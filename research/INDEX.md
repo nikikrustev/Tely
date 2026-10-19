@@ -15,18 +15,18 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 04 | [04-overlay-output-formats.md](04-overlay-output-formats.md) | CasparCG/SPX/OGraf template API (update/play/stop), alpha and key/fill via ffmpeg, media-clock sync (rVFC, WebVTT/HLS cues), EBU safe areas, OBS studio, SCTE-35 |
 | 05 | [05-cv-auto-eventing.md](05-cv-auto-eventing.md) | Licence-safe CV stack (RF-DETR + `trackers` + `supervision`), the known-camera auto-label trick, rule-based events, SoccerNet metrics, event-F1 grader, Azure GPU |
 | 06 | [06-synthetic-broadcast-rendering.md](06-synthetic-broadcast-rendering.md) | Three.js + Playwright lockstep rendering, broadcast camera prior, YOLO auto-labels and homography export, ffmpeg degradations, SoccerSynth prior art |
+| 07 | [07-expected-goals-xg.md](07-expected-goals-xg.md) | xG features and cited coefficients, penalty values (Opta 0.79, StatsBomb 0.78), a hand-set logistic xG we sample shots from, linear-SHAP "because" sentences, StatsBomb licence risk |
 | 08 | [08-pass-difficulty-xpass-xt.md](08-pass-difficulty-xpass-xt.md) | xPass and a 0–10 pass-difficulty score, Spearman time-to-intercept model, xT value iteration, VAEP, and the risk of using real data |
 
 ## In progress
 
-07 xG · 09 pressure/PPDA/control-vs-chaos · 10 pitch control · 11 broadcast stat
+09 pressure/PPDA/control-vs-chaos · 10 pitch control · 11 broadcast stat
 presentation · 12 this hackathon's judging criteria and rules · 13 past winners · 14 demo video and write-up ·
-15 competitors (CV, simulators, overlays) · 16 competitors (front-runners)
+15 competitors (CV, simulators, overlays) · 16 competitors (front-runners) · 17 starter repos and samples
 
 ## Next topics (queue)
 
 Priority 1 (build/tech)
-- Starter repos and Azure samples to fork (Event Hubs + Container Apps + Web PubSub + Foundry end-to-end)
 - Realistic off-ball movement for the generator: jitter, pressing triggers, overlapping runs. Closes the "4 km per player" gap found in 02
 - CDF compliance: settle the validator's v0.3.2 vs paper's v1.0.0 and the exact JSON nesting (from 02)
 - Web PubSub event handlers / upstream messages, so Graphics Desk take/hold commands can go from browser to worker (from 01)
@@ -43,4 +43,6 @@ Priority 1 (build/tech)
 Priority 2 (football domain)
 - Converting synthetic events to SPADL so socceraction xT/VAEP runs unchanged (from 08)
 - Calibration and reliability diagrams for xPass/xT/predictions (Called It, Realism Bench) (from 08)
+- Rahimian/Sumpter "wordalization" code: regression contributions → words → LLM rewrite, a near-template for Explain (from 07)
+- Post-shot xG / xGOT for synthetic shots: sampling where shots end up on goal (Keeper Brain) (from 07)
 - Translator custom glossaries for football jargon in other languages (from 03)
