@@ -5,6 +5,8 @@ It covers the parts almost any of our candidate ideas will need. Every file has 
 So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berbata_Hackathon_Intel.md) ·
 [Idea shortlist](../Berbata_Idea_Shortlist.html) · [Idea brainstorm](../Berbata_Idea_Brainstorm.html).
 
+> **Deadline (verified in the official rules, 20 Oct):** submissions close **27 Oct 2026, 23:59 PT** (28 Oct 08:59 Sofia). Registration closed 20 Oct 12:00 PT. The 12-day plan in the shortlist does not fit; use its one-week cut. See [12](12-judging-criteria-and-rules.md).
+
 ## Files
 
 | # | File | One line |
@@ -17,11 +19,12 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 06 | [06-synthetic-broadcast-rendering.md](06-synthetic-broadcast-rendering.md) | Three.js + Playwright lockstep rendering, broadcast camera prior, YOLO auto-labels and homography export, ffmpeg degradations, SoccerSynth prior art |
 | 07 | [07-expected-goals-xg.md](07-expected-goals-xg.md) | xG features and cited coefficients, penalty values (Opta 0.79, StatsBomb 0.78), a hand-set logistic xG we sample shots from, linear-SHAP "because" sentences, StatsBomb licence risk |
 | 08 | [08-pass-difficulty-xpass-xt.md](08-pass-difficulty-xpass-xt.md) | xPass and a 0–10 pass-difficulty score, Spearman time-to-intercept model, xT value iteration, VAEP, and the risk of using real data |
+| 12 | [12-judging-criteria-and-rules.md](12-judging-criteria-and-rules.md) | **Official rules:** submit by 27 Oct 23:59 PT; five criteria at 20% each; prizes and four categories; video under 2 min, public repo, working demo; synthetic data only |
 
 ## In progress
 
 09 pressure/PPDA/control-vs-chaos · 10 pitch control · 11 broadcast stat
-presentation · 12 this hackathon's judging criteria and rules · 13 past winners · 14 demo video and write-up ·
+presentation · 13 past winners · 14 demo video and write-up ·
 15 competitors (CV, simulators, overlays) · 16 competitors (front-runners) · 17 starter repos and samples
 
 ## Next topics (queue)
@@ -38,6 +41,8 @@ Priority 1 (build/tech)
 - Priority vs Flex processing on Global Standard for live vs offline calls (from 03)
 - Deterministic offline overlay render: OGraf non-real-time mode, Puppeteer virtual time, as an ACA job (from 04)
 - SCTE-35 generation in Python (`threefive`) for Safe Break; NDI-with-alpha from OBS (DistroAV) for a live key/fill demo (from 04)
+- Showing "agentic design" (20% of score) in a CV/pipeline-heavy entry without becoming another agent crew (from 12)
+- Keeping the demo live and free through 10 Nov: cost/uptime plan, scale-to-zero, cached replay mode (from 12)
 - Fabric Real-Time Intelligence (Eventstream/Eventhouse): does it beat our own Python windowing? (from 01)
 
 Priority 2 (football domain)
