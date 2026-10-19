@@ -19,12 +19,13 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 06 | [06-synthetic-broadcast-rendering.md](06-synthetic-broadcast-rendering.md) | Three.js + Playwright lockstep rendering, broadcast camera prior, YOLO auto-labels and homography export, ffmpeg degradations, SoccerSynth prior art |
 | 07 | [07-expected-goals-xg.md](07-expected-goals-xg.md) | xG features and cited coefficients, penalty values (Opta 0.79, StatsBomb 0.78), a hand-set logistic xG we sample shots from, linear-SHAP "because" sentences, StatsBomb licence risk |
 | 08 | [08-pass-difficulty-xpass-xt.md](08-pass-difficulty-xpass-xt.md) | xPass and a 0–10 pass-difficulty score, Spearman time-to-intercept model, xT value iteration, VAEP, and the risk of using real data |
+| 09 | [09-pressure-pressing-ppda.md](09-pressure-pressing-ppda.md) | PPDA (original + provider variants), StatsBomb pressure/counterpress, Opta sequence metrics, Andrienko and Bekkers pressure models, our control/chaos indices, CUSUM change detection |
 | 11 | [11-broadcast-stats-presentation.md](11-broadcast-stats-presentation.md) | Catalogue of on-screen stat formats, the 16 Bundesliga Match Facts, DFL Story Finder, PL/Genius tracking, opt-in data feeds, and a 10-value `layout` grammar with timing rules |
 | 12 | [12-judging-criteria-and-rules.md](12-judging-criteria-and-rules.md) | **Official rules:** submit by 27 Oct 23:59 PT; five criteria at 20% each; prizes and four categories; video under 2 min, public repo, working demo; synthetic data only |
 
 ## In progress
 
-09 pressure/PPDA/control-vs-chaos · 10 pitch control · 13 past winners · 14 demo video and write-up ·
+10 pitch control · 13 past winners · 14 demo video and write-up ·
 15 competitors (CV, simulators, overlays) · 16 competitors (front-runners) · 17 starter repos and samples · 18 agentic design for pipelines · 19 realistic player movement · 20 ground-truth grader and calibration · 21 demo uptime, cost and ops
 
 ## Next topics (queue)
@@ -47,4 +48,7 @@ Priority 2 (football domain)
 - Post-shot xG / xGOT for synthetic shots: sampling where shots end up on goal (Keeper Brain) (from 07)
 - FIFA EFI metric definitions (line breaks, receptions behind lines, phases of play) to copy into Interpret (from 11)
 - DFL AI Live Ticker (Bedrock) and Genius skeletal-tracking graphics as precedents for live multilingual text and speed tags (from 11)
+- Possession value (StatsBomb OBV / Opta PV) as a transparent synthetic "momentum" model (from 09)
+- Bayesian online change-point detection for calibrated "the game has changed" probabilities (from 09)
+- Team compactness, block height and line-breaking passes from tracking (Opta Vision definitions) (from 09)
 - Translator custom glossaries for football jargon in other languages (from 03)
