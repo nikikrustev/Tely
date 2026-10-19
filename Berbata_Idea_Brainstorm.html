@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Berbata Idea Brainstorm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Same visual system as Berbata_Idea_Shortlist.html: match-day rundown, green accent, condensed display type. */
+:root{
+  --bg:#F1F4F0; --surface:#FFFFFF; --ink:#14211B; --muted:#56675E; --line:#D3DCD5;
+  --accent:#147A4B; --accent-soft:#DDEFE4; --gold:#A86C12; --gold-soft:#F6EBD6; --warn:#B0482A; --warn-soft:#F7E2DA;
+  --kid:#2F5DA8; --kid-soft:#E3ECFA;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1612; --surface:#14201A; --ink:#E4ECE7; --muted:#97A89E; --line:#26362E;
+    --accent:#4CC48B; --accent-soft:#163A29; --gold:#E2AE55; --gold-soft:#3A2E17; --warn:#EB8562; --warn-soft:#3D2018;
+    --kid:#8DB4F2; --kid-soft:#18263D;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1612; --surface:#14201A; --ink:#E4ECE7; --muted:#97A89E; --line:#26362E;
+  --accent:#4CC48B; --accent-soft:#163A29; --gold:#E2AE55; --gold-soft:#3A2E17; --warn:#EB8562; --warn-soft:#3D2018;
+  --kid:#8DB4F2; --kid-soft:#18263D;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1080px;margin:0 auto}
+.read{max-width:720px}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.08;text-wrap:balance;margin:0;letter-spacing:.005em}
+h1{font-size:clamp(2.3rem,6vw,3.6rem)}
+h2{font-size:clamp(1.7rem,4vw,2.3rem)}
+h3{font-size:1.5rem}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-mono);font-size:.86em}
+.muted{color:var(--muted)}
+section{padding-top:56px;display:flex;flex-direction:column;gap:18px}
+section > header{display:flex;flex-direction:column;gap:6px;border-top:2px solid var(--ink);padding-top:12px}
+
+/* masthead */
+.mast{padding-top:40px;display:flex;flex-direction:column;gap:18px}
+.mast .kicker{display:flex;flex-wrap:wrap;gap:8px 18px}
+.tally{display:flex;flex-wrap:wrap;gap:12px}
+.tally div{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:10px 16px;min-width:120px}
+.tally b{display:block;font-family:var(--f-display);font-size:2rem;line-height:1}
+.tally span{font-size:.9rem;color:var(--muted)}
+
+/* kid explanation box: the point of this page */
+.kid{background:var(--kid-soft);border-radius:4px;padding:10px 12px 11px;font-size:1rem}
+.kid b{display:block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--kid);margin-bottom:2px}
+
+/* recap of A–F */
+.recap{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.recap article{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.recap article.pick{border:2px solid var(--accent)}
+.recap h3{font-size:1.25rem}
+.recap .code{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);margin-right:6px}
+
+/* picks */
+.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.picks div{border-top:3px solid var(--accent);padding-top:8px;font-size:.96rem;min-width:0}
+.picks .n{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.picks h3{font-size:1.35rem;margin:2px 0 4px}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filters button{font:inherit;font-family:var(--f-mono);font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.filters button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* idea grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card[hidden]{display:none}
+.card .top{display:flex;align-items:baseline;gap:10px}
+.card .num{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.card .cat{margin-left:auto;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.card .pitch{font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.chip.go{color:var(--accent);background:var(--accent-soft);border-color:transparent}
+.chip.ok{color:var(--gold);background:var(--gold-soft);border-color:transparent}
+.chip.no{color:var(--warn);background:var(--warn-soft);border-color:transparent}
+.chip.tc{color:var(--ink);border-color:var(--ink)}
+.card dl{margin:0;display:flex;flex-direction:column;gap:6px;font-size:.92rem}
+.card dt{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card dd{margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.9rem;color:var(--muted);align-items:center}
+footer{padding-top:48px;font-size:.88rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker"><span class="eyebrow">Berbata AI · entry 126726</span><span class="eyebrow">Inside the Game: Microsoft × Premier League</span><span class="eyebrow">Brainstorm · 19 Oct 2026</span></div>
+  <h1>24 more ideas, each explained like you're five</h1>
+  <p class="read">This page extends <a href="Berbata_Idea_Shortlist.html">the shortlist</a>. Every idea below steers clear of the crowded pattern in the field (a studio crew of agents, a fact-checker and overlay JSON). Each card has a one-line pitch for judges, a plain explanation a five-year-old would follow, the part of the brief it hits, and who in the 332 entries is closest.</p>
+  <div class="tally">
+    <div><b>24</b><span>new ideas</span></div>
+    <div><b>14</b><span>open lanes (nobody close)</span></div>
+    <div><b>9</b><span>lightly taken</span></div>
+    <div><b>6</b><span>work as a TwinCast mode</span></div>
+  </div>
+</header>
+
+<!-- ======================= A–F RECAP ======================= -->
+<section id="recap">
+  <header><span class="eyebrow">Part 1</span><h2>The first six, explained simply</h2><p class="muted read">The ideas from the shortlist, each with a kid-level explanation added. TwinCast is still the recommended build.</p></header>
+  <div class="recap">
+    <article class="pick"><h3><span class="code">A</span>TwinCast</h3><div class="kid"><b>Like you're 5</b>We make a pretend football game inside the computer, like a video game. Then a robot watches it and says what happened. We made the game, so we know the right answers and can check the robot's work, like a teacher marking a test.</div></article>
+    <article><h3><span class="code">B</span>Speed Trap</h3><div class="kid"><b>Like you're 5</b>When a player runs super, super fast, a little name sign pops up on TV saying how fast they went, and why that run was important.</div></article>
+    <article><h3><span class="code">C</span>One Number</h3><div class="kid"><b>Like you're 5</b>You pick your favourite thing to count, like “how fast” or “how many passes”, and the TV tells you the whole game using just that one number.</div></article>
+    <article><h3><span class="code">D</span>Chalk Talk</h3><div class="kid"><b>Like you're 5</b>The man on TV asks a question, and the computer draws arrows and circles on the picture, like drawing on a window with a marker, to show the answer.</div></article>
+    <article><h3><span class="code">E</span>Realism Bench</h3><div class="kid"><b>Like you're 5</b>Lots of people make pretend football games. We make a checker that says “this looks like real football” or “this looks silly”.</div></article>
+    <article><h3><span class="code">F</span>Graphics Desk</h3><div class="kid"><b>Like you're 5</b>The computer suggests pictures to put on the TV, and a grown-up presses “yes” or “no” before anyone sees them.</div></article>
+  </div>
+</section>
+
+<!-- ======================= PICKS ======================= -->
+<section id="picks">
+  <header><span class="eyebrow">Part 2</span><h2>Best three from the new batch</h2><p class="muted read">None of these replaces TwinCast. Each one either bolts onto it or is a fallback that is cheap to build and easy to show in a 60-second video.</p></header>
+  <div class="picks">
+    <div><span class="n">01</span><h3>Ghost Team</h3>The most visual idea here and nobody in the field does it. It reuses TwinCast's renderer and simulator: the ghost is just the simulator's “average” run drawn on top of the real one.</div>
+    <div><span class="n">21</span><h3>Called It</h3>40+ entries say “trust us, we fact-check”. This one shows a track record instead. Cheap to build, and the calibration chart is a strong closing shot for the demo.</div>
+    <div><span class="n">10</span><h3>Story Time</h3>A third audience the brief doesn't name but obviously invites. Easy to build, instantly understood by judges, and it gives the demo a warm, memorable moment.</div>
+  </div>
+</section>
+
+<!-- ======================= IDEAS ======================= -->
+<section id="ideas">
+  <header><span class="eyebrow">Part 3</span><h2>All 24 new ideas</h2><p class="muted read">Grouped into five themes. Use the buttons to filter. Effort is for two people: S is a few days, M is about a week, L is risky inside the hackathon window.</p></header>
+  <div class="legend">
+    <span class="chip go">Open</span> nobody in the 332 is close
+    <span class="chip ok">Lightly taken</span> 1–3 entries nearby, angle still free
+    <span class="chip no">Crowded</span> core idea is common
+    <span class="chip tc">TwinCast mode</span> needs the rendered video, so it plugs into TwinCast
+  </div>
+  <div class="filters" role="group" aria-label="Filter ideas by theme">
+    <button type="button" data-f="all" aria-pressed="true">All 24</button>
+    <button type="button" data-f="screen" aria-pressed="false">On screen</button>
+    <button type="button" data-f="fans" aria-pressed="false">Fans &amp; personalisation</button>
+    <button type="button" data-f="senses" aria-pressed="false">Senses &amp; access</button>
+    <button type="button" data-f="trust" aria-pressed="false">Trust</button>
+    <button type="button" data-f="prod" aria-pressed="false">Production</button>
+  </div>
+
+  <div class="grid" id="grid">
+
+    <!-- ON SCREEN -->
+    <article class="card" data-cat="screen">
+      <div class="top"><span class="num">01</span><h3>Ghost Team</h3><span class="cat">On screen</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort M</span><span class="chip tc">TwinCast mode</span></div>
+      <p class="pitch">A see-through “average team” plays alongside the real one, so when a player does something unusual you see the gap between them and the ghost.</p>
+      <div class="kid"><b>Like you're 5</b>In racing games you can see a see-through ghost car. We put a ghost football team on the TV that does the normal thing. When a real player does something clever, you can see it, because they're not where the ghost is.</div>
+      <dl><div><dt>Brief hook</dt><dd>Explain (why a moment matters) and Render, drawn on the picture itself.</dd></div>
+      <div><dt>Nearest in the field</dt><dd>No direct match. <span class="mono">126312</span> Second Guess and <span class="mono">126528</span> Fulcrum do counterfactuals, but as numbers, not a ghost on screen.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="screen">
+      <div class="top"><span class="num">02</span><h3>Decoy Credit</h3><span class="cat">On screen</span></div>
+      <div class="chips"><span class="chip ok">Lightly taken</span><span class="chip">Effort S–M</span><span class="chip tc">TwinCast mode</span></div>
+      <p class="pitch">Finds the runs that drag defenders away so a teammate gets free, and gives the runner on-screen credit.</p>
+      <div class="kid"><b>Like you're 5</b>Sometimes a player runs away just to trick the other team, so their friend can get the ball. Nobody claps for that. We draw a glowing line so everyone sees the trick and says thank you.</div>
+      <dl><div><dt>Brief hook</dt><dd>Interpret and Explain; works as part of player-focus mode.</dd></div>
+      <div><dt>Nearest in the field</dt><dd><span class="mono">126392</span> GhostPlay AI (off-ball support, xT) and <span class="mono">126359</span> Shield (invisible defensive work). Neither turns decoy runs into a broadcast moment.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="screen">
+      <div class="top"><span class="num">03</span><h3>Dive Judges</h3><span class="cat">On screen</span></div>
+      <div class="chips"><span class="chip ok">Lightly taken</span><span class="chip">Effort S</span><span class="chip tc">TwinCast mode</span></div>
+      <p class="pitch">Pass difficulty shown the way Olympic diving is scored: a judging panel, a degree of difficulty and a score, popping up after special passes.</p>
+      <div class="kid"><b>Like you're 5</b>Some passes are easy, like rolling the ball to a friend next to you. Some are super hard, like throwing a paper ball into a bin across the room. Pretend judges hold up scorecards to show how hard it was.</div>
+      <dl><div><dt>Brief hook</dt><dd>Brief ii-b, pass quality: distance, accuracy, difficulty rating.</dd></div>
+      <div><dt>Nearest in the field</dt><dd><span class="mono">126447</span> xPlain Live and <span class="mono">126684</span> MatchLens compute pass difficulty. The metric exists; the scorecard presentation doesn't.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="screen">
+      <div class="top"><span class="num">04</span><h3>Duel Card</h3><span class="cat">On screen</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort M</span></div>
+      <p class="pitch">Tracks the key one-on-one battle (say, winger vs full-back) through the match as a round-by-round boxing scorecard.</p>
+      <div class="kid"><b>Like you're 5</b>Two players keep racing each other all game, like two kids always racing to the swings. We keep score of who wins each race, like in boxing, and show who's ahead.</div>
+      <dl><div><dt>Brief hook</dt><dd>Interpret, player focus, and a running narrative.</dd></div>
+      <div><dt>Nearest in the field</dt><dd>No direct match. <span class="mono">126697</span> MatchLens per-player dashboards come closest, but they track one player, not a matchup.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="screen">
+      <div class="top"><span class="num">05</span><h3>Set-Piece X-Ray</h3><span class="cat">On screen</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort M</span><span class="chip tc">TwinCast mode</span></div>
+      <p class="pitch">Before a corner or free kick, predicts the routine and who will mark whom, then grades its own guess once the ball is kicked.</p>
+      <div class="kid"><b>Like you're 5</b>Before a corner kick, everyone has a secret plan for where to run. We guess the plan and draw it on the TV. Then we watch and see if we guessed right.</div>
+      <dl><div><dt>Brief hook</dt><dd>Explain and Render. Needs set-piece routines in the generator, which also counts as data innovation (v).</dd></div>
+      <div><dt>Nearest in the field</dt><dd>None of the 332 makes set pieces the focus.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="screen">
+      <div class="top"><span class="num">06</span><h3>Relay Credit</h3><span class="cat">On screen</span></div>
+      <div class="chips"><span class="chip ok">Lightly taken</span><span class="chip">Effort S</span></div>
+      <p class="pitch">Every goal is traced back through the whole move, and the credit is split among everyone who touched it, shown as a relay-race graphic.</p>
+      <div class="kid"><b>Like you're 5</b>A goal is like a relay race. The last kid crosses the line, but everyone carried the baton. We give a sticker to every kid who helped, not just the last one.</div>
+      <dl><div><dt>Brief hook</dt><dd>Explain and Narrative (player-performance context).</dd></div>
+      <div><dt>Nearest in the field</dt><dd><span class="mono">126704</span> Why That Goal? rewinds the build-up; <span class="mono">126361</span> Shift11 credits momentum to players. Neither shares out a goal.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="screen">
+      <div class="top"><span class="num">07</span><h3>Déjà Vu</h3><span class="cat">On screen</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort M</span></div>
+      <p class="pitch">Spots when a move repeats something from earlier in the same match and says what happened last time: “third time this switch has worked”.</p>
+      <div class="kid"><b>Like you're 5</b>Your friend always hides behind the same tree in hide and seek. We notice when a team does the same trick again and tell you, “Watch out, they did this before!”</div>
+      <dl><div><dt>Brief hook</dt><dd>Explain (game-rhythm patterns) and Narrative.</dd></div>
+      <div><dt>Nearest in the field</dt><dd><span class="mono">126635</span> The Metronome detects shape changes; <span class="mono">126386</span> Second Story looks at what the match was becoming. Neither matches repeated moves.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="screen">
+      <div class="top"><span class="num">08</span><h3>Weather Player</h3><span class="cat">On screen</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort S–M</span></div>
+      <p class="pitch">Adds rain, wind and a heavy pitch to the synthetic data, and explains when the weather, not the players, changed the game.</p>
+      <div class="kid"><b>Like you're 5</b>When it rains, the ball gets slippy and passes go wrong. The weather is like a sneaky extra player. We tell you when it's the rain making the mess, not the players.</div>
+      <dl><div><dt>Brief hook</dt><dd>Data innovation (v) and Explain.</dd></div>
+      <div><dt>Nearest in the field</dt><dd>Nobody in the field models weather.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="screen">
+      <div class="top"><span class="num">09</span><h3>Keeper Brain</h3><span class="cat">On screen</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort M</span><span class="chip tc">TwinCast mode</span></div>
+      <p class="pitch">A goalkeeper-only mode: positioning, angles, shots faced versus expected, and the saves that didn't need a dive because the keeper was already in the right place.</p>
+      <div class="kid"><b>Like you're 5</b>The goalkeeper is the only one allowed to use their hands. The best ones stand in exactly the right spot so they don't even need to jump. We draw lines to show the clever standing.</div>
+      <dl><div><dt>Brief hook</dt><dd>Player-focus mode and Explain.</dd></div>
+      <div><dt>Nearest in the field</dt><dd>Nobody in the 332 builds for goalkeepers.</dd></div></dl>
+    </article>
+
+    <!-- FANS -->
+    <article class="card" data-cat="fans">
+      <div class="top"><span class="num">10</span><h3>Story Time</h3><span class="cat">Fans</span></div>
+      <div class="chips"><span class="chip ok">Lightly taken</span><span class="chip">Effort S</span></div>
+      <p class="pitch">A kids' mode: the match retold as a short story with characters, simple words and pictures, for under-10s watching with their family.</p>
+      <div class="kid"><b>Like you're 5</b>The football game turns into a bedtime story. The players are the characters, and the goal is the exciting bit at the end.</div>
+      <dl><div><dt>Brief hook</dt><dd>Personalise: a third audience beyond analyst and casual fan. Works in any language.</dd></div>
+      <div><dt>Nearest in the field</dt><dd><span class="mono">126724</span> Pizarra, <span class="mono">126648</span> Coach in Your Ear and <span class="mono">126440</span> One Match, Many Matches target newcomers. None aim at children.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="fans">
+      <div class="top"><span class="num">11</span><h3>Player Diary</h3><span class="cat">Fans</span></div>
+      <div class="chips"><span class="chip ok">Lightly taken</span><span class="chip">Effort S</span></div>
+      <p class="pitch">A first-person recap from the player you follow: “I ran 11.2 km. I faded after 70 minutes. My best moment was…”</p>
+      <div class="kid"><b>Like you're 5</b>After the game, your favourite player writes in their diary about their day: what went well, when they got tired, and their best bit.</div>
+      <dl><div><dt>Brief hook</dt><dd>Player-focus mode and match recaps.</dd></div>
+      <div><dt>Nearest in the field</dt><dd><span class="mono">126646</span> Mauled by the Tigers (player cam and personal recap, but only a short write-up).</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="fans">
+      <div class="top"><span class="num">12</span><h3>Jargon Buster</h3><span class="cat">Fans</span></div>
+      <div class="chips"><span class="chip ok">Lightly taken</span><span class="chip">Effort M</span></div>
+      <p class="pitch">Tap any football word the commentator uses (“low block”, “half-space”) and get a five-second animation built from this match.</p>
+      <div class="kid"><b>Like you're 5</b>Grown-ups use big football words. You tap the word, and a tiny cartoon from the game shows you what it means.</div>
+      <dl><div><dt>Brief hook</dt><dd>Explain, Render and Personalise for newcomers.</dd></div>
+      <div><dt>Nearest in the field</dt><dd><span class="mono">126648</span> Coach in Your Ear teaches new fans; <span class="mono">126615</span> Matchday Explainer explains the rules. Neither uses the live match as the example.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="fans">
+      <div class="top"><span class="num">13</span><h3>Recap Dial</h3><span class="cat">Fans</span></div>
+      <div class="chips"><span class="chip no">Crowded</span><span class="chip">Effort S</span></div>
+      <p class="pitch">One slider sets the recap length, from 15 seconds to 10 minutes, and the story is re-cut for that length, not just trimmed.</p>
+      <div class="kid"><b>Like you're 5</b>You tell us how much time you have, a tiny bit or a lot, and we tell you the story of the game in exactly that much time.</div>
+      <dl><div><dt>Brief hook</dt><dd>Narrative (recaps) and Personalise.</dd></div>
+      <div><dt>Nearest in the field</dt><dd>Recaps are everywhere, e.g. <span class="mono">126443</span> MatchMind Studio and <span class="mono">126532</span> verified recaps. Only the dial is new. Better as a feature than a headline.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="fans">
+      <div class="top"><span class="num">14</span><h3>Comic Recap</h3><span class="cat">Fans</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort M</span></div>
+      <p class="pitch">The match turned into a six-panel comic strip, with speech bubbles in any language.</p>
+      <div class="kid"><b>Like you're 5</b>The game turns into a comic book with six pictures. You can read the whole game in one minute, even if you couldn't watch it.</div>
+      <dl><div><dt>Brief hook</dt><dd>Render and multi-language storytelling. The risk is keeping drawn characters consistent across panels.</dd></div>
+      <div><dt>Nearest in the field</dt><dd>No comic format in the field.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="fans">
+      <div class="top"><span class="num">15</span><h3>Record Watch</h3><span class="cat">Fans</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort S</span></div>
+      <p class="pitch">Live alerts when a player is close to a milestone (“two more tackles for a club record”), so viewers know what to watch for.</p>
+      <div class="kid"><b>Like you're 5</b>When you're one jump away from your best skipping score, everyone watches! We tell you when a player is close to their best ever.</div>
+      <dl><div><dt>Brief hook</dt><dd>Narrative: notable milestones (brief iii). Needs a synthetic season history, which is also data innovation.</dd></div>
+      <div><dt>Nearest in the field</dt><dd>No team headlines milestones.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="fans">
+      <div class="top"><span class="num">16</span><h3>Vertical Match</h3><span class="cat">Fans</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort M</span><span class="chip tc">TwinCast mode</span></div>
+      <p class="pitch">Auto-crops the broadcast to a tall phone-shaped frame that follows the ball, with overlays redesigned for portrait.</p>
+      <div class="kid"><b>Like you're 5</b>TVs are wide, but phones are tall. We cut the picture so it fits your phone and always keeps the ball in the middle.</div>
+      <dl><div><dt>Brief hook</dt><dd>Render for streaming. Needs the rendered video and ball tracking from TwinCast.</dd></div>
+      <div><dt>Nearest in the field</dt><dd>Nobody targets vertical streaming.</dd></div></dl>
+    </article>
+
+    <!-- SENSES -->
+    <article class="card" data-cat="senses">
+      <div class="top"><span class="num">17</span><h3>Heartbeat</h3><span class="cat">Senses</span></div>
+      <div class="chips"><span class="chip ok">Lightly taken</span><span class="chip">Effort S</span></div>
+      <p class="pitch">The phone or watch vibrates with match tension, with different pulses for a chance, a shot and a goal, for deaf and hard-of-hearing fans.</p>
+      <div class="kid"><b>Like you're 5</b>Your phone gives you little taps, like a heartbeat. Slow when the game is calm, fast when something exciting is about to happen.</div>
+      <dl><div><dt>Brief hook</dt><dd>Personalise (accessibility) and Explain (tension and pressure).</dd></div>
+      <div><dt>Nearest in the field</dt><dd>Accessibility entries are for blind fans: <span class="mono">126311</span> Audio Eyes, <span class="mono">126432</span> Blind-side. <span class="mono">126450</span> VYBE is broader. Nobody does touch.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="senses">
+      <div class="top"><span class="num">18</span><h3>Signed Recap</h3><span class="cat">Senses</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip no">Effort L</span></div>
+      <p class="pitch">Key moments and the recap delivered by a sign-language avatar, starting with British Sign Language.</p>
+      <div class="kid"><b>Like you're 5</b>Some people talk with their hands. A cartoon helper tells the story of the game using hand signs.</div>
+      <dl><div><dt>Brief hook</dt><dd>Multi-language storytelling: sign languages are languages too. High risk: a poor avatar looks worse than none.</dd></div>
+      <div><dt>Nearest in the field</dt><dd>None found.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="senses">
+      <div class="top"><span class="num">19</span><h3>Match Music</h3><span class="cat">Senses</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort M</span></div>
+      <p class="pitch">A generated soundtrack whose tempo follows the game's rhythm: calm possession plays slow, chaos speeds it up.</p>
+      <div class="kid"><b>Like you're 5</b>The game gets its own song. When the game is slow, the music is slow. When it gets wild, the music gets fast and loud.</div>
+      <dl><div><dt>Brief hook</dt><dd>Explain (game rhythm, control vs chaos) turned into sound.</dd></div>
+      <div><dt>Nearest in the field</dt><dd>None.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="senses">
+      <div class="top"><span class="num">20</span><h3>Home End</h3><span class="cat">Senses</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort M</span></div>
+      <p class="pitch">A synthetic crowd mix tuned to your club: your fans get louder when your team attacks, and go quiet when you're under pressure.</p>
+      <div class="kid"><b>Like you're 5</b>If you cheer for the red team, the crowd on your TV sounds like the red fans singing, and gets louder when your team is about to score.</div>
+      <dl><div><dt>Brief hook</dt><dd>Personalise (favourite club), driven by the same tension signal as Heartbeat.</dd></div>
+      <div><dt>Nearest in the field</dt><dd><span class="mono">126613</span> Twelfth Voice (a fan's own commentary voice) is the only audio-personalisation entry.</dd></div></dl>
+    </article>
+
+    <!-- TRUST -->
+    <article class="card" data-cat="trust">
+      <div class="top"><span class="num">21</span><h3>Called It</h3><span class="cat">Trust</span></div>
+      <div class="chips"><span class="chip ok">Lightly taken</span><span class="chip">Effort S–M</span></div>
+      <p class="pitch">The AI makes timestamped predictions during the match and keeps a public scorecard of hits and misses, so viewers know how far to trust it.</p>
+      <div class="kid"><b>Like you're 5</b>The robot says what it thinks will happen and writes it down. After the game we check its homework, so everyone knows if the robot is good at guessing.</div>
+      <dl><div><dt>Brief hook</dt><dd>Explainability. A calibration chart is a different kind of trust from “every sentence cites an event ID”.</dd></div>
+      <div><dt>Nearest in the field</dt><dd><span class="mono">126530</span> Lasso (fans vs the AI Gaffer), <span class="mono">126717</span> MatchMind late-game predictions, <span class="mono">126612</span> ThroughPass win probability. None publish how often they're right.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="trust">
+      <div class="top"><span class="num">22</span><h3>Half-Time Talk</h3><span class="cat">Trust</span></div>
+      <div class="chips"><span class="chip ok">Lightly taken</span><span class="chip">Effort M</span></div>
+      <p class="pitch">At half-time, predicts what each manager will change and why. At full time, grades itself against what actually changed.</p>
+      <div class="kid"><b>Like you're 5</b>At half time, the coach tells the players what to fix. We guess what the coach will say. After the game, we check if we guessed right.</div>
+      <dl><div><dt>Brief hook</dt><dd>Explain (tactical pressure changes) and Narrative.</dd></div>
+      <div><dt>Nearest in the field</dt><dd><span class="mono">126360</span> The Half-Time Lab (fans coach the second half), <span class="mono">126678</span> CoachAssistant. Neither grades itself.</dd></div></dl>
+    </article>
+
+    <!-- PRODUCTION -->
+    <article class="card" data-cat="prod">
+      <div class="top"><span class="num">23</span><h3>Safe Break</h3><span class="cat">Production</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort S–M</span></div>
+      <p class="pitch">Predicts the quiet windows when a stream can safely show a replay, sponsor slot or picture-in-picture without missing a big moment.</p>
+      <div class="kid"><b>Like you're 5</b>The TV wants to show something else for a few seconds without missing a goal. We tell it when the game is sleepy, so it's safe to look away.</div>
+      <dl><div><dt>Brief hook</dt><dd>Studio and streaming use; Interpret. Has a clear business case for broadcasters.</dd></div>
+      <div><dt>Nearest in the field</dt><dd>None.</dd></div></dl>
+    </article>
+
+    <article class="card" data-cat="prod">
+      <div class="top"><span class="num">24</span><h3>Big Screen</h3><span class="cat">Production</span></div>
+      <div class="chips"><span class="chip go">Open</span><span class="chip">Effort S</span></div>
+      <p class="pitch">A stadium edition: insights cut to ten words for the giant screen and the PA announcer, readable from 100 metres away.</p>
+      <div class="kid"><b>Like you're 5</b>At the stadium there's a giant TV. We put short, big messages on it so everyone in the stadium knows the cool facts too.</div>
+      <dl><div><dt>Brief hook</dt><dd>Render for a new surface: the people actually at the match.</dd></div>
+      <div><dt>Nearest in the field</dt><dd>None.</dd></div></dl>
+    </article>
+
+  </div>
+</section>
+
+<footer>Competitor IDs come from the Innovation Studio snapshot in <span class="mono">Berbata_Hackathon_Intel.md</span> (19 Oct 2026, 332 projects). “Open” means no entry in that snapshot was close; new entries may have appeared since.</footer>
+</div>
+
+<script>
+(function(){
+  var buttons = document.querySelectorAll('.filters button');
+  var cards = document.querySelectorAll('#grid .card');
+  buttons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var f = btn.getAttribute('data-f');
+      buttons.forEach(function(b){ b.setAttribute('aria-pressed', String(b === btn)); });
+      cards.forEach(function(c){ c.hidden = !(f === 'all' || c.getAttribute('data-cat') === f); });
+    });
+  });
+})();
+</script>
+</body>
+</html>
