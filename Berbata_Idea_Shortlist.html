@@ -1,0 +1,716 @@
+<title>Berbata Idea Shortlist</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a match-day production rundown. Narrow reading column, wide bands for matrix, mockups and the architecture sheet. */
+:root{
+  --bg:#F1F4F0; --surface:#FFFFFF; --ink:#14211B; --muted:#56675E; --line:#D3DCD5;
+  --accent:#147A4B; --accent-soft:#DDEFE4; --gold:#A86C12; --gold-soft:#F6EBD6; --warn:#B0482A; --warn-soft:#F7E2DA;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  /* Broadcast picture + screen palette: identical in both themes on purpose (it is "video" and device UI) */
+  --g-stand:#18221D; --g-stand2:#111915; --g-pitch:#2E7A4C; --g-pitch2:#348656; --g-chalk:#EEF3EC;
+  --g-navy:#0E1A2E; --g-gold:#F2C14E; --g-white:#FFFFFF; --g-red:#E2483D; --g-blue:#3C7DDC; --g-ok:#38D39F; --g-skin:#D9A77F;
+  --s-bg:#0F1726; --s-panel:#18233A; --s-line:#2C3C58; --s-fg:#E8EEF7; --s-mut:#8D9CB5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1612; --surface:#14201A; --ink:#E4ECE7; --muted:#97A89E; --line:#26362E;
+    --accent:#4CC48B; --accent-soft:#163A29; --gold:#E2AE55; --gold-soft:#3A2E17; --warn:#EB8562; --warn-soft:#3D2018;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1612; --surface:#14201A; --ink:#E4ECE7; --muted:#97A89E; --line:#26362E;
+  --accent:#4CC48B; --accent-soft:#163A29; --gold:#E2AE55; --gold-soft:#3A2E17; --warn:#EB8562; --warn-soft:#3D2018;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1080px;margin:0 auto}
+.read{max-width:720px}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.08;text-wrap:balance;margin:0;letter-spacing:.005em}
+h1{font-size:clamp(2.3rem,6vw,3.6rem)}
+h2{font-size:clamp(1.7rem,4vw,2.3rem)}
+h3{font-size:1.45rem}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-mono);font-size:.86em}
+.muted{color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:14px}
+section{padding-top:56px;display:flex;flex-direction:column;gap:18px}
+section > header{display:flex;flex-direction:column;gap:6px;border-top:2px solid var(--ink);padding-top:12px}
+
+/* masthead */
+.mast{padding-top:40px;display:flex;flex-direction:column;gap:18px}
+.mast .kicker{display:flex;flex-wrap:wrap;gap:8px 18px}
+.verdict{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--accent);padding:18px 20px;border-radius:4px}
+.verdict .k{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:4px}
+.verdict .v{min-width:0}
+.verdict strong{font-family:var(--f-display);font-size:1.35rem;font-weight:700}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.note{border:1px dashed var(--line);padding:12px 14px;border-radius:4px;font-size:.95rem;min-width:0}
+.note b{display:block;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--warn);margin-bottom:4px}
+
+/* idea cards */
+.ideas{display:flex;flex-direction:column;gap:18px}
+.idea{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:20px 22px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px 28px}
+.idea.pick{border:2px solid var(--accent)}
+.idea .head{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
+.idea .code{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.idea .pitch{grid-column:1/-1;font-size:1.12rem;font-weight:600;max-width:70ch}
+.chip{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.chip.go{color:var(--accent);background:var(--accent-soft);border-color:transparent}
+.chip.ok{color:var(--gold);background:var(--gold-soft);border-color:transparent}
+.chip.no{color:var(--warn);background:var(--warn-soft);border-color:transparent}
+.lbl{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.stages{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:.95rem}
+.stages li{display:grid;grid-template-columns:86px 1fr;gap:8px}
+.stages li span:first-child{font-family:var(--f-mono);font-size:.74rem;color:var(--accent);padding-top:3px;text-transform:uppercase;letter-spacing:.06em}
+.idea .col{display:flex;flex-direction:column;gap:14px;min-width:0;font-size:.97rem}
+.idea .say{grid-column:1/-1;border-top:1px solid var(--line);padding-top:12px;font-size:.97rem}
+.idea .say b{font-family:var(--f-display);font-size:1.1rem;letter-spacing:.02em}
+
+/* matrix */
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:4px}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+thead th{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pips{display:inline-flex;gap:3px;margin-left:8px;vertical-align:middle}
+.pips i{width:9px;height:9px;border-radius:2px;background:var(--line);display:block}
+.pips i.on{background:var(--accent)}
+.tot{display:flex;align-items:center;gap:10px;min-width:150px}
+.tot .bar{flex:1;height:10px;background:var(--line);border-radius:2px;overflow:hidden}
+.tot .bar span{display:block;height:100%;background:var(--ink)}
+tr.pick td{background:var(--accent-soft)}
+tr.pick .tot .bar span{background:var(--accent)}
+.tot b{font-family:var(--f-mono);font-weight:500;font-variant-numeric:tabular-nums}
+.weights{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.w{border-top:3px solid var(--ink);padding-top:8px;font-size:.93rem;min-width:0}
+.w .pct{font-family:var(--f-display);font-size:1.8rem;font-weight:700;line-height:1}
+
+/* mockups */
+.mocks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr));gap:22px}
+figure{margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+figure svg{width:100%;height:auto;display:block;border-radius:4px;max-width:100%}
+figcaption{font-size:.92rem}
+figcaption b{font-family:var(--f-display);font-size:1.12rem}
+.sv-d{font-family:var(--f-display);font-weight:700}
+.sv-b{font-family:var(--f-body);font-weight:600}
+.sv-m{font-family:var(--f-mono)}
+
+/* architecture */
+.arch{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:10px}
+.arch svg{min-width:900px;width:100%;height:auto;display:block}
+.a-box{fill:var(--bg);stroke:var(--line);stroke-width:1.2}
+.a-key{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.a-truth{fill:var(--gold-soft);stroke:var(--gold);stroke-width:1.2}
+.a-t{fill:var(--ink);font-family:var(--f-display);font-weight:700;font-size:16px}
+.a-s{fill:var(--muted);font-family:var(--f-mono);font-size:10.5px}
+.a-h{fill:var(--ink);font-family:var(--f-mono);font-size:11px;letter-spacing:.1em}
+.a-hb{fill:none;stroke:var(--ink);stroke-width:1.5}
+.a-ln{fill:none;stroke:var(--muted);stroke-width:1.4}
+.a-dash{stroke-dasharray:4 3}
+.a-arrow{fill:var(--muted)}
+
+/* plan + script */
+.plan td:first-child{font-family:var(--f-display);font-weight:700;font-size:1.1rem;white-space:nowrap}
+.plan tr.gate td{background:var(--gold-soft)}
+.plan td.proof{color:var(--muted);font-size:.9rem}
+.script td:first-child{font-family:var(--f-mono);white-space:nowrap;font-size:.85rem}
+.script td.vo{font-style:italic}
+pre{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:14px 16px;overflow-x:auto;font-family:var(--f-mono);font-size:.82rem;line-height:1.5;color:var(--ink)}
+.twocol{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:22px}
+.twocol > *{min-width:0}
+ul.tight{margin:0;padding-left:1.15em;display:flex;flex-direction:column;gap:6px}
+.risk{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.risk div{border-left:3px solid var(--warn);padding:4px 0 4px 12px;font-size:.95rem;min-width:0}
+.risk b{display:block}
+footer{padding-top:48px;font-size:.88rem;color:var(--muted)}
+
+@media (max-width:760px){
+  .idea{grid-template-columns:minmax(0,1fr);padding:18px 16px}
+  .verdict{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:no-preference){ .bar span{transition:width .6s ease} }
+</style>
+
+<!-- shared mockup pieces -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="pl" viewBox="0 0 10 22"><rect x="2.5" y="15" width="2" height="7" style="fill:var(--g-stand2)"/><rect x="5.5" y="15" width="2" height="7" style="fill:var(--g-stand2)"/><rect x="1" y="6" width="8" height="10" rx="3" style="fill:currentColor"/><circle cx="5" cy="3.4" r="2.8" style="fill:var(--g-skin)"/></symbol>
+    <symbol id="bcPitch" viewBox="0 0 640 360">
+      <rect width="640" height="360" style="fill:var(--g-stand)"/>
+      <rect width="640" height="62" style="fill:var(--g-stand2)"/>
+      <polygon points="-40,360 680,360 560,78 80,78" style="fill:var(--g-pitch)"/>
+      <polygon points="-40,360 50,360 140,78 80,78" style="fill:var(--g-pitch2)"/>
+      <polygon points="140,360 230,360 260,78 200,78" style="fill:var(--g-pitch2)"/>
+      <polygon points="320,360 410,360 380,78 320,78" style="fill:var(--g-pitch2)"/>
+      <polygon points="500,360 590,360 500,78 440,78" style="fill:var(--g-pitch2)"/>
+      <g style="fill:none;stroke:var(--g-chalk);stroke-opacity:.75;stroke-width:1.6">
+        <polygon points="-40,360 680,360 560,78 80,78"/>
+        <line x1="320" y1="78" x2="320" y2="360"/>
+        <ellipse cx="320" cy="190" rx="64" ry="25"/>
+        <polygon points="500,130 582,130 650,290 546,290"/>
+      </g>
+    </symbol>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--g-gold)"/></marker>
+    <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="a-arrow"/></marker>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker"><span class="eyebrow">Berbata AI · entry 126726</span><span class="eyebrow">Inside the Game: Microsoft × Premier League</span><span class="eyebrow">Shortlist · 19 Oct 2026</span></div>
+  <h1>Six ways out of the crowd, and the one to build</h1>
+  <p class="read">The field has 332 entries, and 40–50 of them are the same studio crew of agents with a fact-checker and an overlay JSON. Below are six ideas that avoid that pattern. Each one is scored, mocked up and judged honestly. The recommended idea has an Azure architecture, a day-by-day plan and a 60-second demo script.</p>
+  <div class="verdict">
+    <span class="k">Build</span>
+    <div class="v"><strong>TwinCast:</strong> simulate a match, film it like a broadcaster, let our own vision model auto-event the footage, grade it against ground truth, and put explained overlays back on the video.</div>
+    <span class="k">Why</span>
+    <div class="v">It is the only idea that hits four of the five gaps in the intel at once, and the ground-truth grading is a claim teams working from footage they didn't make can't easily match. It also has a built-in floor: if computer vision slips, Day 7 already gives a complete, simpler entry.</div>
+  </div>
+  <div class="notes">
+    <div class="note"><b>Your skills line was blank</b>The brief still had the placeholder “[our languages/frameworks and Azure experience]”. The plan assumes Python and TypeScript, basic Azure, and no prior computer vision work. Tell me the real stack and I will re-cut the plan.</div>
+    <div class="note"><b>Deadline and prize categories unknown</b>Neither was captured from the About page. Only “Best Multi-Agent” is confirmed to exist. Category names below are educated guesses, so check them. The plan has a one-week cut in case the deadline is close.</div>
+    <div class="note"><b>Fix the listing tonight</b>The current tagline and keyword read as a joke entry next to polished write-ups. Swap in a real title, tagline and a five-stage description before anything else.</div>
+  </div>
+</header>
+
+<!-- ======================= IDEAS ======================= -->
+<section id="ideas">
+  <header><span class="eyebrow">Part 1</span><h2>The six ideas</h2><p class="muted read">Each card covers the problem, how the idea runs through the brief's five stages, the closest competitors by project ID, the riskiest technical piece, and the best-fit category.</p></header>
+  <div class="ideas">
+
+    <article class="idea pick" id="twincast">
+      <div class="head"><span class="code">A</span><h3>TwinCast</h3><span class="chip go">Recommended</span><span class="chip" style="color:var(--muted)">Fits: Best technical / Azure AI (guess) · both brief tracks</span></div>
+      <p class="pitch">We simulate a match, film it like a broadcaster, then let our own vision model watch the footage and put graded, explained overlays back on the video.</p>
+      <div class="col">
+        <div><div class="lbl">Problem</div>Auto-eventing from video (brief ii-d) and overlays on a real feed are the hardest asks. No team can prove its computer vision is right, because real footage has no ground truth, and real PL footage is off-limits anyway. Synthetic video gives perfect labels and stays inside the rules.</div>
+        <div><div class="lbl">Closest competitors</div><span class="mono">126679</span> Match Mind AI with Auto Event (CV tracking, 2D twin, Foundry agents) is the nearest. Also <span class="mono">126492</span> The Ninety Labs, <span class="mono">126600</span> MatchSight AI, <span class="mono">126519</span> ATLAS, <span class="mono">126685</span> Kicklytics, and <span class="mono">126495</span> Floodlight for the seeded simulator.<br><b>Still different:</b> they auto-event footage they did not make, so they can't publish accuracy. We publish pass-detection F1 and speed error against truth, draw overlays on the video itself, and release the dataset.</div>
+      </div>
+      <div class="col">
+        <div><div class="lbl">Five stages</div>
+          <ul class="stages">
+            <li><span>Ingest</span><span>Seeded simulator emits events and 25 Hz tracking. A renderer turns it into broadcast-angle video, replayed at match clock.</span></li>
+            <li><span>Interpret</span><span>Detector + tracker on the video → pitch positions → auto-events (pass, shot, sprint), speed, distance, ball and shot speed. Graded live against truth.</span></li>
+            <li><span>Explain</span><span>Rules decide which moment matters (rarity, game state, what happens next). One model writes why, citing event IDs.</span></li>
+            <li><span>Render</span><span>Timed cue JSON drives an overlay compositor on the actual video, plus key/fill output for a vision mixer.</span></li>
+            <li><span>Personalise</span><span>Casual/analyst, club, player focus, single-metric mode, language. These are filters on the same cues, not separate pipelines.</span></li>
+          </ul></div>
+        <div><div class="lbl">Riskiest part</div>Turning noisy ball tracks into reliable pass and shot events, and reading shirt numbers for player ID. Building the renderer is the second risk. Both are covered by the Day 7 gate.</div>
+      </div>
+      <p class="say"><b>Verdict.</b> Highest ceiling and highest risk. It is planned so that the Day 7 checkpoint is already a full entry (idea B on rendered video), and the remaining days add the CV layer that makes it stand out.</p>
+    </article>
+
+    <article class="idea" id="speedtrap">
+      <div class="head"><span class="code">B</span><h3>Speed Trap</h3><span class="chip ok">Safe fallback</span><span class="chip" style="color:var(--muted)">Fits: on-screen storytelling</span></div>
+      <p class="pitch">Broadcast name tags that appear only when a player does something physically remarkable, and say why it mattered.</p>
+      <div class="col">
+        <div><div class="lbl">Problem</div>The brief names threshold-triggered speed and distance tags, plus ball and shot speed (ii-a, ii-c), but almost nobody makes them the main feature. Raw speed numbers are trivia until they are tied to a consequence.</div>
+        <div><div class="lbl">Closest competitors</div><span class="mono">126646</span> Mauled by the Tigers (sprint alerts, but only a brief description), <span class="mono">126384</span> Sisyphus Engine (velocity decay), <span class="mono">126504</span> Fatigue index, <span class="mono">126359</span> Shield.<br><b>Still different:</b> each tag is linked to what it changed (“this sprint stopped a 3v2”), and ball and shot speed sit beside player speed.</div>
+      </div>
+      <div class="col">
+        <div><div class="lbl">Five stages</div>
+          <ul class="stages">
+            <li><span>Ingest</span><span>Synthetic events and 25 Hz tracking.</span></li>
+            <li><span>Interpret</span><span>Speed, acceleration, distance, shot speed, pass length; thresholds with rarity percentiles.</span></li>
+            <li><span>Explain</span><span>Links the physical action to its outcome in the next 10 seconds.</span></li>
+            <li><span>Render</span><span>Broadcast name strap plus a 2D tactical camera.</span></li>
+            <li><span>Personalise</span><span>Viewer-set thresholds, followed player, km/h or mph, language.</span></li>
+          </ul></div>
+        <div><div class="lbl">Riskiest part</div>Low technical risk. The real risk is that it reads as a feature rather than a product. Simulated acceleration curves must look believable or analysts will notice.</div>
+      </div>
+      <p class="say"><b>Verdict.</b> Solid but not memorable on its own. Its best use is as the floor of TwinCast: same metrics engine, same overlays.</p>
+    </article>
+
+    <article class="idea" id="onenumber">
+      <div class="head"><span class="code">C</span><h3>One Number</h3><span class="chip no">Weak headline</span><span class="chip" style="color:var(--muted)">Fits: personalised experiences</span></div>
+      <p class="pitch">Pick the one number you care about, and the whole broadcast is told through it.</p>
+      <div class="col">
+        <div><div class="lbl">Problem</div>The brief lists a single-metric viewing mode and nobody headlines it. Casual fans are buried under dashboards; one number with a story is easier to follow.</div>
+        <div><div class="lbl">Closest competitors</div><span class="mono">126425</span> Control vs. Chaos and <span class="mono">126436</span> Control or Chaos (one fixed live index), <span class="mono">126669</span> Momentum Ledger, <span class="mono">126635</span> The Metronome, <span class="mono">126637</span> Football fun index.<br><b>Still different:</b> the viewer chooses the metric, and the recap is re-cut around it.</div>
+      </div>
+      <div class="col">
+        <div><div class="lbl">Five stages</div>
+          <ul class="stages">
+            <li><span>Ingest</span><span>Synthetic events.</span></li>
+            <li><span>Interpret</span><span>About 12 metrics computed continuously, each with a baseline.</span></li>
+            <li><span>Explain</span><span>Change-point detection on the chosen metric; each swing gets a reason.</span></li>
+            <li><span>Render</span><span>A single corner bug on the feed plus a phone timeline.</span></li>
+            <li><span>Personalise</span><span>The metric choice itself, plus club and language.</span></li>
+          </ul></div>
+        <div><div class="lbl">Riskiest part</div>Product, not technology. Explanations for one metric get repetitive by the 60th minute, and judges may see it as “only personalises”, which the brief rules out.</div>
+      </div>
+      <p class="say"><b>Verdict.</b> Too thin to headline. It works well as a viewer mode inside TwinCast, which still covers gap 4.</p>
+    </article>
+
+    <article class="idea" id="chalktalk">
+      <div class="head"><span class="code">D</span><h3>Chalk Talk</h3><span class="chip ok">Strong second</span><span class="chip" style="color:var(--muted)">Fits: studio / on-screen storytelling</span></div>
+      <p class="pitch">An AI telestrator: a pundit asks a question, and the answer is drawn on the paused frame.</p>
+      <div class="col">
+        <div><div class="lbl">Problem</div>Studio analysis still depends on an operator drawing arrows by hand. AI explanations in other entries stay as text cards and never touch the picture.</div>
+        <div><div class="lbl">Closest competitors</div><span class="mono">126657</span> PlayerLens 3D (2D/3D illustrations), <span class="mono">126624</span> Tactic Replay, <span class="mono">126558</span> MatchShift, <span class="mono">126621</span> Match Microscope, <span class="mono">126334</span> PitchLens.<br><b>Still different:</b> drawings sit on the broadcast frame in camera perspective, and they are generated from a spoken question.</div>
+      </div>
+      <div class="col">
+        <div><div class="lbl">Five stages</div>
+          <ul class="stages">
+            <li><span>Ingest</span><span>Events, tracking and rendered frames with the camera matrix.</span></li>
+            <li><span>Interpret</span><span>Passing lanes, line height, overloads, pitch control.</span></li>
+            <li><span>Explain</span><span>The model picks evidence and returns a small drawing language (arrows, zones, rings) plus narration.</span></li>
+            <li><span>Render</span><span>Drawings projected into the frame and animated.</span></li>
+            <li><span>Personalise</span><span>Drawing depth for casual vs analyst, club perspective, narration language.</span></li>
+          </ul></div>
+        <div><div class="lbl">Riskiest part</div>Getting the model to choose the right evidence and produce drawings that are tactically correct. Wrong arrows on screen are worse than none.</div>
+      </div>
+      <p class="say"><b>Verdict.</b> The best pick if you would rather target a studio category than CV. It shares the renderer with TwinCast, so a single telestration could be a TwinCast stretch goal.</p>
+    </article>
+
+    <article class="idea" id="realism">
+      <div class="head"><span class="code">E</span><h3>Realism Bench</h3><span class="chip no">Don't headline</span><span class="chip" style="color:var(--muted)">Fits: data innovation (v)</span></div>
+      <p class="pitch">An open, seeded synthetic football generator with a published realism report anyone can score their data against.</p>
+      <div class="col">
+        <div><div class="lbl">Problem</div>Every team invents its own fake data, and no one can say whether it is football-realistic.</div>
+        <div><div class="lbl">Closest competitors</div><span class="mono">126672</span> Turning Point (Gillespie simulator), <span class="mono">126495</span> Floodlight, <span class="mono">126707</span> KooraVision, <span class="mono">126729</span> Fire AI.<br><b>Still different:</b> the evaluation is the product, as a public benchmark.</div>
+      </div>
+      <div class="col">
+        <div><div class="lbl">Five stages</div>
+          <ul class="stages">
+            <li><span>Ingest</span><span>The generator itself.</span></li>
+            <li><span>Interpret</span><span>Match-level statistics and distributions.</span></li>
+            <li><span>Explain</span><span>Report says which checks fail and why.</span></li>
+            <li><span>Render</span><span>Weak: a report dashboard, not something next to a match.</span></li>
+            <li><span>Personalise</span><span>Weak: club style presets only.</span></li>
+          </ul></div>
+        <div><div class="lbl">Riskiest part</div>Real data can't be used as the reference, only public aggregate ranges. Judges are unlikely to get excited by it in a 60-second video.</div>
+      </div>
+      <p class="say"><b>Verdict.</b> It barely covers Render and Personalise. Ship it as a by-product of TwinCast (dataset plus realism report on GitHub) for data-innovation points.</p>
+    </article>
+
+    <article class="idea" id="graphicsdesk">
+      <div class="head"><span class="code">F</span><h3>Graphics Desk</h3><span class="chip ok">Depends on execution</span><span class="chip" style="color:var(--muted)">Fits: on-screen storytelling / broadcast</span></div>
+      <p class="pitch">A producer's console where AI-proposed graphics are queued, approved and keyed onto the live video at the right frame.</p>
+      <div class="col">
+        <div><div class="lbl">Problem</div>About 60 entries mention overlays, but most stop at JSON. Few show graphics actually on air inside a production workflow.</div>
+        <div><div class="lbl">Closest competitors</div><span class="mono">126353</span> MatchDesk (human producer in control), <span class="mono">126499</span> PitchPulse AI Broadcast Director, <span class="mono">126586</span>/<span class="mono">126350</span> Pitchside (timed overlays), <span class="mono">126587</span> Director's Cut, <span class="mono">126358</span> SignalFlow.<br><b>Still different:</b> real compositing with safe areas and key/fill output, not just a cue list.</div>
+      </div>
+      <div class="col">
+        <div><div class="lbl">Five stages</div>
+          <ul class="stages">
+            <li><span>Ingest</span><span>Events and a video feed.</span></li>
+            <li><span>Interpret</span><span>Standard metrics.</span></li>
+            <li><span>Explain</span><span>Insight cards with evidence.</span></li>
+            <li><span>Render</span><span>Template compositor, frame-accurate timing, key/fill.</span></li>
+            <li><span>Personalise</span><span>Variants per output (studio, broadcast, stream) and per audience.</span></li>
+          </ul></div>
+        <div><div class="lbl">Riskiest part</div>Frame-accurate sync and low latency. The bigger risk is that the difference from MatchDesk and PitchPulse is hard to see in a write-up.</div>
+      </div>
+      <p class="say"><b>Verdict.</b> Good craft, weak differentiation. Its compositor and key/fill output become TwinCast's Render stage.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ======================= MATRIX ======================= -->
+<section id="matrix">
+  <header><span class="eyebrow">Visualisation 1</span><h2>Scoring matrix</h2><p class="muted read">Each criterion is scored 1–5. The weighted total uses the weights explained below. The last column re-scores with feasibility weighted highest, to show how sensitive the ranking is.</p></header>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Idea</th><th>Originality</th><th>Fit to brief</th><th>Feasibility</th><th>Demo wow</th><th>Weighted total</th><th>Feasibility-first</th></tr></thead>
+      <tbody>
+        <tr class="pick"><td><b>A · TwinCast</b></td><td class="n" data-s="5">5</td><td class="n" data-s="5">5</td><td class="n" data-s="2">2</td><td class="n" data-s="5">5</td><td><div class="tot"><div class="bar"><span style="width:85%"></span></div><b>4.25</b></div></td><td class="n">3.80</td></tr>
+        <tr><td><b>D · Chalk Talk</b></td><td class="n" data-s="4">4</td><td class="n" data-s="4">4</td><td class="n" data-s="3">3</td><td class="n" data-s="4">4</td><td><div class="tot"><div class="bar"><span style="width:75%"></span></div><b>3.75</b></div></td><td class="n">3.60</td></tr>
+        <tr><td><b>B · Speed Trap</b></td><td class="n" data-s="3">3</td><td class="n" data-s="4">4</td><td class="n" data-s="5">5</td><td class="n" data-s="3">3</td><td><div class="tot"><div class="bar"><span style="width:74%"></span></div><b>3.70</b></div></td><td class="n"><b>3.95</b></td></tr>
+        <tr><td><b>F · Graphics Desk</b></td><td class="n" data-s="3">3</td><td class="n" data-s="4">4</td><td class="n" data-s="4">4</td><td class="n" data-s="4">4</td><td><div class="tot"><div class="bar"><span style="width:74%"></span></div><b>3.70</b></div></td><td class="n">3.75</td></tr>
+        <tr><td><b>C · One Number</b></td><td class="n" data-s="4">4</td><td class="n" data-s="3">3</td><td class="n" data-s="5">5</td><td class="n" data-s="2">2</td><td><div class="tot"><div class="bar"><span style="width:71%"></span></div><b>3.55</b></div></td><td class="n">3.85</td></tr>
+        <tr><td><b>E · Realism Bench</b></td><td class="n" data-s="3">3</td><td class="n" data-s="3">3</td><td class="n" data-s="4">4</td><td class="n" data-s="1">1</td><td><div class="tot"><div class="bar"><span style="width:55%"></span></div><b>2.75</b></div></td><td class="n">3.00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="weights">
+    <div class="w"><div class="pct">30%</div><b>Originality vs the field</b><br>Your stated goal is to stand out among 332 entries, so this carries the most weight.</div>
+    <div class="w"><div class="pct">25%</div><b>Feasibility in 1–2 weeks</b><br>A half-built idea loses to a finished ordinary one. Two people, no slack.</div>
+    <div class="w"><div class="pct">25%</div><b>Demo wow-factor</b><br>Most judges will see a short video and a write-up. What shows on screen in 60 seconds decides a lot.</div>
+    <div class="w"><div class="pct">20%</div><b>Fit to brief</b><br>Lowest weight only because every idea was designed to hit all five stages, so this criterion separates them least.</div>
+  </div>
+  <p class="read"><b>Reading the sensitivity column:</b> with feasibility at 40% (originality 25, fit 15, wow 20), Speed Trap wins and TwinCast drops to third. So TwinCast only wins if you accept the risk. The plan handles this by making TwinCast's Day 7 checkpoint equal to a finished Speed Trap. The worst case is the safest idea, and the best case is the most original one.</p>
+</section>
+
+<!-- ======================= MOCKUPS ======================= -->
+<section id="mockups">
+  <header><span class="eyebrow">Visualisation 2</span><h2>What the viewer actually sees</h2><p class="muted read">One rough frame per idea. The synthetic clubs are Ashford Rovers (red) and Kingsmere Athletic (blue). All numbers in the mockups are illustrative.</p></header>
+  <div class="mocks">
+
+    <!-- A TwinCast -->
+    <figure>
+      <svg viewBox="0 0 640 360" role="img" aria-label="TwinCast broadcast frame with a speed name tag, a computer vision inset and a why-it-matters lower third">
+        <use href="#bcPitch" width="640" height="360"/>
+        <g style="color:var(--g-red)"><use href="#pl" x="146" y="140" width="7" height="15"/><use href="#pl" x="236" y="108" width="6" height="13"/><use href="#pl" x="384" y="160" width="8" height="17"/><use href="#pl" x="446" y="236" width="10" height="22"/><use href="#pl" x="520" y="128" width="7" height="15"/></g>
+        <g style="color:var(--g-blue)"><use href="#pl" x="196" y="170" width="8" height="17"/><use href="#pl" x="348" y="118" width="7" height="14"/><use href="#pl" x="418" y="196" width="9" height="19"/><use href="#pl" x="478" y="100" width="6" height="13"/><use href="#pl" x="556" y="190" width="9" height="19"/><use href="#pl" x="262" y="250" width="11" height="23"/></g>
+        <line x1="236" y1="240" x2="290" y2="214" style="stroke:var(--g-gold);stroke-width:2;stroke-dasharray:3 4"/>
+        <g style="color:var(--g-red)"><use href="#pl" x="292" y="200" width="10" height="22"/></g>
+        <circle cx="309" cy="222" r="3" style="fill:var(--g-white)"/>
+        <ellipse cx="297" cy="223" rx="13" ry="4" style="fill:none;stroke:var(--g-gold);stroke-width:1.5"/>
+        <line x1="297" y1="198" x2="297" y2="176" style="stroke:var(--g-gold);stroke-width:1.5"/>
+        <rect x="212" y="134" width="180" height="42" style="fill:var(--g-navy)"/>
+        <rect x="212" y="134" width="34" height="42" style="fill:var(--g-gold)"/>
+        <text x="229" y="162" text-anchor="middle" class="sv-d" style="fill:var(--g-navy);font-size:20px">11</text>
+        <text x="254" y="152" class="sv-d" style="fill:var(--g-white);font-size:15px">T. VANCE</text>
+        <text x="254" y="169" class="sv-m" style="fill:var(--g-gold);font-size:11px">35.2 km/h · TOP SPEED</text>
+        <rect x="16" y="16" width="176" height="26" style="fill:var(--g-navy)"/>
+        <rect x="16" y="16" width="5" height="26" style="fill:var(--g-red)"/>
+        <text x="28" y="34" class="sv-d" style="fill:var(--g-white);font-size:15px">ASH 1 – 0 KNG</text>
+        <text x="140" y="34" class="sv-m" style="fill:var(--g-gold);font-size:11px">63:12</text>
+        <rect x="446" y="16" width="178" height="100" style="fill:var(--g-navy);fill-opacity:.92;stroke:var(--g-ok);stroke-width:1"/>
+        <text x="456" y="32" class="sv-m" style="fill:var(--g-ok);font-size:9.5px">CV · AUTO-EVENT</text>
+        <rect x="458" y="40" width="20" height="30" style="fill:none;stroke:var(--g-ok);stroke-width:1.2"/>
+        <rect x="490" y="46" width="16" height="24" style="fill:none;stroke:var(--g-ok);stroke-width:1.2"/>
+        <rect x="520" y="38" width="22" height="34" style="fill:none;stroke:var(--g-gold);stroke-width:1.5"/>
+        <text x="546" y="50" class="sv-m" style="fill:var(--g-gold);font-size:9px">#11 · 0.93</text>
+        <text x="456" y="90" class="sv-m" style="fill:var(--g-white);font-size:10px">PASS 63:09 ✓ matches truth</text>
+        <text x="456" y="106" class="sv-m" style="fill:var(--g-white);font-size:10px">speed err ±0.6 km/h</text>
+        <rect x="16" y="290" width="608" height="54" style="fill:var(--g-navy)"/>
+        <rect x="16" y="290" width="608" height="4" style="fill:var(--g-gold)"/>
+        <text x="30" y="313" class="sv-m" style="fill:var(--g-gold);font-size:10.5px">WHY IT MATTERS</text>
+        <text x="30" y="333" class="sv-b" style="fill:var(--g-white);font-size:13.5px">Vance's 3rd sprint over 34 km/h since Kingsmere pushed their line up at 55'. Each one ended in a shot.</text>
+      </svg>
+      <figcaption><b>A · TwinCast</b>, on-screen overlay on the synthetic broadcast. A threshold name tag follows the tracked player, and the inset shows the vision model's live result next to ground truth.</figcaption>
+    </figure>
+
+    <!-- B Speed Trap -->
+    <figure>
+      <svg viewBox="0 0 640 360" role="img" aria-label="Speed Trap top-down tactical view with threshold tags and a thresholds panel">
+        <rect width="640" height="360" style="fill:var(--g-stand)"/>
+        <rect x="16" y="33" width="454" height="294" style="fill:var(--g-pitch)"/>
+        <g style="fill:none;stroke:var(--g-chalk);stroke-opacity:.7;stroke-width:1.4">
+          <rect x="16" y="33" width="454" height="294"/><line x1="243" y1="33" x2="243" y2="327"/><circle cx="243" cy="180" r="40"/>
+          <rect x="16" y="108" width="71" height="144"/><rect x="399" y="108" width="71" height="144"/>
+        </g>
+        <g class="sv-d" style="font-size:9px" text-anchor="middle">
+          <g style="fill:var(--g-red)"><circle cx="90" cy="180" r="8"/><circle cx="180" cy="90" r="8"/><circle cx="170" cy="260" r="8"/><circle cx="300" cy="150" r="8"/><circle cx="330" cy="250" r="8"/><circle cx="410" cy="190" r="8"/></g>
+          <g style="fill:var(--g-blue)"><circle cx="440" cy="180" r="8"/><circle cx="380" cy="120" r="8"/><circle cx="360" cy="220" r="8"/><circle cx="260" cy="200" r="8"/><circle cx="220" cy="120" r="8"/></g>
+          <g style="fill:var(--g-white)"><text x="300" y="153">8</text><text x="410" y="193">9</text><text x="330" y="253">4</text><text x="180" y="93">6</text></g>
+        </g>
+        <path d="M240,170 C262,160 280,156 292,152" style="fill:none;stroke:var(--g-gold);stroke-width:2;stroke-dasharray:3 3"/>
+        <line x1="418" y1="188" x2="470" y2="176" style="stroke:var(--g-white);stroke-width:1.5;stroke-dasharray:4 3"/>
+        <rect x="236" y="64" width="150" height="40" style="fill:var(--g-navy)"/><rect x="236" y="64" width="4" height="40" style="fill:var(--g-gold)"/>
+        <text x="248" y="80" class="sv-d" style="fill:var(--g-white);font-size:13px">8 · OKAFOR</text>
+        <text x="248" y="96" class="sv-m" style="fill:var(--g-gold);font-size:10px">10.0 km · first to 10</text>
+        <line x1="300" y1="104" x2="300" y2="141" style="stroke:var(--g-gold);stroke-width:1.2"/>
+        <rect x="300" y="268" width="160" height="40" style="fill:var(--g-navy)"/><rect x="300" y="268" width="4" height="40" style="fill:var(--g-gold)"/>
+        <text x="312" y="284" class="sv-d" style="fill:var(--g-white);font-size:13px">9 · DIALLO · SHOT</text>
+        <text x="312" y="300" class="sv-m" style="fill:var(--g-gold);font-size:10px">112 km/h · hardest today</text>
+        <line x1="410" y1="199" x2="410" y2="268" style="stroke:var(--g-gold);stroke-width:1.2"/>
+        <rect x="486" y="33" width="138" height="294" style="fill:var(--s-panel)"/>
+        <text x="498" y="54" class="sv-m" style="fill:var(--s-mut);font-size:9.5px">THRESHOLDS</text>
+        <g class="sv-b" style="font-size:11px;fill:var(--s-fg)">
+          <text x="498" y="80">Sprint ≥ 34 km/h</text><text x="498" y="108">Distance 9/10/11 km</text><text x="498" y="136">Shot ≥ 100 km/h</text><text x="498" y="164">Pass ≥ 40 m</text>
+        </g>
+        <g><rect x="594" y="71" width="22" height="12" rx="6" style="fill:var(--g-ok)"/><rect x="594" y="99" width="22" height="12" rx="6" style="fill:var(--g-ok)"/><rect x="594" y="127" width="22" height="12" rx="6" style="fill:var(--g-ok)"/><rect x="594" y="155" width="22" height="12" rx="6" style="fill:var(--s-line)"/></g>
+        <line x1="498" y1="184" x2="612" y2="184" style="stroke:var(--s-line)"/>
+        <text x="498" y="204" class="sv-m" style="fill:var(--s-mut);font-size:9.5px">FOLLOWING</text>
+        <text x="498" y="222" class="sv-b" style="fill:var(--s-fg);font-size:12px">#8 Okafor</text>
+        <text x="498" y="252" class="sv-m" style="fill:var(--s-mut);font-size:9.5px">UNITS</text>
+        <rect x="498" y="260" width="50" height="20" style="fill:var(--g-gold)"/><text x="523" y="274" text-anchor="middle" class="sv-m" style="fill:var(--g-navy);font-size:10px">km/h</text>
+        <rect x="550" y="260" width="50" height="20" style="fill:none;stroke:var(--s-line)"/><text x="575" y="274" text-anchor="middle" class="sv-m" style="fill:var(--s-mut);font-size:10px">mph</text>
+      </svg>
+      <figcaption><b>B · Speed Trap</b>, tactical camera overlay with a viewer-controlled threshold panel. Tags appear only when a threshold is crossed.</figcaption>
+    </figure>
+
+    <!-- C One Number -->
+    <figure>
+      <svg viewBox="0 0 640 360" role="img" aria-label="One Number: a TV with a single corner bug and a phone showing one metric with its timeline">
+        <rect width="640" height="360" style="fill:var(--s-bg)"/>
+        <rect x="12" y="66" width="364" height="210" rx="6" style="fill:var(--s-panel)"/>
+        <svg x="24" y="78" width="340" height="191" viewBox="0 0 640 360"><use href="#bcPitch" width="640" height="360"/></svg>
+        <rect x="246" y="86" width="110" height="34" style="fill:var(--g-navy)"/>
+        <text x="256" y="100" class="sv-m" style="fill:var(--g-gold);font-size:8.5px">KNG PRESS</text>
+        <text x="256" y="115" class="sv-d" style="fill:var(--g-white);font-size:14px">4.1</text>
+        <path d="M290,104 l8,10 l8,-10 z" style="fill:var(--g-red)"/>
+        <text x="194" y="300" text-anchor="middle" class="sv-b" style="fill:var(--s-mut);font-size:12px">On the TV: one corner bug, nothing else</text>
+        <rect x="420" y="12" width="190" height="336" rx="24" style="fill:var(--s-panel);stroke:var(--s-line);stroke-width:2"/>
+        <text x="436" y="48" class="sv-m" style="fill:var(--s-mut);font-size:9px">YOUR NUMBER</text>
+        <text x="436" y="66" class="sv-b" style="fill:var(--s-fg);font-size:12px">Kingsmere press intensity ▾</text>
+        <text x="436" y="114" class="sv-d" style="fill:var(--g-gold);font-size:44px">4.1</text>
+        <text x="500" y="112" class="sv-m" style="fill:var(--s-mut);font-size:10px">was 7.4</text>
+        <line x1="436" y1="210" x2="594" y2="210" style="stroke:var(--s-line)"/>
+        <path d="M436,166 L452,160 L468,168 L484,158 L500,163 L516,160 L528,162 L536,195 L552,192 L568,198 L594,194" style="fill:none;stroke:var(--g-gold);stroke-width:2"/>
+        <circle cx="532" cy="179" r="4" style="fill:var(--g-white)"/>
+        <text x="436" y="224" class="sv-m" style="fill:var(--s-mut);font-size:9px">0'</text><text x="526" y="224" class="sv-m" style="fill:var(--s-mut);font-size:9px">55'</text><text x="580" y="224" class="sv-m" style="fill:var(--s-mut);font-size:9px">90'</text>
+        <rect x="432" y="234" width="166" height="72" rx="6" style="fill:var(--s-bg)"/>
+        <text x="442" y="252" class="sv-m" style="fill:var(--g-gold);font-size:9px">WHY IT DROPPED</text>
+        <text x="442" y="268" class="sv-b" style="fill:var(--s-fg);font-size:10.5px">Line pushed up at 55'.</text>
+        <text x="442" y="283" class="sv-b" style="fill:var(--s-fg);font-size:10.5px">3 pressures in the final</text>
+        <text x="442" y="298" class="sv-b" style="fill:var(--s-fg);font-size:10.5px">third since, down from 11.</text>
+        <text x="515" y="330" text-anchor="middle" class="sv-m" style="fill:var(--s-mut);font-size:9px">top speed · distance · xG</text>
+      </svg>
+      <figcaption><b>C · One Number</b>, second-screen app plus a single bug on the TV feed. The viewer swaps the number and the recap re-cuts around it.</figcaption>
+    </figure>
+
+    <!-- D Chalk Talk -->
+    <figure>
+      <svg viewBox="0 0 640 360" role="img" aria-label="Chalk Talk studio touchscreen with AI-drawn telestration on a paused frame">
+        <use href="#bcPitch" width="640" height="360"/>
+        <g style="color:var(--g-blue)"><use href="#pl" x="222" y="182" width="9" height="19"/><use href="#pl" x="324" y="222" width="10" height="21"/><use href="#pl" x="270" y="140" width="7" height="16"/><use href="#pl" x="200" y="248" width="11" height="23"/></g>
+        <g style="color:var(--g-red)"><use href="#pl" x="298" y="190" width="9" height="19"/><use href="#pl" x="360" y="160" width="8" height="17"/><use href="#pl" x="250" y="210" width="9" height="20"/></g>
+        <g style="color:var(--g-blue)"><use href="#pl" x="424" y="132" width="8" height="17"/></g>
+        <polygon points="232,196 428,146 432,160 236,212" style="fill:var(--g-gold);fill-opacity:.28"/>
+        <path d="M232,202 C300,150 370,138 424,146" style="fill:none;stroke:var(--g-gold);stroke-width:4" marker-end="url(#ah)"/>
+        <ellipse cx="329" cy="243" rx="24" ry="8" style="fill:none;stroke:var(--g-white);stroke-width:2;stroke-dasharray:5 3"/>
+        <rect x="270" y="256" width="104" height="20" style="fill:var(--g-navy)"/><text x="278" y="270" class="sv-m" style="fill:var(--g-white);font-size:10px">#6 pulled wide</text>
+        <rect x="300" y="112" width="122" height="20" style="fill:var(--g-navy)"/><text x="308" y="126" class="sv-m" style="fill:var(--g-gold);font-size:10px">switch · 38 m · 1.2 s</text>
+        <rect x="16" y="12" width="608" height="32" style="fill:var(--g-navy);fill-opacity:.95"/>
+        <text x="28" y="33" class="sv-m" style="fill:var(--g-gold);font-size:11px">ASK</text>
+        <text x="62" y="33" class="sv-b" style="fill:var(--g-white);font-size:13px">“Why did Kingsmere's press break at 57:40?”</text>
+        <rect x="478" y="58" width="146" height="140" style="fill:var(--s-panel);fill-opacity:.95"/>
+        <text x="488" y="76" class="sv-m" style="fill:var(--s-mut);font-size:9px">DRAWN BY AI · 3 LAYERS</text>
+        <g class="sv-b" style="fill:var(--s-fg);font-size:10.5px"><text x="488" y="98">☑ Lane open 2.1 s</text><text x="488" y="118">☑ Ring: #6 wide</text><text x="488" y="138">☑ Arrow: switch</text><text x="488" y="166" style="fill:var(--g-gold)">Narrate EN / BG ▸</text></g>
+        <rect x="16" y="314" width="608" height="32" style="fill:var(--g-navy);fill-opacity:.95"/>
+        <path d="M30,322 l12,8 l-12,8 z" style="fill:var(--g-white)"/>
+        <line x1="56" y1="330" x2="500" y2="330" style="stroke:var(--s-line);stroke-width:4"/>
+        <line x1="56" y1="330" x2="340" y2="330" style="stroke:var(--g-gold);stroke-width:4"/>
+        <circle cx="340" cy="330" r="6" style="fill:var(--g-gold)"/>
+        <text x="514" y="334" class="sv-m" style="fill:var(--s-mut);font-size:10px">Analyst depth ▾</text>
+      </svg>
+      <figcaption><b>D · Chalk Talk</b>, studio touchscreen. The pundit asks a question and the passing lane, ring and arrow are drawn in camera perspective.</figcaption>
+    </figure>
+
+    <!-- E Realism Bench -->
+    <figure>
+      <svg viewBox="0 0 640 360" role="img" aria-label="Realism Bench report dashboard with three distribution charts and failing checks">
+        <rect width="640" height="360" style="fill:var(--s-bg)"/>
+        <text x="20" y="34" class="sv-d" style="fill:var(--s-fg);font-size:20px">Realism report · seed 4471 · 50 matches</text>
+        <rect x="470" y="16" width="154" height="28" rx="14" style="fill:var(--g-ok);fill-opacity:.18;stroke:var(--g-ok)"/>
+        <text x="547" y="35" text-anchor="middle" class="sv-m" style="fill:var(--g-ok);font-size:10.5px">17 / 20 checks pass</text>
+        <g>
+          <rect x="20" y="58" width="190" height="172" style="fill:var(--s-panel)"/>
+          <text x="30" y="78" class="sv-m" style="fill:var(--s-mut);font-size:9.5px">GOALS PER MATCH</text>
+          <rect x="74" y="92" width="62" height="118" style="fill:var(--g-ok);fill-opacity:.12"/>
+          <g style="fill:var(--g-gold)"><rect x="34" y="186" width="18" height="24"/><rect x="56" y="160" width="18" height="50"/><rect x="78" y="124" width="18" height="86"/><rect x="100" y="112" width="18" height="98"/><rect x="122" y="140" width="18" height="70"/><rect x="144" y="170" width="18" height="40"/><rect x="166" y="194" width="18" height="16"/></g>
+          <text x="30" y="224" class="sv-m" style="fill:var(--s-mut);font-size:9px">0</text><text x="176" y="224" class="sv-m" style="fill:var(--s-mut);font-size:9px">6+</text>
+        </g>
+        <g>
+          <rect x="225" y="58" width="190" height="172" style="fill:var(--s-panel)"/>
+          <text x="235" y="78" class="sv-m" style="fill:var(--s-mut);font-size:9.5px">TOP SPRINT KM/H</text>
+          <rect x="320" y="92" width="66" height="118" style="fill:var(--g-ok);fill-opacity:.12"/>
+          <g style="fill:var(--g-gold)"><rect x="240" y="200" width="16" height="10"/><rect x="260" y="190" width="16" height="20"/><rect x="280" y="170" width="16" height="40"/><rect x="300" y="140" width="16" height="70"/><rect x="320" y="110" width="16" height="100"/><rect x="340" y="120" width="16" height="90"/><rect x="360" y="160" width="16" height="50"/><rect x="380" y="196" width="16" height="14"/></g>
+          <text x="235" y="224" class="sv-m" style="fill:var(--s-mut);font-size:9px">28</text><text x="386" y="224" class="sv-m" style="fill:var(--s-mut);font-size:9px">38</text>
+        </g>
+        <g>
+          <rect x="430" y="58" width="194" height="172" style="fill:var(--s-panel)"/>
+          <text x="440" y="78" class="sv-m" style="fill:var(--s-mut);font-size:9.5px">PASS COMPLETION BY LENGTH</text>
+          <rect x="446" y="100" width="166" height="26" style="fill:var(--g-ok);fill-opacity:.12"/><circle cx="530" cy="113" r="5" style="fill:var(--g-gold)"/>
+          <rect x="446" y="140" width="166" height="26" style="fill:var(--g-ok);fill-opacity:.12"/><circle cx="540" cy="153" r="5" style="fill:var(--g-gold)"/>
+          <rect x="446" y="180" width="80" height="26" style="fill:var(--g-ok);fill-opacity:.12"/><circle cx="586" cy="193" r="5" style="fill:var(--g-red)"/>
+          <g class="sv-m" style="fill:var(--s-mut);font-size:9px"><text x="446" y="97">short</text><text x="446" y="137">medium</text><text x="446" y="177">long (too accurate)</text></g>
+        </g>
+        <rect x="20" y="244" width="604" height="100" style="fill:var(--s-panel)"/>
+        <text x="32" y="264" class="sv-m" style="fill:var(--s-mut);font-size:9.5px">FAILING CHECKS</text>
+        <g class="sv-b" style="fill:var(--s-fg);font-size:12px"><text x="32" y="286"><tspan style="fill:var(--g-red)">✕</tspan>  Long passes too accurate: 71% vs reference 45–60%</text><text x="32" y="306"><tspan style="fill:var(--g-red)">✕</tspan>  Fouls per match low: 14 vs 18–24</text><text x="32" y="326"><tspan style="fill:var(--g-red)">✕</tspan>  Corners per match high: 13.8 vs 9–11</text></g>
+      </svg>
+      <figcaption><b>E · Realism Bench</b>, a web report. Shaded bands are public aggregate reference ranges; dots and bars are the generator's output.</figcaption>
+    </figure>
+
+    <!-- F Graphics Desk -->
+    <figure>
+      <svg viewBox="0 0 640 360" role="img" aria-label="Graphics Desk producer console with program monitor, approval queue and cue timeline">
+        <rect width="640" height="360" style="fill:var(--s-bg)"/>
+        <svg x="16" y="34" width="384" height="216" viewBox="0 0 640 360"><use href="#bcPitch" width="640" height="360"/>
+          <rect x="30" y="280" width="420" height="56" style="fill:var(--g-navy)"/><rect x="30" y="280" width="420" height="5" style="fill:var(--g-gold)"/>
+          <text x="46" y="316" class="sv-d" style="fill:var(--g-white);font-size:24px">DIALLO · SHOT 112 km/h</text></svg>
+        <rect x="16" y="14" width="64" height="16" style="fill:var(--g-red)"/><text x="48" y="26" text-anchor="middle" class="sv-m" style="fill:var(--g-white);font-size:9.5px">PROGRAM</text>
+        <g class="sv-m" style="font-size:9px"><rect x="250" y="14" width="44" height="16" style="fill:none;stroke:var(--g-ok)"/><text x="272" y="26" text-anchor="middle" style="fill:var(--g-ok)">KEY</text><rect x="300" y="14" width="44" height="16" style="fill:none;stroke:var(--g-ok)"/><text x="322" y="26" text-anchor="middle" style="fill:var(--g-ok)">FILL</text><rect x="350" y="14" width="50" height="16" style="fill:none;stroke:var(--s-mut)"/><text x="375" y="26" text-anchor="middle" style="fill:var(--s-mut)">CLEAN</text></g>
+        <text x="414" y="26" class="sv-m" style="fill:var(--s-mut);font-size:9.5px">QUEUE · PROPOSED BY AI</text>
+        <g>
+          <rect x="414" y="34" width="210" height="62" style="fill:var(--s-panel)"/><rect x="414" y="34" width="4" height="62" style="fill:var(--g-ok)"/>
+          <text x="426" y="52" class="sv-m" style="fill:var(--g-ok);font-size:9px">ON AIR · 4 s left</text><text x="426" y="70" class="sv-b" style="fill:var(--s-fg);font-size:12px">Shot speed · Diallo</text><text x="426" y="86" class="sv-m" style="fill:var(--s-mut);font-size:9px">ev-4471 · trk-9</text>
+          <rect x="414" y="104" width="210" height="62" style="fill:var(--s-panel)"/><rect x="414" y="104" width="4" height="62" style="fill:var(--g-gold)"/>
+          <text x="426" y="122" class="sv-m" style="fill:var(--g-gold);font-size:9px">READY</text><text x="426" y="140" class="sv-b" style="fill:var(--s-fg);font-size:12px">Distance · Okafor 10 km</text>
+          <rect x="566" y="128" width="48" height="24" style="fill:var(--g-gold)"/><text x="590" y="144" text-anchor="middle" class="sv-d" style="fill:var(--g-navy);font-size:13px">TAKE</text>
+          <rect x="414" y="174" width="210" height="62" style="fill:var(--s-panel)"/><rect x="414" y="174" width="4" height="62" style="fill:var(--g-blue)"/>
+          <text x="426" y="192" class="sv-m" style="fill:var(--g-blue);font-size:9px">HOLD · needs review</text><text x="426" y="210" class="sv-b" style="fill:var(--s-fg);font-size:12px">Why it matters · high line</text><text x="426" y="226" class="sv-m" style="fill:var(--s-mut);font-size:9px">confidence 0.71</text>
+        </g>
+        <rect x="16" y="262" width="608" height="84" style="fill:var(--s-panel)"/>
+        <g class="sv-m" style="fill:var(--s-mut);font-size:9px"><text x="26" y="278">55'</text><text x="306" y="278">60'</text><text x="590" y="278">65'</text><text x="26" y="300">L3</text><text x="26" y="318">TAG</text><text x="26" y="336">BUG</text></g>
+        <rect x="60" y="291" width="70" height="12" style="fill:var(--g-blue)"/><rect x="380" y="291" width="90" height="12" style="fill:var(--g-ok)"/>
+        <rect x="150" y="309" width="40" height="12" style="fill:var(--g-gold)"/><rect x="260" y="309" width="40" height="12" style="fill:var(--g-gold)"/><rect x="500" y="309" width="40" height="12" style="fill:var(--g-gold);fill-opacity:.5"/>
+        <rect x="60" y="327" width="550" height="12" style="fill:var(--s-line)"/>
+        <line x1="440" y1="284" x2="440" y2="344" style="stroke:var(--g-red);stroke-width:2"/>
+      </svg>
+      <figcaption><b>F · Graphics Desk</b>, producer console. AI proposes cues, a human takes them, and graphics leave as key and fill for the vision mixer.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ======================= RECOMMENDATION ======================= -->
+<section id="twincast-plan">
+  <header><span class="eyebrow">Part 2 · Recommended</span><h2>TwinCast in detail</h2></header>
+  <div class="twocol">
+    <div class="stack">
+      <h3>Why it wins</h3>
+      <ul class="tight">
+        <li><b>It closes four of the five gaps in the intel at once:</b> CV joined to a story layer, threshold speed and distance tags, an overlay drawn on real video, and an open dataset with a realism report. Single-metric viewing comes in as a mode, which covers the fifth.</li>
+        <li><b>Its proof is unusual.</b> “Our auto-eventing scores X on passes against ground truth” is a sentence teams working from footage they didn't make can't easily say, and judges can check it on screen.</li>
+        <li><b>It respects the synthetic-only rule</b> while still doing computer vision, which most CV entries can only do by using footage from somewhere else.</li>
+        <li><b>It is not a crew.</b> Rules decide when a moment matters and one model says why. That keeps it out of the crowded multi-agent group.</li>
+        <li><b>It splits cleanly for two people:</b> a vision track and a story track, joined by three schemas frozen on Day 1.</li>
+        <li><b>It has a floor.</b> If CV disappoints at the Day 7 gate, you still have Speed Trap on rendered video with real overlays.</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <h3>The contract between the two tracks</h3>
+      <p>Everything downstream reads one timed cue format. It is the machine-readable output the brief asks for, and the same cue serves studio, broadcast and streaming.</p>
+<pre>{
+  "cue_id": "c-0631",
+  "match_clock": "63:12.2",
+  "tc_in": "01:03:12:05",  "ttl_ms": 6000,
+  "layout": "name_strap",
+  "anchor": { "track_id": 17, "follow": true },
+  "metric": { "name": "top_speed_kmh", "value": 35.2,
+              "pct_in_match": 100 },
+  "text": { "casual": "Fastest run of the match",
+            "analyst": "35.2 km/h, 3rd sprint >34 since 55'" },
+  "evidence": ["ev-4412", "trk-17@63:09-63:12"],
+  "source": "cv",
+  "truth_check": { "speed_err_kmh": 0.6, "event_match": true }
+}</pre>
+    </div>
+  </div>
+
+  <h3>Azure architecture</h3>
+  <div class="arch">
+    <svg viewBox="0 0 1000 510" role="img" aria-label="TwinCast Azure architecture across the five pipeline stages with a ground-truth grader lane">
+      <g>
+        <rect x="20" y="16" width="180" height="30" class="a-hb"/><text x="30" y="36" class="a-h">1 · INGEST</text>
+        <rect x="215" y="16" width="180" height="30" class="a-hb"/><text x="225" y="36" class="a-h">2 · INTERPRET</text>
+        <rect x="410" y="16" width="180" height="30" class="a-hb"/><text x="420" y="36" class="a-h">3 · EXPLAIN</text>
+        <rect x="605" y="16" width="180" height="30" class="a-hb"/><text x="615" y="36" class="a-h">4 · RENDER</text>
+        <rect x="800" y="16" width="180" height="30" class="a-hb"/><text x="810" y="36" class="a-h">5 · PERSONALISE</text>
+      </g>
+      <!-- Ingest -->
+      <rect x="20" y="70" width="180" height="70" class="a-box"/><text x="32" y="92" class="a-t">Match simulator</text><text x="32" y="110" class="a-s">Python · ACA Job</text><text x="32" y="126" class="a-s">events + 25 Hz tracking</text>
+      <rect x="20" y="160" width="180" height="70" class="a-box"/><text x="32" y="182" class="a-t">Broadcast renderer</text><text x="32" y="200" class="a-s">Three.js + Playwright</text><text x="32" y="216" class="a-s">MP4 + camera matrix</text>
+      <rect x="20" y="250" width="180" height="70" class="a-box"/><text x="32" y="272" class="a-t">Feed replayer</text><text x="32" y="290" class="a-s">ACA · plays at match clock</text><text x="32" y="306" class="a-s">HLS video + timecode</text>
+      <rect x="20" y="340" width="180" height="56" class="a-truth"/><text x="32" y="362" class="a-t">Blob Storage</text><text x="32" y="380" class="a-s">truth · video · open data</text>
+      <!-- Interpret -->
+      <rect x="215" y="70" width="180" height="80" class="a-key"/><text x="227" y="92" class="a-t">CV auto-eventing</text><text x="227" y="110" class="a-s">YOLO + ByteTrack</text><text x="227" y="126" class="a-s">ACA serverless GPU</text><text x="227" y="142" class="a-s">trained in Azure ML</text>
+      <rect x="215" y="170" width="180" height="56" class="a-box"/><text x="227" y="192" class="a-t">Event Hubs</text><text x="227" y="210" class="a-s">cv-events stream</text>
+      <rect x="215" y="250" width="180" height="80" class="a-box"/><text x="227" y="272" class="a-t">Metrics engine</text><text x="227" y="290" class="a-s">Python · ACA</text><text x="227" y="306" class="a-s">speed · distance · tags</text><text x="227" y="322" class="a-s">pass diff. · shot speed</text>
+      <!-- Explain -->
+      <rect x="410" y="70" width="180" height="70" class="a-box"/><text x="422" y="92" class="a-t">Salience scorer</text><text x="422" y="110" class="a-s">rarity · game state ·</text><text x="422" y="126" class="a-s">consequence (next 10 s)</text>
+      <rect x="410" y="170" width="180" height="80" class="a-key"/><text x="422" y="192" class="a-t">Explainer</text><text x="422" y="210" class="a-s">Foundry model</text><text x="422" y="226" class="a-s">structured output</text><text x="422" y="242" class="a-s">cites event IDs</text>
+      <rect x="410" y="270" width="180" height="56" class="a-box"/><text x="422" y="292" class="a-t">Cosmos DB</text><text x="422" y="310" class="a-s">match state · insights</text>
+      <!-- Render -->
+      <rect x="605" y="70" width="180" height="70" class="a-box"/><text x="617" y="92" class="a-t">Cue builder</text><text x="617" y="110" class="a-s">timed cue JSON</text><text x="617" y="126" class="a-s">timecode · layout · TTL</text>
+      <rect x="605" y="170" width="180" height="70" class="a-key"/><text x="617" y="192" class="a-t">Overlay compositor</text><text x="617" y="210" class="a-s">web player on video</text><text x="617" y="226" class="a-s">Static Web Apps</text>
+      <rect x="605" y="270" width="180" height="70" class="a-box"/><text x="617" y="292" class="a-t">Broadcast output</text><text x="617" y="310" class="a-s">ffmpeg · ACA Job</text><text x="617" y="326" class="a-s">burn-in MP4 + key/fill</text>
+      <!-- Personalise -->
+      <rect x="800" y="70" width="180" height="80" class="a-box"/><text x="812" y="92" class="a-t">Viewer profiles</text><text x="812" y="110" class="a-s">Cosmos DB</text><text x="812" y="126" class="a-s">mode · club · player ·</text><text x="812" y="142" class="a-s">metric · language</text>
+      <rect x="800" y="170" width="180" height="70" class="a-box"/><text x="812" y="192" class="a-t">Web PubSub</text><text x="812" y="210" class="a-s">cue stream per profile</text><text x="812" y="226" class="a-s">casual / analyst / focus</text>
+      <rect x="800" y="270" width="180" height="70" class="a-box"/><text x="812" y="292" class="a-t">Language</text><text x="812" y="310" class="a-s">Foundry model</text><text x="812" y="326" class="a-s">+ AI Translator</text>
+      <!-- Grader lane -->
+      <rect x="215" y="430" width="375" height="64" class="a-truth"/><text x="227" y="452" class="a-t">Ground-truth grader</text><text x="227" y="470" class="a-s">compares CV events and speeds with simulator truth</text><text x="227" y="486" class="a-s">→ F1 · speed error · ID accuracy, on screen + App Insights</text>
+      <!-- arrows -->
+      <g class="a-ln" marker-end="url(#aa)">
+        <line x1="110" y1="140" x2="110" y2="157"/>
+        <line x1="110" y1="230" x2="110" y2="247"/>
+        <path d="M200,285 H207 V110 H212"/>
+        <line x1="305" y1="150" x2="305" y2="167"/>
+        <line x1="305" y1="226" x2="305" y2="247"/>
+        <path d="M395,290 H402 V105 H407"/>
+        <line x1="500" y1="140" x2="500" y2="167"/>
+        <line x1="500" y1="250" x2="500" y2="267"/>
+        <path d="M590,210 H597 V105 H602"/>
+        <line x1="695" y1="140" x2="695" y2="167"/>
+        <line x1="695" y1="240" x2="695" y2="267"/>
+        <line x1="890" y1="150" x2="890" y2="167"/>
+        <line x1="800" y1="205" x2="788" y2="205"/>
+        <line x1="890" y1="270" x2="890" y2="243"/>
+        <line x1="305" y1="330" x2="305" y2="427"/>
+        <path d="M110,396 V462 H212"/>
+      </g>
+      <line x1="110" y1="320" x2="110" y2="337" class="a-ln a-dash" marker-end="url(#aa)"/>
+      <g><rect x="640" y="430" width="14" height="10" class="a-key"/><text x="662" y="439" class="a-s">the parts that set it apart</text>
+        <rect x="640" y="452" width="14" height="10" class="a-truth"/><text x="662" y="461" class="a-s">ground truth, only possible because data is synthetic</text>
+        <line x1="640" y1="480" x2="654" y2="480" class="a-ln a-dash"/><text x="662" y="484" class="a-s">batch / offline write</text></g>
+    </svg>
+  </div>
+  <div class="twocol">
+    <ul class="tight">
+      <li><b>Live path:</b> replayer → CV → Event Hubs → metrics → salience → explainer → cues → compositor. YOLOv8n runs well above 25 fps on a T4-class GPU, so “live” is real, not faked.</li>
+      <li><b>One model call per selected moment,</b> not per event. The salience rules filter first, which keeps latency and cost down.</li>
+    </ul>
+    <ul class="tight">
+      <li><b>Request GPU quota tonight.</b> Azure ML and Container Apps GPU quota can take days. If it doesn't arrive, run inference as a batch and replay the results at match clock, and say so in the write-up.</li>
+      <li><b>Realism references</b> come from public aggregate football ranges (goals per match, sprint speeds, pass counts), not PL feeds. Check this against the rules.</li>
+    </ul>
+  </div>
+
+  <h3>Build plan</h3>
+  <p class="read muted">Twelve working days, Day 0 tonight. Person A runs the vision track and person B the story track. Assign by skills; I couldn't, because the skills line was blank. Each day ends with something you can show.</p>
+  <div class="tbl plan">
+    <table>
+      <thead><tr><th>Day</th><th>A · Vision track</th><th>B · Story track</th><th>Proof at end of day</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td colspan="2">Rewrite the listing (title, tagline, keywords, five-stage description). Create repo, Azure resource group, budget alert. Request GPU quota.</td><td class="proof">Listing no longer reads as a joke</td></tr>
+        <tr><td>1</td><td>Together for 2 hours: freeze the event, tracking-frame and cue schemas. Then a Three.js pitch, broadcast camera, players drawn from tracking JSON.</td><td>Event-first simulator v0: seeded possession chains, passes, shots, tackles, pressures.</td><td class="proof">10-second clip of players moving on a 3D pitch</td></tr>
+        <tr><td>2</td><td>Shirt numbers, ball, camera follow. Headless capture to MP4 (Playwright + ffmpeg).</td><td>Tracking from events: formation anchors, pull toward the ball, sprints with speed and acceleration caps.</td><td class="proof">60-second broadcast-angle MP4 of a seeded match</td></tr>
+        <tr><td>3</td><td>Auto-labels: project 3D boxes to YOLO labels. Degradations: blur, compression, noise, camera shake.</td><td>Realism checks v0 against public aggregate ranges; tune the simulator.</td><td class="proof">~5k labelled frames; first realism report</td></tr>
+        <tr><td>4</td><td>Train YOLOv8n on an Azure ML GPU. Add ByteTrack.</td><td>Metrics engine on truth tracking: speed, distance, threshold tags, pass difficulty, shot speed.</td><td class="proof">Tracked boxes on video; tags firing from truth data</td></tr>
+        <tr><td>5</td><td>Image to pitch coordinates via the camera matrix. Ball track to pass and shot detector.</td><td>Salience scorer plus explainer (Foundry model, structured output, event IDs).</td><td class="proof">Auto-events JSON from video; “why it matters” text</td></tr>
+        <tr><td>6</td><td>Grader: pass/shot precision and recall, speed error, ID accuracy.</td><td>Cue builder and overlay compositor in a web player synced to timecode.</td><td class="proof">Overlays on the video; first accuracy numbers</td></tr>
+        <tr class="gate"><td>7</td><td colspan="2"><b>Gate.</b> Run end-to-end on one 3-minute clip. If pass F1 ≥ 0.8 and speed error ≤ 1.5 km/h, overlays run on CV output. If not, CV drives player tags and speeds only, events come from truth, and the demo says so openly.</td><td class="proof">Decision written down; full pipeline on one clip</td></tr>
+        <tr><td>8</td><td>Event Hubs and replayer at match clock on Container Apps; GPU inference in the live path.</td><td>Personalisation: casual and analyst, club, player focus, single-metric mode.</td><td class="proof">Two profiles see different cues from one stream</td></tr>
+        <tr><td>9</td><td>ffmpeg burn-in and key/fill alpha export. Stretch: shirt-number ID by voting along each track.</td><td>Two languages (Bulgarian plus one more). Recap built from the insight timeline.</td><td class="proof">Key/fill files; Bulgarian overlays; a recap</td></tr>
+        <tr><td>10</td><td>Everything deployed on Azure; App Insights; degradation sweep for the accuracy chart.</td><td>Studio view (take/hold queue) and the accuracy panel UI.</td><td class="proof">Public URL works from a cold start</td></tr>
+        <tr><td>11</td><td colspan="2">Record the demo to the script below. Write-up in problem → solution → five stages → Azure → proof order. Publish generator, dataset and realism report on GitHub.</td><td class="proof">Video, repo and write-up done</td></tr>
+        <tr><td>12</td><td colspan="2">Buffer. Fix what the recording exposed, re-record if needed, submit early.</td><td class="proof">Submitted</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="read"><b>One-week cut</b> (if the deadline is closer than it looks): skip all CV work on Days 3–7 and 9. Person A moves to deployment and the compositor, and you ship Speed Trap on rendered video with the open dataset. It still scores 3.70, ahead of most of the field.</p>
+
+  <h3>Risks and what to do about them</h3>
+  <div class="risk">
+    <div><b>Pass and shot detection from noisy ball tracks</b>Render a large white ball, detect passes from sudden ball-speed changes plus the nearest player, and smooth with a short window. The Day 7 gate decides.</div>
+    <div><b>Player identity from shirt numbers</b>Render big back numbers and vote across each track. Fallback: identity from tracker, kit colour and position, with a visible confidence.</div>
+    <div><b>“CV on a rendered video is easy”</b>Answer it in the demo: a degradation sweep (blur, compression, occlusion, camera shake) with accuracy at each level.</div>
+    <div><b>Simulator realism</b>Generate events first and tracking second. That is simpler and looks right from a broadcast camera. Publish the failing checks too; honesty scores better than overclaiming.</div>
+    <div><b>Azure GPU quota</b>Request tonight. Fallback is batch inference replayed at match clock, stated plainly.</div>
+    <div><b>Scope creep</b>No agent crew, two languages at most, one 3-minute hero clip rather than 90 minutes of video.</div>
+  </div>
+
+  <h3>60-second demo script</h3>
+  <p class="read muted">About 140 words of voiceover. Use the accuracy numbers you actually measure on Day 10. Never put made-up numbers on screen.</p>
+  <div class="tbl script">
+    <table>
+      <thead><tr><th>Time</th><th>On screen</th><th>Voiceover</th></tr></thead>
+      <tbody>
+        <tr><td>0:00–0:07</td><td>Broadcast-angle footage, Ashford Rovers v Kingsmere Athletic. #11 sprints, and a name strap pops up: VANCE 35.2 km/h, top speed of the match.</td><td class="vo">“Every frame here is synthetic. We simulated this match, then filmed it like a broadcaster.”</td></tr>
+        <tr><td>0:07–0:16</td><td>Split screen: clean feed beside the CV view with tracked boxes and a live event ticker (PASS, PASS, SHOT 104 km/h).</td><td class="vo">“Our vision model watches the footage and tags every pass, shot and sprint by itself. Nobody types anything in.”</td></tr>
+        <tr><td>0:16–0:25</td><td>Accuracy panel fills in: pass F1, speed error, ID accuracy against ground truth, then the degradation chart.</td><td class="vo">“Because we generated the match, we know the truth. So we grade our own auto-eventing, frame by frame. Real footage can't give you that.”</td></tr>
+        <tr><td>0:25–0:36</td><td>A shot from 28 m: shot-speed tag, then a “Why it matters” lower third with an evidence link.</td><td class="vo">“The engine picks the moments that matter by rarity, score and what happens next, and explains why, citing the events behind every line.”</td></tr>
+        <tr><td>0:36–0:48</td><td>Same clip in a 2×2 grid: casual (English), analyst, Bulgarian fan following #8, top-speed-only mode.</td><td class="vo">“Same intelligence, four viewers: a casual fan, an analyst, a Bulgarian fan following one player, and someone who only wants top speeds.”</td></tr>
+        <tr><td>0:48–0:55</td><td>Studio queue: the producer takes a cue; key and fill outputs appear beside the program monitor.</td><td class="vo">“For the studio, every graphic is a timed cue with key and fill, ready for the vision mixer.”</td></tr>
+        <tr><td>0:55–1:00</td><td>Architecture strip, GitHub link to the open dataset, Berbata AI logo.</td><td class="vo">“Built on Azure, dataset open source. Berbata AI: synthetic match, real pipeline.”</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="read">Based on the Berbata Hackathon Intel pack (332 entries, compiled 19 Oct 2026). Competitor descriptions are one-line summaries from that pack, not full reviews. Prize category names other than “Best Multi-Agent” are guesses.</footer>
+</div>
+
+<script>
+document.querySelectorAll('td[data-s]').forEach(function(td){
+  var s=+td.getAttribute('data-s'), p=document.createElement('span'); p.className='pips'; p.setAttribute('aria-hidden','true');
+  for(var i=1;i<=5;i++){var b=document.createElement('i'); if(i<=s) b.className='on'; p.appendChild(b);} td.appendChild(p);
+});
+</script>
