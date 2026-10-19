@@ -1,0 +1,34 @@
+# Research Library — Index
+
+Research for the "Inside the Game" hackathon (Microsoft × Premier League, Synthetic Match Insights Engine).
+It covers the parts almost any of our candidate ideas will need. Every file has the same parts: TL;DR, Findings,
+So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berbata_Hackathon_Intel.md) ·
+[Idea shortlist](../Berbata_Idea_Shortlist.html) · [Idea brainstorm](../Berbata_Idea_Brainstorm.html).
+
+## Files
+
+| # | File | One line |
+|---|---|---|
+| 03 | [03-foundry-llm-explain.md](03-foundry-llm-explain.md) | Calling Foundry models (v1 API), structured outputs for cues, grounding checks, Translator/Speech (Bulgarian), quotas and cost |
+
+## Next topics (queue)
+
+Priority 1 (build/tech)
+- Computer vision for auto-eventing: YOLO, ByteTrack, Roboflow `sports`/`supervision`, homography to pitch coordinates (TwinCast)
+- Rendering synthetic broadcast video: Three.js broadcast camera, headless capture to MP4 (TwinCast, Ghost Team, Chalk Talk)
+- Starter repos and Azure samples to fork (Event Hubs + Functions + Web PubSub + OpenAI end-to-end)
+
+Priority 2 (football domain)
+- xG models: features, open models, a logistic-regression xG we can implement
+- Pass difficulty / expected pass (xP) and expected threat (xT)
+- Pressure, pressing and PPDA: definitions and formulas
+- Pitch control (Spearman, Fernández & Bornn) with a NumPy implementation
+- How broadcasters show stats on screen (Premier League, Sky, Amazon/AWS, Opta graphics)
+
+Priority 3 (judging and winners)
+- This hackathon's judging criteria, prize categories and deadlines (About page)
+- What past Microsoft and sports-tech hackathon winners did
+- Demo video and write-up best practice
+
+Priority 4 (competitors)
+- Deep dive on the closest competitors: what they do well and where the gaps are
