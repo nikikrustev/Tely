@@ -69,11 +69,12 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 | 32 | [32-accessible-responsive-viewer.md](32-accessible-responsive-viewer.md) | WCAG 2.2 for live overlays (contrast plates, hide/freeze, live captions, audio description), tested colour-blind team-colour checker, BBC subtitle rules, throttled aria-live announcer, phone layout, Playwright+axe CI |
 | 34 | [34-fabric-real-time-intelligence.md](34-fabric-real-time-intelligence.md) | Verdict: optional half-day side quest. Judges can't open Fabric dashboards; trial needs a work email; F2 cost; FabricTool retires 6 Nov 2026 mid-judging; side consumer-group tap; ready KQL for possession/PPDA/speeds; Activator rule |
 | 35 | [35-multilingual-pipeline.md](35-multilingual-pipeline.md) | Translate templates offline, fill slots at runtime; EN+BG+ES+AR demo; Translator 2026-06-06 details and bg/ar limits; ICU plurals/ordinals tested; quality-score licence traps (CometKiwi NC vs MetricX Apache); RTL overlays; 40-term EN→BG glossary |
+| 39 | [39-anticipatory-emotional-commentary.md](39-anticipatory-emotional-commentary.md) | Commentator runs a 10 s delay behind the truth buffer (framed as broadcast delay), suspense/surprise from win-prob (Ely et al., PL audience evidence), anti-spoiler cap, prosody evidence for build-ups and goal calls, priority planner, SSML for EN HD + BG, tested on toy data |
 | 42 | [42-audio-competitors-and-demo.md](42-audio-competitors-and-demo.md) | Audio rivals with evidence: Ninety Labs' audio-description PRs and Matchday Companion's Voice Live Q&A are the real threats; white space (anticipation, crowd, haptics, blind-user testing); muted/laptop-speaker demo craft; Foundry category; agents as a spoiler firewall |
 
 ## In progress
 
-33 synthetic possession value · 36 blind fans and audio description · 37 spatial audio in the browser · 38 reactive crowd atmosphere · 39 anticipatory emotional commentary · 40 conversational commentator · 41 haptics for match tension · 44 accounts, quotas and setup checklist · 46 Copilot, GitHub CLI and Azure MCP workflow
+33 synthetic possession value · 36 blind fans and audio description · 37 spatial audio in the browser · 38 reactive crowd atmosphere · 40 conversational commentator · 41 haptics for match tension · 44 accounts, quotas and setup checklist · 46 Copilot, GitHub CLI and Azure MCP workflow
 
 ## Next topics (queue)
 
