@@ -46,27 +46,23 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 20 | [20-ground-truth-grader-and-calibration.md](20-ground-truth-grader-and-calibration.md) | MOTChallenge format and HOTA/IDF1 commands, GS-HOTA, a simpler pitch-metre grader, FIFA EPTS speed method, NBJW/PnLCalib/TVCalib calibration, degradation-sweep design |
 | 21 | [21-demo-uptime-cost-and-ops.md](21-demo-uptime-cost-and-ops.md) | Static replay mode as the judge landing page (~$0), 21-day cost arithmetic (~$25–34 minimal stack), availability tests, LLM abuse caps, OIDC CI/CD, freeze at deadline, judge-day runbook |
 
-## In progress 19 realistic player movement ·
-22 explanation generation patterns · 23 win probability and momentum · 24 producer console control path · 25 team shape and tactical metrics
+## In progress
+
+19 realistic player movement · 22 explanation generation patterns · 23 win probability and momentum · 24 producer console control path · 25 team shape and tactical metrics · 26 CDF/SPADL data tooling · 27 voice, speech and audio · 28 sponsor goals and real-world impact · 29 render realism and sim-to-real
 
 ## Next topics (queue)
 
 Priority 1 (build/tech)
-- CDF compliance: settle the validator's v0.3.2 vs paper's v1.0.0 and the exact JSON nesting (from 02)
 - Serving RF-DETR (ONNX/TensorRT) on an ACA serverless T4: cold start, image size, quota on Students/Free Trial (from 01, 05)
-- Synthetic-to-real gap: texture, lighting and kit randomisation; low-poly GLTF players with run cycles (from 05, 06)
-- Foundry Voice Live / speech-in, speech-out for Chalk Talk and Half-Time Talk (from 03)
 - Priority vs Flex processing on Global Standard for live vs offline calls (from 03)
 - Deterministic offline overlay render: OGraf non-real-time mode, Puppeteer virtual time, as an ACA job (from 04)
 - SCTE-35 generation in Python (`threefive`) for Safe Break; NDI-with-alpha from OBS (DistroAV) for a live key/fill demo (from 04)
 - Animated architecture diagram and readable on-screen agent traces for the video (from 14)
 - Score our own demo against the Agent Academy 2026 rubric before submitting (from 13)
-- Premier League Companion app: what the sponsor already ships, so Personalise lines up with it (from 13)
 - EPTS certification reports: real provider speed/position error per velocity band as a benchmark (from 20)
 - A permissive (MIT/Apache) pitch-keypoint detector fine-tuned on our renders, to avoid GPL calibration repos (from 20)
 - One Bicep/azd module for the whole judge environment (SWA Standard + linked ACA, Key Vault, low-TPM Foundry deployment, App Insights) (from 21)
 - Accessibility and phone-width checks for the viewer, since judges may open the link on a phone (from 21)
-- Official repo's RESOURCE PLAYLISTS.md: what learning material the organisers point to (from 18)
 - Foundry Toolbox / hosted Agent Framework agents for a "Best Use of Foundry" angle (from 18)
 - AVM Bicep for the full stack with exact keyless role names (from 17)
 - Deploying ACA jobs under azd (no job host type): hooks vs azd deploy vs Actions (from 17)
@@ -79,7 +75,6 @@ Priority 4 (competitors)
 - Re-check Ninety Labs, PlayerLens 3D and PitchPulse closer to the deadline (from 15)
 
 Priority 2 (football domain)
-- Converting synthetic events to SPADL so socceraction xT/VAEP runs unchanged (from 08)
 - Post-shot xG / xGOT for synthetic shots: sampling where shots end up on goal (Keeper Brain) (from 07)
 - DFL AI Live Ticker (Bedrock) and Genius skeletal-tracking graphics as precedents for live multilingual text and speed tags (from 11)
 - Bayesian online change-point detection for calibrated "the game has changed" probabilities (from 09)
