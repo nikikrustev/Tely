@@ -1,0 +1,5 @@
+# OWNER: A (potencialbg). Microsoft SDKs for Person A's lane only. CI never installs this file.
+# Install on A's machine: pip install -e "pipeline[dev]" -r pipeline/requirements-azure.txt
+azure-cognitiveservices-speech>=1.52,<2
+azure-identity>=1.26,<2
+openai>=3.35,<4

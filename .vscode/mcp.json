@@ -1,0 +1,15 @@
+{
+  "inputs": [
+    { "type": "promptString", "id": "azure-sub", "description": "Azure subscription ID (dev)" }
+  ],
+  "servers": {
+    "azure": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@azure/mcp@3.0.0", "server", "start", "--read-only",
+               "--namespace", "group", "--namespace", "monitor", "--namespace", "containerapps",
+               "--namespace", "deploy", "--namespace", "resourcehealth", "--namespace", "bicepschema"],
+      "env": { "AZURE_SUBSCRIPTION_ID": "${input:azure-sub}" }
+    }
+  }
+}
