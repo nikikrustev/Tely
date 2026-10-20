@@ -369,4 +369,4 @@ Useful links: AVM web test module https://github.com/Azure/bicep-registry-module
 - GitHub Docs: Adding a workflow status badge — https://docs.github.com/en/actions/how-tos/monitor-workflows/add-a-status-badge — accessed 20 Oct 2026
 - GitHub Docs: Events that trigger workflows (schedule) — https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows — accessed 20 Oct 2026
 - azd `azd-env-name` tag convention (sample template, not a formal spec) — https://glama.ai/mcp/servers/@Azure-Samples/remote-mcp-webapp-node/blob/c5c398e5d8ee4e7aaae45e1bd32ff367b2de8857/infra/main.bicep — accessed 20 Oct 2026
-- Internal: research/01, research/03 (LLM prices, Content Safety, RBAC role), research/04 (.vtt cue carrier), research/12 (deliverables, edit rules)
+- Internal: 01, 03 (LLM prices, Content Safety, RBAC role), 04 (.vtt cue carrier), 12 (deliverables, edit rules)

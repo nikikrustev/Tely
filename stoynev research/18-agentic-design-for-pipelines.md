@@ -374,4 +374,4 @@ Samples:
 - MCP Python SDK: OpenTelemetry — https://github.com/modelcontextprotocol/python-sdk/blob/main/docs/run/opentelemetry.md — accessed 20 Oct 2026
 - Anthropic, "Building effective agents" — https://www.anthropic.com/engineering/building-effective-agents — accessed 20 Oct 2026
 - OpenAI, "A practical guide to building agents" (PDF) — https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf — accessed 20 Oct 2026
-- Research 03 (internal) — research/03-foundry-llm-explain.md; Research 12 (internal) — research/12-judging-criteria-and-rules.md — accessed 20 Oct 2026
+- Research 03 (internal) — 03-foundry-llm-explain.md; Research 12 (internal) — 12-judging-criteria-and-rules.md — accessed 20 Oct 2026
