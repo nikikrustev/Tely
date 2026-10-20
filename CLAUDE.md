@@ -11,6 +11,11 @@ the Synthetic Match Insights Engine. The pipeline has five stages: Ingest → In
 3. `Berbata_Idea_Shortlist.html` and `Berbata_Idea_Brainstorm.html` have our candidate ideas. TwinCast is the recommended one.
    Don't edit these three files.
 
+## Current focus (from the user, 20 Oct 2026)
+"Audio Stands" (working name): the best audio experience for a blind fan. It combines brainstorm ideas 20 Home End and
+17 Heartbeat: an immersive reactive crowd, an AI commentator who builds emotion because the pipeline knows what is
+coming, and the fan can talk to the commentator and ask questions. See the "Current focus" section in INDEX.md.
+
 ## Hard facts (verified 20 Oct 2026, see `stoynev research/12-judging-criteria-and-rules.md`)
 - Submissions close **27 Oct 2026, 23:59 PT**. Judging runs to 10 Nov, and the demo must stay up and free until then.
 - Deliverables: a video **under 2 minutes** (YouTube/Vimeo), a **public** GitHub repo, a working demo link, and a pitch naming the Microsoft tech.

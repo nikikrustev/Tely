@@ -7,10 +7,19 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 
 > **Deadline (verified in the official rules, 20 Oct):** submissions close **27 Oct 2026, 23:59 PT** (28 Oct 08:59 Sofia). Registration closes 20 Oct 12:00 PT. See [12](12-judging-criteria-and-rules.md).
 
+## Current focus (20 Oct 2026): "Audio Stands", the blind-fan audio experience (working name)
+
+Brainstorm ideas **20 Home End** (a crowd mix tuned to your club) and **17 Heartbeat** (haptic tension) combined. A blind or
+low-vision fan should feel as if they are in the stands: a reactive crowd around them, and an AI commentator who builds
+emotion because the pipeline **knows what is coming** (look-ahead / short delay). The fan can **talk to the commentator** and
+ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voice), 32 (accessibility), 22 (explanation text),
+23 (tension from win probability) and 09 (pressure / chaos).
+
 ## For Claude: which file for which job
 
 | Building… | Read |
 |---|---|
+| **Audio Stands** (blind-fan audio) | 36–42, then 27, 32, 22, 23, 09 |
 | Pitch, impact framing, what the sponsor wants | 28 |
 | Azure architecture, infra, deploy, Fabric | 01, 17, 21, 34 |
 | Synthetic events, tracking, realism, data format | 02, 19, 26 |
@@ -61,7 +70,7 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 
 ## In progress
 
-30 infra as code (azd + Bicep) · 33 synthetic possession value · 35 multilingual pipeline
+30 infra as code (azd + Bicep) · 33 synthetic possession value · 35 multilingual pipeline · 36 blind fans and audio description · 37 spatial audio in the browser · 38 reactive crowd atmosphere · 39 anticipatory emotional commentary · 40 conversational commentator · 41 haptics for match tension · 42 audio rivals and audio-first demo video
 
 ## Next topics (queue)
 
