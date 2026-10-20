@@ -45,10 +45,11 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 18 | [18-agentic-design-for-pipelines.md](18-agentic-design-for-pipelines.md) | What the rules reward for agentic design; Director/Explainer-via-Stats-MCP/code Verifier/HITL take-hold design off the hot path; MCP SDK v2 (`MCPServer`) and Agent Framework 1.22 gotchas; tracing and evals |
 | 20 | [20-ground-truth-grader-and-calibration.md](20-ground-truth-grader-and-calibration.md) | MOTChallenge format and HOTA/IDF1 commands, GS-HOTA, a simpler pitch-metre grader, FIFA EPTS speed method, NBJW/PnLCalib/TVCalib calibration, degradation-sweep design |
 | 21 | [21-demo-uptime-cost-and-ops.md](21-demo-uptime-cost-and-ops.md) | Static replay mode as the judge landing page (~$0), 21-day cost arithmetic (~$25–34 minimal stack), availability tests, LLM abuse caps, OIDC CI/CD, freeze at deadline, judge-day runbook |
+| 23 | [23-win-probability-and-momentum.md](23-win-probability-and-momentum.md) | Live win probability (Poisson grid / Skellam, red-card and xG blending), possession value, Bundesliga-style momentum, Brier/RPS/ECE and reliability diagrams for Called It; tested on toy data |
 
 ## In progress
 
-19 realistic player movement · 22 explanation generation patterns · 23 win probability and momentum · 24 producer console control path · 25 team shape and tactical metrics · 26 CDF/SPADL data tooling · 27 voice, speech and audio · 28 sponsor goals and real-world impact · 29 render realism and sim-to-real
+19 realistic player movement · 22 explanation generation patterns · 24 producer console control path · 25 team shape and tactical metrics · 26 CDF/SPADL data tooling · 27 voice, speech and audio · 28 sponsor goals and real-world impact · 29 render realism and sim-to-real
 
 ## Next topics (queue)
 
@@ -68,6 +69,8 @@ Priority 1 (build/tech)
 - Deploying ACA jobs under azd (no job host type): hooks vs azd deploy vs Actions (from 17)
 - Matchroom's hidden-truth evaluation (`scripts/evaluate`, `truth.json`) as a template for our grader (from 16)
 - `rejcom/inside-the-game-insights` `demo/make_video.py`: automated demo-video generation (from 16)
+- Live added-time estimation for win probability (from 23)
+- Hash-and-lock predictions at issue so Called It is tamper-evident (from 23)
 - Fabric Real-Time Intelligence (Eventstream/Eventhouse): does it beat our own Python windowing? (from 01)
 
 Priority 4 (competitors)
