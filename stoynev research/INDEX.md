@@ -19,7 +19,7 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 
 | Building… | Read |
 |---|---|
-| **Audio Stands** (blind-fan audio) | 36–42, then 27, 32, 22, 23, 09 |
+| **Audio Stands** (blind-fan audio) | **43 first** (architecture + build plan), then 36–42, 27, 32, 22, 23, 09 |
 | Pitch, impact framing, what the sponsor wants | 28 |
 | Azure architecture, infra, deploy, Fabric | 01, 17, 21, 30, 34 |
 | Synthetic events, tracking, realism, data format | 02, 19, 26 |
@@ -77,11 +77,12 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 | 40 | [40-conversational-commentator.md](40-conversational-commentator.md) | Ask toggle button (VoiceOver-friendly), Voice Live WebRTC with a server relay for tool calls, six read-only tools that only see the delayed playhead (no spoilers), same voice as commentary, Bulgarian STT limits, ~$0.02/question, code for relay and browser |
 | 41 | [41-haptics-match-tension.md](41-haptics-match-tension.md) | iOS web can't vibrate; Firefox Android silently fails; rhythm-only tacton vocabulary (heartbeat, attack, shot, goal), gamepad rumble, audio-clock sync ~20 ms early, anti-fatigue cap, real tactile products, typed haptics.ts + AHAP for later native |
 | 42 | [42-audio-competitors-and-demo.md](42-audio-competitors-and-demo.md) | Audio rivals with evidence: Ninety Labs' audio-description PRs and Matchday Companion's Voice Live Q&A are the real threats; white space (anticipation, crowd, haptics, blind-user testing); muted/laptop-speaker demo craft; Foundry category; agents as a spoiler firewall |
+| 43 | [43-audio-stands-architecture.md](43-audio-stands-architecture.md) | End-to-end design on the hero stack: component map, truth/playhead timing and spoiler firewall, extended audio cue contract, 8 Q&A tools, cost (~$1.46/match commentary, ~$0.02/question), static judge mode with offline Ask, 7-day 2-person build plan, risks, Foundry category pitch |
 | 46 | [46-copilot-github-azure-mcp-workflow.md](46-copilot-github-azure-mcp-workflow.md) | Copilot plans today (agent mode in Free; cloud agent needs Student/Pro), Azure MCP 3.0 flags and 128-tool limit, GitHub Models retired, datasets as attested GitHub Releases, honest AI-assistance disclosure, ready config files (instructions, mcp.json, workflows) |
 
 ## In progress
 
-43 Audio Stands architecture on the hero stack · 44 accounts, quotas and setup checklist · 45 Agent Framework orchestration for Audio Stands · 47 prior art outside the hackathon
+44 accounts, quotas and setup checklist · 45 Agent Framework orchestration for Audio Stands · 47 prior art outside the hackathon
 
 ## Next topics (queue)
 
