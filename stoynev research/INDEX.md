@@ -12,7 +12,7 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | Building… | Read |
 |---|---|
 | Pitch, impact framing, what the sponsor wants | 28 |
-| Azure architecture, infra, deploy | 01, 17, 21 |
+| Azure architecture, infra, deploy, Fabric | 01, 17, 21, 34 |
 | Synthetic events, tracking, realism, data format | 02, 19, 26 |
 | LLM explanations, translation, speech | 03, 22, 27 |
 | Overlays, cues, producer console, accessibility | 04, 11, 24, 32 |
@@ -57,10 +57,11 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 29 | [29-render-realism-and-sim2real.md](29-render-realism-and-sim2real.md) | Mixamo is out (no redistribution); CC0 Quaternius players + ambientCG grass + Poly Haven HDRIs; Three.js skinned-player gotchas; which randomisations matter (Tobin, SoccerSynth); realism ladder (stop at level 3) |
 | 31 | [31-cv-inference-serving.md](31-cv-inference-serving.md) | RF-DETR → ONNX/TensorRT export gotchas, sourced T4/L4/CPU speeds, batch-then-replay recommendation (ball tiling breaks real time), ACA GPU vs Azure ML costs, CUDA 12 vs 13 driver trap, cold start, Dockerfile |
 | 32 | [32-accessible-responsive-viewer.md](32-accessible-responsive-viewer.md) | WCAG 2.2 for live overlays (contrast plates, hide/freeze, live captions, audio description), tested colour-blind team-colour checker, BBC subtitle rules, throttled aria-live announcer, phone layout, Playwright+axe CI |
+| 34 | [34-fabric-real-time-intelligence.md](34-fabric-real-time-intelligence.md) | Verdict: optional half-day side quest. Judges can't open Fabric dashboards; trial needs a work email; F2 cost; FabricTool retires 6 Nov 2026 mid-judging; side consumer-group tap; ready KQL for possession/PPDA/speeds; Activator rule |
 
 ## In progress
 
-30 infra as code (azd + Bicep) · 33 synthetic possession value · 34 Fabric Real-Time Intelligence · 35 multilingual pipeline
+30 infra as code (azd + Bicep) · 33 synthetic possession value · 35 multilingual pipeline
 
 ## Next topics (queue)
 
