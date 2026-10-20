@@ -15,6 +15,8 @@ _Accessed/compiled: 20 Oct 2026 · Priority area: Personalise + Render (two-way 
 - **One persona across commentary and answers comes almost free.** Voice Live speaks with the same Azure TTS voices we use to pre-render commentary (HD voices work in every Voice Live region), so the timbre is identical. We share one persona prompt block, and the relay feeds every line that has aired into the conversation as labelled system items.
 - **Bulgarian works, but use the toggle rather than open-mic.** `gpt-realtime` lists Bulgarian and so does `mai-transcribe-2`. `azure-speech` (which pairs only with non-realtime models) needs `language: "bg-BG"` set explicitly, because the auto-detect list excludes Bulgarian. Semantic-VAD filler-word removal does not cover Bulgarian, so open-mic barge-in would false-trigger more often. Answer with `bg-BG-BorislavNeural`, which has no styles, only prosody (file 27).
 
+> **Correction (from [43](43-audio-stands-architecture.md)):** Microsoft Learn lists only **en-US** DragonHD voices, so `en-GB-Ollie`/`en-GB-…:DragonHDLatestNeural` HD names used below should be replaced by an en-US DragonHD (or DragonHD Omni) voice. DragonHD supports `<break>` but not `prosody`/`express-as`; Omni supports `express-as` but not `<break>`. HD voices are real-time only (no batch pre-render).
+
 ## Findings
 
 ### 1. Interaction model: how the fan asks
