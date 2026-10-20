@@ -71,6 +71,7 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 | 34 | [34-fabric-real-time-intelligence.md](34-fabric-real-time-intelligence.md) | Verdict: optional half-day side quest. Judges can't open Fabric dashboards; trial needs a work email; F2 cost; FabricTool retires 6 Nov 2026 mid-judging; side consumer-group tap; ready KQL for possession/PPDA/speeds; Activator rule |
 | 35 | [35-multilingual-pipeline.md](35-multilingual-pipeline.md) | Translate templates offline, fill slots at runtime; EN+BG+ES+AR demo; Translator 2026-06-06 details and bg/ar limits; ICU plurals/ordinals tested; quality-score licence traps (CometKiwi NC vs MetricX Apache); RTL overlays; 40-term EN→BG glossary |
 | 36 | [36-blind-fans-and-audio-description.md](36-blind-fans-and-audio-description.md) | What blind fans want (RNIB 2022–23: ball-first, real-time, one voice), lag as the top pain, UEFA/CAFE guidance, what exists (Sky's new descriptive commentary, Touch2See, OneCourt, FIFA 2026), the gap (no Q&A, no detail control, no synced crowd), design principles, ethical testing plan |
+| 37 | [37-spatial-audio-in-the-browser.md](37-spatial-audio-in-the-browser.md) | Native Web Audio is enough (HRTF PannerNode, Convolver), Firefox listener fallback, halfway seat default, rattle-like ball sound, earcon rules (Sonification Handbook), no web head tracking, iOS audioSession, Bluetooth latency, synthetic stadium IR, typed 126-line AudioStands module |
 | 38 | [38-reactive-crowd-atmosphere.md](38-reactive-crowd-atmosphere.md) | How EA/Sky faked crowds in 2020, home-advantage research, spoiler-safe crowd state machine {excitement, valence, danger} (toy-tested, flips for away end), Web Audio CrowdEngine (granular bed, synthetic chants, ducking), CC0 Freesound packs, no real chants (legal), mixing levels |
 | 39 | [39-anticipatory-emotional-commentary.md](39-anticipatory-emotional-commentary.md) | Commentator runs a 10 s delay behind the truth buffer (framed as broadcast delay), suspense/surprise from win-prob (Ely et al., PL audience evidence), anti-spoiler cap, prosody evidence for build-ups and goal calls, priority planner, SSML for EN HD + BG, tested on toy data |
 | 40 | [40-conversational-commentator.md](40-conversational-commentator.md) | Ask toggle button (VoiceOver-friendly), Voice Live WebRTC with a server relay for tool calls, six read-only tools that only see the delayed playhead (no spoilers), same voice as commentary, Bulgarian STT limits, ~$0.02/question, code for relay and browser |
@@ -79,7 +80,7 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 
 ## In progress
 
-37 spatial audio in the browser · 43 Audio Stands architecture on the hero stack · 44 accounts, quotas and setup checklist · 45 Agent Framework orchestration for Audio Stands · 46 Copilot, GitHub CLI and Azure MCP workflow · 47 prior art outside the hackathon
+43 Audio Stands architecture on the hero stack · 44 accounts, quotas and setup checklist · 45 Agent Framework orchestration for Audio Stands · 46 Copilot, GitHub CLI and Azure MCP workflow · 47 prior art outside the hackathon
 
 ## Next topics (queue)
 
