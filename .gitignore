@@ -1,0 +1,20 @@
+# Secrets: never commit. Only .env.example (no values) is tracked.
+.env
+.env.*
+!.env.example
+
+# Build and run output
+out/
+dist/
+node_modules/
+.azure/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+
+# Raw CC0 downloads (licences tracked in assets/licences.json instead)
+assets/raw/
