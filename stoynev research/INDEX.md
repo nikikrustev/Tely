@@ -72,11 +72,12 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 | 35 | [35-multilingual-pipeline.md](35-multilingual-pipeline.md) | Translate templates offline, fill slots at runtime; EN+BG+ES+AR demo; Translator 2026-06-06 details and bg/ar limits; ICU plurals/ordinals tested; quality-score licence traps (CometKiwi NC vs MetricX Apache); RTL overlays; 40-term EN→BG glossary |
 | 39 | [39-anticipatory-emotional-commentary.md](39-anticipatory-emotional-commentary.md) | Commentator runs a 10 s delay behind the truth buffer (framed as broadcast delay), suspense/surprise from win-prob (Ely et al., PL audience evidence), anti-spoiler cap, prosody evidence for build-ups and goal calls, priority planner, SSML for EN HD + BG, tested on toy data |
 | 40 | [40-conversational-commentator.md](40-conversational-commentator.md) | Ask toggle button (VoiceOver-friendly), Voice Live WebRTC with a server relay for tool calls, six read-only tools that only see the delayed playhead (no spoilers), same voice as commentary, Bulgarian STT limits, ~$0.02/question, code for relay and browser |
+| 41 | [41-haptics-match-tension.md](41-haptics-match-tension.md) | iOS web can't vibrate; Firefox Android silently fails; rhythm-only tacton vocabulary (heartbeat, attack, shot, goal), gamepad rumble, audio-clock sync ~20 ms early, anti-fatigue cap, real tactile products, typed haptics.ts + AHAP for later native |
 | 42 | [42-audio-competitors-and-demo.md](42-audio-competitors-and-demo.md) | Audio rivals with evidence: Ninety Labs' audio-description PRs and Matchday Companion's Voice Live Q&A are the real threats; white space (anticipation, crowd, haptics, blind-user testing); muted/laptop-speaker demo craft; Foundry category; agents as a spoiler firewall |
 
 ## In progress
 
-33 synthetic possession value · 36 blind fans and audio description · 37 spatial audio in the browser · 38 reactive crowd atmosphere · 40 conversational commentator · 41 haptics for match tension · 44 accounts, quotas and setup checklist · 46 Copilot, GitHub CLI and Azure MCP workflow
+36 blind fans and audio description · 37 spatial audio in the browser · 38 reactive crowd atmosphere · 44 accounts, quotas and setup checklist · 46 Copilot, GitHub CLI and Azure MCP workflow
 
 ## Next topics (queue)
 
