@@ -2,7 +2,7 @@
 # Stage 0 Azure bootstrap for Audio Stands (file 44 "Reuse", cut to what BUILD_PLAN.md uses).
 # OWNER: A (potencialbg). Person A runs this by hand after `az login`. Claude never runs it.
 # Creates: rg-as-dev + rg-as-judge (swedencentral), one AIServices S0 resource with a custom domain,
-# a gpt-5.4-mini GlobalStandard deployment (capacity 10, NoAutoUpgrade), and A's own data-plane roles.
+# a gpt-5-mini GlobalStandard deployment (capacity 10, NoAutoUpgrade), and A's own data-plane roles.
 # Does NOT create Cosmos DB, Web PubSub or Event Hubs: this plan doesn't use them.
 # Does NOT give Nikolay (B) any Azure role: B's lane has no Microsoft (TEAM_SPLIT.md).
 #
@@ -12,13 +12,17 @@
 # Usage:  az login && bash scripts/bootstrap_azure.sh
 # Override names with env vars, e.g.  FOUNDRY_NAME=as-foundry-dev2 bash scripts/bootstrap_azure.sh
 set -euo pipefail
+# Git Bash on Windows rewrites args starting with "/" into Windows paths, which broke
+# `--scope /subscriptions/...` ("MissingSubscription"). This turns that rewriting off.
+export MSYS_NO_PATHCONV=1
 
 LOCATION="${LOCATION:-swedencentral}"
 RG_DEV="${RG_DEV:-rg-as-dev}"
 RG_JUDGE="${RG_JUDGE:-rg-as-judge}"
 FOUNDRY_NAME="${FOUNDRY_NAME:-as-foundry-dev}"   # also the custom domain, so it must be globally unique
-MODEL_NAME="${MODEL_NAME:-gpt-5.4-mini}"
-DEPLOYMENT_NAME="${DEPLOYMENT_NAME:-gpt-5.4-mini}"
+# gpt-5.4-mini has 0 quota on the Free Tier; gpt-5-mini has 500K TPM there (usage list, 21 Oct 2026). See DECISIONS D7.
+MODEL_NAME="${MODEL_NAME:-gpt-5-mini}"
+DEPLOYMENT_NAME="${DEPLOYMENT_NAME:-$MODEL_NAME}"
 CAPACITY="${CAPACITY:-10}"
 ARM_API="2024-10-01"                              # Microsoft.CognitiveServices API version (unverified: newest may differ)
 
