@@ -10,6 +10,8 @@ _Accessed/compiled: 20 Oct 2026 · Priority area: Ingest (synthetic data source)
 - **Realism targets (cited):** 2.93 goals/match (PL 2024/25), ~893 passes/match, ~26 shots/match, top speeds of 35–37.4 km/h, outfield distance of 8.5–12.9 km per 90, and a sprint threshold of 25 km/h.
 - A seeded 53-line toy generator (below), averaged over 300 seeds, lands near these targets: ~880 passes, 84.7% completion, ~28 shots, ~3.2 goals per 90. The tracking it derives is still too static (~4 km per player per 90). That gap is exactly what the Realism Bench should report.
 
+> **Correction (from [33](33-synthetic-possession-value.md)):** the toy generator below has two bugs. (1) After a missed shot the goal kick is placed at the shooter's end, so the opponent restarts 5.5 m from goal; this roughly doubles goals and explains the "~3.2 goals per 90". (2) Passes aimed off the pitch are clamped onto the goal line, and shots from there get xG ≈ 0.89. With both fixed, goals drop to ~1.58 per match, so xG and shot rate need re-tuning toward the cited 2.93. The fix is in file 33.
+
 ## Findings
 
 ### 1. Event/tracking schemas worth copying
