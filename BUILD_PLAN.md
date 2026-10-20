@@ -122,7 +122,7 @@ Run it, verify it, commit and push.
 **You do this manually:**
 - [ ] **(5 min, do first)** Check that you are registered and listed on project 126726 in Innovation Studio. Registration closed on 20 Oct at 12:00 PT (file 12). If you aren't registered, sort that out before anything else. While you are there, note which fields the submission form has (file 12's open questions): 10 min.
 - [ ] **(5 min) [CARD] [PHONE]** Create an Azure free account (file 44, step 1).
-- [ ] **(2 min)** Upgrade to Pay-As-You-Go straight away. Unused credit stays for its 30 days. Note the expiry date (file 44, step 2).
+- [ ] **(0 min) Do NOT upgrade to Pay-As-You-Go** (changed 20 Oct: the team spends no money; see `docs/DECISIONS.md` D6). The free account has a spending limit equal to its $200 credit, so Azure switches services off instead of charging the card. Note the credit expiry date (30 days after sign-up, after judging ends on 10 Nov).
 - [ ] **(3 min)** Create a $100 budget with alerts at 50% and 100% (file 44, step 3). Budgets don't stop spending (file 21).
 - [ ] **(10 min)** Run `az login`, then `bash scripts/bootstrap_azure.sh`. Alternatively, create the Foundry resource and project in the portal (file 44, steps 4–5 and 7).
 - [ ] **(5 min, the day-1 risk)** Check quota in Foundry → Quota. **If `gpt-5.4-mini` shows 0 TPM, file https://aka.ms/oai/stuquotarequest now** (15 min). File 44 says approval takes "days, approval not guaranteed". Stages 1–4 don't need it.
