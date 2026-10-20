@@ -58,3 +58,18 @@ The team spends no money while building. That overrides file 44 and BUILD_PLAN's
 - **Risk 2: running out of credit takes the demo down.** File 44 estimates $45–87 in total, well under $200. Keep the $100
   budget alert at 50% and 100%, and never use `minReplicas` > 0 or a paid SKU we don't need.
 - The card still gets a $1 temporary hold at sign-up (file 44).
+
+## D7. Director model: gpt-5-mini, because gpt-5.4-mini has no Free Tier quota (21 Oct 2026)
+
+The bootstrap on our free account reported quota tier **"Free Tier"**, and deploying `gpt-5.4-mini` GlobalStandard
+failed with `InsufficientQuota` (limit 0). `az cognitiveservices usage list -l swedencentral` shows non-zero limits for
+`gpt-5-mini` GlobalStandard (500, in thousands of TPM), `gpt4.1-mini` GlobalStandard (200), `o4-mini` (100) and
+`gpt-realtime-mini` (40). We deploy **`gpt-5-mini`** for the Director instead of filing the quota form, which may not
+apply to a free account. `.env` uses `FOUNDRY_MODEL=gpt-5-mini`. If the Free Tier later moves up, we can switch back.
+
+## D8. Voice Live works on the Free Tier: GPT Realtime Mini, Standard tier (21 Oct 2026)
+
+potencialbg tested the Voice Live playground in project `audiostands` (resource `as-foundry-stoynev`, Sweden Central) on our
+free account: it heard the question and answered by voice. The playground lists models by price tier (Pro / Standard / Lite)
+without version numbers. We use **GPT Realtime Mini (Standard)**, which matches `gpt-realtime-mini` in our quota list (40)
+and the plan's `gpt-realtime-2.1-mini`. The exact version behind the name is (unverified). Avoid the Pro models, which cost more.
