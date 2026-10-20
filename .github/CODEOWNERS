@@ -1,0 +1,101 @@
+# OWNER: A (potencialbg). Mirrors TEAM_SPLIT.md "File ownership"; if they differ, TEAM_SPLIT.md wins and this file is fixed.
+# A = @potencialbg (everything Microsoft). B = @nikikrustev (Nikolay, no Microsoft).
+# GitHub uses the LAST matching line, so broad patterns come first and specific ones after.
+
+# Fallback for anything not listed: both review. Whoever creates a new file owns it (add it via a TEAM_SPLIT.md PR).
+*                                             @potencialbg @nikikrustev
+
+# ---------- A: potencialbg ----------
+/infra/                                       @potencialbg
+/azure.yaml                                   @potencialbg
+/.github/                                     @potencialbg
+/.vscode/                                     @potencialbg
+/.gitignore                                   @potencialbg
+/.gitattributes                               @potencialbg
+/.env.example                                 @potencialbg
+/scripts/bootstrap_azure.sh                   @potencialbg
+/scripts/smoke_azure.py                       @potencialbg
+/relay/                                       @potencialbg
+/pipeline/audiostands/__init__.py             @potencialbg
+/pipeline/audiostands/commentary/             @potencialbg
+/pipeline/audiostands/agents/                 @potencialbg
+/pipeline/audiostands/eval/                   @potencialbg
+/pipeline/audiostands/build_commentary.py     @potencialbg
+/pipeline/audiostands/build_bundle.py         @potencialbg
+/pipeline/audiostands/answers.py              @potencialbg
+/pipeline/audiostands/spoiler.py              @potencialbg
+/pipeline/audiostands/voices.py               @potencialbg
+/pipeline/requirements-azure.txt              @potencialbg
+/pipeline/tests/a/                            @potencialbg
+/web/staticwebapp.config.json                 @potencialbg
+/web/src/lane-a/                              @potencialbg
+/web/src/contracts/a-exports.ts               @potencialbg
+/web/tests/a/                                 @potencialbg
+/web/public/replay/v1/judge/cues.*.jsonl      @potencialbg
+/web/public/replay/v1/judge/audio/            @potencialbg
+/web/public/replay/v1/judge/captions_sdh.vtt  @potencialbg
+/web/public/replay/v1/judge/descriptions.vtt  @potencialbg
+/web/public/replay/v1/judge/manifest.json     @potencialbg
+/web/public/replay/v1/judge/answers/          @potencialbg
+/contracts/golden/a/                          @potencialbg
+/eval/report.md                               @potencialbg
+/eval/report.json                             @potencialbg
+/eval/qa_latency.py                           @potencialbg
+/eval/build_report.py                         @potencialbg
+/video/                                       @potencialbg
+/README.md                                    @potencialbg
+/SUBMISSION.md                                @potencialbg
+/docs/DECISIONS.md                            @potencialbg
+# Shared docs: A edits, B proposes
+/CLAUDE.md                                    @potencialbg
+/BUILD_PLAN.md                                @potencialbg
+/TEAM_SPLIT.md                                @potencialbg
+# "stoynev research/": the * stands in for the space, so no escaping is needed.
+/stoynev*research/                            @potencialbg
+
+# ---------- B: nikikrustev (Nikolay) ----------
+/pipeline/pyproject.toml                      @nikikrustev
+/pipeline/audiostands/generator.py            @nikikrustev
+/pipeline/audiostands/movement.py             @nikikrustev
+/pipeline/audiostands/clock.py                @nikikrustev
+/pipeline/audiostands/interpret.py            @nikikrustev
+/pipeline/audiostands/crowd.py                @nikikrustev
+/pipeline/audiostands/haptics.py              @nikikrustev
+/pipeline/audiostands/judge_cut.py            @nikikrustev
+/pipeline/audiostands/build_match.py          @nikikrustev
+/pipeline/audiostands/build_segments.py       @nikikrustev
+/pipeline/audiostands/qa/                     @nikikrustev
+/pipeline/judge_cut.json                      @nikikrustev
+/pipeline/tests/b/                            @nikikrustev
+/scripts/prepare_crowd.py                     @nikikrustev
+/assets/                                      @nikikrustev
+/web/public/crowd/                            @nikikrustev
+/web/package.json                             @nikikrustev
+/web/package-lock.json                        @nikikrustev
+/web/vite.config.*                            @nikikrustev
+/web/tsconfig.json                            @nikikrustev
+/web/index.html                               @nikikrustev
+/web/src/main.ts                              @nikikrustev
+/web/src/wire.ts                              @nikikrustev
+/web/src/audio/                               @nikikrustev
+/web/src/replay/                              @nikikrustev
+/web/src/haptics/                             @nikikrustev
+/web/src/ask/                                 @nikikrustev
+/web/src/settings.ts                          @nikikrustev
+/web/src/radar/                               @nikikrustev
+/web/src/learn/                               @nikikrustev
+/web/src/contracts/b-exports.ts               @nikikrustev
+/web/tests/b/                                 @nikikrustev
+/web/public/replay/v1/judge/events.jsonl      @nikikrustev
+/web/public/replay/v1/judge/ticks.json.gz     @nikikrustev
+/web/public/replay/v1/judge/signals.json      @nikikrustev
+/web/public/replay/v1/judge/segments.json     @nikikrustev
+/contracts/README.md                          @nikikrustev
+/contracts/b/                                 @nikikrustev
+/contracts/golden/b/                          @nikikrustev
+/eval/qa_cases.jsonl                          @nikikrustev
+/eval/qa.json                                 @nikikrustev
+/eval/listening_test.*                        @nikikrustev
+/eval/listening.json                          @nikikrustev
+/eval/score_listening.py                      @nikikrustev
+/docs/nikolay/                                @nikikrustev

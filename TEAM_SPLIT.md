@@ -6,7 +6,7 @@ _This file is for both people **and both Claude Code sessions**. If you are Clau
 - **A = potencialbg.** A owns everything Microsoft.
 - **B = Nikolay.** B's lane has no Microsoft.
 
-Whether Nikolay's GitHub account is `nikikrustev` (the repo owner) is (unverified).
+Nikolay's GitHub account is `nikikrustev`, the repo owner (confirmed by potencialbg, 20 Oct 2026). `.github/CODEOWNERS` uses it.
 
 **How this relates to `BUILD_PLAN.md`:** this file is an add-on. The stage prompts and "Done when" checks still come from `BUILD_PLAN.md`.
 - If the two disagree on **who** does something or **which file** it goes in, this file wins.
@@ -85,7 +85,7 @@ Nikolay proposed: "I take the Q&A agent and its tools; you take the commentator 
 
 | Area | Paths |
 |---|---|
-| Infra and CI | `infra/**`, `azure.yaml`, `.github/**` (incl. `CODEOWNERS`), `.vscode/**`, `web/staticwebapp.config.json`, root `.gitignore`, `.env.example` |
+| Infra and CI | `infra/**`, `azure.yaml`, `.github/**` (incl. `CODEOWNERS`), `.vscode/**`, `web/staticwebapp.config.json`, root `.gitignore`, `.gitattributes`, `.env.example` |
 | Scripts | `scripts/bootstrap_azure.sh`, `scripts/smoke_azure.py` |
 | Python, commentator and agents | `pipeline/audiostands/__init__.py` (empty; created once in Stage 0, never edited), `pipeline/audiostands/commentary/**`, `pipeline/audiostands/agents/**`, `pipeline/audiostands/build_commentary.py`, `pipeline/audiostands/build_bundle.py`, `pipeline/audiostands/answers.py`, `pipeline/audiostands/spoiler.py`, `pipeline/audiostands/voices.py`, `pipeline/audiostands/eval/**`, `pipeline/requirements-azure.txt`, `pipeline/tests/a/**` |
 | Relay | `relay/**`. It **imports** B's `audiostands.qa`; it never copies it |

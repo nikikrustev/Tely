@@ -1,0 +1,24 @@
+# OWNER: B (Nikolay). Stub created by A in Stage 0; from merge on, only B edits this file.
+# No Microsoft packages here: Azure deps live in requirements-azure.txt (A), which CI never installs.
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "audiostands"
+version = "0.0.1"
+description = "Audio Stands: synthetic match, signals, commentary and Q&A for blind fans"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=9.1"]
+
+[tool.setuptools.packages.find]
+include = ["audiostands*"]
+
+[tool.pytest.ini_options]
+# importlib mode: tests/a/test_x.py and tests/b/test_x.py can share a basename without clashing,
+# and neither folder needs an __init__.py. CI runs plain `pytest`, so new test files are found automatically.
+addopts = "--import-mode=importlib -q"
+testpaths = ["tests"]
