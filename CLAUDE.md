@@ -16,6 +16,13 @@ the Synthetic Match Insights Engine. The pipeline has five stages: Ingest → In
 17 Heartbeat: an immersive reactive crowd, an AI commentator who builds emotion because the pipeline knows what is
 coming, and the fan can talk to the commentator and ask questions. See the "Current focus" section in INDEX.md.
 
+## Two people, two Claudes (from 20 Oct 2026)
+Read `TEAM_SPLIT.md` before editing anything. Person A (potencialbg) owns all Microsoft software. Person B (Nikolay) has
+no Microsoft in his lane: no Azure, Foundry, Speech or Copilot calls, packages or keys. **One file, one owner:** edit only
+files your person owns in TEAM_SPLIT.md's "File ownership". Put anything else under "HANDOFF to A/B" in the PR description.
+Work on short `a/<topic>` or `b/<topic>` branches and open PRs into main daily. If you don't know whose session you are,
+ask before editing.
+
 ## Hard facts (verified 20 Oct 2026, see `stoynev research/12-judging-criteria-and-rules.md`)
 - Submissions close **27 Oct 2026, 23:59 PT**. Judging runs to 10 Nov, and the demo must stay up and free until then.
 - Deliverables: a video **under 2 minutes** (YouTube/Vimeo), a **public** GitHub repo, a working demo link, and a pitch naming the Microsoft tech.
