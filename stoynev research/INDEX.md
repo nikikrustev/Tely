@@ -13,10 +13,10 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 |---|---|
 | Pitch, impact framing, what the sponsor wants | 28 |
 | Azure architecture, infra, deploy | 01, 17, 21 |
-| Synthetic events, tracking, realism | 02, 19 |
-| LLM explanations, translation, speech | 03, 22 |
+| Synthetic events, tracking, realism, data format | 02, 19, 26 |
+| LLM explanations, translation, speech | 03, 22, 27 |
 | Overlays, cues, producer console | 04, 11, 24 |
-| Computer vision, rendered video, grading | 05, 06, 20 |
+| Computer vision, rendered video, grading | 05, 06, 20, 29 |
 | Football metrics | 07 xG · 08 xPass/xT · 09 pressure/PPDA · 10 pitch control · 23 win prob · 25 team shape |
 | Agent layer / MCP | 18 |
 | Submission, video, judging | 12, 13, 14 |
@@ -58,7 +58,7 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 
 ## In progress
 
-30 infra as code (azd + Bicep) · 31 CV inference serving · 32 accessible, responsive viewer
+30 infra as code (azd + Bicep) · 31 CV inference serving · 32 accessible, responsive viewer · 33 synthetic possession value · 34 Fabric Real-Time Intelligence · 35 multilingual pipeline
 
 ## Next topics (queue)
 
@@ -75,7 +75,6 @@ Priority 1 (build/tech)
 - `rejcom/inside-the-game-insights` `demo/make_video.py`: automated demo-video generation (from 16)
 - Live added-time estimation for win probability (from 23)
 - Hash-and-lock predictions at issue so Called It is tamper-evident (from 23)
-- Translator dynamic dictionary / Custom Translator glossaries for football terms (from 22)
 - Error-annotation report for our generated text (Thomson & Reiter corpus as template) (from 22)
 - Static Web Apps auth/roles to protect /api/negotiate (from 24)
 - Live HLS media-clock sync (PROGRAM-DATE-TIME vs server clock) for overlays on a delayed stream (from 24)
@@ -90,7 +89,6 @@ Priority 1 (build/tech)
 - Hands-on test of gpt-realtime-translate for English → Bulgarian live dubbing (from 27)
 - Royalty-free / procedural crowd audio for Home End (from 27)
 - Cross-file id checks and a CDF conformance badge for Realism Bench (from 26)
-- Fabric Real-Time Intelligence (Eventstream/Eventhouse): does it beat our own Python windowing? (from 01)
 
 Priority 4 (competitors)
 - Study Floodlight's cue-sheet compiler (priorities, slot exclusivity, expiry) against our cue contract (from 15)
@@ -101,4 +99,3 @@ Priority 2 (football domain)
 - DFL AI Live Ticker (Bedrock) and Genius skeletal-tracking graphics as precedents for live multilingual text and speed tags (from 11)
 - Bayesian online change-point detection for calibrated "the game has changed" probabilities (from 09)
 - Run-timing counterfactual (CRSV, open-starlab spaceEval) and BIMOS for Ghost Team / Decoy Credit (from 10)
-- Synthetic EPV/OBSO grid fitted on our generator so EPV × pitch control ships without real-data risk (from 10)
