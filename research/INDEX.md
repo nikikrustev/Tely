@@ -26,11 +26,12 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 13 | [13-past-winners-patterns.md](13-past-winners-patterns.md) | Microsoft 2024–26 and sports-tech winners (Big Data Bowl, SoccerNet, Sloan), 10 cited patterns (narrow job, measured result vs ground truth, newest sponsor services, open repo) and anti-patterns |
 | 14 | [14-demo-video-and-writeup.md](14-demo-video-and-writeup.md) | Video under 2:00 (rules), judges may not test the demo; structure, OBS/Clipchamp/Azure TTS tooling, 2-minute script extending our 60s one, README template, pitfalls |
 | 15 | [15-competitors-cv-overlay-sim.md](15-competitors-cv-overlay-sim.md) | 16 CV/simulator/overlay rivals checked on 20 Oct: high threats Ninety Labs (same pipeline as TwinCast, nothing shipped), Floodlight (shipped, top-down CV), PitchPulse (speed tags); gaps we can own |
+| 20 | [20-ground-truth-grader-and-calibration.md](20-ground-truth-grader-and-calibration.md) | MOTChallenge format and HOTA/IDF1 commands, GS-HOTA, a simpler pitch-metre grader, FIFA EPTS speed method, NBJW/PnLCalib/TVCalib calibration, degradation-sweep design |
 
 ## In progress
 
 16 competitors (front-runners) · 17 starter repos and samples ·
-18 agentic design for pipelines · 19 realistic player movement · 20 ground-truth grader and calibration · 21 demo uptime, cost and ops ·
+18 agentic design for pipelines · 19 realistic player movement · 21 demo uptime, cost and ops ·
 22 explanation generation patterns · 23 win probability and momentum · 24 producer console control path · 25 team shape and tactical metrics
 
 ## Next topics (queue)
@@ -46,6 +47,8 @@ Priority 1 (build/tech)
 - Animated architecture diagram and readable on-screen agent traces for the video (from 14)
 - Score our own demo against the Agent Academy 2026 rubric before submitting (from 13)
 - Premier League Companion app: what the sponsor already ships, so Personalise lines up with it (from 13)
+- EPTS certification reports: real provider speed/position error per velocity band as a benchmark (from 20)
+- A permissive (MIT/Apache) pitch-keypoint detector fine-tuned on our renders, to avoid GPL calibration repos (from 20)
 - Fabric Real-Time Intelligence (Eventstream/Eventhouse): does it beat our own Python windowing? (from 01)
 
 Priority 4 (competitors)
