@@ -88,7 +88,7 @@ Reasoning effort accepts `none`, `minimal`, `low`, `medium`, `high`, `xhigh` and
 
 ### 6. Translator, Speech, Content Safety
 
-- **Translator**: Bulgarian (`bg`) is supported for text translation, Custom Translator, auto-detect, dictionary, transliteration and **LLM translation**. The new GA text API version **`2026-06-06`** lets you pick an LLM and supports adaptive custom translation (5-10,000 segment pairs). v3 is still GA.
+- **Translator**: Bulgarian (`bg`) is supported for text translation, Custom Translator, auto-detect, dictionary, transliteration and **LLM translation**. The new GA text API version **`2026-06-06`** lets you pick an LLM and supports adaptive custom translation (5-10,000 segment pairs). v3 is still GA. **Correction (from [35](35-multilingual-pipeline.md)):** adaptive custom translation is listed only for en, fr, fr-ca, de, it and es, **not Bulgarian or Arabic**. For bg/ar, force terms with the dynamic dictionary or Custom Translator phrase dictionaries.
 - **Speech TTS**: Bulgarian neural voices `bg-BG-KalinaNeural` (F) and `bg-BG-BorislavNeural` (M). British voices include `en-GB-SoniaNeural`, `en-GB-RyanNeural` and `en-GB-LibbyNeural`. HD voices use names like `en-US-Ava:DragonHDLatestNeural`. Whether multilingual voices can speak Bulgarian is not documented on that page (unverified).
   - The SDK emits **`synthesis_word_boundary`** events (audio_offset, text_offset, duration) and **viseme** events. Events arrive faster than playback, so you must sync them to playback yourself. This is how captions and overlays can line up with voiced commentary.
 - **Content Safety**:

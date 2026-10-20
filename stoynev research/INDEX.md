@@ -21,9 +21,9 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 |---|---|
 | **Audio Stands** (blind-fan audio) | 36–42, then 27, 32, 22, 23, 09 |
 | Pitch, impact framing, what the sponsor wants | 28 |
-| Azure architecture, infra, deploy, Fabric | 01, 17, 21, 34 |
+| Azure architecture, infra, deploy, Fabric | 01, 17, 21, 30, 34 |
 | Synthetic events, tracking, realism, data format | 02, 19, 26 |
-| LLM explanations, translation, speech | 03, 22, 27 |
+| LLM explanations, translation, speech | 03, 22, 27, 35 |
 | Overlays, cues, producer console, accessibility | 04, 11, 24, 32 |
 | Computer vision, rendered video, grading, GPU serving | 05, 06, 20, 29, 31 |
 | Football metrics | 07 xG · 08 xPass/xT · 09 pressure/PPDA · 10 pitch control · 23 win prob · 25 team shape |
@@ -64,13 +64,15 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 | 27 | [27-voice-speech-and-audio.md](27-voice-speech-and-audio.md) | Pre-rendered TTS for commentary vs Voice Live (barge-in, function calling) for Chalk Talk; sports styles only on one Mandarin voice; Bulgarian speech in/out limits; prices; Limited Access voice rules; Web Audio ducking and Tone.js tempo |
 | 28 | [28-sponsor-goals-and-real-world-impact.md](28-sponsor-goals-and-real-world-impact.md) | What Microsoft and the PL say they want (4 pillars, real-time overlays, native-language Q&A), what already ships (PL Companion, FPL Companion, Premier League+), the gap (PL Studios producer tooling), framings per idea, resource playlists |
 | 29 | [29-render-realism-and-sim2real.md](29-render-realism-and-sim2real.md) | Mixamo is out (no redistribution); CC0 Quaternius players + ambientCG grass + Poly Haven HDRIs; Three.js skinned-player gotchas; which randomisations matter (Tobin, SoccerSynth); realism ladder (stop at level 3) |
+| 30 | [30-infra-as-code-azd-bicep.md](30-infra-as-code-azd-bicep.md) | One `azd up`: 16 AVM modules with current versions, production defaults to override, 9 verified role GUIDs, azd deploys ACA jobs natively since 1.23.8, low-TPM Foundry deployment, dev vs judge params, postprovision hook (Bicep not yet compiled) |
 | 31 | [31-cv-inference-serving.md](31-cv-inference-serving.md) | RF-DETR → ONNX/TensorRT export gotchas, sourced T4/L4/CPU speeds, batch-then-replay recommendation (ball tiling breaks real time), ACA GPU vs Azure ML costs, CUDA 12 vs 13 driver trap, cold start, Dockerfile |
 | 32 | [32-accessible-responsive-viewer.md](32-accessible-responsive-viewer.md) | WCAG 2.2 for live overlays (contrast plates, hide/freeze, live captions, audio description), tested colour-blind team-colour checker, BBC subtitle rules, throttled aria-live announcer, phone layout, Playwright+axe CI |
 | 34 | [34-fabric-real-time-intelligence.md](34-fabric-real-time-intelligence.md) | Verdict: optional half-day side quest. Judges can't open Fabric dashboards; trial needs a work email; F2 cost; FabricTool retires 6 Nov 2026 mid-judging; side consumer-group tap; ready KQL for possession/PPDA/speeds; Activator rule |
+| 35 | [35-multilingual-pipeline.md](35-multilingual-pipeline.md) | Translate templates offline, fill slots at runtime; EN+BG+ES+AR demo; Translator 2026-06-06 details and bg/ar limits; ICU plurals/ordinals tested; quality-score licence traps (CometKiwi NC vs MetricX Apache); RTL overlays; 40-term EN→BG glossary |
 
 ## In progress
 
-30 infra as code (azd + Bicep) · 33 synthetic possession value · 35 multilingual pipeline · 36 blind fans and audio description · 37 spatial audio in the browser · 38 reactive crowd atmosphere · 39 anticipatory emotional commentary · 40 conversational commentator · 41 haptics for match tension · 42 audio rivals and audio-first demo video
+33 synthetic possession value · 36 blind fans and audio description · 37 spatial audio in the browser · 38 reactive crowd atmosphere · 39 anticipatory emotional commentary · 40 conversational commentator · 41 haptics for match tension · 42 audio rivals and audio-first demo video
 
 ## Next topics (queue)
 

@@ -32,6 +32,8 @@ Gallery facts: `templates.json` lists 343 templates. 109 are tagged `managediden
 
 `azure.yaml` service hosts in the current schema include `containerapp`, `staticwebapp`, `function`, `appservice`, `aks` and several `azure.ai.*` / `microsoft.foundry` hosts. The schema's examples list **no ACA *job* host**. So the render and CV jobs are created in Bicep, and their images are pushed by a hook or CI (unverified that azd has no job support elsewhere). The current azd release is `azure-dev-cli_1.36.0` (15 Oct 2026).
 
+> **Correction (from [30](30-infra-as-code-azd-bicep.md)):** azd **does** deploy Container Apps jobs since azd 1.23.8 (6 Mar 2026): `host: containerapp` also targets a `Microsoft.App/jobs` resource tagged `azd-service-name`. Pin `requiredVersions.azd: ">= 1.23.8"` and use the native path.
+
 **Static Web Apps limits (official docs):**
 - Managed Functions are "HTTP only", have no managed identity, and support Python 3.8–3.10 only.
 - "Bring your own APIs is only available in the Azure Static Web Apps Standard plan."
