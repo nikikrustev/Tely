@@ -1,0 +1,4 @@
+# Test-only dependencies for contracts/b/ (no Microsoft packages). make_sample.py itself needs only the stdlib.
+# Versions pinned per stoynev research/26-cdf-spadl-data-tooling.md. Validator: MIT licence, Python >= 3.11.
+common-data-format-validator==0.1.1
+pytest>=9.1
