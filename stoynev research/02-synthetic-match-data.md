@@ -24,6 +24,8 @@ _Accessed/compiled: 20 Oct 2026 · Priority area: Ingest (synthetic data source)
 
 **Recommendation:** use **CDF-style JSONL** as the canonical format, with events and tracking sharing one clock and one coordinate system. Make it machine-checkable with the CDF validator. Add a trivial converter to SPADL (shift by +52.5/+34, map types) for analytics libraries. Copy StatsBomb only for *ideas* (its `possession` counter and pressure/counterpress flags are useful to emulate). Do not copy its data.
 
+> **Correction (20 Oct 2026, from [26](26-cdf-spadl-data-tooling.md)):** the two JSON examples below do **not** pass the CDF v0.3.2 validator. Event fields must sit under `"event"`, `"meta": {"is_synced": ...}` is required, tracking uses `ball.status` (boolean) and `ball.poss_team_id`, `frame_id` starts at 0, and extra fields like `time_s` fail in `extreme` mode. Use the validated examples in file 26.
+
 Minimal event (CDF-style; our extra fields such as `xg` and `time_s` are allowed because CDF permits optional fields):
 
 ```json
