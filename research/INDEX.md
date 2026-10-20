@@ -26,13 +26,13 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 13 | [13-past-winners-patterns.md](13-past-winners-patterns.md) | Microsoft 2024–26 and sports-tech winners (Big Data Bowl, SoccerNet, Sloan), 10 cited patterns (narrow job, measured result vs ground truth, newest sponsor services, open repo) and anti-patterns |
 | 14 | [14-demo-video-and-writeup.md](14-demo-video-and-writeup.md) | Video under 2:00 (rules), judges may not test the demo; structure, OBS/Clipchamp/Azure TTS tooling, 2-minute script extending our 60s one, README template, pitfalls |
 | 15 | [15-competitors-cv-overlay-sim.md](15-competitors-cv-overlay-sim.md) | 16 CV/simulator/overlay rivals checked on 20 Oct: high threats Ninety Labs (same pipeline as TwinCast, nothing shipped), Floodlight (shipped, top-down CV), PitchPulse (speed tags); gaps we can own |
+| 18 | [18-agentic-design-for-pipelines.md](18-agentic-design-for-pipelines.md) | What the rules reward for agentic design; Director/Explainer-via-Stats-MCP/code Verifier/HITL take-hold design off the hot path; MCP SDK v2 (`MCPServer`) and Agent Framework 1.22 gotchas; tracing and evals |
 | 20 | [20-ground-truth-grader-and-calibration.md](20-ground-truth-grader-and-calibration.md) | MOTChallenge format and HOTA/IDF1 commands, GS-HOTA, a simpler pitch-metre grader, FIFA EPTS speed method, NBJW/PnLCalib/TVCalib calibration, degradation-sweep design |
 | 21 | [21-demo-uptime-cost-and-ops.md](21-demo-uptime-cost-and-ops.md) | Static replay mode as the judge landing page (~$0), 21-day cost arithmetic (~$25–34 minimal stack), availability tests, LLM abuse caps, OIDC CI/CD, freeze at deadline, judge-day runbook |
 
 ## In progress
 
-16 competitors (front-runners) · 17 starter repos and samples ·
-18 agentic design for pipelines · 19 realistic player movement  ·
+16 competitors (front-runners) · 17 starter repos and samples · 19 realistic player movement ·
 22 explanation generation patterns · 23 win probability and momentum · 24 producer console control path · 25 team shape and tactical metrics
 
 ## Next topics (queue)
@@ -52,6 +52,8 @@ Priority 1 (build/tech)
 - A permissive (MIT/Apache) pitch-keypoint detector fine-tuned on our renders, to avoid GPL calibration repos (from 20)
 - One Bicep/azd module for the whole judge environment (SWA Standard + linked ACA, Key Vault, low-TPM Foundry deployment, App Insights) (from 21)
 - Accessibility and phone-width checks for the viewer, since judges may open the link on a phone (from 21)
+- Official repo's RESOURCE PLAYLISTS.md: what learning material the organisers point to (from 18)
+- Foundry Toolbox / hosted Agent Framework agents for a "Best Use of Foundry" angle (from 18)
 - Fabric Real-Time Intelligence (Eventstream/Eventhouse): does it beat our own Python windowing? (from 01)
 
 Priority 4 (competitors)
