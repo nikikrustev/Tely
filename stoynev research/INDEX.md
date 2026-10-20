@@ -15,7 +15,7 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | Azure architecture, infra, deploy | 01, 17, 21 |
 | Synthetic events, tracking, realism, data format | 02, 19, 26 |
 | LLM explanations, translation, speech | 03, 22, 27 |
-| Overlays, cues, producer console | 04, 11, 24 |
+| Overlays, cues, producer console, accessibility | 04, 11, 24, 32 |
 | Computer vision, rendered video, grading | 05, 06, 20, 29 |
 | Football metrics | 07 xG · 08 xPass/xT · 09 pressure/PPDA · 10 pitch control · 23 win prob · 25 team shape |
 | Agent layer / MCP | 18 |
@@ -55,10 +55,11 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 27 | [27-voice-speech-and-audio.md](27-voice-speech-and-audio.md) | Pre-rendered TTS for commentary vs Voice Live (barge-in, function calling) for Chalk Talk; sports styles only on one Mandarin voice; Bulgarian speech in/out limits; prices; Limited Access voice rules; Web Audio ducking and Tone.js tempo |
 | 28 | [28-sponsor-goals-and-real-world-impact.md](28-sponsor-goals-and-real-world-impact.md) | What Microsoft and the PL say they want (4 pillars, real-time overlays, native-language Q&A), what already ships (PL Companion, FPL Companion, Premier League+), the gap (PL Studios producer tooling), framings per idea, resource playlists |
 | 29 | [29-render-realism-and-sim2real.md](29-render-realism-and-sim2real.md) | Mixamo is out (no redistribution); CC0 Quaternius players + ambientCG grass + Poly Haven HDRIs; Three.js skinned-player gotchas; which randomisations matter (Tobin, SoccerSynth); realism ladder (stop at level 3) |
+| 32 | [32-accessible-responsive-viewer.md](32-accessible-responsive-viewer.md) | WCAG 2.2 for live overlays (contrast plates, hide/freeze, live captions, audio description), tested colour-blind team-colour checker, BBC subtitle rules, throttled aria-live announcer, phone layout, Playwright+axe CI |
 
 ## In progress
 
-30 infra as code (azd + Bicep) · 31 CV inference serving · 32 accessible, responsive viewer · 33 synthetic possession value · 34 Fabric Real-Time Intelligence · 35 multilingual pipeline
+30 infra as code (azd + Bicep) · 31 CV inference serving · 33 synthetic possession value · 34 Fabric Real-Time Intelligence · 35 multilingual pipeline
 
 ## Next topics (queue)
 
