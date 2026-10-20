@@ -72,11 +72,12 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 
 ## In progress
 
-33 synthetic possession value · 36 blind fans and audio description · 37 spatial audio in the browser · 38 reactive crowd atmosphere · 39 anticipatory emotional commentary · 40 conversational commentator · 41 haptics for match tension · 42 audio rivals and audio-first demo video
+33 synthetic possession value · 36 blind fans and audio description · 37 spatial audio in the browser · 38 reactive crowd atmosphere · 39 anticipatory emotional commentary · 40 conversational commentator · 41 haptics for match tension · 42 audio rivals and audio-first demo video · 44 accounts, quotas and setup checklist · 46 Copilot, GitHub CLI and Azure MCP workflow
 
 ## Next topics (queue)
 
 Priority 1 (build/tech)
+- **Next for Audio Stands, once 36–42 land:** 43 end-to-end architecture on the hero stack (Foundry, Agent Framework, Azure MCP, Speech/Voice Live, Web PubSub, ACA, Cosmos), and 45 Agent Framework orchestration (director, commentator, crowd conductor, Q&A agent, verifier)
 - Priority vs Flex processing on Global Standard for live vs offline calls (from 03)
 - Deterministic offline overlay render: OGraf non-real-time mode, Puppeteer virtual time, as an ACA job (from 04)
 - SCTE-35 generation in Python (`threefive`) for Safe Break; NDI-with-alpha from OBS (DistroAV) for a live key/fill demo (from 04)
