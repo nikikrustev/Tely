@@ -44,6 +44,7 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 16 | [16-competitors-front-runners.md](16-competitors-front-runners.md) | Front-runners (126601, Matchroom, 126532) set the bar: public repos, CI, live demos, measured groundedness; table stakes vs common gaps (no overlays on video, no latency or CV accuracy) and 5 ways to beat them |
 | 17 | [17-starter-repos-and-samples.md](17-starter-repos-and-samples.md) | No azd template fits: borrow Bicep from 3 live MIT templates + Azure Verified Modules; SWA for front end only; MCP on the worker; licence traps and archived starters; repo skeleton and day-0 commands |
 | 18 | [18-agentic-design-for-pipelines.md](18-agentic-design-for-pipelines.md) | What the rules reward for agentic design; Director/Explainer-via-Stats-MCP/code Verifier/HITL take-hold design off the hot path; MCP SDK v2 (`MCPServer`) and Agent Framework 1.22 gotchas; tracing and evals |
+| 19 | [19-realistic-player-movement.md](19-realistic-player-movement.md) | Rule-based steering model (formation anchor, role behaviours, pressing triggers, OU jitter, accel caps) that lifts distance from ~4 to ~10 km/player; our measured speed bands, sprints, team shape vs published ranges; 84-line NumPy class |
 | 20 | [20-ground-truth-grader-and-calibration.md](20-ground-truth-grader-and-calibration.md) | MOTChallenge format and HOTA/IDF1 commands, GS-HOTA, a simpler pitch-metre grader, FIFA EPTS speed method, NBJW/PnLCalib/TVCalib calibration, degradation-sweep design |
 | 21 | [21-demo-uptime-cost-and-ops.md](21-demo-uptime-cost-and-ops.md) | Static replay mode as the judge landing page (~$0), 21-day cost arithmetic (~$25–34 minimal stack), availability tests, LLM abuse caps, OIDC CI/CD, freeze at deadline, judge-day runbook |
 | 22 | [22-explanation-generation-patterns.md](22-explanation-generation-patterns.md) | Templates vs LLM on facts (RotoWire, Thomson & Reiter), wordalisation, salience formula, template → placeholder-locked LLM polish → code verifier → fallback, faithfulness metrics, translate-with-locked-numbers |
@@ -55,7 +56,7 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 
 ## In progress
 
-19 realistic player movement · 26 CDF/SPADL data tooling · 27 voice, speech and audio · 30 infra as code (azd + Bicep) · 31 CV inference serving · 32 accessible, responsive viewer
+26 CDF/SPADL data tooling · 27 voice, speech and audio · 30 infra as code (azd + Bicep) · 31 CV inference serving · 32 accessible, responsive viewer
 
 ## Next topics (queue)
 
@@ -82,6 +83,8 @@ Priority 1 (build/tech)
 - Crowd and ad-board distractor generator for detector robustness (from 29)
 - Premier League Studios tech stack and graphics vendor, to aim our key/fill output at what they use (from 28)
 - Microsoft's PL Companion customer story as a reference multi-agent pattern judges will recognise (from 28)
+- Fatigue model (late-match drop in high-intensity running) as a Realism Bench check (from 19)
+- Calibrate speed bands and accelerations against SkillCorner open data (MIT) (from 19)
 - Fabric Real-Time Intelligence (Eventstream/Eventhouse): does it beat our own Python windowing? (from 01)
 
 Priority 4 (competitors)
