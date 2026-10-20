@@ -8,7 +8,7 @@ the Synthetic Match Insights Engine. The pipeline has five stages: Ingest → In
    "So what for us", reusable code and dated sources. Read the TL;DR of the relevant files before researching
    or building anything. Don't redo work that is already there.
 2. `Berbata_Hackathon_Intel.md` has the brief and a snapshot of the 332 competing projects.
-3. `Berbata_Idea_Shortlist.html` and `Berbata_Idea_Brainstorm.html` have our candidate ideas. TwinCast is the recommended one.
+3. `Berbata_Idea_Shortlist.html` and `Berbata_Idea_Brainstorm.html` have our candidate ideas. The shortlist recommended TwinCast, but the user has since chosen to focus on Audio Stands (below).
    Don't edit these three files.
 
 ## Current focus (from the user, 20 Oct 2026)
