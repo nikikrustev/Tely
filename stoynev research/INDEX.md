@@ -49,10 +49,11 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 23 | [23-win-probability-and-momentum.md](23-win-probability-and-momentum.md) | Live win probability (Poisson grid / Skellam, red-card and xG blending), possession value, Bundesliga-style momentum, Brier/RPS/ECE and reliability diagrams for Called It; tested on toy data |
 | 24 | [24-producer-console-control-path.md](24-producer-console-control-path.md) | Commands as Web PubSub events to a FastAPI webhook (ack via 200 body), dedupe with cmd_id/seq, group-based personalisation, NEXT/TAKE/CLEAR/KILL mapped to playout systems, NTP-style clock sync, tested asyncio cue scheduler, audit log |
 | 25 | [25-team-shape-and-tactical-metrics.md](25-team-shape-and-tactical-metrics.md) | FIFA EFI definitions (line height, line breaks, phases), cited shape ranges (length 31–46 m, area ~900 m²), SkillCorner phase rules, formation matching (Hungarian) and change detection; tested code |
+| 29 | [29-render-realism-and-sim2real.md](29-render-realism-and-sim2real.md) | Mixamo is out (no redistribution); CC0 Quaternius players + ambientCG grass + Poly Haven HDRIs; Three.js skinned-player gotchas; which randomisations matter (Tobin, SoccerSynth); realism ladder (stop at level 3) |
 
 ## In progress
 
-19 realistic player movement · 26 CDF/SPADL data tooling · 27 voice, speech and audio · 28 sponsor goals and real-world impact · 29 render realism and sim-to-real
+19 realistic player movement · 26 CDF/SPADL data tooling · 27 voice, speech and audio · 28 sponsor goals and real-world impact
 
 ## Next topics (queue)
 
@@ -80,6 +81,8 @@ Priority 1 (build/tech)
 - Live HLS media-clock sync (PROGRAM-DATE-TIME vs server clock) for overlays on a delayed stream (from 24)
 - Event-only fallback for line breaks and blocks when there is no tracking (from 25)
 - Offside-line graphics (Genius, FIFA SAOT) as a precedent for drawing line height (from 25)
+- Lens-distortion pass that also distorts labels and homography (from 29)
+- Crowd and ad-board distractor generator for detector robustness (from 29)
 - Fabric Real-Time Intelligence (Eventstream/Eventhouse): does it beat our own Python windowing? (from 01)
 
 Priority 4 (competitors)
