@@ -66,3 +66,10 @@ failed with `InsufficientQuota` (limit 0). `az cognitiveservices usage list -l s
 `gpt-5-mini` GlobalStandard (500, in thousands of TPM), `gpt4.1-mini` GlobalStandard (200), `o4-mini` (100) and
 `gpt-realtime-mini` (40). We deploy **`gpt-5-mini`** for the Director instead of filing the quota form, which may not
 apply to a free account. `.env` uses `FOUNDRY_MODEL=gpt-5-mini`. If the Free Tier later moves up, we can switch back.
+
+## D8. Voice Live works on the Free Tier: GPT Realtime Mini, Standard tier (21 Oct 2026)
+
+potencialbg tested the Voice Live playground in project `audiostands` (resource `as-foundry-stoynev`, Sweden Central) on our
+free account: it heard the question and answered by voice. The playground lists models by price tier (Pro / Standard / Lite)
+without version numbers. We use **GPT Realtime Mini (Standard)**, which matches `gpt-realtime-mini` in our quota list (40)
+and the plan's `gpt-realtime-2.1-mini`. The exact version behind the name is (unverified). Avoid the Pro models, which cost more.
