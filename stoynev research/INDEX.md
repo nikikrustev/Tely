@@ -27,7 +27,7 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 | Overlays, cues, producer console, accessibility | 04, 11, 24, 32 |
 | Computer vision, rendered video, grading, GPU serving | 05, 06, 20, 29, 31 |
 | Football metrics | 07 xG · 08 xPass/xT · 09 pressure/PPDA · 10 pitch control · 23 win prob · 25 team shape |
-| Agent layer / MCP | 18 |
+| Agent layer / MCP, dev tooling | 18, 46 |
 | Submission, video, judging | 12, 13, 14 |
 | Competitors | 15, 16 |
 
@@ -77,10 +77,11 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 | 40 | [40-conversational-commentator.md](40-conversational-commentator.md) | Ask toggle button (VoiceOver-friendly), Voice Live WebRTC with a server relay for tool calls, six read-only tools that only see the delayed playhead (no spoilers), same voice as commentary, Bulgarian STT limits, ~$0.02/question, code for relay and browser |
 | 41 | [41-haptics-match-tension.md](41-haptics-match-tension.md) | iOS web can't vibrate; Firefox Android silently fails; rhythm-only tacton vocabulary (heartbeat, attack, shot, goal), gamepad rumble, audio-clock sync ~20 ms early, anti-fatigue cap, real tactile products, typed haptics.ts + AHAP for later native |
 | 42 | [42-audio-competitors-and-demo.md](42-audio-competitors-and-demo.md) | Audio rivals with evidence: Ninety Labs' audio-description PRs and Matchday Companion's Voice Live Q&A are the real threats; white space (anticipation, crowd, haptics, blind-user testing); muted/laptop-speaker demo craft; Foundry category; agents as a spoiler firewall |
+| 46 | [46-copilot-github-azure-mcp-workflow.md](46-copilot-github-azure-mcp-workflow.md) | Copilot plans today (agent mode in Free; cloud agent needs Student/Pro), Azure MCP 3.0 flags and 128-tool limit, GitHub Models retired, datasets as attested GitHub Releases, honest AI-assistance disclosure, ready config files (instructions, mcp.json, workflows) |
 
 ## In progress
 
-43 Audio Stands architecture on the hero stack · 44 accounts, quotas and setup checklist · 45 Agent Framework orchestration for Audio Stands · 46 Copilot, GitHub CLI and Azure MCP workflow · 47 prior art outside the hackathon
+43 Audio Stands architecture on the hero stack · 44 accounts, quotas and setup checklist · 45 Agent Framework orchestration for Audio Stands · 47 prior art outside the hackathon
 
 ## Next topics (queue)
 
