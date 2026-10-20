@@ -47,10 +47,11 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 21 | [21-demo-uptime-cost-and-ops.md](21-demo-uptime-cost-and-ops.md) | Static replay mode as the judge landing page (~$0), 21-day cost arithmetic (~$25–34 minimal stack), availability tests, LLM abuse caps, OIDC CI/CD, freeze at deadline, judge-day runbook |
 | 22 | [22-explanation-generation-patterns.md](22-explanation-generation-patterns.md) | Templates vs LLM on facts (RotoWire, Thomson & Reiter), wordalisation, salience formula, template → placeholder-locked LLM polish → code verifier → fallback, faithfulness metrics, translate-with-locked-numbers |
 | 23 | [23-win-probability-and-momentum.md](23-win-probability-and-momentum.md) | Live win probability (Poisson grid / Skellam, red-card and xG blending), possession value, Bundesliga-style momentum, Brier/RPS/ECE and reliability diagrams for Called It; tested on toy data |
+| 24 | [24-producer-console-control-path.md](24-producer-console-control-path.md) | Commands as Web PubSub events to a FastAPI webhook (ack via 200 body), dedupe with cmd_id/seq, group-based personalisation, NEXT/TAKE/CLEAR/KILL mapped to playout systems, NTP-style clock sync, tested asyncio cue scheduler, audit log |
 
 ## In progress
 
-19 realistic player movement · 24 producer console control path · 25 team shape and tactical metrics · 26 CDF/SPADL data tooling · 27 voice, speech and audio · 28 sponsor goals and real-world impact · 29 render realism and sim-to-real
+19 realistic player movement · 25 team shape and tactical metrics · 26 CDF/SPADL data tooling · 27 voice, speech and audio · 28 sponsor goals and real-world impact · 29 render realism and sim-to-real
 
 ## Next topics (queue)
 
@@ -74,6 +75,8 @@ Priority 1 (build/tech)
 - Hash-and-lock predictions at issue so Called It is tamper-evident (from 23)
 - Translator dynamic dictionary / Custom Translator glossaries for football terms (from 22)
 - Error-annotation report for our generated text (Thomson & Reiter corpus as template) (from 22)
+- Static Web Apps auth/roles to protect /api/negotiate (from 24)
+- Live HLS media-clock sync (PROGRAM-DATE-TIME vs server clock) for overlays on a delayed stream (from 24)
 - Fabric Real-Time Intelligence (Eventstream/Eventhouse): does it beat our own Python windowing? (from 01)
 
 Priority 4 (competitors)
