@@ -25,10 +25,11 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 12 | [12-judging-criteria-and-rules.md](12-judging-criteria-and-rules.md) | **Official rules:** submit by 27 Oct 23:59 PT; five criteria at 20% each; prizes and four categories; video under 2 min, public repo, working demo; synthetic data only |
 | 13 | [13-past-winners-patterns.md](13-past-winners-patterns.md) | Microsoft 2024–26 and sports-tech winners (Big Data Bowl, SoccerNet, Sloan), 10 cited patterns (narrow job, measured result vs ground truth, newest sponsor services, open repo) and anti-patterns |
 | 14 | [14-demo-video-and-writeup.md](14-demo-video-and-writeup.md) | Video under 2:00 (rules), judges may not test the demo; structure, OBS/Clipchamp/Azure TTS tooling, 2-minute script extending our 60s one, README template, pitfalls |
+| 15 | [15-competitors-cv-overlay-sim.md](15-competitors-cv-overlay-sim.md) | 16 CV/simulator/overlay rivals checked on 20 Oct: high threats Ninety Labs (same pipeline as TwinCast, nothing shipped), Floodlight (shipped, top-down CV), PitchPulse (speed tags); gaps we can own |
 
 ## In progress
 
-15 competitors (CV, simulators, overlays) · 16 competitors (front-runners) · 17 starter repos and samples ·
+16 competitors (front-runners) · 17 starter repos and samples ·
 18 agentic design for pipelines · 19 realistic player movement · 20 ground-truth grader and calibration · 21 demo uptime, cost and ops ·
 22 explanation generation patterns · 23 win probability and momentum · 24 producer console control path · 25 team shape and tactical metrics
 
@@ -46,6 +47,10 @@ Priority 1 (build/tech)
 - Score our own demo against the Agent Academy 2026 rubric before submitting (from 13)
 - Premier League Companion app: what the sponsor already ships, so Personalise lines up with it (from 13)
 - Fabric Real-Time Intelligence (Eventstream/Eventhouse): does it beat our own Python windowing? (from 01)
+
+Priority 4 (competitors)
+- Study Floodlight's cue-sheet compiler (priorities, slot exclusivity, expiry) against our cue contract (from 15)
+- Re-check Ninety Labs, PlayerLens 3D and PitchPulse closer to the deadline (from 15)
 
 Priority 2 (football domain)
 - Converting synthetic events to SPADL so socceraction xT/VAEP runs unchanged (from 08)
