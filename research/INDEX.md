@@ -20,14 +20,14 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 | 07 | [07-expected-goals-xg.md](07-expected-goals-xg.md) | xG features and cited coefficients, penalty values (Opta 0.79, StatsBomb 0.78), a hand-set logistic xG we sample shots from, linear-SHAP "because" sentences, StatsBomb licence risk |
 | 08 | [08-pass-difficulty-xpass-xt.md](08-pass-difficulty-xpass-xt.md) | xPass and a 0–10 pass-difficulty score, Spearman time-to-intercept model, xT value iteration, VAEP, and the risk of using real data |
 | 09 | [09-pressure-pressing-ppda.md](09-pressure-pressing-ppda.md) | PPDA (original + provider variants), StatsBomb pressure/counterpress, Opta sequence metrics, Andrienko and Bekkers pressure models, our control/chaos indices, CUSUM change detection |
+| 10 | [10-pitch-control-space.md](10-pitch-control-space.md) | Voronoi vs Spearman vs Fernández-Bornn pitch control, tested vectorised NumPy (~1–6 ms/frame, our timing), `space_created` for decoy runs, homography overlay, licences |
 | 11 | [11-broadcast-stats-presentation.md](11-broadcast-stats-presentation.md) | Catalogue of on-screen stat formats, the 16 Bundesliga Match Facts, DFL Story Finder, PL/Genius tracking, opt-in data feeds, and a 10-value `layout` grammar with timing rules |
 | 12 | [12-judging-criteria-and-rules.md](12-judging-criteria-and-rules.md) | **Official rules:** submit by 27 Oct 23:59 PT; five criteria at 20% each; prizes and four categories; video under 2 min, public repo, working demo; synthetic data only |
 | 14 | [14-demo-video-and-writeup.md](14-demo-video-and-writeup.md) | Video under 2:00 (rules), judges may not test the demo; structure, OBS/Clipchamp/Azure TTS tooling, 2-minute script extending our 60s one, README template, pitfalls |
 
 ## In progress
 
-10 pitch control · 13 past winners · 
-15 competitors (CV, simulators, overlays) · 16 competitors (front-runners) · 17 starter repos and samples · 18 agentic design for pipelines · 19 realistic player movement · 20 ground-truth grader and calibration · 21 demo uptime, cost and ops
+13 past winners · 15 competitors (CV, simulators, overlays) · 16 competitors (front-runners) · 17 starter repos and samples · 18 agentic design for pipelines · 19 realistic player movement · 20 ground-truth grader and calibration · 21 demo uptime, cost and ops
 
 ## Next topics (queue)
 
@@ -53,4 +53,6 @@ Priority 2 (football domain)
 - Possession value (StatsBomb OBV / Opta PV) as a transparent synthetic "momentum" model (from 09)
 - Bayesian online change-point detection for calibrated "the game has changed" probabilities (from 09)
 - Team compactness, block height and line-breaking passes from tracking (Opta Vision definitions) (from 09)
+- Run-timing counterfactual (CRSV, open-starlab spaceEval) and BIMOS for Ghost Team / Decoy Credit (from 10)
+- Synthetic EPV/OBSO grid fitted on our generator so EPV × pitch control ships without real-data risk (from 10)
 - Translator custom glossaries for football jargon in other languages (from 03)
