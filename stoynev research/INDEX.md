@@ -80,10 +80,11 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 | 43 | [43-audio-stands-architecture.md](43-audio-stands-architecture.md) | End-to-end design on the hero stack: component map, truth/playhead timing and spoiler firewall, extended audio cue contract, 8 Q&A tools, cost (~$1.46/match commentary, ~$0.02/question), static judge mode with offline Ask, 7-day 2-person build plan, risks, Foundry category pitch |
 | 44 | [44-accounts-quotas-setup-checklist.md](44-accounts-quotas-setup-checklist.md) | Do-later checklist (nothing signed up): free account → upgrade to Pay-As-You-Go, avoid Students as main sub, Sweden Central region (West Europe lacks Voice Live realtime), Voice Live needs S0, model quota may start at 0 TPM, ~$45–87 budget, 2-person account ownership |
 | 46 | [46-copilot-github-azure-mcp-workflow.md](46-copilot-github-azure-mcp-workflow.md) | Copilot plans today (agent mode in Free; cloud agent needs Student/Pro), Azure MCP 3.0 flags and 128-tool limit, GitHub Models retired, datasets as attested GitHub Releases, honest AI-assistance disclosure, ready config files (instructions, mcp.json, workflows) |
+| 47 | [47-prior-art-outside-hackathon.md](47-prior-art-outside-hackathon.md) | No single product does all of Audio Stands, but each pillar exists (IBM/Opta Voice/NBC AI commentary, FOX/Samsung talk-back, OneCourt, Disney spatial-audio patent, AiCommentator). Defensible novelty: look-ahead used for tension + talk-back on a delayed playhead. 8 patents, safe novelty wording, partners |
 
 ## In progress
 
-45 Agent Framework orchestration for Audio Stands · 47 prior art outside the hackathon
+45 Agent Framework orchestration for Audio Stands (stopped before finishing; not committed)
 
 ## Next topics (queue)
 
