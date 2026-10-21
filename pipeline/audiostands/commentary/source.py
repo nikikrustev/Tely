@@ -15,10 +15,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 BUNDLE = ROOT / "web" / "public" / "replay" / "v1"
 
-# SEAM(A->B): match format v0.1.0 (contracts/b/). B's Stage 1 writes the real judge cut to BUNDLE / "judge".
-# Until that merges we build against B's hand-written 90 s sample. Switching is this one line:
-#   "judge": BUNDLE / "judge",
-MATCH_DIRS = {"judge": ROOT / "contracts" / "b" / "sample"}
+# SEAM(A->B): match format v0.2.0 (contracts/b/). "judge" is B's Stage 1 cut; "sample" is B's hand-written 90 s
+# sample, which the tests also build so both stay covered.
+MATCH_DIRS = {"judge": BUNDLE / "judge", "sample": ROOT / "contracts" / "b" / "sample"}
 
 
 @dataclass
@@ -108,8 +107,11 @@ class Match:
         return {"x": x, "y": y, "z": z, "alive": bool(alive), "poss": poss}
 
     def score_at(self, t: float) -> dict[str, int]:
-        """Goals whose outcome is revealed by t. Computed from events, so the verifier doesn't trust signals alone."""
-        score = {"home": 0, "away": 0}
+        """Goals revealed by t, on top of the score when the window opens (contract 0.2.0).
+
+        Counted from events, so the verifier doesn't trust signals alone. A VAR-reviewed goal counts at the decision.
+        """
+        score = dict(self.meta["judge_cut"].get("score_at_start") or {"home": 0, "away": 0})
         for e in self.events:
             if e["type"] == "shot" and e["outcome_type"] == "successful" and self.reveal_t(e) <= t:
                 score[self.side(e)] += 1
