@@ -93,3 +93,14 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
 - The spoiler-leak eval is stricter than file 43: an outcome word is a leak from D before the shot **until its `reveal_t`**.
 - DragonHD `temperature=0.4` (BUILD_PLAN: "low"). The style tag is repeated per sentence, since a tag ends at a sentence boundary.
 - Rendered-but-rejected fallback MP3s stay in the cache: they are what lets a rebuild make 0 TTS calls.
+
+## D10. Stage 3 on B's real judge cut (21 Oct 2026)
+
+`MATCH_DIRS["judge"]` now points at B's Stage 1 bundle. The tests build both the sample and the judge cut.
+- **VAR (contract 0.2.0):** `reveal_t` is the decision, about 22 s after the ball goes in. During the wait we say that a check
+  is happening ("It's in the net... but hold on, VAR is checking it", then "Still checking..."), never the verdict. "Net" is
+  not an outcome word: the ball going in is a fact at that moment, and whether the goal stands is not.
+- **Opener and kits are split:** the cut opens 5.4 s before the first build-up, so the AI label goes first, and the kits and
+  direction line takes the first quiet slot (716 s in this cut).
+- New lines: yellow card, free kick, goal kick (never the word "goal"), block with the blocker's name, wide, offside.
+- Judge cut, Andrew HD: 45 lines, truth_check 45/45, 0 spoiler leaks, longest gap between line starts 19.1 s, rebuild 0 TTS calls.

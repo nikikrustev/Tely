@@ -85,29 +85,39 @@ def _rng(m: Match, key: str) -> random.Random:
 
 # --- lines -------------------------------------------------------------------------------------------------------
 
-def intro(m: Match) -> Draft:
-    """Kits for both teams and the direction of play, at the start of the window (file 36 rule 1)."""
-    home, away = m.meta["teams"]["home"], m.meta["teams"]["away"]
+def opener(m: Match) -> Draft:
+    """First words of the window: the AI label, then kick-off or where we join it (CLAUDE.md: every AI voice labelled)."""
     first = m.events[0] if m.events else None
-    kick_off = first is not None and first.get("sub_type") == "kick_off" and m.t(first) <= m.t_start + 1
+    label = f"AI commentary, synthetic match, at {m.meta['match']['venue']['name']}."
+    if first is not None and first.get("sub_type") == "kick_off" and m.t(first) <= m.t_start + 1:
+        texts, evidence = [f"{label} {m.team_name(m.side(first))} get us under way.", label], (first["id"],)
+    else:
+        # A cut can open seconds before a chance (judge cut: 9 s), so this has short fallbacks and a short slot.
+        score, clock = score_words(m, m.t_start), clock_words(m, m.t_start)
+        texts, evidence = [f"{label} We join it with {clock}, {cap(score)}.",
+                           f"AI commentary, synthetic match. {cap(score)}.", "AI commentary, synthetic match."], ()
+    return Draft("intro", m.t_start, 4, texts, "calm", 0.2, evidence, stale_s=0.5, key="intro")
+
+
+def kits(m: Match) -> Draft:
+    """Both kits and the direction of play (file 36 rule 1), at the first quiet moment after the opener."""
+    home, away = m.meta["teams"]["home"], m.meta["teams"]["away"]
+
     # SEAM(A->B): "to your right" assumes B's sound stage pans ball x = +52.5 to the right ear (HANDOFF to B).
     def dirn(team: dict) -> str:
         return "right" if team["attacks"] == "+x" else "left"
-    opener = f"AI commentary, synthetic match, at {m.meta['match']['venue']['name']}."
-    kits = (f"{home['short_name']}, in {home['kit']['words']}, attack to your {dirn(home)}. "
+
+    full = (f"{home['short_name']}, in {home['kit']['words']}, attack to your {dirn(home)}. "
             f"{away['short_name']}, in {away['kit']['words']}, attack to your {dirn(away)}.")
-    if kick_off:
-        start = f"{m.team_name(m.side(first))} get us under way."
-        evidence = (first["id"],)
-    else:
-        start = f"We join it with {score_words(m, m.t_start)}."
-        evidence = ()
-    return Draft("intro", m.t_start, 2, [f"{opener} {kits} {start}", f"{opener} {kits}"], "calm", 0.2,
-                 evidence, stale_s=0.5, key="intro")
+    short = (f"{home['short_name']} in {home['kit']['shirt']} attack to your {dirn(home)}, "
+             f"{away['short_name']} in {away['kit']['shirt']} to your {dirn(away)}.")
+    return Draft("kits", m.t_start, 2, [full, short], "calm", 0.2, (), stale_s=120.0, key="kits")
 
 
 def describe(m: Match, e: dict) -> Draft | None:
     """Who has the ball now, ball first. Never the receiver: that is the pass's outcome (spoiler rule)."""
+    if e["type"] == "referee":
+        return None  # SEAM(A->B): referee events carry official_id, never team_id/player_id (contract 0.2.0)
     t, side = m.t(e), m.side(e)
     rng = _rng(m, f"describe:{e['id']}")
     where = cap(m.sig(e["id"])["zone"]["words"])
@@ -116,7 +126,12 @@ def describe(m: Match, e: dict) -> Draft | None:
         tail = rng.choice([f"{who} on the ball.", f"{who} has it.", f"{who}, looking for a way forward.",
                            f"it's with {who}."])
         prio = 1 if m.sig(e["id"])["priority"] >= 1 else 0
-        return Draft("describe", t, prio, [f"{where}, {team}. {cap(tail)}"], "calm",
+        text = f"{where}, {team}. {cap(tail)}"
+        if e.get("sub_type") == "free_kick":
+            text, prio = f"Free kick, {where.lower()}, {team}. {who} takes it.", 1
+        elif e.get("sub_type") == "goal_kick":  # never the word "goal" here: it is an outcome word (spoiler eval)
+            text, prio = f"{team} restart from the back. {who} on the ball.", 1
+        return Draft("describe", t, prio, [text], "calm",
                      m.second(t)["tension"], (e["id"],), stale_s=1.0 if prio else 0.5, team=side, key=e["id"])
     if e["type"] == "defending" and e.get("sub_type") == "interception":
         text = rng.choice([f"Cut out! {who} wins it back for {team}.", f"Intercepted by {who}! {team} have it back."])
@@ -148,7 +163,7 @@ def build(m: Match, shot: dict) -> Draft | None:
     evidence = (shot["id"],) + ((holder_ev,) if who else ())
     # Intensity from tension (xG-weighted look-ahead, B's signals) and xG only: identical for a goal and a save.
     intensity = min(1.0, max(m.second(t)["tension"] * 0.8, 0.5 + xg))
-    return Draft("build", t, 4, texts, "urgent" if intensity < 0.75 else "excited", intensity, evidence,
+    return Draft("build", t, 5, texts, "urgent" if intensity < 0.75 else "excited", intensity, evidence,
                  stale_s=0.5, team=m.side(shot), tacton="attack", key=f"build:{shot['id']}")
 
 
@@ -161,24 +176,63 @@ def call(m: Match, shot: dict) -> Draft:
 
 
 def react(m: Match, shot: dict) -> Draft:
-    """The outcome, at the moment it is revealed (contracts/b spoiler rule)."""
+    """The outcome, at the moment it is revealed (contracts/b spoiler rule; for a VAR review, the decision)."""
     side, rt = m.side(shot), m.reveal_t(shot)
     rng = _rng(m, f"react:{shot['id']}")
-    team = m.team_name(side)
-    if shot["outcome_type"] == "successful":
-        return Draft("react", rt, 6, [f"Goal! Goal for {team}!", "Goal!"], "shouting", 1.0, (shot["id"],),
-                     stale_s=1.5, pause_ms=300, reveal="outcome", team=side, tacton="goal", key=f"react:{shot['id']}")
+    team, s = m.team_name(side), m.surname(shot["player_id"])
     related = [m.by_id(i) for i in shot.get("related_event_ids") or ()]
-    keeper = next((r for r in related if r["type"] == "goalkeeping"), None)
+    by_type = {r["type"]: r for r in related}
+    reviewed = (shot.get("var") or {}).get("reviewed", False)
+    var_ids = tuple(r["id"] for r in related if r["type"] == "referee")
+    if shot["outcome_type"] == "successful":
+        texts = ([f"The goal stands! Goal for {team}!", "The goal stands!"] if reviewed else
+                 [f"Goal! Goal for {team}!", "Goal!"])
+        return Draft("react", rt, 7, texts, "shouting", 1.0, (shot["id"], *var_ids), stale_s=1.5, pause_ms=300,
+                     reveal="outcome", team=side, tacton="goal", key=f"react:{shot['id']}")
+    evidence: tuple[str, ...] = (shot["id"],)
+    keeper, blocker = by_type.get("goalkeeping"), by_type.get("defending")
     if shot["outcome_type"] == "saved" and keeper:
-        k, s = m.surname(keeper["player_id"]), m.surname(shot["player_id"])
+        k = m.surname(keeper["player_id"])
         text = rng.choice([f"Saved! {k} keeps out {s}.", f"Saved by {k}! {s} denied.", f"Saved! {k} holds on."])
         texts, evidence = [text, f"Saved by {k}!"], (shot["id"], keeper["id"])
+    elif shot["outcome_type"] == "blocked" and blocker and blocker.get("sub_type") == "block":
+        b = m.surname(blocker["player_id"])
+        texts, evidence = [f"Blocked! {b} gets in the way.", "Blocked!"], (shot["id"], blocker["id"])
+    elif shot["outcome_type"] == "wide":
+        texts = [rng.choice([f"Wide! {s} sends it past the post.", f"Wide from {s}!"]), "Wide!"]
+    elif shot["outcome_type"] == "offside":
+        texts, evidence = ["No goal! VAR rules it out for offside.", "No goal!"], (shot["id"], *var_ids)
     else:
-        word = {"saved": "Saved!", "wide": "Wide!", "blocked": "Blocked!", "woodwork": "Off the post!"}
-        texts, evidence = [word.get(shot["outcome_type"], "Not this time!")], (shot["id"],)
-    return Draft("react", rt, 6, texts, "excited", 0.85, evidence, stale_s=1.5, pause_ms=300, reveal="outcome",
+        texts = [{"saved": "Saved!", "blocked": "Blocked!", "woodwork": "Off the post!"}.get(shot["outcome_type"],
+                                                                                              "Not this time!")]
+    return Draft("react", rt, 7, texts, "excited", 0.85, evidence, stale_s=1.5, pause_ms=300, reveal="outcome",
                  team=side, tacton="nearMiss", key=f"react:{shot['id']}")
+
+
+def var_check(m: Match, e: dict) -> list[Draft]:
+    """A VAR review is a long wait before the outcome. Say that it is happening, never how it ends (contract 0.2.0)."""
+    shot = m.by_id(e["related_event_ids"][0])
+    t, rt, side = m.t(e), m.reveal_t(e), m.side(shot)
+    ev = (e["id"], shot["id"])
+    out = [Draft("var", t, 6, ["It's in the net... but hold on, VAR is checking it.", "VAR is checking it."],
+                 "urgent", 0.6, ev, stale_s=1.5, team=side, key=f"var:{e['id']}")]
+    if rt - t > 12:  # keep the wait under MAX_QUIET_S of silence
+        out.append(Draft("var", t + (rt - t) / 2, 6, ["Still checking... both ends waiting on VAR.", "Still checking."],
+                         "curious", 0.5, ev, stale_s=3.0, team=side, key=f"var2:{e['id']}"))
+    return out
+
+
+def foul(m: Match, e: dict) -> Draft | None:
+    if e.get("sub_type") != "foul_committed":
+        return None
+    t, side = m.t(e), m.side(e)
+    who, team = m.surname(e["player_id"]), m.team_name(side)
+    if e["outcome_type"] == "yellow_card":
+        return Draft("foul", t, 4, [f"Foul by {who}... and it's a yellow card for {team}.", f"Yellow card, {who}."],
+                     "urgent", 0.6, (e["id"],), stale_s=1.5, reveal="outcome", team=side, tacton="yellow",
+                     key=f"foul:{e['id']}")
+    return Draft("foul", t, 1, [f"Foul by {who}. Free kick."], "curious", 0.4, (e["id"],), stale_s=1.0,
+                 reveal="outcome", team=side, key=f"foul:{e['id']}")
 
 
 def detail(m: Match, shot: dict) -> Draft | None:
@@ -198,7 +252,7 @@ def detail(m: Match, shot: dict) -> Draft | None:
     else:
         play, evidence = f"And {scorer} {finish}!", (shot["id"],)
     state = f"{cap(score_words(m, t))}, {clock_words(m, t)}."
-    return Draft("detail", t, 5, [f"{play} {state}", f"{scorer} scores. {state}"], "excited", 0.75, evidence,
+    return Draft("detail", t, 6, [f"{play} {state}", f"{scorer} scores. {state}"], "excited", 0.75, evidence,
                  stale_s=8.0, reveal="outcome", team=side, key=f"detail:{shot['id']}")
 
 
