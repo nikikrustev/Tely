@@ -104,3 +104,18 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   direction line takes the first quiet slot (716 s in this cut).
 - New lines: yellow card, free kick, goal kick (never the word "goal"), block with the blocker's name, wide, offside.
 - Judge cut, Andrew HD: 45 lines, truth_check 45/45, 0 spoiler leaks, longest gap between line starts 19.1 s, rebuild 0 TTS calls.
+
+## D11. Replay bundle and hosting (A3, 21 Oct 2026)
+
+- **`build_bundle`** runs B's `build_match`, then `build_commentary`, then B's `build_segments` (skipped until B's Stage 2 exists),
+  then writes `manifest.json` (file 43 §6 shape, sha256 of every file). Cues stay out of `segments.json` (TEAM_SPLIT.md).
+- **gzip across machines:** B's `ticks.json.gz` re-compresses to different bytes on our Python 3.12 / zlib 1.3.1 than on B's
+  machine. The unzipped data is identical. `build_bundle` writes B's original bytes back in that case, so git stays clean; any
+  real content change stops the build (exit 2) as a determinism bug for B.
+- **Chapters are spoiler-safe:** one "Big moment N" stop 6 s before every build-up and card, the same for a goal or a miss.
+- **Hosting:** Static Web Apps **Free only** (D6), in West Europe. Verified 21 Oct with `az provider show`: SWA regions are
+  Central US, East US 2, West US 2, West Europe, East Asia (no Sweden Central). The resource group stays rg-as-judge in Sweden
+  Central, where the bootstrap created it.
+- **Caching:** only the hash-named MP3s and Vite's `/assets/*` are `immutable`; the rest of `/replay/*` revalidates after
+  5 minutes, because `cues.en.radio.jsonl` keeps its name when rebuilt. `.gz` is served as `application/gzip`, so the
+  browser gets raw bytes and decompresses them itself.
