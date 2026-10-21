@@ -73,3 +73,23 @@ potencialbg tested the Voice Live playground in project `audiostands` (resource 
 free account: it heard the question and answered by voice. The playground lists models by price tier (Pro / Standard / Lite)
 without version numbers. We use **GPT Realtime Mini (Standard)**, which matches `gpt-realtime-mini` in our quota list (40)
 and the plan's `gpt-realtime-2.1-mini`. The exact version behind the name is (unverified). Avoid the Pro models, which cost more.
+
+## D9. Stage 3 commentary: what we verified and what we chose (21 Oct 2026)
+
+Built against B's hand-written 90 s sample (`contracts/b/sample/`), because Stage 1 has not merged. Every Stage 3 reader
+goes through `audiostands.commentary.source.load_match()`. Switching to the real cut is one line in `MATCH_DIRS`.
+
+**Verified on our resource (`as-foundry-stoynev`, keyless):**
+- `get_voices_async("en-US")` lists 30+ `en-US-*:DragonHDLatestNeural` voices, incl. Andrew, Brian, Ava, Davis, Emma, Steffan.
+- All five style tags we use (`calm`, `curious`, `urgent`, `excited`, `shouting`) are silent: we rendered each with Andrew HD
+  and transcribed the audio with Speech-to-text; no tag word was spoken. Andrew HD measured about 2.6 words/s, as file 39 assumed.
+- HD output differs slightly on every render (file 43 §7), so we never re-render a cached SSML hash.
+
+**Choices (ours):**
+- B's `reveal_t` comes 0.4–0.7 s after the shot. A "shoots!" call at shot + 0.2 s rarely fits before the outcome, so the
+  outcome line ("Saved!", "Goal!") is placed first, at `reveal_t`, and the call appears only when the ball travels long enough.
+- Hush: no describe or fill line may start between a build-up and its reveal.
+- Build-ups carry shorter fallback texts and are never dropped for length (BUILD_PLAN: never cut the build-up).
+- The spoiler-leak eval is stricter than file 43: an outcome word is a leak from D before the shot **until its `reveal_t`**.
+- DragonHD `temperature=0.4` (BUILD_PLAN: "low"). The style tag is repeated per sentence, since a tag ends at a sentence boundary.
+- Rendered-but-rejected fallback MP3s stay in the cache: they are what lets a rebuild make 0 TTS calls.
