@@ -1,0 +1,299 @@
+{
+  "format": "audiostands.meta",
+  "version": "0.2.0",
+  "cdf_version": "0.3.2",
+  "synthetic": true,
+  "notice": "Synthetic match. Fictional clubs and players. No real match data.",
+  "match": {
+    "id": "syn_s0024",
+    "competition": "Berbata Synthetic League",
+    "season": "2026-27",
+    "kickoff_time": "2026-10-24T15:00:00.000Z",
+    "venue": {
+      "id": "syn_emberfield",
+      "name": "Emberfield"
+    }
+  },
+  "periods": [
+    {
+      "period": "second_half",
+      "start_time": "2026-10-24T16:03:00.000Z",
+      "start_t": 0.0,
+      "clock_start": "45:00.00"
+    }
+  ],
+  "pitch": {
+    "length_m": 105.0,
+    "width_m": 68.0,
+    "origin": "centre_spot",
+    "x": "metres along the touchline, -52.5..52.5; home attacks +x all match (CDF)",
+    "y": "metres across, -34..34, bottom to top: -34 is the near (main-stand) touchline"
+  },
+  "teams": {
+    "home": {
+      "id": "syn_reds",
+      "name": "Ember Vale FC",
+      "short_name": "Reds",
+      "formation": "4-4-2",
+      "attacks": "+x",
+      "kit": {
+        "shirt": "red",
+        "sleeves": "red",
+        "shorts": "white",
+        "socks": "red",
+        "words": "red shirts, white shorts"
+      },
+      "players": [
+        {
+          "id": "r1",
+          "first_name": "Omar",
+          "last_name": "Vaston",
+          "name": "Omar Vaston",
+          "jersey_number": 1,
+          "position": "GK",
+          "is_starter": true
+        },
+        {
+          "id": "r2",
+          "first_name": "Milo",
+          "last_name": "Olvard",
+          "name": "Milo Olvard",
+          "jersey_number": 2,
+          "position": "RB",
+          "is_starter": true
+        },
+        {
+          "id": "r5",
+          "first_name": "Zeki",
+          "last_name": "Wexros",
+          "name": "Zeki Wexros",
+          "jersey_number": 5,
+          "position": "CB",
+          "is_starter": true
+        },
+        {
+          "id": "r4",
+          "first_name": "Bastian",
+          "last_name": "Nevaro",
+          "name": "Bastian Nevaro",
+          "jersey_number": 4,
+          "position": "CB",
+          "is_starter": true
+        },
+        {
+          "id": "r3",
+          "first_name": "Bastian",
+          "last_name": "Dunani",
+          "name": "Bastian Dunani",
+          "jersey_number": 3,
+          "position": "LB",
+          "is_starter": true
+        },
+        {
+          "id": "r7",
+          "first_name": "Teo",
+          "last_name": "Dunwick",
+          "name": "Teo Dunwick",
+          "jersey_number": 7,
+          "position": "RM",
+          "is_starter": true
+        },
+        {
+          "id": "r8",
+          "first_name": "Emre",
+          "last_name": "Morani",
+          "name": "Emre Morani",
+          "jersey_number": 8,
+          "position": "CM",
+          "is_starter": true
+        },
+        {
+          "id": "r6",
+          "first_name": "Dmitri",
+          "last_name": "Ashski",
+          "name": "Dmitri Ashski",
+          "jersey_number": 6,
+          "position": "CM",
+          "is_starter": true
+        },
+        {
+          "id": "r11",
+          "first_name": "Femi",
+          "last_name": "Nevford",
+          "name": "Femi Nevford",
+          "jersey_number": 11,
+          "position": "LM",
+          "is_starter": true
+        },
+        {
+          "id": "r9",
+          "first_name": "Arlo",
+          "last_name": "Orlani",
+          "name": "Arlo Orlani",
+          "jersey_number": 9,
+          "position": "ST",
+          "is_starter": true
+        },
+        {
+          "id": "r10",
+          "first_name": "Teo",
+          "last_name": "Varell",
+          "name": "Teo Varell",
+          "jersey_number": 10,
+          "position": "ST",
+          "is_starter": true
+        }
+      ]
+    },
+    "away": {
+      "id": "syn_navy",
+      "name": "Port Halden FC",
+      "short_name": "Navy",
+      "formation": "4-4-2",
+      "attacks": "-x",
+      "kit": {
+        "shirt": "navy",
+        "sleeves": "sky blue",
+        "shorts": "navy",
+        "socks": "navy",
+        "words": "navy shirts with sky-blue sleeves"
+      },
+      "players": [
+        {
+          "id": "n1",
+          "first_name": "Gus",
+          "last_name": "Galic",
+          "name": "Gus Galic",
+          "jersey_number": 1,
+          "position": "GK",
+          "is_starter": true
+        },
+        {
+          "id": "n2",
+          "first_name": "Bram",
+          "last_name": "Lomley",
+          "name": "Bram Lomley",
+          "jersey_number": 2,
+          "position": "LB",
+          "is_starter": true
+        },
+        {
+          "id": "n5",
+          "first_name": "Ilan",
+          "last_name": "Rilford",
+          "name": "Ilan Rilford",
+          "jersey_number": 5,
+          "position": "CB",
+          "is_starter": true
+        },
+        {
+          "id": "n4",
+          "first_name": "Dmitri",
+          "last_name": "Dunaro",
+          "name": "Dmitri Dunaro",
+          "jersey_number": 4,
+          "position": "CB",
+          "is_starter": true
+        },
+        {
+          "id": "n3",
+          "first_name": "Hugo",
+          "last_name": "Olvros",
+          "name": "Hugo Olvros",
+          "jersey_number": 3,
+          "position": "RB",
+          "is_starter": true
+        },
+        {
+          "id": "n7",
+          "first_name": "Teo",
+          "last_name": "Ashard",
+          "name": "Teo Ashard",
+          "jersey_number": 7,
+          "position": "LM",
+          "is_starter": true
+        },
+        {
+          "id": "n8",
+          "first_name": "Kenji",
+          "last_name": "Lomade",
+          "name": "Kenji Lomade",
+          "jersey_number": 8,
+          "position": "CM",
+          "is_starter": true
+        },
+        {
+          "id": "n6",
+          "first_name": "Lars",
+          "last_name": "Kelski",
+          "name": "Lars Kelski",
+          "jersey_number": 6,
+          "position": "CM",
+          "is_starter": true
+        },
+        {
+          "id": "n11",
+          "first_name": "Jude",
+          "last_name": "Olvholm",
+          "name": "Jude Olvholm",
+          "jersey_number": 11,
+          "position": "RM",
+          "is_starter": true
+        },
+        {
+          "id": "n9",
+          "first_name": "Gus",
+          "last_name": "Fenford",
+          "name": "Gus Fenford",
+          "jersey_number": 9,
+          "position": "ST",
+          "is_starter": true
+        },
+        {
+          "id": "n10",
+          "first_name": "Sami",
+          "last_name": "Strandford",
+          "name": "Sami Strandford",
+          "jersey_number": 10,
+          "position": "ST",
+          "is_starter": true
+        }
+      ]
+    }
+  },
+  "judge_cut": {
+    "t_start": 670.0,
+    "t_end": 1150.0,
+    "seed": 24,
+    "source": "generator",
+    "period": "second_half",
+    "score_at_start": {
+      "home": 0,
+      "away": 0
+    }
+  },
+  "rates": {
+    "ball_hz": 25,
+    "player_hz": 5,
+    "signals_hz": 1
+  },
+  "files": {
+    "events": "events.jsonl",
+    "signals": "signals.json",
+    "ticks": "ticks.json.gz"
+  },
+  "officials": [
+    {
+      "id": "ref_1",
+      "type": "main_referee"
+    },
+    {
+      "id": "var_1",
+      "type": "video_assistant_referee"
+    }
+  ],
+  "generator": {
+    "name": "audiostands.generator",
+    "version": "0.2.0"
+  }
+}
