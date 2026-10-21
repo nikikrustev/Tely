@@ -26,7 +26,7 @@ MIN_GAP_S = 0.4      # silence between two lines (file 39)
 MAX_QUIET_S = 20.0   # max time between line starts without spoken state (file 39 §3, our guess)
 FILL_AFTER_S = 6.0   # a quiet fill comes this long after the last line ends, unless MAX_QUIET_S forces it sooner
 ROUTINE_GAP_S = 1.5  # a routine pass is described only after this much silence
-HUSHED = ("describe", "state")  # kinds that may not talk over a build-up (build start -> reveal)
+HUSHED = ("describe", "state", "kits")  # kinds that may not talk over a build-up (build start -> reveal)
 STEP_S = 0.1
 EPS = 1e-6           # float tolerance for the overlap test (15.05 + 0.4 > 15.45 in floats)
 
@@ -50,14 +50,18 @@ def estimate(text: str, style: str, pause_ms: int) -> float:
 
 
 def drafts(m: Match) -> list[T.Draft]:
-    out = [T.intro(m)]
+    out = [T.opener(m), T.kits(m)]
     for e in m.events:
         if e.get("sub_type") == "kick_off" and m.t(e) <= m.t_start + 1:
-            continue  # the intro says who kicks off
+            continue  # the opener says who kicks off
         if e["type"] == "shot":
             out += [T.build(m, e), T.call(m, e), T.react(m, e), T.detail(m, e)]
+        elif e["type"] == "referee":
+            out += T.var_check(m, e) if e.get("sub_type") == "var_check" else []
+        elif e["type"] == "misc":
+            out.append(T.foul(m, e))
         else:
-            out.append(T.describe(m, e))  # saves are spoken by the shot's react line
+            out.append(T.describe(m, e))  # saves and blocks are spoken by the shot's react line
     return [d for d in out if d is not None and m.t_start <= d.t < m.t_end]
 
 

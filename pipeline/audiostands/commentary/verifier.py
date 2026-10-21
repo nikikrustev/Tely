@@ -32,7 +32,7 @@ def allowed_players(m: Match, evidence: list[str], t_in: float) -> set[str]:
     ok = set()
     for eid in evidence:
         e = m.by_id(eid)
-        ok.add(e["player_id"])
+        ok.add(e.get("player_id"))  # referee events have none
         if e.get("receiver_id") and m.reveal_t(e) <= t_in:
             ok.add(e["receiver_id"])
     return ok
