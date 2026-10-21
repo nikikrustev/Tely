@@ -8,7 +8,9 @@ Files that cross from one lane to the other. Each folder has one owner (TEAM_SPL
 | `golden/a/` | A (potencialbg) | Live Voice Live transcripts (later) |
 | `golden/b/` | B | Q&A golden cases (later) |
 
-The rest of this file documents `b/`: the **match format, version 0.1.0**.
+The rest of this file documents `b/`: the **match format, version 0.2.0** (0.1.0 plus added fields only; see the Changelog).
+
+**Where the real match is.** Stage 1 (`python -m audiostands.build_match --cut judge`, from `pipeline/`) writes the judge cut to `web/public/replay/v1/judge/`. It uses the same four files and the same fields as the sample, plus the 0.2.0 additions.
 
 **Append-only from Wed 21 Oct, 18:00 Sofia.** Adding a field is fine. Renaming or removing a field needs A's approval in the PR (TEAM_SPLIT.md, cross-lane rules).
 
@@ -96,6 +98,7 @@ Metres, origin at the centre spot (CDF, file 26 §4). The pitch is 105 × 68 m.
 An event starts at `t`, but its **outcome is only known at `reveal_t`**: when the pass arrives, the shot reaches the keeper, or the ball crosses the line. The listener's playhead must pass `reveal_t` before anything may say how it ended. That covers `spoken`, `spoken_past`, `outcome_type`, the score and the crowd reaction.
 - The look-ahead for build-up lines may use a shot's `t`, its `xg` and its zone, never its outcome (files 38, 39, 43).
 - The crowd's per-second values already follow this rule: their look-ahead uses xG only.
+- **VAR-checked goals (0.2.0):** the final outcome is only known when the check ends. So for a reviewed shot, `reveal_t` is the VAR decision time, not the moment the ball crossed the line. The score changes then too.
 
 ---
 
@@ -118,6 +121,10 @@ Our format (not CDF). The match, the teams and the window.
 | `judge_cut` | object | The window this bundle covers: `t_start`, `t_end` (s), `seed` (generator seed; `null` for the hand-written sample), `source` (`"hand_written_sample"` or `"generator"`) | `{"t_start":0.0,"t_end":90.0,"seed":null,"source":"hand_written_sample"}` |
 | `rates` | object | `ball_hz` 25, `player_hz` 5, `signals_hz` 1 | |
 | `files` | object | The other three file names | |
+| `judge_cut.period` *(0.2.0)* | string | The CDF period the window is in (the generator's cuts sit inside one half) | `"second_half"` |
+| `judge_cut.score_at_start` *(0.2.0)* | `{home, away}` | Score when the window opens. Goals before the window are not in `events.jsonl`, so add this to any score you count from events. The judge cut is chosen to start at 0–0 | `{"home":0,"away":0}` |
+| `officials` *(0.2.0)* | list | `{id, type}` of the officials that referee events name in `official_id` | `[{"id":"ref_1","type":"main_referee"},{"id":"var_1","type":"video_assistant_referee"}]` |
+| `generator` *(0.2.0)* | object | `name` and `version` of the generator that made the bundle (absent in the hand-written sample) | `{"name":"audiostands.generator","version":"0.2.0"}` |
 
 **A team:**
 
@@ -158,8 +165,10 @@ Player ids are `r1`…`r11` (Reds) and `n1`…`n11` (Navy), with the shirt numbe
 | `event.x`, `y` | Where it started (m) |
 | `event.x_end`, `y_end` | Where the ball ended (m). Passes and shots only, `null` otherwise. For a goal, the point where it crossed the line |
 | `event.body_part` | `right_foot`, `left_foot`, `head`, `hands`, … (CDF list). Required for passes and shots |
-| `event.related_event_ids` | Linked events: shot ↔ save, intercepted pass ↔ interception, goal → the pass that set it up |
+| `event.related_event_ids` | Linked events: shot ↔ save, intercepted pass ↔ interception, goal → the pass that set it up. In the generated cut a shot lists the pass that set it up first (if any), then its save, block or VAR check |
 | `event.match_clock` | `"MM:SS.mm"` |
+| `event.official_id` *(0.2.0)* | Referee events only, instead of `player_id`/`team_id` (CDF forbids those on referee events). Look it up in `meta.officials` |
+| `event.var` *(0.2.0)* | Shots a VAR check reviewed: `{"reviewed": true, "upheld": true/false}` (CDF field). `upheld` = the goal stood |
 
 **Event types in v0.1.0.** CDF leaves `type` free; the names follow file 26 §3.
 
@@ -170,8 +179,15 @@ Player ids are `r1`…`r11` (Reds) and `n1`…`n11` (Navy), with the shirt numbe
 | Shot | `shot` | `null` | `successful` (= goal) / `saved` (later also `wide`, `blocked`, `woodwork`) |
 | Keeper save | `goalkeeping` | `save` | `successful` |
 | Interception | `defending` | `interception` | `successful` |
+| *(0.2.0)* Free kick · goal kick | `pass` | `free_kick` · `goal_kick` | as a pass |
+| *(0.2.0)* Shot that missed or was ruled out | `shot` | `null` | `wide`, `woodwork` (off the post, then a goal kick), `blocked`, `offside` (went in, but VAR ruled it out) |
+| *(0.2.0)* Block | `defending` | `block` | `successful` |
+| *(0.2.0)* Foul (with or without a card) | `misc` | `foul_committed` | `unsuccessful` (free kick only) / `yellow_card`. The player and team are the ones who committed it |
+| *(0.2.0)* VAR-style check | `referee` | `var_check` | `goal_stands` / `goal_disallowed`. Has `official_id` and **no** `player_id`/`team_id`; `x`/`y` = the reviewed shot; `related_event_ids` = [that shot]; `reveal_t` = the decision, about 20 s later |
 
-Stage 1 adds more types from file 26 §3 (tackle, foul, card, carry, clearance and the VAR-style check) as **new rows**. The fields stay the same.
+Rows marked 0.2.0 were added by Stage 1. Not generated yet: red cards (the generator never shows a second yellow, so it stays 11 v 11), penalties, corners and throw-ins. They would be added as new rows, and the fields stay the same.
+
+**Code that reads every event must allow for `referee` events, which have no `team_id` or `player_id`.**
 
 There are no `metrics` on purpose. xG lives in `signals.json` (TEAM_SPLIT.md). Copying it into CDF's `metrics.xg` later would be an additive change.
 
@@ -239,7 +255,17 @@ These are B's plain-text drafts. A's commentator writes its own lines; these are
 
 ### `crowd_one_shots[]`
 
-Crowd reactions to play once, at the moment the outcome is revealed: `{"t": 61.28, "end": "H", "kind": "roar"}`. The kinds in v0.1.0 are `roar`, `stunned_hush` (goal for / against), `ooh_groan` and `relief_applause` (our shot missed / theirs missed). Stage 1 adds whistles, card cheers and the VAR `hush`.
+Crowd reactions to play once, at the moment the outcome is revealed: `{"t": 61.28, "end": "H", "kind": "roar"}`. The kinds in v0.1.0 are `roar`, `stunned_hush` (goal for / against), `ooh_groan` and `relief_applause` (our shot missed / theirs missed). 0.2.0 adds:
+- `whistles_jeer`: the other team fouls us;
+- `cheer`: the other team gets a card;
+- `hush`: both ends, when a VAR check starts.
+
+### `haptics[]` *(0.2.0)*
+
+One-off vibration cues from file 41's vocabulary: `{"t": 703.76, "tacton": "goal", "team": "away"}`.
+- `tacton` is one of `whistle1` (kick-off), `attack` (tension crosses 0.6), `shot`, `goal` or `nearMiss` (at `reveal_t`), `yellow` or `red`.
+- `team` is `"home"`, `"away"` or `null`.
+- The heartbeat is not listed: the browser drives it from per-second `tension`.
 
 ---
 
@@ -302,12 +328,12 @@ What makes it believable:
 ### Regenerate and test
 
 ```bash
-pip install -r contracts/b/requirements.txt
+pip install -e "pipeline[dev]"
 python contracts/b/make_sample.py
-pytest contracts/b
+cd pipeline && pytest tests/b
 ```
 
-`make_sample.py` uses only the standard library and no randomness, so it writes identical files every time. The test checks:
+`make_sample.py` uses only the standard library and no randomness, so it writes identical files every time. The test (`pipeline/tests/b/test_contract.py`, run in CI) checks the sample **and** the real judge cut:
 - CDF validity in `extreme` mode;
 - ids agree across the four files;
 - every event has matching signals;
@@ -319,8 +345,20 @@ pytest contracts/b
 - the story is complete (pass chain, shot, save, goal, and no score leak before the goal);
 - regenerating gives identical files. For `ticks.json.gz` it compares the unzipped content, because gzip bytes can differ between zlib builds.
 
-The test moves to `pipeline/tests/b/` with Stage 1. Until then, CI (which runs `pytest` in `pipeline/`) does not run it.
+On the judge cut, "events line up with the players" allows a median of 2 m and a 90th percentile of 4 m, because the players come from file 19's movement model rather than being placed by hand. `pipeline/tests/b/test_stage1.py` adds the Stage 1 checks:
+- byte-identical rebuilds, and the committed bundle matches a fresh build;
+- the two file 33 generator fixes;
+- the crowd before a shot doesn't depend on its outcome;
+- the look-ahead swell before a good chance;
+- opposite valence at the two ends after a goal;
+- the clock firewall;
+- the judge-cut choice.
 
 ## Changelog
 
 - **0.1.0** (20 Oct 2026): first version, with the hand-written 90 s sample.
+- **0.2.0** (21 Oct 2026): Stage 1, the real judge cut. Added only, nothing renamed or removed:
+  - `meta`: `judge_cut.period`, `judge_cut.score_at_start`, `officials`, `generator`;
+  - `events`: event types `pass/free_kick`, `pass/goal_kick`, `shot` outcomes `wide`/`woodwork`/`blocked`/`offside`, `defending/block`, `misc/foul_committed`, `referee/var_check` (with `official_id`), and the CDF `var` field on reviewed shots;
+  - `signals`: `haptics[]` and the one-shot kinds `whistles_jeer`, `cheer`, `hush`.
+  - For VAR-reviewed shots, `reveal_t` is the decision time.

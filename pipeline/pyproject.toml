@@ -9,10 +9,10 @@ name = "audiostands"
 version = "0.0.1"
 description = "Audio Stands: synthetic match, signals, commentary and Q&A for blind fans"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = ["numpy>=2.0,<3"]   # movement.py only (element-wise maths; see its docstring)
 
 [project.optional-dependencies]
-dev = ["pytest>=9.1"]
+dev = ["pytest>=9.1", "common-data-format-validator==0.1.1"]   # CDF v0.3.2 checker (MIT, file 26)
 
 [tool.setuptools.packages.find]
 include = ["audiostands*"]
