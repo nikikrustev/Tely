@@ -194,7 +194,8 @@ def spoken_lines(e: dict, match: dict, by_id: dict) -> tuple[str, str]:
     if out == "offside":
         return (f"{Where}, {team}. {who} puts it in, but VAR rules it out.", f"{who} had a goal ruled out")
     if out == "saved":
-        keeper = name(rel[0]["player_id"]) if rel else "the keeper"
+        # The keeper is the linked *save* event (a shot links its assist pass first since 0.2.0).
+        keeper = next((name(r["player_id"]) for r in rel if r["type"] == "goalkeeping"), "the keeper")
         return (f"{Where}, {team}. {who} shoots, saved by {keeper}.", f"{who} had a shot saved by {keeper}")
     tail = {"wide": "wide", "woodwork": "off the post", "blocked": "blocked"}[out]
     past = {"wide": f"{who} shot wide", "woodwork": f"{who} hit the post", "blocked": f"{who} had a shot blocked"}[out]
