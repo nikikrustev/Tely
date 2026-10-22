@@ -1,0 +1,210 @@
+[
+  {
+    "output": "web/public/crowd/murmur_1.mp3",
+    "freesound_id": "63587",
+    "author": "studiob",
+    "url": "https://freesound.org/people/studiob/sounds/63587/",
+    "licence": "CC0-1.0",
+    "role": "murmur",
+    "cut_s": [
+      0.0,
+      99.0
+    ],
+    "notes": "steady stadium bed; loops cleanly"
+  },
+  {
+    "output": "web/public/crowd/swell_1.mp3",
+    "freesound_id": "505716",
+    "author": "neisantos",
+    "url": "https://freesound.org/people/neisantos/sounds/505716/",
+    "licence": "CC0-1.0",
+    "role": "swell",
+    "cut_s": [
+      18.0,
+      45.5
+    ],
+    "notes": "livelier part only (from 18 s); mono 64 kbps source"
+  },
+  {
+    "output": "web/public/crowd/tense_1.mp3",
+    "freesound_id": "612131",
+    "author": "felix.blume",
+    "url": "https://freesound.org/people/felix.blume/sounds/612131/",
+    "licence": "CC0-1.0",
+    "role": "tense",
+    "cut_s": [
+      8.0,
+      29.9
+    ],
+    "notes": "first 30 s of the source only (a chant starts after); skip the 8 s fade-in"
+  },
+  {
+    "output": "web/public/crowd/away_1.mp3",
+    "freesound_id": "369420",
+    "author": "_vk",
+    "url": "https://freesound.org/people/_vk/sounds/369420/",
+    "licence": "CC0-1.0",
+    "role": "away",
+    "cut_s": [
+      0.0,
+      26.4
+    ],
+    "notes": "played low-passed as the far end"
+  },
+  {
+    "output": "web/public/crowd/roar_1.mp3",
+    "freesound_id": "829455",
+    "author": "itmightgetloud",
+    "url": "https://freesound.org/people/itmightgetloud/sounds/829455/",
+    "licence": "CC0-1.0",
+    "role": "roar",
+    "cut_s": [
+      1.6,
+      13.5
+    ],
+    "notes": "roar at 2.0 s in the cut"
+  },
+  {
+    "output": "web/public/crowd/roar_2.mp3",
+    "freesound_id": "829455",
+    "author": "itmightgetloud",
+    "url": "https://freesound.org/people/itmightgetloud/sounds/829455/",
+    "licence": "CC0-1.0",
+    "role": "roar",
+    "cut_s": [
+      0.2,
+      14.0
+    ],
+    "notes": "roar from 0.4 s"
+  },
+  {
+    "output": "web/public/crowd/roar_3.mp3",
+    "freesound_id": "829455",
+    "author": "itmightgetloud",
+    "url": "https://freesound.org/people/itmightgetloud/sounds/829455/",
+    "licence": "CC0-1.0",
+    "role": "roar",
+    "cut_s": [
+      0.2,
+      14.0
+    ],
+    "notes": "roar from 0.4 s"
+  },
+  {
+    "output": "web/public/crowd/ooh_groan_1.mp3",
+    "freesound_id": "829452",
+    "author": "itmightgetloud",
+    "url": "https://freesound.org/people/itmightgetloud/sounds/829452/",
+    "licence": "CC0-1.0",
+    "role": "ooh_groan",
+    "cut_s": [
+      0.7,
+      6.7
+    ],
+    "notes": "peak at 1.5 s"
+  },
+  {
+    "output": "web/public/crowd/ooh_groan_2.mp3",
+    "freesound_id": "829452",
+    "author": "itmightgetloud",
+    "url": "https://freesound.org/people/itmightgetloud/sounds/829452/",
+    "licence": "CC0-1.0",
+    "role": "ooh_groan",
+    "cut_s": [
+      3.5,
+      9.5
+    ],
+    "notes": "peak at 4.3 s"
+  },
+  {
+    "output": "web/public/crowd/ooh_groan_3.mp3",
+    "freesound_id": "829452",
+    "author": "itmightgetloud",
+    "url": "https://freesound.org/people/itmightgetloud/sounds/829452/",
+    "licence": "CC0-1.0",
+    "role": "ooh_groan",
+    "cut_s": [
+      6.8,
+      12.8
+    ],
+    "notes": "peak at 7.6 s"
+  },
+  {
+    "output": "web/public/crowd/ooh_groan_4.mp3",
+    "freesound_id": "829452",
+    "author": "itmightgetloud",
+    "url": "https://freesound.org/people/itmightgetloud/sounds/829452/",
+    "licence": "CC0-1.0",
+    "role": "ooh_groan",
+    "cut_s": [
+      1.8,
+      6.8
+    ],
+    "notes": "peak at 2.6 s"
+  },
+  {
+    "output": "web/public/crowd/ooh_groan_5.mp3",
+    "freesound_id": "829452",
+    "author": "itmightgetloud",
+    "url": "https://freesound.org/people/itmightgetloud/sounds/829452/",
+    "licence": "CC0-1.0",
+    "role": "ooh_groan",
+    "cut_s": [
+      1.3,
+      5.2
+    ],
+    "notes": "peak at 2.1 s"
+  },
+  {
+    "output": "web/public/crowd/ooh_groan_6.mp3",
+    "freesound_id": "829452",
+    "author": "itmightgetloud",
+    "url": "https://freesound.org/people/itmightgetloud/sounds/829452/",
+    "licence": "CC0-1.0",
+    "role": "ooh_groan",
+    "cut_s": [
+      3.9,
+      9.9
+    ],
+    "notes": "peak at 4.7 s"
+  },
+  {
+    "output": "web/public/crowd/relief_applause_1.mp3",
+    "freesound_id": "829455",
+    "author": "itmightgetloud",
+    "url": "https://freesound.org/people/itmightgetloud/sounds/829455/",
+    "licence": "CC0-1.0",
+    "role": "relief_applause",
+    "cut_s": [
+      1.5,
+      9.5
+    ],
+    "notes": "cheer from 1.8 s"
+  },
+  {
+    "output": "web/public/crowd/whistles_jeer_1.mp3",
+    "freesound_id": "369420",
+    "author": "_vk",
+    "url": "https://freesound.org/people/_vk/sounds/369420/",
+    "licence": "CC0-1.0",
+    "role": "whistles_jeer",
+    "cut_s": [
+      0.0,
+      10.0
+    ],
+    "notes": "booing and whistling"
+  },
+  {
+    "output": "web/public/crowd/cheer_1.mp3",
+    "freesound_id": "369420",
+    "author": "_vk",
+    "url": "https://freesound.org/people/_vk/sounds/369420/",
+    "licence": "CC0-1.0",
+    "role": "cheer",
+    "cut_s": [
+      0.0,
+      3.0
+    ],
+    "notes": "short cheer"
+  }
+]
