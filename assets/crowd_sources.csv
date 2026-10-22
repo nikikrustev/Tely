@@ -1,0 +1,17 @@
+id,file,author,url,licence,role,start,end,notes
+63587,bed_arena.wav,studiob,https://freesound.org/people/studiob/sounds/63587/,CC0-1.0,murmur,0,99,steady stadium bed; loops cleanly
+505716,bed_lively.wav,neisantos,https://freesound.org/people/neisantos/sounds/505716/,CC0-1.0,swell,18,45.5,livelier part only (from 18 s); mono 64 kbps source
+612131,bed_huuu.wav,felix.blume,https://freesound.org/people/felix.blume/sounds/612131/,CC0-1.0,tense,8,29.9,first 30 s of the source only (a chant starts after); skip the 8 s fade-in
+369420,bed_distant.wav,_vk,https://freesound.org/people/_vk/sounds/369420/,CC0-1.0,away,0,26.4,played low-passed as the far end
+829455,goal_1.wav,itmightgetloud,https://freesound.org/people/itmightgetloud/sounds/829455/,CC0-1.0,roar,1.6,13.5,roar at 2.0 s in the cut
+829455,goal_2.wav,itmightgetloud,https://freesound.org/people/itmightgetloud/sounds/829455/,CC0-1.0,roar,0.2,14,roar from 0.4 s
+829455,goal_3.wav,itmightgetloud,https://freesound.org/people/itmightgetloud/sounds/829455/,CC0-1.0,roar,0.2,14,roar from 0.4 s
+829452,nearmiss_1.wav,itmightgetloud,https://freesound.org/people/itmightgetloud/sounds/829452/,CC0-1.0,ooh_groan,0.7,6.7,peak at 1.5 s
+829452,nearmiss_2.wav,itmightgetloud,https://freesound.org/people/itmightgetloud/sounds/829452/,CC0-1.0,ooh_groan,3.5,9.5,peak at 4.3 s
+829452,nearmiss_3.wav,itmightgetloud,https://freesound.org/people/itmightgetloud/sounds/829452/,CC0-1.0,ooh_groan,6.8,12.8,peak at 7.6 s
+829452,nearmiss_4.wav,itmightgetloud,https://freesound.org/people/itmightgetloud/sounds/829452/,CC0-1.0,ooh_groan,1.8,6.8,peak at 2.6 s
+829452,nearmiss_5.wav,itmightgetloud,https://freesound.org/people/itmightgetloud/sounds/829452/,CC0-1.0,ooh_groan,1.3,5.2,peak at 2.1 s
+829452,nearmiss_6.wav,itmightgetloud,https://freesound.org/people/itmightgetloud/sounds/829452/,CC0-1.0,ooh_groan,3.9,9.9,peak at 4.7 s
+829455,cheer_long.wav,itmightgetloud,https://freesound.org/people/itmightgetloud/sounds/829455/,CC0-1.0,relief_applause,1.5,9.5,cheer from 1.8 s
+369420,boo_whistle.wav,_vk,https://freesound.org/people/_vk/sounds/369420/,CC0-1.0,whistles_jeer,0,10,booing and whistling
+369420,cheer_short.wav,_vk,https://freesound.org/people/_vk/sounds/369420/,CC0-1.0,cheer,0,3,short cheer

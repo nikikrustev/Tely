@@ -1,0 +1,39 @@
+{
+  "placeholder": false,
+  "roles": {
+    "murmur": [
+      "murmur_1.mp3"
+    ],
+    "swell": [
+      "swell_1.mp3"
+    ],
+    "tense": [
+      "tense_1.mp3"
+    ],
+    "away": [
+      "away_1.mp3"
+    ],
+    "roar": [
+      "roar_1.mp3",
+      "roar_2.mp3",
+      "roar_3.mp3"
+    ],
+    "ooh_groan": [
+      "ooh_groan_1.mp3",
+      "ooh_groan_2.mp3",
+      "ooh_groan_3.mp3",
+      "ooh_groan_4.mp3",
+      "ooh_groan_5.mp3",
+      "ooh_groan_6.mp3"
+    ],
+    "relief_applause": [
+      "relief_applause_1.mp3"
+    ],
+    "whistles_jeer": [
+      "whistles_jeer_1.mp3"
+    ],
+    "cheer": [
+      "cheer_1.mp3"
+    ]
+  }
+}

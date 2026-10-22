@@ -2,14 +2,33 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Audio Stands</title>
+    <style>
+      :root { color-scheme: light dark; --bg: #fff; --fg: #111; --accent: #b00020; --muted: #555; }
+      @media (prefers-color-scheme: dark) { :root { --bg: #111; --fg: #f2f2f2; --accent: #ff6b7d; --muted: #bbb; } }
+      body { margin: 0; background: var(--bg); color: var(--fg); font: 1.125rem/1.5 system-ui, sans-serif; }
+      main { max-width: 40rem; margin: 0 auto; padding: 1.5rem 1rem; }
+      h1 { font-size: 2rem; margin: 0 0 0.5rem; }
+      .notice { color: var(--muted); }
+      #start { display: block; width: 100%; min-height: 6rem; margin: 1.5rem 0; font-size: 2rem; font-weight: 700;
+               border: 3px solid var(--fg); border-radius: 1rem; background: var(--accent); color: #fff; cursor: pointer; }
+      #start:focus-visible { outline: 4px solid var(--fg); outline-offset: 4px; }
+      .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      #debug { font: 0.95rem/1.4 ui-monospace, monospace; border: 1px dashed var(--muted); padding: 0.75rem; }
+    </style>
   </head>
   <body>
     <main id="app">
       <h1>Audio Stands</h1>
-      <p id="status" aria-live="polite">Loading…</p>
+      <p class="notice" id="notice">A synthetic match with fictional clubs. Commentary uses AI voices. Headphones recommended.</p>
+      <button id="start" type="button">Start</button>
+      <p id="status">Loading…</p>
+      <div id="debug" hidden aria-hidden="true"></div>
     </main>
+    <!-- Live regions exist from page load, so screen readers announce later changes (file 32, WCAG 4.1.3). -->
+    <div id="sr-polite" class="sr-only" role="status" aria-live="polite"></div>
+    <div id="sr-assertive" class="sr-only" aria-live="assertive"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
