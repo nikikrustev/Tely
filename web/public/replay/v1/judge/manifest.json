@@ -46,15 +46,15 @@
  "events": "events.jsonl",
  "signals": "signals.json",
  "ticks": "ticks.json.gz",
- "segments": null,
+ "segments": "segments.json",
  "captions": "captions_sdh.vtt",
  "descriptions": "descriptions.vtt",
  "answers": null,
  "ai_voice_notice": "Commentary uses Azure AI voices. Match data is synthetic.",
- "files": 65,
- "bytes": 2183909,
+ "files": 66,
+ "bytes": 2426391,
  "sha256": {
-  ".gitattributes": "074a7394e919763ecb1bda9a0894736ee1fdd544c5091078de07b61f759a0f8d",
+  ".gitattributes": "388cc297116535ee565c188a3b7733e108f3a8fec17de8335a9b47d444922d54",
   "audio/en/radio/05d24e31d9958bc8ff5f11f00e027f79756cc1f5b6c47b31a0bd16c81dbbc41a.mp3": "74956895710c238a1ad36ee593612b9148320c8a2806c8a631acf180f0ba074e",
   "audio/en/radio/06affab1a430640e836a38e1188114846ba248d68131d0a7bbf16d3a91160480.mp3": "3185f92727a94d9d407b3c3ef62cfee5f9a765dfd65d7b567468516bd9f2023f",
   "audio/en/radio/09bd99b72ed563679534a84aefed236edacc204c15c18f8f81d9810ded3516bd.mp3": "b140a92a4c836d57e80a93ebc5acab5f6826f0940b731ea618f4ba678ff5103d",
@@ -117,6 +117,7 @@
   "descriptions.vtt": "6bdc5fbd1f3cab5d6f797a0ce4d849b39566824136813cc6893ef1125a29a702",
   "events.jsonl": "84ba756076276a7c7b454b37bec6f8fc790f411ce8cbb7d4da16a7fc5f2980d5",
   "meta.json": "93e29846afdd9b65ca462823469126f95a15d3fca8b288c18bb5a74b82fe5c3a",
+  "segments.json": "e338e5fa3f31b35d52bbed528063a417c1eca61e42e26562b6918e25be3104ac",
   "signals.json": "ee1040ee92196a778610b14e0132bccfb76262db927438d1d1b67e6afed8d0c6",
   "ticks.json.gz": "32f6e98819e3c60424a8447e222c22bacdf51fead408c33ec1d691945ba7ee45"
  }
