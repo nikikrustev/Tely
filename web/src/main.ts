@@ -1,6 +1,6 @@
 // OWNER: B (Nikolay). Builds lane B's services, mounts lane A once, and runs the judge-cut sound stage on Start.
 import type { LaneAHandle } from './contracts/a-exports';
-import type { CrowdBus, LaneBContext, LiveAskHandler, ReplayClock } from './contracts/b-exports';
+import type { CrowdBus, LaneBContext, ReplayClock } from './contracts/b-exports';
 import { mountLaneA } from './lane-a';
 
 /** Placeholder services (tests, and before Start). */
@@ -55,9 +55,10 @@ export function scoreLine(score: { home: number; away: number }): string {
 
 async function startApp(): Promise<void> {
   const [{ AudioStands }, { CrowdEngine, loadCrowdBuffers }, { ReplaySource, loadSegments }, { wire }, { startDebugPanel },
-    hap, settingsMod, { loadChapters, nextChapter }] = await Promise.all([
+    hap, settingsMod, { loadChapters, nextChapter }, askMod, { LocalTools, loadQaBundle }] = await Promise.all([
     import('./audio/audio-stands'), import('./audio/crowd-engine'), import('./replay/replay-source'), import('./wire'),
-    import('./replay/debug'), import('./haptics/haptics'), import('./settings'), import('./replay/chapters')]);
+    import('./replay/debug'), import('./haptics/haptics'), import('./settings'), import('./replay/chapters'),
+    import('./ask/ask'), import('./ask/local-tools')]);
   const { loadSettings, saveSettings, crowdGainFor } = settingsMod;
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
   const start = $<HTMLButtonElement>('start'), next = $<HTMLButtonElement>('next'), toggle = $<HTMLButtonElement>('settings-toggle');
@@ -70,9 +71,8 @@ async function startApp(): Promise<void> {
 
   // Lane A gets its services now; the audio ones forward once Start creates them.
   const crowdBus = new LazyCrowdBus(), clock = new LazyClock();
-  let live: LiveAskHandler | null = null;
-  const lane = boot({ crowd: crowdBus, ask: { registerLiveMode: (h) => { live = h; } }, clock });
-  void live; // Stage 6/7: the Ask button uses it
+  const lazyAsk = new askMod.LazyAsk();                 // A may register its live voice mode right at boot
+  const lane = boot({ crowd: crowdBus, ask: lazyAsk, clock });
 
   // ---- settings (work without storage) ----
   let settings = loadSettings();
@@ -136,6 +136,51 @@ async function startApp(): Promise<void> {
     haptics.stopAll();
   };
 
+  // ---- Ask the commentator (Stage 6) ----
+  const askBtn = $<HTMLButtonElement>('ask'), askMenu = $('ask-menu'), askLive = $<HTMLButtonElement>('ask-live');
+  let askCtl: InstanceType<typeof askMod.AskController> | null = null;
+  const openMenu = (open: boolean) => {
+    askMenu.hidden = !open;
+    askBtn.setAttribute('aria-expanded', String(open));
+    if (open) askMenu.querySelector<HTMLButtonElement>('button:not([hidden])')?.focus();
+  };
+  askBtn.addEventListener('click', () => openMenu(askMenu.hidden !== false));
+  const runAsk = async (fn: () => Promise<unknown>) => {
+    openMenu(false);
+    askBtn.disabled = true;
+    say('Answering.');                                   // state change only; the answer itself is heard
+    try { await fn(); } finally { askBtn.disabled = false; askBtn.focus(); }
+  };
+  for (const b of askMenu.querySelectorAll<HTMLButtonElement>('button[data-preset]')) {
+    b.addEventListener('click', () => { if (askCtl) void runAsk(() => askCtl!.ask(b.dataset.preset as 'ball')); });
+  }
+  askLive.addEventListener('click', () => { if (askCtl) void runAsk(() => askCtl!.askLive()); });
+  document.addEventListener('keydown', (e) => {
+    const typing = (e.target as HTMLElement | null)?.closest('input, select, textarea');
+    if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === 'a' || e.key === 'A') { if (!askBtn.disabled) { e.preventDefault(); openMenu(askMenu.hidden !== false); } }
+    else if (e.key === 'Escape' && !askMenu.hidden) { openMenu(false); askBtn.focus(); }
+  });
+  const setupAsk = async (actx: AudioContext, st: InstanceType<typeof AudioStands>, c: InstanceType<typeof CrowdEngine>,
+                          s: InstanceType<typeof ReplaySource>) => {
+    try {
+      const tools = new LocalTools(await loadQaBundle());
+      const player = new askMod.FragmentPlayer(actx, st.commentaryIn);
+      await player.load();
+      askCtl = new askMod.AskController({
+        tools, clock: s, crowd: c, commentary: lane.commentary,
+        speak: (f, text) => player.speak(f, text),
+        ping: () => st.pingBall(),
+        show: (text) => { status.textContent = text; },
+      });
+      lazyAsk.attach(askCtl);
+      askLive.hidden = !askCtl.hasLive;
+      askBtn.disabled = false;
+    } catch {
+      askBtn.disabled = true;                            // no data: the button stays off rather than failing mid-match
+    }
+  };
+
   start.addEventListener('click', async () => {
     if (!ctx) {
       start.disabled = true;
@@ -171,6 +216,7 @@ async function startApp(): Promise<void> {
       s.play();
       wired.pump();
       setInterval(() => wired.pump(), 250);
+      void setupAsk(ctx, st, c, s);
       if (new URLSearchParams(location.search).get('debug') === '1') {
         startDebugPanel($('debug'), { playhead: () => s.now(), crowdGain: () => c.level.gain.value, ballX: () => st.last.x });
       }

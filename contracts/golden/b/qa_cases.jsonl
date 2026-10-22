@@ -1,0 +1,354 @@
+{"tool":"get_score_and_clock","args":{},"playhead_s":670.0,"expected_say":"Reds nil, Navy nil, 56 minutes played.","expected_fragments":["score_m56_0_0"],"expected_evidence":[]}
+{"tool":"get_ball_position","args":{},"playhead_s":670.0,"expected_say":"Navy have it, attacking third, far side. 40 metres from goal.","expected_fragments":["zone_A_attacking_third_far","dist_040"],"expected_evidence":[]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":670.0,"expected_say":"Nothing big has happened yet.","expected_fragments":["nothing_yet"],"expected_evidence":[]}
+{"tool":"what_did_i_miss","args":{"since":"56:10"},"playhead_s":670.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":670.0},"playhead_s":670.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":670.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":679.3,"expected_say":"Reds nil, Navy nil, 56 minutes played.","expected_fragments":["score_m56_0_0"],"expected_evidence":[]}
+{"tool":"get_ball_position","args":{},"playhead_s":679.3,"expected_say":"Navy have it, attacking third, centre. 5 metres from goal.","expected_fragments":["zone_A_attacking_third_centre","dist_005"],"expected_evidence":["e00674"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":679.3,"expected_say":"Attacking third, far side, Navy. Olvholm crosses for Fenford. Before that: Attacking third, far side, Navy. Olvros to Olvholm.","expected_fragments":["ev_e00674","then","ev_e00673"],"expected_evidence":["e00674","e00673"]}
+{"tool":"what_did_i_miss","args":{"since":"56:10"},"playhead_s":679.3,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":670.0},"playhead_s":679.3,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":679.3,"expected":true}
+{"tool":"get_score_and_clock","args":{},"playhead_s":679.4,"expected_say":"Reds nil, Navy nil, 56 minutes played.","expected_fragments":["score_m56_0_0"],"expected_evidence":[]}
+{"tool":"get_ball_position","args":{},"playhead_s":679.4,"expected_say":"Navy have it, attacking third, centre. 5 metres from goal.","expected_fragments":["zone_A_attacking_third_centre","dist_005"],"expected_evidence":["e00674"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":679.4,"expected_say":"Attacking third, far side, Navy. Olvholm crosses for Fenford. Before that: Attacking third, far side, Navy. Olvros to Olvholm.","expected_fragments":["ev_e00674","then","ev_e00673"],"expected_evidence":["e00674","e00673"]}
+{"tool":"what_did_i_miss","args":{"since":"56:10"},"playhead_s":679.4,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":670.0},"playhead_s":679.4,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":679.4,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":682.1,"expected_say":"Reds nil, Navy nil, 56 minutes played.","expected_fragments":["score_m56_0_0"],"expected_evidence":[]}
+{"tool":"get_ball_position","args":{},"playhead_s":682.1,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00674"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":682.1,"expected_say":"Attacking third, far side, Navy. Olvholm crosses for Fenford. Before that: Attacking third, far side, Navy. Olvros to Olvholm.","expected_fragments":["ev_e00674","then","ev_e00673"],"expected_evidence":["e00674","e00673"]}
+{"tool":"what_did_i_miss","args":{"since":"56:10"},"playhead_s":682.1,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":670.0},"playhead_s":682.1,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":682.1,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":682.2,"expected_say":"Reds nil, Navy nil, 56 minutes played.","expected_fragments":["score_m56_0_0"],"expected_evidence":[]}
+{"tool":"get_ball_position","args":{},"playhead_s":682.2,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00674"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":682.2,"expected_say":"Attacking third, far side, Navy. Olvholm crosses for Fenford. Before that: Attacking third, far side, Navy. Olvros to Olvholm.","expected_fragments":["ev_e00674","then","ev_e00673"],"expected_evidence":["e00674","e00673"]}
+{"tool":"what_did_i_miss","args":{"since":"56:10"},"playhead_s":682.2,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":670.0},"playhead_s":682.2,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":682.2,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":685.0,"expected_say":"Reds nil, Navy nil, 56 minutes played.","expected_fragments":["score_m56_0_0"],"expected_evidence":[]}
+{"tool":"get_ball_position","args":{},"playhead_s":685.0,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00674"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":685.0,"expected_say":"Attacking third, far side, Navy. Olvholm crosses for Fenford. Before that: Attacking third, far side, Navy. Olvros to Olvholm.","expected_fragments":["ev_e00674","then","ev_e00673"],"expected_evidence":["e00674","e00673"]}
+{"tool":"what_did_i_miss","args":{"since":"56:10"},"playhead_s":685.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":670.0},"playhead_s":685.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":685.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":700.0,"expected_say":"Reds nil, Navy nil, 56 minutes played.","expected_fragments":["score_m56_0_0"],"expected_evidence":[]}
+{"tool":"get_ball_position","args":{},"playhead_s":700.0,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00674"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":700.0,"expected_say":"Attacking third, far side, Navy. Olvholm crosses for Fenford. Before that: Attacking third, far side, Navy. Olvros to Olvholm.","expected_fragments":["ev_e00674","then","ev_e00673"],"expected_evidence":["e00674","e00673"]}
+{"tool":"what_did_i_miss","args":{"since":"56:10"},"playhead_s":700.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":670.0},"playhead_s":700.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":700.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":703.72,"expected_say":"Reds nil, Navy nil, 56 minutes played.","expected_fragments":["score_m56_0_0"],"expected_evidence":[]}
+{"tool":"get_ball_position","args":{},"playhead_s":703.72,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00674"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":703.72,"expected_say":"Attacking third, far side, Navy. Olvholm crosses for Fenford. Before that: Attacking third, far side, Navy. Olvros to Olvholm.","expected_fragments":["ev_e00674","then","ev_e00673"],"expected_evidence":["e00674","e00673"]}
+{"tool":"what_did_i_miss","args":{"since":"56:10"},"playhead_s":703.72,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":673.72},"playhead_s":703.72,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":703.72,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":703.76,"expected_say":"Reds nil, Navy nil, 56 minutes played.","expected_fragments":["score_m56_0_0"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":703.76,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00676"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":703.76,"expected_say":"VAR checks the Navy goal... and it stands. Before that: Attacking third, centre, Navy. Fenford heads it in! Goal for Navy.","expected_fragments":["ev_e00676","then","ev_e00675"],"expected_evidence":["e00676","e00675"]}
+{"tool":"what_did_i_miss","args":{"since":"56:10"},"playhead_s":703.76,"expected_say":"While you were away, Fenford scored for Navy and VAR let the Navy goal stand.","expected_fragments":["while_away","past_e00675","and","past_e00676"],"expected_evidence":["e00675","e00676"]}
+{"tool":"catch_up","args":{"since_s":673.76},"playhead_s":703.76,"expected_say":"Back to the action. While we talked, Fenford scored for Navy and VAR let the Navy goal stand.","expected_fragments":["back","while_we_talked","past_e00675","and","past_e00676"],"expected_evidence":["e00675","e00676"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":703.76,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":704.76,"expected_say":"Reds nil, Navy one, 56 minutes played.","expected_fragments":["score_m56_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":704.76,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00676"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":704.76,"expected_say":"VAR checks the Navy goal... and it stands. Before that: Attacking third, centre, Navy. Fenford heads it in! Goal for Navy.","expected_fragments":["ev_e00676","then","ev_e00675"],"expected_evidence":["e00676","e00675"]}
+{"tool":"what_did_i_miss","args":{"since":"56:10"},"playhead_s":704.76,"expected_say":"While you were away, Fenford scored for Navy and VAR let the Navy goal stand.","expected_fragments":["while_away","past_e00675","and","past_e00676"],"expected_evidence":["e00675","e00676"]}
+{"tool":"catch_up","args":{"since_s":674.76},"playhead_s":704.76,"expected_say":"Back to the action. While we talked, Fenford scored for Navy and VAR let the Navy goal stand.","expected_fragments":["back","while_we_talked","past_e00675","and","past_e00676"],"expected_evidence":["e00675","e00676"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":704.76,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":715.0,"expected_say":"Reds nil, Navy one, 56 minutes played.","expected_fragments":["score_m56_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":715.0,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00676"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":715.0,"expected_say":"VAR checks the Navy goal... and it stands. Before that: Attacking third, centre, Navy. Fenford heads it in! Goal for Navy.","expected_fragments":["ev_e00676","then","ev_e00675"],"expected_evidence":["e00676","e00675"]}
+{"tool":"what_did_i_miss","args":{"since":"56:10"},"playhead_s":715.0,"expected_say":"While you were away, Fenford scored for Navy and VAR let the Navy goal stand.","expected_fragments":["while_away","past_e00675","and","past_e00676"],"expected_evidence":["e00675","e00676"]}
+{"tool":"catch_up","args":{"since_s":685.0},"playhead_s":715.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":715.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":730.0,"expected_say":"Reds nil, Navy one, 57 minutes played.","expected_fragments":["score_m57_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":730.0,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00676"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":730.0,"expected_say":"VAR checks the Navy goal... and it stands. Before that: Attacking third, centre, Navy. Fenford heads it in! Goal for Navy.","expected_fragments":["ev_e00676","then","ev_e00675"],"expected_evidence":["e00676","e00675"]}
+{"tool":"what_did_i_miss","args":{"since":"56:10"},"playhead_s":730.0,"expected_say":"While you were away, Fenford scored for Navy and VAR let the Navy goal stand.","expected_fragments":["while_away","past_e00675","and","past_e00676"],"expected_evidence":["e00675","e00676"]}
+{"tool":"catch_up","args":{"since_s":700.0},"playhead_s":730.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":730.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":745.0,"expected_say":"Reds nil, Navy one, 57 minutes played.","expected_fragments":["score_m57_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":745.0,"expected_say":"Reds have it, midfield, centre. 60 metres from goal.","expected_fragments":["zone_H_middle_third_centre","dist_060"],"expected_evidence":["e00676"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":745.0,"expected_say":"VAR checks the Navy goal... and it stands. Before that: Attacking third, centre, Navy. Fenford heads it in! Goal for Navy.","expected_fragments":["ev_e00676","then","ev_e00675"],"expected_evidence":["e00676","e00675"]}
+{"tool":"what_did_i_miss","args":{"since":"56:25"},"playhead_s":745.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":715.0},"playhead_s":745.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":745.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":760.0,"expected_say":"Reds nil, Navy one, 57 minutes played.","expected_fragments":["score_m57_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":760.0,"expected_say":"Reds have it, midfield, far side. 60 metres from goal.","expected_fragments":["zone_H_middle_third_far","dist_060"],"expected_evidence":["e00680"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":760.0,"expected_say":"Kick-off, Reds. Orlani to Wexros. Before that: VAR checks the Navy goal... and it stands.","expected_fragments":["ev_e00677","then","ev_e00676"],"expected_evidence":["e00677","e00676"]}
+{"tool":"what_did_i_miss","args":{"since":"56:40"},"playhead_s":760.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":730.0},"playhead_s":760.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":760.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":775.0,"expected_say":"Reds nil, Navy one, 57 minutes played.","expected_fragments":["score_m57_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":775.0,"expected_say":"Navy have it, defensive third, far side. 90 metres from goal.","expected_fragments":["zone_A_defensive_third_far","dist_090"],"expected_evidence":["e00683"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":775.0,"expected_say":"Olvros intercepts for Navy, defensive third, far side. Before that: Kick-off, Reds. Orlani to Wexros.","expected_fragments":["ev_e00683","then","ev_e00677"],"expected_evidence":["e00683","e00677"]}
+{"tool":"what_did_i_miss","args":{"since":"56:55"},"playhead_s":775.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":745.0},"playhead_s":775.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":775.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":790.0,"expected_say":"Reds nil, Navy one, 58 minutes played.","expected_fragments":["score_m58_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":790.0,"expected_say":"Navy have it, midfield, far side. 65 metres from goal.","expected_fragments":["zone_A_middle_third_far","dist_065"],"expected_evidence":["e00685"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":790.0,"expected_say":"Olvros intercepts for Navy, defensive third, far side. Before that: Kick-off, Reds. Orlani to Wexros.","expected_fragments":["ev_e00683","then","ev_e00677"],"expected_evidence":["e00683","e00677"]}
+{"tool":"what_did_i_miss","args":{"since":"57:10"},"playhead_s":790.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":760.0},"playhead_s":790.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":790.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":805.0,"expected_say":"Reds nil, Navy one, 58 minutes played.","expected_fragments":["score_m58_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":805.0,"expected_say":"Navy have it, midfield, far side. 55 metres from goal.","expected_fragments":["zone_A_middle_third_far","dist_055"],"expected_evidence":["e00686"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":805.0,"expected_say":"Olvros intercepts for Navy, defensive third, far side. Before that: Kick-off, Reds. Orlani to Wexros.","expected_fragments":["ev_e00683","then","ev_e00677"],"expected_evidence":["e00683","e00677"]}
+{"tool":"what_did_i_miss","args":{"since":"57:25"},"playhead_s":805.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":775.0},"playhead_s":805.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":805.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":820.0,"expected_say":"Reds nil, Navy one, 58 minutes played.","expected_fragments":["score_m58_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":820.0,"expected_say":"Navy have it, midfield, far side. 50 metres from goal.","expected_fragments":["zone_A_middle_third_far","dist_050"],"expected_evidence":["e00694"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":820.0,"expected_say":"Olvholm intercepts for Navy, midfield, far side. Before that: Dunani intercepts for Reds, midfield, far side.","expected_fragments":["ev_e00692","then","ev_e00688"],"expected_evidence":["e00692","e00688"]}
+{"tool":"what_did_i_miss","args":{"since":"57:40"},"playhead_s":820.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":790.0},"playhead_s":820.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":820.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":835.0,"expected_say":"Reds nil, Navy one, 58 minutes played.","expected_fragments":["score_m58_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":835.0,"expected_say":"Navy have it, attacking third, far side. 45 metres from goal.","expected_fragments":["zone_A_attacking_third_far","dist_045"],"expected_evidence":["e00696"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":835.0,"expected_say":"Attacking third, far side, Navy. Kelski to Olvholm. Before that: Olvholm intercepts for Navy, midfield, far side.","expected_fragments":["ev_e00696","then","ev_e00692"],"expected_evidence":["e00696","e00692"]}
+{"tool":"what_did_i_miss","args":{"since":"57:55"},"playhead_s":835.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":805.0},"playhead_s":835.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":835.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":850.0,"expected_say":"Reds nil, Navy one, 59 minutes played.","expected_fragments":["score_m59_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":850.0,"expected_say":"Reds have it, defensive third, centre. 80 metres from goal.","expected_fragments":["zone_H_defensive_third_centre","dist_080"],"expected_evidence":["e00700"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":850.0,"expected_say":"Nevaro intercepts for Reds, defensive third, centre. Before that: Attacking third, far side, Navy. Olvholm to Kelski.","expected_fragments":["ev_e00699","then","ev_e00697"],"expected_evidence":["e00699","e00697"]}
+{"tool":"what_did_i_miss","args":{"since":"58:10"},"playhead_s":850.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":820.0},"playhead_s":850.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":850.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":865.0,"expected_say":"Reds nil, Navy one, 59 minutes played.","expected_fragments":["score_m59_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":865.0,"expected_say":"Reds have it, defensive third, near side. 70 metres from goal.","expected_fragments":["zone_H_defensive_third_near","dist_070"],"expected_evidence":["e00702"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":865.0,"expected_say":"Nevaro intercepts for Reds, defensive third, centre. Before that: Attacking third, far side, Navy. Olvholm to Kelski.","expected_fragments":["ev_e00699","then","ev_e00697"],"expected_evidence":["e00699","e00697"]}
+{"tool":"what_did_i_miss","args":{"since":"58:25"},"playhead_s":865.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":835.0},"playhead_s":865.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":865.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":879.3,"expected_say":"Reds nil, Navy one, 59 minutes played.","expected_fragments":["score_m59_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":879.3,"expected_say":"Navy have it, attacking third, near side. 25 metres from goal.","expected_fragments":["zone_A_attacking_third_near","dist_025"],"expected_evidence":["e00705"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":879.3,"expected_say":"Attacking third, near side, Navy. Ashard to Fenford. Before that: Ashard intercepts for Navy, midfield, near side.","expected_fragments":["ev_e00705","then","ev_e00704"],"expected_evidence":["e00705","e00704"]}
+{"tool":"what_did_i_miss","args":{"since":"58:39"},"playhead_s":879.3,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":849.3},"playhead_s":879.3,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":879.3,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":879.4,"expected_say":"Reds nil, Navy one, 59 minutes played.","expected_fragments":["score_m59_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":879.4,"expected_say":"Navy have it, attacking third, near side. 25 metres from goal.","expected_fragments":["zone_A_attacking_third_near","dist_025"],"expected_evidence":["e00705"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":879.4,"expected_say":"Attacking third, near side, Navy. Ashard to Fenford. Before that: Ashard intercepts for Navy, midfield, near side.","expected_fragments":["ev_e00705","then","ev_e00704"],"expected_evidence":["e00705","e00704"]}
+{"tool":"what_did_i_miss","args":{"since":"58:39"},"playhead_s":879.4,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":849.4},"playhead_s":879.4,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":879.4,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":880.0,"expected_say":"Reds nil, Navy one, 59 minutes played.","expected_fragments":["score_m59_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":880.0,"expected_say":"Navy have it, attacking third, centre. 10 metres from goal.","expected_fragments":["zone_A_attacking_third_centre","dist_010"],"expected_evidence":["e00705"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":880.0,"expected_say":"Attacking third, near side, Navy. Ashard to Fenford. Before that: Ashard intercepts for Navy, midfield, near side.","expected_fragments":["ev_e00705","then","ev_e00704"],"expected_evidence":["e00705","e00704"]}
+{"tool":"what_did_i_miss","args":{"since":"58:40"},"playhead_s":880.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":850.0},"playhead_s":880.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":880.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":880.42,"expected_say":"Reds nil, Navy one, 59 minutes played.","expected_fragments":["score_m59_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":880.42,"expected_say":"Navy have it, attacking third, centre. 5 metres from goal.","expected_fragments":["zone_A_attacking_third_centre","dist_005"],"expected_evidence":["e00705"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":880.42,"expected_say":"Attacking third, near side, Navy. Ashard to Fenford. Before that: Ashard intercepts for Navy, midfield, near side.","expected_fragments":["ev_e00705","then","ev_e00704"],"expected_evidence":["e00705","e00704"]}
+{"tool":"what_did_i_miss","args":{"since":"58:40"},"playhead_s":880.42,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":850.42},"playhead_s":880.42,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":880.42,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":880.48,"expected_say":"Reds nil, Navy one, 59 minutes played.","expected_fragments":["score_m59_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":880.48,"expected_say":"Navy have it, attacking third, centre. On the goal line.","expected_fragments":["zone_A_attacking_third_centre","dist_000"],"expected_evidence":["e00705"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":880.48,"expected_say":"Attacking third, near side, Navy. Ashard to Fenford. Before that: Ashard intercepts for Navy, midfield, near side.","expected_fragments":["ev_e00705","then","ev_e00704"],"expected_evidence":["e00705","e00704"]}
+{"tool":"what_did_i_miss","args":{"since":"58:40"},"playhead_s":880.48,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":850.48},"playhead_s":880.48,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":880.48,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":880.52,"expected_say":"Reds nil, Navy one, 59 minutes played.","expected_fragments":["score_m59_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":880.52,"expected_say":"Reds have it, defensive third, centre. 100 metres from goal.","expected_fragments":["zone_H_defensive_third_centre","dist_100"],"expected_evidence":["e00707"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":880.52,"expected_say":"Saved by Vaston, who holds on. Before that: Attacking third, near side, Navy. Fenford shoots, saved by Vaston.","expected_fragments":["ev_e00707","then","ev_e00706"],"expected_evidence":["e00707","e00706"]}
+{"tool":"what_did_i_miss","args":{"since":"58:40"},"playhead_s":880.52,"expected_say":"While you were away, Fenford had a shot saved by Vaston.","expected_fragments":["while_away","past_e00706"],"expected_evidence":["e00706"]}
+{"tool":"catch_up","args":{"since_s":850.52},"playhead_s":880.52,"expected_say":"Back to the action. While we talked, Fenford had a shot saved by Vaston.","expected_fragments":["back","while_we_talked","past_e00706"],"expected_evidence":["e00706"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":880.52,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":881.52,"expected_say":"Reds nil, Navy one, 59 minutes played.","expected_fragments":["score_m59_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":881.52,"expected_say":"Reds have it, defensive third, centre. 100 metres from goal.","expected_fragments":["zone_H_defensive_third_centre","dist_100"],"expected_evidence":["e00707"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":881.52,"expected_say":"Saved by Vaston, who holds on. Before that: Attacking third, near side, Navy. Fenford shoots, saved by Vaston.","expected_fragments":["ev_e00707","then","ev_e00706"],"expected_evidence":["e00707","e00706"]}
+{"tool":"what_did_i_miss","args":{"since":"58:41"},"playhead_s":881.52,"expected_say":"While you were away, Fenford had a shot saved by Vaston.","expected_fragments":["while_away","past_e00706"],"expected_evidence":["e00706"]}
+{"tool":"catch_up","args":{"since_s":851.52},"playhead_s":881.52,"expected_say":"Back to the action. While we talked, Fenford had a shot saved by Vaston.","expected_fragments":["back","while_we_talked","past_e00706"],"expected_evidence":["e00706"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":881.52,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":895.0,"expected_say":"Reds nil, Navy one, 59 minutes played.","expected_fragments":["score_m59_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":895.0,"expected_say":"Reds have it, defensive third, centre. 100 metres from goal.","expected_fragments":["zone_H_defensive_third_centre","dist_100"],"expected_evidence":["e00712"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":895.0,"expected_say":"Nevaro intercepts for Reds, defensive third, centre. Before that: Attacking third, centre, Navy. Fenford's pass is cut out by Nevaro.","expected_fragments":["ev_e00712","then","ev_e00711"],"expected_evidence":["e00712","e00711"]}
+{"tool":"what_did_i_miss","args":{"since":"58:55"},"playhead_s":895.0,"expected_say":"While you were away, Fenford had a shot saved by Vaston.","expected_fragments":["while_away","past_e00706"],"expected_evidence":["e00706"]}
+{"tool":"catch_up","args":{"since_s":865.0},"playhead_s":895.0,"expected_say":"Back to the action. While we talked, Fenford had a shot saved by Vaston.","expected_fragments":["back","while_we_talked","past_e00706"],"expected_evidence":["e00706"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":895.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":910.0,"expected_say":"Reds nil, Navy one, 60 minutes played.","expected_fragments":["score_m60_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":910.0,"expected_say":"Reds have it, midfield, far side. 70 metres from goal.","expected_fragments":["zone_H_middle_third_far","dist_070"],"expected_evidence":["e00713"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":910.0,"expected_say":"Nevaro intercepts for Reds, defensive third, centre. Before that: Attacking third, centre, Navy. Fenford's pass is cut out by Nevaro.","expected_fragments":["ev_e00712","then","ev_e00711"],"expected_evidence":["e00712","e00711"]}
+{"tool":"what_did_i_miss","args":{"since":"59:10"},"playhead_s":910.0,"expected_say":"While you were away, Fenford had a shot saved by Vaston.","expected_fragments":["while_away","past_e00706"],"expected_evidence":["e00706"]}
+{"tool":"catch_up","args":{"since_s":880.0},"playhead_s":910.0,"expected_say":"Back to the action. While we talked, Vaston saved from Fenford.","expected_fragments":["back","while_we_talked","past_e00707"],"expected_evidence":["e00707"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":910.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":925.0,"expected_say":"Reds nil, Navy one, 60 minutes played.","expected_fragments":["score_m60_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":925.0,"expected_say":"Navy have it, defensive third, far side. 85 metres from goal.","expected_fragments":["zone_A_defensive_third_far","dist_085"],"expected_evidence":["e00718"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":925.0,"expected_say":"Olvros intercepts for Navy, defensive third, far side. Before that: Midfield, far side, Reds. Nevford to Ashski.","expected_fragments":["ev_e00718","then","ev_e00716"],"expected_evidence":["e00718","e00716"]}
+{"tool":"what_did_i_miss","args":{"since":"59:25"},"playhead_s":925.0,"expected_say":"While you were away, Fenford had a shot saved by Vaston.","expected_fragments":["while_away","past_e00706"],"expected_evidence":["e00706"]}
+{"tool":"catch_up","args":{"since_s":895.0},"playhead_s":925.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":925.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":939.9,"expected_say":"Reds nil, Navy one, 60 minutes played.","expected_fragments":["score_m60_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":939.9,"expected_say":"Navy have it, midfield, far side. 70 metres from goal.","expected_fragments":["zone_A_middle_third_far","dist_070"],"expected_evidence":["e00719"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":939.9,"expected_say":"Olvros intercepts for Navy, defensive third, far side. Before that: Midfield, far side, Reds. Nevford to Ashski.","expected_fragments":["ev_e00718","then","ev_e00716"],"expected_evidence":["e00718","e00716"]}
+{"tool":"what_did_i_miss","args":{"since":"59:39"},"playhead_s":939.9,"expected_say":"While you were away, Fenford had a shot saved by Vaston.","expected_fragments":["while_away","past_e00706"],"expected_evidence":["e00706"]}
+{"tool":"catch_up","args":{"since_s":909.9},"playhead_s":939.9,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":939.9,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":939.96,"expected_say":"Reds nil, Navy one, 60 minutes played.","expected_fragments":["score_m60_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":939.96,"expected_say":"Navy have it, midfield, far side. 70 metres from goal.","expected_fragments":["zone_A_middle_third_far","dist_070"],"expected_evidence":["e00719"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":939.96,"expected_say":"Olvros intercepts for Navy, defensive third, far side. Before that: Midfield, far side, Reds. Nevford to Ashski.","expected_fragments":["ev_e00718","then","ev_e00716"],"expected_evidence":["e00718","e00716"]}
+{"tool":"what_did_i_miss","args":{"since":"59:39"},"playhead_s":939.96,"expected_say":"While you were away, Fenford had a shot saved by Vaston.","expected_fragments":["while_away","past_e00706"],"expected_evidence":["e00706"]}
+{"tool":"catch_up","args":{"since_s":909.96},"playhead_s":939.96,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":939.96,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":940.0,"expected_say":"Reds nil, Navy one, 60 minutes played.","expected_fragments":["score_m60_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":940.0,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00720"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":940.0,"expected_say":"Foul by Nevford of Reds, midfield, far side. Yellow card. Before that: Olvros intercepts for Navy, defensive third, far side.","expected_fragments":["ev_e00720","then","ev_e00718"],"expected_evidence":["e00720","e00718"]}
+{"tool":"what_did_i_miss","args":{"since":"59:40"},"playhead_s":940.0,"expected_say":"While you were away, Vaston saved from Fenford and Nevford was booked.","expected_fragments":["while_away","past_e00707","and","past_e00720"],"expected_evidence":["e00707","e00720"]}
+{"tool":"catch_up","args":{"since_s":910.0},"playhead_s":940.0,"expected_say":"Back to the action. While we talked, Nevford was booked.","expected_fragments":["back","while_we_talked","past_e00720"],"expected_evidence":["e00720"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":940.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":941.0,"expected_say":"Reds nil, Navy one, 60 minutes played.","expected_fragments":["score_m60_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":941.0,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00720"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":941.0,"expected_say":"Foul by Nevford of Reds, midfield, far side. Yellow card. Before that: Olvros intercepts for Navy, defensive third, far side.","expected_fragments":["ev_e00720","then","ev_e00718"],"expected_evidence":["e00720","e00718"]}
+{"tool":"what_did_i_miss","args":{"since":"59:41"},"playhead_s":941.0,"expected_say":"While you were away, Nevford was booked.","expected_fragments":["while_away","past_e00720"],"expected_evidence":["e00720"]}
+{"tool":"catch_up","args":{"since_s":911.0},"playhead_s":941.0,"expected_say":"Back to the action. While we talked, Nevford was booked.","expected_fragments":["back","while_we_talked","past_e00720"],"expected_evidence":["e00720"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":941.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":955.0,"expected_say":"Reds nil, Navy one, 60 minutes played.","expected_fragments":["score_m60_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":955.0,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00720"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":955.0,"expected_say":"Foul by Nevford of Reds, midfield, far side. Yellow card. Before that: Olvros intercepts for Navy, defensive third, far side.","expected_fragments":["ev_e00720","then","ev_e00718"],"expected_evidence":["e00720","e00718"]}
+{"tool":"what_did_i_miss","args":{"since":"59:55"},"playhead_s":955.0,"expected_say":"While you were away, Nevford was booked.","expected_fragments":["while_away","past_e00720"],"expected_evidence":["e00720"]}
+{"tool":"catch_up","args":{"since_s":925.0},"playhead_s":955.0,"expected_say":"Back to the action. While we talked, Nevford was booked.","expected_fragments":["back","while_we_talked","past_e00720"],"expected_evidence":["e00720"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":955.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":970.0,"expected_say":"Reds nil, Navy one, 61 minutes played.","expected_fragments":["score_m61_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":970.0,"expected_say":"Navy have it, midfield, far side. 60 metres from goal.","expected_fragments":["zone_A_middle_third_far","dist_060"],"expected_evidence":["e00721"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":970.0,"expected_say":"Foul by Nevford of Reds, midfield, far side. Yellow card. Before that: Olvros intercepts for Navy, defensive third, far side.","expected_fragments":["ev_e00720","then","ev_e00718"],"expected_evidence":["e00720","e00718"]}
+{"tool":"what_did_i_miss","args":{"since":"60:10"},"playhead_s":970.0,"expected_say":"While you were away, Nevford was booked.","expected_fragments":["while_away","past_e00720"],"expected_evidence":["e00720"]}
+{"tool":"catch_up","args":{"since_s":940.0},"playhead_s":970.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":970.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":985.0,"expected_say":"Reds nil, Navy one, 61 minutes played.","expected_fragments":["score_m61_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":985.0,"expected_say":"Navy have it, attacking third, far side. 15 metres from goal.","expected_fragments":["zone_A_attacking_third_far","dist_015"],"expected_evidence":["e00726"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":985.0,"expected_say":"Attacking third, far side, Navy. Olvholm crosses for Fenford. Before that: Attacking third, far side, Navy. Strandford to Olvholm.","expected_fragments":["ev_e00726","then","ev_e00725"],"expected_evidence":["e00726","e00725"]}
+{"tool":"what_did_i_miss","args":{"since":"60:25"},"playhead_s":985.0,"expected_say":"While you were away, Nevford was booked.","expected_fragments":["while_away","past_e00720"],"expected_evidence":["e00720"]}
+{"tool":"catch_up","args":{"since_s":955.0},"playhead_s":985.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":985.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1000.0,"expected_say":"Reds nil, Navy one, 61 minutes played.","expected_fragments":["score_m61_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1000.0,"expected_say":"Navy have it, attacking third, far side. 30 metres from goal.","expected_fragments":["zone_A_attacking_third_far","dist_030"],"expected_evidence":["e00727"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1000.0,"expected_say":"Attacking third, far side, Navy. Fenford to Strandford. Before that: Attacking third, far side, Navy. Olvholm crosses for Fenford.","expected_fragments":["ev_e00727","then","ev_e00726"],"expected_evidence":["e00727","e00726"]}
+{"tool":"what_did_i_miss","args":{"since":"60:40"},"playhead_s":1000.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":970.0},"playhead_s":1000.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1000.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1015.0,"expected_say":"Reds nil, Navy one, 61 minutes played.","expected_fragments":["score_m61_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1015.0,"expected_say":"Reds have it, defensive third, far side. 95 metres from goal.","expected_fragments":["zone_H_defensive_third_far","dist_095"],"expected_evidence":["e00733"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1015.0,"expected_say":"Nevaro intercepts for Reds, defensive third, centre. Before that: Attacking third, far side, Navy. Fenford's pass is cut out by Nevaro.","expected_fragments":["ev_e00732","then","ev_e00731"],"expected_evidence":["e00732","e00731"]}
+{"tool":"what_did_i_miss","args":{"since":"60:55"},"playhead_s":1015.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":985.0},"playhead_s":1015.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1015.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1030.0,"expected_say":"Reds nil, Navy one, 62 minutes played.","expected_fragments":["score_m62_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1030.0,"expected_say":"Reds have it, midfield, far side. 60 metres from goal.","expected_fragments":["zone_H_middle_third_far","dist_060"],"expected_evidence":["e00734"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1030.0,"expected_say":"Nevaro intercepts for Reds, defensive third, centre. Before that: Attacking third, far side, Navy. Fenford's pass is cut out by Nevaro.","expected_fragments":["ev_e00732","then","ev_e00731"],"expected_evidence":["e00732","e00731"]}
+{"tool":"what_did_i_miss","args":{"since":"61:10"},"playhead_s":1030.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":1000.0},"playhead_s":1030.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1030.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1045.0,"expected_say":"Reds nil, Navy one, 62 minutes played.","expected_fragments":["score_m62_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1045.0,"expected_say":"Reds have it, attacking third, far side. 30 metres from goal.","expected_fragments":["zone_H_attacking_third_far","dist_030"],"expected_evidence":["e00737"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1045.0,"expected_say":"Midfield, far side, Reds. Ashski to Nevford. Before that: Nevaro intercepts for Reds, defensive third, centre.","expected_fragments":["ev_e00737","then","ev_e00732"],"expected_evidence":["e00737","e00732"]}
+{"tool":"what_did_i_miss","args":{"since":"61:25"},"playhead_s":1045.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":1015.0},"playhead_s":1045.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1045.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1060.0,"expected_say":"Reds nil, Navy one, 62 minutes played.","expected_fragments":["score_m62_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1060.0,"expected_say":"Reds have it, attacking third, centre. 5 metres from goal.","expected_fragments":["zone_H_attacking_third_centre","dist_005"],"expected_evidence":["e00739"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1060.0,"expected_say":"Attacking third, centre, Reds. Ashski to Orlani. Before that: Attacking third, far side, Reds. Nevford to Ashski.","expected_fragments":["ev_e00739","then","ev_e00738"],"expected_evidence":["e00739","e00738"]}
+{"tool":"what_did_i_miss","args":{"since":"61:40"},"playhead_s":1060.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":1030.0},"playhead_s":1060.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1060.0,"expected":true}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1067.1,"expected_say":"Reds nil, Navy one, 62 minutes played.","expected_fragments":["score_m62_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1067.1,"expected_say":"Reds have it, attacking third, centre. 10 metres from goal.","expected_fragments":["zone_H_attacking_third_centre","dist_010"],"expected_evidence":["e00739"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1067.1,"expected_say":"Attacking third, centre, Reds. Ashski to Orlani. Before that: Attacking third, far side, Reds. Nevford to Ashski.","expected_fragments":["ev_e00739","then","ev_e00738"],"expected_evidence":["e00739","e00738"]}
+{"tool":"what_did_i_miss","args":{"since":"61:47"},"playhead_s":1067.1,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":1037.1},"playhead_s":1067.1,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1067.1,"expected":true}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1067.2,"expected_say":"Reds nil, Navy one, 62 minutes played.","expected_fragments":["score_m62_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1067.2,"expected_say":"Reds have it, attacking third, centre. 10 metres from goal.","expected_fragments":["zone_H_attacking_third_centre","dist_010"],"expected_evidence":["e00739"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1067.2,"expected_say":"Attacking third, centre, Reds. Ashski to Orlani. Before that: Attacking third, far side, Reds. Nevford to Ashski.","expected_fragments":["ev_e00739","then","ev_e00738"],"expected_evidence":["e00739","e00738"]}
+{"tool":"what_did_i_miss","args":{"since":"61:47"},"playhead_s":1067.2,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":1037.2},"playhead_s":1067.2,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1067.2,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1067.4,"expected_say":"Reds nil, Navy one, 62 minutes played.","expected_fragments":["score_m62_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1067.4,"expected_say":"Reds have it, attacking third, centre. 5 metres from goal.","expected_fragments":["zone_H_attacking_third_centre","dist_005"],"expected_evidence":["e00739"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1067.4,"expected_say":"Attacking third, centre, Reds. Ashski to Orlani. Before that: Attacking third, far side, Reds. Nevford to Ashski.","expected_fragments":["ev_e00739","then","ev_e00738"],"expected_evidence":["e00739","e00738"]}
+{"tool":"what_did_i_miss","args":{"since":"61:47"},"playhead_s":1067.4,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":1037.4},"playhead_s":1067.4,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1067.4,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1067.44,"expected_say":"Reds nil, Navy one, 62 minutes played.","expected_fragments":["score_m62_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1067.44,"expected_say":"Navy have it, defensive third, centre. 100 metres from goal.","expected_fragments":["zone_A_defensive_third_centre","dist_100"],"expected_evidence":["e00741"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1067.44,"expected_say":"Rilford blocks it for Navy, defensive third, centre. Before that: Attacking third, centre, Reds. Orlani shoots, blocked.","expected_fragments":["ev_e00741","then","ev_e00740"],"expected_evidence":["e00741","e00740"]}
+{"tool":"what_did_i_miss","args":{"since":"61:47"},"playhead_s":1067.44,"expected_say":"While you were away, Orlani had a shot blocked.","expected_fragments":["while_away","past_e00740"],"expected_evidence":["e00740"]}
+{"tool":"catch_up","args":{"since_s":1037.44},"playhead_s":1067.44,"expected_say":"Back to the action. While we talked, Orlani had a shot blocked.","expected_fragments":["back","while_we_talked","past_e00740"],"expected_evidence":["e00740"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1067.44,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1068.44,"expected_say":"Reds nil, Navy one, 62 minutes played.","expected_fragments":["score_m62_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1068.44,"expected_say":"Navy have it, defensive third, centre. 100 metres from goal.","expected_fragments":["zone_A_defensive_third_centre","dist_100"],"expected_evidence":["e00741"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1068.44,"expected_say":"Rilford blocks it for Navy, defensive third, centre. Before that: Attacking third, centre, Reds. Orlani shoots, blocked.","expected_fragments":["ev_e00741","then","ev_e00740"],"expected_evidence":["e00741","e00740"]}
+{"tool":"what_did_i_miss","args":{"since":"61:48"},"playhead_s":1068.44,"expected_say":"While you were away, Orlani had a shot blocked.","expected_fragments":["while_away","past_e00740"],"expected_evidence":["e00740"]}
+{"tool":"catch_up","args":{"since_s":1038.44},"playhead_s":1068.44,"expected_say":"Back to the action. While we talked, Orlani had a shot blocked.","expected_fragments":["back","while_we_talked","past_e00740"],"expected_evidence":["e00740"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1068.44,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1075.0,"expected_say":"Reds nil, Navy one, 62 minutes played.","expected_fragments":["score_m62_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1075.0,"expected_say":"Navy have it, defensive third, centre. 100 metres from goal.","expected_fragments":["zone_A_defensive_third_centre","dist_100"],"expected_evidence":["e00742"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1075.0,"expected_say":"Rilford blocks it for Navy, defensive third, centre. Before that: Attacking third, centre, Reds. Orlani shoots, blocked.","expected_fragments":["ev_e00741","then","ev_e00740"],"expected_evidence":["e00741","e00740"]}
+{"tool":"what_did_i_miss","args":{"since":"61:55"},"playhead_s":1075.0,"expected_say":"While you were away, Orlani had a shot blocked.","expected_fragments":["while_away","past_e00740"],"expected_evidence":["e00740"]}
+{"tool":"catch_up","args":{"since_s":1045.0},"playhead_s":1075.0,"expected_say":"Back to the action. While we talked, Orlani had a shot blocked.","expected_fragments":["back","while_we_talked","past_e00740"],"expected_evidence":["e00740"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1075.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1090.0,"expected_say":"Reds nil, Navy one, 63 minutes played.","expected_fragments":["score_m63_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1090.0,"expected_say":"Navy have it, defensive third, centre. 90 metres from goal.","expected_fragments":["zone_A_defensive_third_centre","dist_090"],"expected_evidence":["e00745"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1090.0,"expected_say":"Rilford blocks it for Navy, defensive third, centre. Before that: Attacking third, centre, Reds. Orlani shoots, blocked.","expected_fragments":["ev_e00741","then","ev_e00740"],"expected_evidence":["e00741","e00740"]}
+{"tool":"what_did_i_miss","args":{"since":"62:10"},"playhead_s":1090.0,"expected_say":"While you were away, Orlani had a shot blocked.","expected_fragments":["while_away","past_e00740"],"expected_evidence":["e00740"]}
+{"tool":"catch_up","args":{"since_s":1060.0},"playhead_s":1090.0,"expected_say":"Back to the action. While we talked, Orlani had a shot blocked.","expected_fragments":["back","while_we_talked","past_e00740"],"expected_evidence":["e00740"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1090.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1105.0,"expected_say":"Reds nil, Navy one, 63 minutes played.","expected_fragments":["score_m63_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1105.0,"expected_say":"Reds have it, midfield, centre. 65 metres from goal.","expected_fragments":["zone_H_middle_third_centre","dist_065"],"expected_evidence":["e00749"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1105.0,"expected_say":"Morani intercepts for Reds, midfield, centre. Before that: Rilford blocks it for Navy, defensive third, centre.","expected_fragments":["ev_e00749","then","ev_e00741"],"expected_evidence":["e00749","e00741"]}
+{"tool":"what_did_i_miss","args":{"since":"62:25"},"playhead_s":1105.0,"expected_say":"While you were away, Orlani had a shot blocked.","expected_fragments":["while_away","past_e00740"],"expected_evidence":["e00740"]}
+{"tool":"catch_up","args":{"since_s":1075.0},"playhead_s":1105.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1105.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1120.0,"expected_say":"Reds nil, Navy one, 63 minutes played.","expected_fragments":["score_m63_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1120.0,"expected_say":"Navy have it, midfield, far side. 50 metres from goal.","expected_fragments":["zone_A_middle_third_far","dist_050"],"expected_evidence":["e00752"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1120.0,"expected_say":"Olvholm intercepts for Navy, midfield, far side. Before that: Morani intercepts for Reds, midfield, centre.","expected_fragments":["ev_e00751","then","ev_e00749"],"expected_evidence":["e00751","e00749"]}
+{"tool":"what_did_i_miss","args":{"since":"62:40"},"playhead_s":1120.0,"expected_say":"While you were away, Orlani had a shot blocked.","expected_fragments":["while_away","past_e00740"],"expected_evidence":["e00740"]}
+{"tool":"catch_up","args":{"since_s":1090.0},"playhead_s":1120.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1120.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1135.0,"expected_say":"Reds nil, Navy one, 63 minutes played.","expected_fragments":["score_m63_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1135.0,"expected_say":"Navy have it, attacking third, far side. 30 metres from goal.","expected_fragments":["zone_A_attacking_third_far","dist_030"],"expected_evidence":["e00753"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1135.0,"expected_say":"Midfield, far side, Navy. Olvros to Kelski. Before that: Olvholm intercepts for Navy, midfield, far side.","expected_fragments":["ev_e00753","then","ev_e00751"],"expected_evidence":["e00753","e00751"]}
+{"tool":"what_did_i_miss","args":{"since":"62:55"},"playhead_s":1135.0,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":1105.0},"playhead_s":1135.0,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1135.0,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1138.94,"expected_say":"Reds nil, Navy one, 63 minutes played.","expected_fragments":["score_m63_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1138.94,"expected_say":"Navy have it, attacking third, far side. 30 metres from goal.","expected_fragments":["zone_A_attacking_third_far","dist_030"],"expected_evidence":["e00753"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1138.94,"expected_say":"Midfield, far side, Navy. Olvros to Kelski. Before that: Olvholm intercepts for Navy, midfield, far side.","expected_fragments":["ev_e00753","then","ev_e00751"],"expected_evidence":["e00753","e00751"]}
+{"tool":"what_did_i_miss","args":{"since":"62:58"},"playhead_s":1138.94,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":1108.94},"playhead_s":1138.94,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1138.94,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1139.04,"expected_say":"Reds nil, Navy one, 63 minutes played.","expected_fragments":["score_m63_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1139.04,"expected_say":"Navy have it, attacking third, far side. 30 metres from goal.","expected_fragments":["zone_A_attacking_third_far","dist_030"],"expected_evidence":["e00753"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1139.04,"expected_say":"Midfield, far side, Navy. Olvros to Kelski. Before that: Olvholm intercepts for Navy, midfield, far side.","expected_fragments":["ev_e00753","then","ev_e00751"],"expected_evidence":["e00753","e00751"]}
+{"tool":"what_did_i_miss","args":{"since":"62:59"},"playhead_s":1139.04,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":1109.04},"playhead_s":1139.04,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1139.04,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1140.24,"expected_say":"Reds nil, Navy one, 64 minutes played.","expected_fragments":["score_m64_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1140.24,"expected_say":"Navy have it, attacking third, centre. 5 metres from goal.","expected_fragments":["zone_A_attacking_third_centre","dist_005"],"expected_evidence":["e00753"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1140.24,"expected_say":"Midfield, far side, Navy. Olvros to Kelski. Before that: Olvholm intercepts for Navy, midfield, far side.","expected_fragments":["ev_e00753","then","ev_e00751"],"expected_evidence":["e00753","e00751"]}
+{"tool":"what_did_i_miss","args":{"since":"63:00"},"playhead_s":1140.24,"expected_say":"Nothing big happened.","expected_fragments":["nothing_missed"],"expected_evidence":[]}
+{"tool":"catch_up","args":{"since_s":1110.24},"playhead_s":1140.24,"expected_say":"Back to the action.","expected_fragments":["back"],"expected_evidence":[]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1140.24,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1140.28,"expected_say":"Reds nil, Navy one, 64 minutes played.","expected_fragments":["score_m64_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1140.28,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00754"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1140.28,"expected_say":"Attacking third, far side, Navy. Kelski shoots, wide. Before that: Midfield, far side, Navy. Olvros to Kelski.","expected_fragments":["ev_e00754","then","ev_e00753"],"expected_evidence":["e00754","e00753"]}
+{"tool":"what_did_i_miss","args":{"since":"63:00"},"playhead_s":1140.28,"expected_say":"While you were away, Kelski shot wide.","expected_fragments":["while_away","past_e00754"],"expected_evidence":["e00754"]}
+{"tool":"catch_up","args":{"since_s":1110.28},"playhead_s":1140.28,"expected_say":"Back to the action. While we talked, Kelski shot wide.","expected_fragments":["back","while_we_talked","past_e00754"],"expected_evidence":["e00754"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1140.28,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1141.28,"expected_say":"Reds nil, Navy one, 64 minutes played.","expected_fragments":["score_m64_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1141.28,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00754"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1141.28,"expected_say":"Attacking third, far side, Navy. Kelski shoots, wide. Before that: Midfield, far side, Navy. Olvros to Kelski.","expected_fragments":["ev_e00754","then","ev_e00753"],"expected_evidence":["e00754","e00753"]}
+{"tool":"what_did_i_miss","args":{"since":"63:01"},"playhead_s":1141.28,"expected_say":"While you were away, Kelski shot wide.","expected_fragments":["while_away","past_e00754"],"expected_evidence":["e00754"]}
+{"tool":"catch_up","args":{"since_s":1111.28},"playhead_s":1141.28,"expected_say":"Back to the action. While we talked, Kelski shot wide.","expected_fragments":["back","while_we_talked","past_e00754"],"expected_evidence":["e00754"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1141.28,"expected":false}
+{"tool":"get_score_and_clock","args":{},"playhead_s":1150.0,"expected_say":"Reds nil, Navy one, 64 minutes played.","expected_fragments":["score_m64_0_1"],"expected_evidence":["e00675"]}
+{"tool":"get_ball_position","args":{},"playhead_s":1150.0,"expected_say":"The ball is out of play.","expected_fragments":["ball_out"],"expected_evidence":["e00754"]}
+{"tool":"get_last_events","args":{"n":2},"playhead_s":1150.0,"expected_say":"Attacking third, far side, Navy. Kelski shoots, wide. Before that: Midfield, far side, Navy. Olvros to Kelski.","expected_fragments":["ev_e00754","then","ev_e00753"],"expected_evidence":["e00754","e00753"]}
+{"tool":"what_did_i_miss","args":{"since":"63:10"},"playhead_s":1150.0,"expected_say":"While you were away, Kelski shot wide.","expected_fragments":["while_away","past_e00754"],"expected_evidence":["e00754"]}
+{"tool":"catch_up","args":{"since_s":1120.0},"playhead_s":1150.0,"expected_say":"Back to the action. While we talked, Kelski shot wide.","expected_fragments":["back","while_we_talked","past_e00754"],"expected_evidence":["e00754"]}
+{"tool":"hold_that_thought","args":{},"playhead_s":1150.0,"expected":false}

@@ -187,6 +187,16 @@ def _missed_parts(b: Bundle, lead: str, events: list[dict]) -> list[tuple[str, s
     return parts
 
 
+def catch_up_answer(b: Bundle, since_s: float, until_s: float) -> dict:
+    """"Back to the action", plus the big moments revealed while the fan was asking (file 40 catch_up_line)."""
+    until = b.clamp(until_s)
+    ev = _missed(b, since_s, until)
+    if not ev:
+        return _ok(b, until, [_static("back")])
+    parts = [_static("back")] + _missed_parts(b, "while_we_talked", ev)
+    return _ok(b, until, parts, say=" ".join(t for _, t in parts) + ".", evidence=[e["id"] for e in ev])
+
+
 def what_did_i_miss(b: Bundle, p: float, since: str) -> dict:
     s = b.parse_clock(since)
     if s is None:
