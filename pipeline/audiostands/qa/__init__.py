@@ -114,33 +114,56 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     },
 ]
 
-# SEAM(A->B): A's relay sends this as the Voice Live session instructions. B writes it (file 40 §4 and §6).
-PERSONA: str = ""  # TODO(B): Role, Tone, Tools, Scope; 1-2 sentences; never say what happens next; no betting advice.
+from .bundle import Bundle, load_bundle  # noqa: E402
+from .fragments import FRAGMENTS  # noqa: E402,F401  (SEAM(B->A): A's answers.py renders every entry)
+from .persona import PERSONA  # noqa: E402,F401  (SEAM(B->A): Voice Live session instructions)
+from . import router, tools  # noqa: E402
 
-# SEAM(A->B): every fixed phrase that needs audio, as [{"id": str, "text": str}]. A's answers.py renders each with Azure TTS.
-FRAGMENTS: list[dict[str, str]] = []  # TODO(B): due Sat 24 Oct 14:00 (TEAM_SPLIT.md timeline).
+_DEFAULT: Bundle | None = None
+
+
+def _bundle(bundle: Any) -> Bundle:
+    """`bundle` from the caller, or the judge cut loaded once (the relay may pass None)."""
+    global _DEFAULT
+    if isinstance(bundle, Bundle):
+        return bundle
+    if _DEFAULT is None:
+        _DEFAULT = load_bundle()
+    return _DEFAULT
 
 
 def call_tool(name: str, args: dict[str, Any], *, playhead_s: float, bundle: Any) -> dict[str, Any]:
     """Run one tool at the listener's playhead.
 
     Returns ``{say, evidence_ids, as_of_clock}`` or ``{error, candidates}``. Never reads past ``playhead_s``.
+    (Also ``fragments``: the FRAGMENTS ids that speak ``say`` offline, or None.)
     """
     # SEAM(A->B): the relay calls this for every Voice Live function call, with playhead_s from the session.
-    raise NotImplementedError("B implements call_tool (Stage 7, TEAM_SPLIT.md seam 2)")
+    return tools.call(name, args, playhead_s, _bundle(bundle))
 
 
 def answer_text(question: str, *, playhead_s: float, bundle: Any) -> dict[str, Any]:
     """Deterministic keyword/intent router with no LLM: the offline fallback and the preset-question engine."""
-    raise NotImplementedError("B implements answer_text (Stage 6/7, TEAM_SPLIT.md seam 2)")
+    return router.answer_text(question, playhead_s=playhead_s, bundle=_bundle(bundle))
 
 
 def catch_up(since_s: float, until_s: float, bundle: Any) -> str:
     """Spoken summary of the key events in ``[since_s, until_s]``."""
     # SEAM(A->B): the relay calls this when a listener comes back after a pause.
-    raise NotImplementedError("B implements catch_up (TEAM_SPLIT.md seam 2)")
+    b = _bundle(bundle)
+    ev = tools._missed(b, since_s, b.clamp(until_s))
+    if not ev:
+        return "Back to the action."
+    return "Back to the action. " + " ".join(t for _, t in tools._missed_parts(b, "while_we_talked", ev)) + "."
+
+
+HOLD_LOOKAHEAD_S = 8.0   # a build-up line plays 4 s before a shot (file 39 LEAD_S); "due within 4 s" -> shot within 8 s
+HOLD_MIN_XG = 0.08       # file 39: the planner builds up only for chances with xG >= 0.08
 
 
 def hold_that_thought(playhead_s: float, bundle: Any) -> bool:
     """True if something is about to happen, so the answer should wait. Says THAT, never WHAT."""
-    raise NotImplementedError("B implements hold_that_thought (TEAM_SPLIT.md seam 2)")
+    b = _bundle(bundle)
+    p = b.clamp(playhead_s)
+    return any(e["type"] == "shot" and p < b.sig(e["id"])["t"] <= p + HOLD_LOOKAHEAD_S
+               and (b.sig(e["id"])["xg"] or 0) >= HOLD_MIN_XG for e in b.events)
