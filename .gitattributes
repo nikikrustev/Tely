@@ -6,3 +6,4 @@
 web/public/replay/**/cues.*.jsonl text eol=lf
 web/public/replay/**/*.vtt text eol=lf
 web/public/replay/**/audio/**/index.json text eol=lf
+web/public/replay/**/manifest.json text eol=lf
