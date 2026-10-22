@@ -122,7 +122,7 @@ export class CrowdEngine implements CrowdBus {
     const bed = (n: BedName) => this.beds.get(n) as Bed;
     go(this.level.gain, levelFor(e));
     go(bed('murmur').gain.gain, (0.25 + 0.35 * e) * (1 - 0.45 * theirs)); // home end goes quiet under pressure
-    go(bed('murmur').lp.frequency, 700 + 4500 * e);                         // bigger crowd = brighter
+    go(bed('murmur').lp.frequency, 2000 + 3500 * e);                        // bigger crowd = brighter (2 kHz floor: no rumble)
     go(bed('swell').gain.gain, Math.pow(ours, 1.5) * (0.3 + 0.7 * e));      // rising "ooh" on our attacks
     go(bed('swell').lp.frequency, 900 + 6000 * ours);
     go(bed('tense').gain.gain, 0.45 * theirs * (0.5 + 0.5 * e));
@@ -200,7 +200,7 @@ export class CrowdEngine implements CrowdBus {
     const murmur = this.buf.beds.murmur;
     const density = 6 + 30 * e;
     while (murmur && this.nextGrain < ahead) {
-      this.grain(murmur, this.nextGrain, 0.08 + 0.12 * this.rnd());
+      this.grain(murmur, this.nextGrain, 0.18 + 0.22 * this.rnd()); // longer grains: smoother, less "chug"
       this.nextGrain += (0.5 + this.rnd()) / density;
     }
     const beatS = 60 / (96 + 20 * e) / 2;
@@ -218,7 +218,7 @@ export class CrowdEngine implements CrowdBus {
     gain.gain.value = 0;
     const lp = this.ctx.createBiquadFilter();
     lp.type = 'lowpass';
-    lp.frequency.value = 1200;
+    lp.frequency.value = 2000;
     const pan = this.ctx.createStereoPanner();
     pan.pan.value = panValue;
     lp.connect(gain).connect(pan).connect(this.level);
@@ -231,7 +231,7 @@ export class CrowdEngine implements CrowdBus {
     src.playbackRate.value = 0.97 + 0.06 * this.state.excitement;
     const g = this.ctx.createGain();
     g.gain.setValueAtTime(0, when);
-    g.gain.linearRampToValueAtTime(0.5, when + len / 2);
+    g.gain.linearRampToValueAtTime(0.35, when + len / 2); // longer grains overlap more: lower each one (~ -3 dB)
     g.gain.linearRampToValueAtTime(0, when + len);
     src.connect(g).connect((this.beds.get('murmur') as Bed).lp);
     src.start(when, this.rnd() * Math.max(0, b.duration - len), len);
