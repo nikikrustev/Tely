@@ -26,7 +26,13 @@ const PRIORITY: Record<Earcon, number> = { net: 0, whistle: 0, shot: 0, save: 1,
 export interface BallSample { x: number; y: number; z: number; speed: number; alive: boolean }
 
 /** Ball loudness from its speed (m/s): 0.04 when still, rising to 0.25 by 12 m/s (a firm pass). Ours, tune by ear. */
-export const ballLevel = (speed: number): number => 0.04 + 0.21 * Math.min(1, Math.max(0, (speed - 1) / 11));
+export const ballLevel = (speed: number): number => 0.06 + 0.39 * Math.min(1, Math.max(0, (speed - 1) / 11));
+
+/** Plain left/right pan from pitch x: Reds' own goal (x -52.5, where Navy attack) hard left, halfway centre,
+ *  Navy's goal (x 52.5, where Reds attack) hard right.
+ *  HRTF alone was too subtle on laptops and earbuds (listening notes, 23 Oct), so this rides alongside it. */
+export const stereoPan = (x: number): number => 0.9 * Math.min(1, Math.max(-1, x / 45));
+const HRTF_MIX = 0.45, STEREO_MIX = 0.75;
 
 export class AudioStands {
   readonly ctx: BaseAudioContext;
@@ -36,6 +42,7 @@ export class AudioStands {
   readonly earconBus: GainNode;
   readonly commentaryIn: GainNode; // A's commentary: dry, centre, top priority
   readonly ballPanner: PannerNode;
+  readonly ballStereo: StereoPannerNode;
   private ballGain: GainNode;
   private ballSend: GainNode;
   private rattle: OscillatorNode;
@@ -49,15 +56,18 @@ export class AudioStands {
     this.ctx = ctx;
     this.master = ctx.createGain();
     const limiter = ctx.createDynamicsCompressor(); // file 38 §7: limiter on the master, never full-scale jumps
-    limiter.threshold.value = -6;
-    limiter.ratio.value = 20;
+    limiter.threshold.value = -3; // gentle: a hard ratio-20 limiter pumped on thuds and roars ("hoover", 23 Oct)
+    limiter.ratio.value = 4;
+    limiter.knee.value = 6;
+    limiter.attack.value = 0.005;
+    limiter.release.value = 0.3;
     this.master.connect(limiter).connect(destination);
     this.reverb = ctx.createConvolver();
     this.reverb.buffer = stadiumIR(ctx, 2.8);
     this.reverb.connect(this.master);
     this.crowdIn = this.bus(1.0);
     this.ballBus = this.bus(0.8);
-    this.earconBus = this.bus(0.9);
+    this.earconBus = this.bus(0.7);
     this.commentaryIn = this.bus(1.0);
     // Ball = looped noise -> band-pass (broadband localises better than tones) -> rattle AM -> HRTF panner
     const noise = ctx.createBufferSource();
@@ -65,8 +75,8 @@ export class AudioStands {
     noise.loop = true;
     const bp = ctx.createBiquadFilter();
     bp.type = 'bandpass';
-    bp.frequency.value = 1800;
-    bp.Q.value = 0.6;
+    bp.frequency.value = 3200; // above most of the crowd's energy, so the ball cuts through
+    bp.Q.value = 1.2;
     // Gentle rattle: a smooth (sine) wobble of +-15% around 0.85. A square wave at full depth chugged like a train
     // (team listening notes, 22 Oct).
     const am = ctx.createGain();
@@ -80,7 +90,9 @@ export class AudioStands {
     this.ballGain = ctx.createGain();
     this.ballGain.gain.value = 0;
     this.ballPanner = this.panner();
-    noise.connect(bp).connect(am).connect(this.ballGain).connect(this.ballPanner).connect(this.ballBus);
+    noise.connect(bp).connect(am).connect(this.ballGain);
+    this.ballStereo = ctx.createStereoPanner();
+    this.mix(this.ballGain, this.ballPanner, this.ballStereo, this.ballBus);
     this.ballSend = ctx.createGain();
     this.ballSend.gain.value = 0.2;
     this.ballPanner.connect(this.ballSend).connect(this.reverb); // far = wetter (distance cue)
@@ -105,6 +117,7 @@ export class AudioStands {
     p.positionX.setTargetAtTime(w[0], at, tau);
     p.positionY.setTargetAtTime(w[1], at, tau);
     p.positionZ.setTargetAtTime(w[2], at, tau);
+    this.ballStereo.pan.setTargetAtTime(stereoPan(b.x), at, tau);
     this.rattle.frequency.setTargetAtTime(4 + Math.min(b.speed, 30) * 0.8, at, 0.1); // faster ball, faster rattle
     // Loud only while the ball travels: a ball at someone's feet is near-silent, and a dead ball is silent.
     this.ballGain.gain.setTargetAtTime(b.alive ? ballLevel(b.speed) : 0, at, b.alive ? 0.08 : 0.3);
@@ -130,8 +143,11 @@ export class AudioStands {
     p.positionX.value = X;
     p.positionY.value = Y;
     p.positionZ.value = Z;
-    src.connect(g).connect(p).connect(this.earconBus);
-    src.onended = () => p.disconnect();
+    const sp = this.ctx.createStereoPanner();
+    sp.pan.value = stereoPan(x);
+    src.connect(g);
+    this.mix(g, p, sp, this.earconBus);
+    src.onended = () => { p.disconnect(); sp.disconnect(); };
     src.start(t);
     return t;
   }
@@ -145,6 +161,15 @@ export class AudioStands {
   get outputDelay(): number {
     const c = this.ctx as AudioContext;
     return (c.baseLatency ?? 0) + (c.outputLatency ?? 0);
+  }
+
+  /** Send `from` through both the 3D (HRTF) panner and the plain stereo panner into `to`. */
+  private mix(from: AudioNode, hrtf: PannerNode, stereo: StereoPannerNode, to: AudioNode): void {
+    const a = this.ctx.createGain(), b = this.ctx.createGain();
+    a.gain.value = HRTF_MIX;
+    b.gain.value = STEREO_MIX;
+    from.connect(hrtf).connect(a).connect(to);
+    from.connect(stereo).connect(b).connect(to);
   }
 
   private bus(gain: number): GainNode {
@@ -184,8 +209,8 @@ export class AudioStands {
       const u = t / len;
       let v = 0;
       if (kind === 'pass' || kind === 'shot' || kind === 'save') {
-        const f = kind === 'pass' ? 110 : kind === 'shot' ? 80 : 140; // a "thud": falling sine + a click of noise
-        v = Math.sin(2 * Math.PI * f * t * (1 - 0.4 * u)) * Math.exp(-t * (kind === 'shot' ? 18 : 30));
+        const f = kind === 'pass' ? 180 : kind === 'shot' ? 140 : 210; // a "thud": falling sine + a click (less bass: 23 Oct)
+        v = 0.6 * Math.sin(2 * Math.PI * f * t * (1 - 0.4 * u)) * Math.exp(-t * (kind === 'shot' ? 22 : 35));
         v += (rnd() * 2 - 1) * Math.exp(-t * 120) * (kind === 'shot' ? 0.6 : 0.3);
       } else if (kind === 'tackle') {
         v = (rnd() * 2 - 1) * Math.exp(-t * 25) * 0.7 + Math.sin(2 * Math.PI * 60 * t) * Math.exp(-t * 20) * 0.5;

@@ -3,7 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
 import { describe, expect, it } from 'vitest';
-import { AudioStands, ballLevel, EARCON_GAP_S, SEATS, toWorld } from '../../src/audio/audio-stands';
+import { AudioStands, ballLevel, EARCON_GAP_S, SEATS, stereoPan, toWorld } from '../../src/audio/audio-stands';
 import { CrowdEngine, levelFor, REFRACTORY_S, type CrowdBuffers } from '../../src/audio/crowd-engine';
 import { ReplaySource, type SegmentsDoc } from '../../src/replay/replay-source';
 import { wire } from '../../src/wire';
@@ -41,7 +41,7 @@ describe('ball -> panner position', () => {
   });
 
   it('the ball is near-silent when still and loud only while it travels (no constant "train" chug)', () => {
-    expect(ballLevel(0)).toBeLessThan(0.05);
+    expect(ballLevel(0)).toBeLessThan(0.08);
     expect(ballLevel(15)).toBeGreaterThan(5 * ballLevel(0));
     for (let s = 0; s < 30; s += 0.5) expect(ballLevel(s + 0.5)).toBeGreaterThanOrEqual(ballLevel(s));
     const fake = new FakeAudioContext();
@@ -61,6 +61,18 @@ describe('ball -> panner position', () => {
     const peak = d.reduce((m, v) => Math.max(m, Math.abs(v)), 0);
     expect(peak).toBeLessThanOrEqual(Math.pow(10, -18 / 20));
     expect(peak).toBeGreaterThan(0.02);
+  });
+
+  it("swings the ball clearly left/right: Reds' goal (Navy attack it) hard left, halfway centre, Navy's goal hard right", () => {
+    expect(stereoPan(-52.5)).toBeLessThanOrEqual(-0.85);
+    expect(stereoPan(0)).toBe(0);
+    expect(stereoPan(52.5)).toBeGreaterThanOrEqual(0.85);
+    for (let x = -52; x < 52; x += 4) expect(stereoPan(x + 4)).toBeGreaterThanOrEqual(stereoPan(x));
+    const fake = new FakeAudioContext();
+    const stands = new AudioStands(asCtx(fake));
+    stands.ballAt({ x: -45, y: 0, z: 0.11, speed: 12, alive: true }, 0, 0.01);
+    fake.currentTime = 1;
+    expect(paramOf(stands.ballStereo.pan).value).toBeLessThan(-0.8);
   });
 
   it('keeps earcons at least 300 ms apart', () => {
