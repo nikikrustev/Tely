@@ -122,6 +122,7 @@ B owns haptics, settings and the UI, so don't build those.
 
 ### A5 · Sat 24 · Director agent on Foundry
 **Wait for:** A4 deployed.
+**First, in a terminal:** `git checkout main && git pull origin main`, then open the new session and paste the block.
 
 ```text
 I am potencialbg (Person A, I own ALL Microsoft work). Nikolay (Person B) works in this repo at the same time.
