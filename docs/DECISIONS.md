@@ -113,9 +113,28 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   machine. The unzipped data is identical. `build_bundle` writes B's original bytes back in that case, so git stays clean; any
   real content change stops the build (exit 2) as a determinism bug for B.
 - **Chapters are spoiler-safe:** one "Big moment N" stop 6 s before every build-up and card, the same for a goal or a miss.
-- **Hosting:** Static Web Apps **Free only** (D6), in West Europe. Verified 21 Oct with `az provider show`: SWA regions are
+- **Hosting:** Static Web Apps **Free only** (D6), in West Europe (superseded by D12: East US 2). Verified 21 Oct with `az provider show`: SWA regions are
   Central US, East US 2, West US 2, West Europe, East Asia (no Sweden Central). The resource group stays rg-as-judge in Sweden
   Central, where the bootstrap created it.
 - **Caching:** only the hash-named MP3s and Vite's `/assets/*` are `immutable`; the rest of `/replay/*` revalidates after
   5 minutes, because `cues.en.radio.jsonl` keeps its name when rebuilt. `.gz` is served as `application/gzip`, so the
   browser gets raw bytes and decompresses them itself.
+
+## D12. Stage 4 deploy and the browser commentary track (22 Oct 2026)
+
+- **Static Web Apps moved to East US 2.** The first `azd up` failed validation in West Europe with `RequestDisallowedByAzure`
+  ("The selected region is currently not accepting new customers"). Nothing was created. East US 2 deployed first time.
+  On Free, the region only hosts the app's metadata; the static files are served from the global edge (file 21).
+  The resource group stays in Sweden Central.
+- **MVP live:** https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/ (env `judge`, rg-as-judge). Checked in Chrome: 70 requests,
+  all `GET 200` to that one host (HTML, JS, JSON/JSONL, MP3); no API, no third party.
+- **azd uses the az CLI login** (`azd config set auth.useAzCliAuth true`, user-level azd config, chosen by potencialbg).
+- **Two audio clocks.** `LaneBContext` gives lane A no AudioContext, and B's context only exists after Start's awaits, so the
+  voice has its own context, unlocked in the same tap, and maps match time from `ReplayClock.now()` (median of 15 samples,
+  re-measured on every play/pause/seek). Measured: lines land within 5 ms of `t_in` in simulation and 0-3 ms in Chrome.
+  If B appends the context to `LaneBContext`, we can drop the second clock.
+- **Late lines skip their own leading silence.** The playhead holds at t0 during `ReplaySource.play()`'s 0.3 s head start, so
+  the first line is found a few ms late. All 45 Andrew HD MP3s open with 46-72 ms of silence (measured by decoding in Chrome),
+  so skipping up to that much keeps speech on `t_in` without cutting a syllable.
+- **Duck:** -12 dB (file 38's +12 dB speech rule; B adds a -6 dB 2 kHz dip), 150 ms attack starting 0.25 s before each
+  line, 600 ms release 0.35 s after it. Holds are counted, so lines closer than that share one duck.

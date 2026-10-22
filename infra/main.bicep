@@ -9,9 +9,10 @@ param environmentName string
 param location string
 
 // Verified 21 Oct 2026 with `az provider show -n Microsoft.Web` (staticSites): Central US, East US 2, West US 2,
-// West Europe, East Asia. Sweden Central is not offered, so the site lives in West Europe (file 30).
+// West Europe, East Asia. Sweden Central is not offered. West Europe refused our subscription on 22 Oct 2026
+// (RequestDisallowedByAzure: "not accepting new customers"), so the site lives in East US 2 (docs/DECISIONS.md D12).
 @allowed(['westeurope', 'eastus2', 'centralus', 'westus2', 'eastasia'])
-param swaLocation string = 'westeurope'
+param swaLocation string = 'eastus2'
 
 @allowed(['Free'])
 param swaSku string = 'Free'
