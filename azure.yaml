@@ -1,0 +1,23 @@
+# OWNER: A (potencialbg). `azd up` in env "judge" deploys the zero-backend replay to Static Web Apps Free.
+# Before deploying: python -m audiostands.build_bundle --cut judge (from pipeline/), so web/public/replay/v1/judge/ is
+# current. The bundle is committed, so the deploy itself needs no Python, no TTS and no keys.
+name: audiostands
+infra:
+  provider: bicep
+  path: infra
+services:
+  web:
+    project: ./web
+    language: ts
+    host: staticwebapp
+    dist: dist        # vite build copies web/public/ (the replay bundle) into dist/
+    hooks:
+      # staticwebapp.config.json lives in web/ (TEAM_SPLIT.md) but must ship inside the deployed folder.
+      # Whether azd would also pick it up from web/ on its own is (unverified); copying it is safe either way.
+      predeploy:
+        posix:
+          shell: sh
+          run: cp staticwebapp.config.json dist/staticwebapp.config.json
+        windows:
+          shell: pwsh
+          run: Copy-Item staticwebapp.config.json dist/staticwebapp.config.json -Force

@@ -17,7 +17,7 @@ Ask for anything else under "HANDOFF to A/B" in the PR description.
 - TypeScript (Vite, vanilla, strict) in `web/`. Tests: `cd web && npm test` (vitest, `tests/a/` and `tests/b/`).
   A's browser code lives in `web/src/lane-a/`; `web/src/main.ts` calls `mountLaneA()` once and nothing else of A's.
 - Stage 7 relay (FastAPI, Voice Live) in `relay/`. It imports `audiostands.qa`; never copy B's tools.
-- Infra: Bicep in `infra/`, deployed with `azd` (env `judge`, `rg-as-judge`, Sweden Central; Static Web Apps in westeurope).
+- Infra: Bicep in `infra/`, deployed with `azd` (env `judge`, `rg-as-judge`, Sweden Central; Static Web Apps in eastus2).
 
 ## Rules
 - Numbers shown or spoken to users come from the stats tools, never invented by an LLM.
