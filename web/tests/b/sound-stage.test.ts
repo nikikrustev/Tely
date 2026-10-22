@@ -3,7 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
 import { describe, expect, it } from 'vitest';
-import { AudioStands, EARCON_GAP_S, SEATS, toWorld } from '../../src/audio/audio-stands';
+import { AudioStands, ballLevel, EARCON_GAP_S, SEATS, toWorld } from '../../src/audio/audio-stands';
 import { CrowdEngine, levelFor, REFRACTORY_S, type CrowdBuffers } from '../../src/audio/crowd-engine';
 import { ReplaySource, type SegmentsDoc } from '../../src/replay/replay-source';
 import { wire } from '../../src/wire';
@@ -38,6 +38,29 @@ describe('ball -> panner position', () => {
     expect(paramOf(p.positionZ).value).toBeCloseTo(30, 3);
     const seat = SEATS.halfway.pos;                         // listener faces -Z: smaller world X = further left
     expect(paramOf(p.positionX).value).toBeLessThan(seat[0]);
+  });
+
+  it('the ball is near-silent when still and loud only while it travels (no constant "train" chug)', () => {
+    expect(ballLevel(0)).toBeLessThan(0.05);
+    expect(ballLevel(15)).toBeGreaterThan(5 * ballLevel(0));
+    for (let s = 0; s < 30; s += 0.5) expect(ballLevel(s + 0.5)).toBeGreaterThanOrEqual(ballLevel(s));
+    const fake = new FakeAudioContext();
+    const stands = new AudioStands(asCtx(fake));
+    stands.ballAt({ x: 0, y: 0, z: 0.11, speed: 0, alive: false }, 0);
+    fake.currentTime = 2;
+    const gain = (stands as unknown as { ballGain: GainNode }).ballGain.gain;
+    expect(paramOf(gain).value).toBeLessThan(0.01);                         // dead ball: silent
+  });
+
+  it('the whistle is soft: peak at most -18 dBFS, and not a pure tone', () => {
+    const fake = new FakeAudioContext();
+    fake.sampleRate = 22050;
+    const stands = new AudioStands(asCtx(fake));
+    const buf = (stands as unknown as { icons: Map<string, AudioBuffer> }).icons.get('whistle') as AudioBuffer;
+    const d = buf.getChannelData(0);
+    const peak = d.reduce((m, v) => Math.max(m, Math.abs(v)), 0);
+    expect(peak).toBeLessThanOrEqual(Math.pow(10, -18 / 20));
+    expect(peak).toBeGreaterThan(0.02);
   });
 
   it('keeps earcons at least 300 ms apart', () => {

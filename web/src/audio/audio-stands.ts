@@ -25,6 +25,9 @@ const PRIORITY: Record<Earcon, number> = { net: 0, whistle: 0, shot: 0, save: 1,
 
 export interface BallSample { x: number; y: number; z: number; speed: number; alive: boolean }
 
+/** Ball loudness from its speed (m/s): 0.04 when still, rising to 0.25 by 12 m/s (a firm pass). Ours, tune by ear. */
+export const ballLevel = (speed: number): number => 0.04 + 0.21 * Math.min(1, Math.max(0, (speed - 1) / 11));
+
 export class AudioStands {
   readonly ctx: BaseAudioContext;
   readonly master: GainNode;
@@ -64,13 +67,15 @@ export class AudioStands {
     bp.type = 'bandpass';
     bp.frequency.value = 1800;
     bp.Q.value = 0.6;
+    // Gentle rattle: a smooth (sine) wobble of +-15% around 0.85. A square wave at full depth chugged like a train
+    // (team listening notes, 22 Oct).
     const am = ctx.createGain();
-    am.gain.value = 0.5;
+    am.gain.value = 0.85;
     this.rattle = ctx.createOscillator();
-    this.rattle.type = 'square';
+    this.rattle.type = 'sine';
     this.rattle.frequency.value = 6;
     const depth = ctx.createGain();
-    depth.gain.value = 0.5;
+    depth.gain.value = 0.15;
     this.rattle.connect(depth).connect(am.gain);
     this.ballGain = ctx.createGain();
     this.ballGain.gain.value = 0;
@@ -101,7 +106,8 @@ export class AudioStands {
     p.positionY.setTargetAtTime(w[1], at, tau);
     p.positionZ.setTargetAtTime(w[2], at, tau);
     this.rattle.frequency.setTargetAtTime(4 + Math.min(b.speed, 30) * 0.8, at, 0.1); // faster ball, faster rattle
-    this.ballGain.gain.setTargetAtTime(b.alive ? 0.35 : 0, at, b.alive ? 0.05 : 0.3); // silent when the ball is dead
+    // Loud only while the ball travels: a ball at someone's feet is near-silent, and a dead ball is silent.
+    this.ballGain.gain.setTargetAtTime(b.alive ? ballLevel(b.speed) : 0, at, b.alive ? 0.08 : 0.3);
     const s = SEATS[this.seat].pos;
     const d = Math.hypot(s[0] - w[0], s[1] - w[1], s[2] - w[2]);
     this.ballSend.gain.setTargetAtTime(Math.min(0.6, d / 120), at, 0.2);
@@ -172,6 +178,7 @@ export class AudioStands {
     const b = this.ctx.createBuffer(1, Math.floor(sr * len), sr);
     const d = b.getChannelData(0);
     const rnd = prng(kind.length * 97 + 11);
+    let phase = 0, breath = 0;
     for (let i = 0; i < d.length; i++) {
       const t = i / sr;
       const u = t / len;
@@ -183,7 +190,13 @@ export class AudioStands {
       } else if (kind === 'tackle') {
         v = (rnd() * 2 - 1) * Math.exp(-t * 25) * 0.7 + Math.sin(2 * Math.PI * 60 * t) * Math.exp(-t * 20) * 0.5;
       } else if (kind === 'whistle') {
-        v = Math.sin(2 * Math.PI * (2800 + 120 * Math.sin(2 * Math.PI * 28 * t)) * t) * 0.35 * Math.min(1, 40 * t, 8 * (1 - u));
+        // A referee's pea whistle: ~2.2 kHz tone trilled ~27 times a second by the pea, plus breath noise.
+        // About 10 dB quieter than the first version, which was a pure 2.8 kHz sine (piercing, team notes 22 Oct).
+        const trill = Math.sin(2 * Math.PI * 27 * t);
+        phase += (2 * Math.PI * (2200 + 70 * trill)) / sr;
+        breath = 0.75 * breath + 0.25 * (rnd() * 2 - 1);
+        const env = Math.min(1, 25 * t, 6 * (1 - u));
+        v = (0.8 * Math.sin(phase) * (0.55 + 0.45 * (0.5 + 0.5 * trill)) + 0.3 * breath) * env * 0.11;
       } else if (kind === 'net') {
         v = (rnd() * 2 - 1) * Math.sin(Math.PI * u) * 0.5; // a soft swish
       } else {
