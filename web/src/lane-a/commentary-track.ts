@@ -61,8 +61,8 @@ export function parseCues(jsonl: string): Cue[] {
     .sort((a, b) => a.t_in - b.t_in);
 }
 
-/** Seconds before the first sample above -50 dBFS, minus 5 ms of margin. The Andrew HD MP3s open with 46-72 ms of
- *  silence (measured in Chrome on all 45 judge-cut lines, 22 Oct 2026). */
+/** Seconds before the first sample above -50 dBFS, minus 5 ms of margin. The Brian HD MP3s open with 67-88 ms of
+ *  silence (measured in Chrome on all 45 judge-cut MP3s, 22 Oct 2026; Andrew HD was 46-72 ms). */
 export function leadingSilence(buf: Pick<AudioBuffer, 'getChannelData' | 'sampleRate' | 'length'>): number {
   if (typeof buf.getChannelData !== 'function') return 0;
   const d = buf.getChannelData(0);
