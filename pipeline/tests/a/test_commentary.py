@@ -98,6 +98,59 @@ def test_never_more_than_20_s_between_lines(built, match):
     assert max(b - a for a, b in zip(starts, starts[1:])) <= planner.MAX_QUIET_S
 
 
+def test_ball_in_play_is_never_quiet_for_more_than_10_s(built, match):
+    # Nikolay's listening note on PR #11: the old judge cut had 18.2 s between line starts with the ball in play.
+    if built["cut"] == "sample":
+        pytest.skip("the sample's longest stretch (11.5 s) is its 9.3 s kits line, talk rather than silence")
+    quiet = planner.quiet_in_play(match, [c["t_in"] for c in built["cues"]])
+    assert max(b - a for a, b in quiet) <= planner.MAX_BALL_QUIET_S == 10.0
+
+
+def test_shipped_judge_cut_is_never_quiet_in_play_for_more_than_10_s():
+    # The committed bundle, with the real Brian HD durations, not the mocked ones.
+    judge = load_match("judge")
+    cues = [json.loads(s) for s in (MATCH_DIRS["judge"] / "cues.en.radio.jsonl").read_text(encoding="utf-8")
+            .splitlines() if s.strip()]
+    quiet = planner.quiet_in_play(judge, [c["t_in"] for c in cues])
+    assert max(b - a for a, b in quiet) <= planner.MAX_BALL_QUIET_S
+    assert any(c["kind"] == "ball" for c in cues)
+
+
+def test_ball_lines_are_ball_first_varied_and_leave_room_for_the_duck(built, match):
+    cues = sorted(built["cues"], key=lambda c: c["t_in"])
+    balls = [c for c in cues if c["kind"] == "ball"]
+    if not balls:
+        pytest.skip("no in-play stretch needed a ball line in this cut")
+    zones = tuple(f"{templates.THIRD[t].capitalize()}, {templates.SIDE[s]}, "
+                  for t in templates.THIRD for s in templates.SIDE)
+    for c in balls:
+        text = c["text"]["radio"]
+        assert text.startswith(zones), text  # where first (file 36 rule 1)
+        assert not spoiler.words(text) & (spoiler.OUTCOME | spoiler.PASS_OUTCOME), text
+        assert match.ball(c["t_in"])["alive"] and match.ball(c["t_in"] + c["utterance"]["duration_ms"] / 1000)["alive"]
+    for a, b in zip(cues, cues[1:]):
+        if "ball" in (a["kind"], b["kind"]):  # duck 0.25 s before, release 0.35 s after (D12)
+            assert b["t_in"] - (a["t_in"] + a["utterance"]["duration_ms"] / 1000) >= planner.DUCK_S - 1e-3
+    if built["cut"] == "judge":  # seeded variety: at least three phrasings once zone, team and name are taken out
+        names = [p["last_name"] for p in match.players.values()] + [match.team_name(s) for s in ("home", "away")]
+        shapes = set()
+        for c in balls:
+            text = c["text"]["radio"].split(", ", 2)[2]
+            for name in names:
+                text = text.replace(name, "X")
+            shapes.add(text)
+        assert len(shapes) >= 3, shapes
+
+
+def test_ball_line_never_names_a_receiver_still_in_the_air(match):
+    p = next(e for e in match.events if e["type"] == "pass" and match.reveal_t(e) - match.t(e) > 0.2)
+    assert templates.ball(match, (match.t(p) + match.reveal_t(p)) / 2) is None
+    t = match.reveal_t(p) + 0.05
+    if match.holder_at(t)[1] == p["id"] and match.ball(t)["alive"]:  # once it arrives, the receiver may be named
+        d = templates.ball(match, t)
+        assert d.evidence == (p["id"],) and match.surname(p["receiver_id"]) in d.texts[0]
+
+
 def test_opener_labels_the_ai_and_kits_give_directions(built, match):
     opener = built["cues"][0]
     assert opener["kind"] == "intro" and opener["t_in"] == match.t_start
