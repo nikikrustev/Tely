@@ -138,3 +138,18 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   so skipping up to that much keeps speech on `t_in` without cutting a syllable.
 - **Duck:** -12 dB (file 38's +12 dB speech rule; B adds a -6 dB 2 kHz dip), 150 ms attack starting 0.25 s before each
   line, 600 ms release 0.35 s after it. Holds are counted, so lines closer than that share one duck.
+
+## D13. Commentary voice: Brian HD, picked by ear (22 Oct 2026)
+
+- **potencialbg picked `en-US-Brian:DragonHDLatestNeural`** from the `out/voices/` samples (Andrew, Brian, Ava), closing the
+  Stage 3 "pick a voice by ear" item. `.env.example` now defaults to Brian; `ssml.py`'s `DEFAULT_VOICE` stays Andrew so the
+  mocked test hashes don't change, and real builds read `TTS_VOICE` from `.env`.
+- **Re-render:** the old Andrew MP3s were deleted first, because the SSML-hash cache never prunes files, so they would
+  otherwise ship and be listed in the manifest. Result: 58 TTS calls, **48 lines** (was 45), truth_check 48/48, 0 spoiler
+  leaks, both build-ups exactly 4.0 s before their shots, longest gap between line starts 18.2 s; 2.3 MB bundle.
+- **Why 48 lines:** the planner uses the real MP3 durations, and Brian is a little faster (204 s of speech against Andrew's
+  215 s), so three short describe/call lines now fit. One build-up switched to its shorter fallback ("Navy coming...").
+- **Leading silence:** Brian's 45 MP3s open with 67-88 ms of silence (decoded in Chrome); the late-line skip measures each
+  buffer, so nothing in the code changed.
+- **Deployed** with `azd deploy`; the live manifest lists Brian, and in Chrome the first lines started on their `t_in` spacing
+  with only same-origin requests.
