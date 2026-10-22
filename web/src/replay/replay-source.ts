@@ -12,9 +12,10 @@ export interface Segment {
   ball: [number, number, number, number, number][];
   crowd: CrowdEnds;
   tension: number;
-  seconds: { t: number; crowd: CrowdEnds; tension: number }[];
+  seconds: { t: number; crowd: CrowdEnds; tension: number; score: { home: number; away: number } }[];
   one_shots: { t: number; end: 'H' | 'A'; kind: string }[];
   earcons: { t: number; kind: Earcon; x: number; y: number }[];
+  haptics: { t: number; tacton: string; team: 'home' | 'away' | null }[];
 }
 export interface SegmentsDoc {
   format: string;
@@ -69,6 +70,16 @@ export class ReplaySource implements ReplayClock {
     if (!this.playing) return;
     this.anchorMatch = this.now();
     this.playing = false;
+    this.emit();
+  }
+
+  /** Jump to match time `t` (e.g. "Next big moment"). Keeps playing if it was playing. Listeners (A's commentary
+   *  track) re-anchor on the change; the caller must cancel sound already queued after now. */
+  seek(t: number, delayS = 0.3): void {
+    this.anchorMatch = Math.min(Math.max(t, this.doc.t0), this.doc.t1);
+    this.anchorCtx = this.ctx.currentTime + (this.playing ? delayS : 0);
+    const i = this.doc.segments.findIndex((s) => s.t1 > this.anchorMatch);
+    this.next = i < 0 ? this.doc.segments.length : i;
     this.emit();
   }
 
