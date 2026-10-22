@@ -34,3 +34,6 @@ def test_segments_shape():
     assert seconds == list(range(int(doc["t0"]), int(doc["t1"]) + 1))
     signals = json.loads((JUDGE / "signals.json").read_text(encoding="utf-8"))
     assert [o for s in segs for o in s["one_shots"]] == signals["crowd_one_shots"]
+    assert [h for s in segs for h in s["haptics"]] == signals["haptics"]
+    rows = {r["t"]: r for r in signals["per_second"]}
+    assert all(x["score"] == rows[x["t"]]["score"] for s in segs for x in s["seconds"])

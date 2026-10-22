@@ -3,7 +3,8 @@
     python -m audiostands.build_segments --cut judge      # writes web/public/replay/v1/judge/segments.json
 
 Each segment carries the ball at 10 Hz, the crowd state per end and the tension for each second, the crowd one-shots
-and the earcons (thud, whistle, net...) that fall inside it. **No `cues` field** (TEAM_SPLIT.md): A's commentary track
+and the earcons (thud, whistle, net...) and haptic cues (file 41 tactons) that fall inside it, plus the score
+per second (for the score announcement). **No `cues` field** (TEAM_SPLIT.md): A's commentary track
 loads cues.*.jsonl itself. Deterministic: same input bytes -> same output bytes.
 """
 from __future__ import annotations
@@ -17,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 BUNDLE = ROOT / "web" / "public" / "replay" / "v1"
 SEG_S, BALL_HZ = 2, 10
-FORMAT_VERSION = "0.1.0"
+FORMAT_VERSION = "0.2.0"   # 0.2.0 adds seconds[].score and haptics[] (additive)
 HALF_L = 52.5
 
 
@@ -59,6 +60,7 @@ def segments(bundle: Path) -> dict:
     per_s = {r["t"]: r for r in signals["per_second"]}
     icons = earcons(events, t_of, rows, t0, hz)
     shots = signals["crowd_one_shots"]
+    taps = signals.get("haptics", [])
     step = hz / BALL_HZ
     segs = []
     s0 = t0
@@ -77,9 +79,11 @@ def segments(bundle: Path) -> dict:
         segs.append(dict(
             t0=s0, t1=s1, ball=ball,
             crowd=per_s[int(s0)]["crowd"], tension=per_s[int(s0)]["tension"],
-            seconds=[dict(t=t, crowd=per_s[t]["crowd"], tension=per_s[t]["tension"]) for t in secs],
+            seconds=[dict(t=t, crowd=per_s[t]["crowd"], tension=per_s[t]["tension"], score=per_s[t]["score"])
+                     for t in secs],
             one_shots=[o for o in shots if inside(o["t"])],
-            earcons=[c for c in icons if inside(c["t"])]))
+            earcons=[c for c in icons if inside(c["t"])],
+            haptics=[h for h in taps if inside(h["t"])]))
         s0 = s1
     return dict(format="audiostands.segments", version=FORMAT_VERSION, match_id=meta["match"]["id"],
                 t0=t0, t1=t_end, seg_s=SEG_S, ball_hz=BALL_HZ, ball_columns=["x", "y", "z", "speed", "alive"],

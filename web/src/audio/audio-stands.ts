@@ -49,6 +49,7 @@ export class AudioStands {
   private reverb: ConvolverNode;
   private icons = new Map<Earcon, AudioBuffer>();
   private nextEarconAt = 0;
+  private queued: { src: AudioScheduledSourceNode; when: number }[] = [];
   private seat: Seat = 'halfway';
   last = { x: 0, y: 0 };
 
@@ -149,7 +150,19 @@ export class AudioStands {
     this.mix(g, p, sp, this.earconBus);
     src.onended = () => { p.disconnect(); sp.disconnect(); };
     src.start(t);
+    this.queued = this.queued.filter((q) => q.when > this.ctx.currentTime - 5);
+    this.queued.push({ src, when: t });
     return t;
+  }
+
+  /** Drop ball moves and earcons scheduled from audio time `t` on (after a seek). */
+  cancelFrom(t: number): void {
+    const p = this.ballPanner;
+    for (const a of [p.positionX, p.positionY, p.positionZ, this.ballStereo.pan, this.ballGain.gain, this.ballSend.gain,
+      this.rattle.frequency]) a.cancelScheduledValues(t);
+    for (const q of this.queued) if (q.when >= t) try { q.src.stop(); } catch { /* already stopped */ }
+    this.queued = this.queued.filter((q) => q.when < t);
+    this.nextEarconAt = 0;
   }
 
   /** "Where is the ball?": three pings at its last position. */

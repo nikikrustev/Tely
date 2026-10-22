@@ -35,6 +35,7 @@ export class CrowdEngine implements CrowdBus {
   private beds = new Map<BedName, Bed>();
   private lastShot = new Map<string, number>();
   private targets = new Map<AudioParam, number>();
+  private queued: { src: AudioScheduledSourceNode; when: number }[] = [];
   private state: CrowdState = { excitement: 0.2, valence: 0, danger: 0 };
   private rnd: () => number;
   private timer: ReturnType<typeof setInterval> | null = null;
@@ -173,8 +174,26 @@ export class CrowdEngine implements CrowdBus {
     }
     src.start(when);
     this.started++;
+    this.queued = this.queued.filter((q) => q.when > this.ctx.currentTime - 30);
+    this.queued.push({ src, when });
     if (name === 'roar' && ours) this.chantGain.gain.setTargetAtTime(0, when, 0.2);
     return true;
+  }
+
+  /** Drop everything scheduled from audio time `t` on (after a seek): state moves and one-shots not yet started. */
+  cancelFrom(t: number): void {
+    const params = [this.level.gain, this.hushGain.gain, this.chantGain.gain];
+    for (const b of this.beds.values()) params.push(b.gain.gain, b.lp.frequency);
+    for (const p of params) p.cancelScheduledValues(t);
+    this.hushGain.gain.setTargetAtTime(1, t, 0.2);
+    for (const q of this.queued) if (q.when >= t) try { q.src.stop(); } catch { /* already stopped */ }
+    this.queued = this.queued.filter((q) => q.when < t);
+    this.lastShot.clear();
+  }
+
+  /** Overall crowd level (Settings: crowd mix). */
+  setOutputGain(g: number): void {
+    this.output.gain.setTargetAtTime(g, this.ctx.currentTime, 0.1);
   }
 
   // SEAM(B->A): CrowdBus contract (web/src/contracts/b-exports.ts). A's commentary track and live Ask call these.
