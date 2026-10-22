@@ -153,3 +153,13 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   buffer, so nothing in the code changed.
 - **Deployed** with `azd deploy`; the live manifest lists Brian, and in Chrome the first lines started on their `t_in` spacing
   with only same-origin requests.
+
+## D14. Copilot Agent Mode + Azure MCP verified (22 Oct 2026)
+
+- **Set-up:** VS Code 1.143.0, GitHub Copilot (Free) in Agent Mode, and the Azure MCP Server from `.vscode/mcp.json`
+  (`@azure/mcp@3.0.0`, `--read-only`), started from its Start link with our subscription ID entered at the prompt.
+- **Test (potencialbg):** Agent Mode was asked to list the resources in `rg-as-judge` through Azure MCP. Its answer:
+  one resource, `swa-as-judge-calef3`, a Static Web App (`Microsoft.Web/staticSites`) in `eastus2`. That matches D12.
+- **What it hit:** the first request failed with a tenant mismatch. Giving the subscription's tenant fixed it.
+- **Evidence:** potencialbg kept a screenshot of the answer for the README and the "How we built it" section. This is
+  the BUILD_PLAN Stage 0 Copilot item; A7 still needs the Container Apps question and one real `ai:copilot` commit.
