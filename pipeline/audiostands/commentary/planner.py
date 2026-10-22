@@ -6,7 +6,10 @@
    its reveal.
 3. Routine passes fill the gaps only with breathing room around them (Radio level: ball and key moments, short pauses).
    Nothing but the shot's own lines may talk between a build-up and its reveal (the hush keeps the rise unbroken).
-4. Quiet fill: never more than MAX_QUIET_S between line starts without spoken state (file 39 §3).
+4. Ball fill: while the ball is in play, a short ball-first line ("Midfield, far side, Reds. It's with Ashski.")
+   whenever BALL_EVERY_S passes without a line start, so no in-play stretch is quiet for more than MAX_BALL_QUIET_S
+   (file 36 rule 1; Nikolay's listening note on PR #11). Dead-ball stoppages are left to step 5.
+5. Quiet fill: never more than MAX_QUIET_S between line starts without spoken state (file 39 §3).
 
 Durations come from duration_of(text, style, pause_ms): real MP3 durations once rendered, an estimate before that.
 """
@@ -26,7 +29,12 @@ MIN_GAP_S = 0.4      # silence between two lines (file 39)
 MAX_QUIET_S = 20.0   # max time between line starts without spoken state (file 39 §3, our guess)
 FILL_AFTER_S = 6.0   # a quiet fill comes this long after the last line ends, unless MAX_QUIET_S forces it sooner
 ROUTINE_GAP_S = 1.5  # a routine pass is described only after this much silence
-HUSHED = ("describe", "state", "kits")  # kinds that may not talk over a build-up (build start -> reveal)
+BALL_EVERY_S = 9.0   # in play, a ball line once this long passes without a line start (#11 note: 8-10 s)
+MAX_BALL_QUIET_S = 10.0  # longest in-play stretch without a line start; the tests hold the judge cut to it
+BALL_GAP_S = 1.5     # silence either side of a ball line, so the crowd swells back between lines
+SCORE_EVERY_S = 60.0 # a ball line may give the score instead of a name already heard, if not said this recently
+DUCK_S = 0.6         # the crowd ducks 0.25 s before a line and releases 0.35 s after it (D12): the tightest ball gap
+HUSHED = ("describe", "state", "kits", "ball")  # kinds that may not talk over a build-up (build start -> reveal)
 STEP_S = 0.1
 EPS = 1e-6           # float tolerance for the overlap test (15.05 + 0.4 > 15.45 in floats)
 
@@ -82,8 +90,7 @@ def plan(m: Match, duration_of: DurationFn = estimate) -> list[Line]:
         place(d)
     for d in sorted((d for d in ds if d.prio == 0), key=lambda d: d.t):
         place(d, gap_before=ROUTINE_GAP_S)
-    placed.sort(key=lambda p: p.t_in)
-    return _quiet_fill(m, placed, duration_of)
+    return _quiet_fill(m, _ball_fill(m, placed, duration_of), duration_of)
 
 
 def _ceil2(t: float) -> float:
@@ -94,12 +101,85 @@ def _hushes(m: Match, placed: list[Line]) -> list[tuple[float, float]]:
     return [(p.t_in, m.reveal_t(m.by_id(p.draft.evidence[0]))) for p in placed if p.draft.kind == "build"]
 
 
-def _free(m: Match, placed: list[Line], a: float, b: float, kind: str, gap_before: float = MIN_GAP_S) -> bool:
+def _free(m: Match, placed: list[Line], a: float, b: float, kind: str, gap_before: float = MIN_GAP_S,
+          gap_after: float = MIN_GAP_S) -> bool:
     if a < m.t_start - EPS or b > m.t_end + EPS:
         return False
     if kind in HUSHED and any(a < h1 and b > h0 for h0, h1 in _hushes(m, placed)):
         return False
-    return all(b + MIN_GAP_S <= p.t_in + EPS or a + EPS >= p.end + gap_before for p in placed)
+    return all(b + gap_after <= p.t_in + EPS or a + EPS >= p.end + gap_before for p in placed)
+
+
+def in_play(m: Match) -> list[tuple[float, float]]:
+    """(from, to) for every stretch of the window with the ball alive, from B's 25 Hz ticks."""
+    rows, hz, t0 = m.ticks["ball"]["rows"], m.ticks["ball"]["hz"], m.ticks["t0"]
+    runs: list[tuple[float, float]] = []
+    start = None
+    for k, row in enumerate(rows):
+        if row[3] and start is None:
+            start = t0 + k / hz
+        elif not row[3] and start is not None:
+            runs.append((start, t0 + k / hz))
+            start = None
+    if start is not None:
+        runs.append((start, t0 + len(rows) / hz))
+    return [(max(a, m.t_start), min(b, m.t_end)) for a, b in runs if b > m.t_start and a < m.t_end]
+
+
+def quiet_in_play(m: Match, starts: list[float], runs: list[tuple[float, float]] | None = None
+                  ) -> list[tuple[float, float]]:
+    """(from, to) for every stretch with the ball in play and no line starting, window start to window end."""
+    runs = in_play(m) if runs is None else runs
+    edges = [m.t_start, *sorted(starts), m.t_end]
+    return [(max(a, r0), min(b, r1)) for a, b in zip(edges, edges[1:]) for r0, r1 in runs if min(b, r1) > max(a, r0)]
+
+
+def _ball_fill(m: Match, placed: list[Line], duration_of: DurationFn) -> list[Line]:
+    """Split every in-play stretch longer than BALL_EVERY_S with ball lines, evenly, left to right."""
+    runs = in_play(m)
+    lines = sorted(placed, key=lambda p: p.t_in)
+    said: dict[str, int] = {}  # holder event -> ball lines about it so far (varies the wording)
+    cursor = m.t_start
+    while True:
+        todo = next(((s0, s1) for s0, s1 in quiet_in_play(m, [p.t_in for p in lines], runs)
+                     if s0 >= cursor - EPS and s1 - s0 > BALL_EVERY_S), None)
+        if todo is None:
+            return lines
+        fit = _fit_ball(m, lines, *todo, runs, said, duration_of)
+        if fit is None:
+            cursor = todo[1]  # nothing fits anywhere in this stretch (a hush, or no known holder): move on
+            continue
+        ev = m.holder_at(fit.t_in)[1] or ""
+        said[ev] = said.get(ev, 0) + 1
+        lines.append(fit)
+        lines.sort(key=lambda p: p.t_in)
+        cursor = fit.t_in
+
+
+def _fit_ball(m: Match, lines: list[Line], s0: float, s1: float, runs: list[tuple[float, float]],
+              said: dict[str, int], duration_of: DurationFn) -> Line | None:
+    # Even spacing: cut the stretch into the fewest equal parts no longer than BALL_EVERY_S, and aim for the first cut.
+    # Try that point, then earlier, then later. The next round of _ball_fill splits whatever is left.
+    pref = _ceil2(s0 + (s1 - s0) / math.ceil((s1 - s0) / BALL_EVERY_S))
+    n_back, n_fwd = int((pref - s0) / STEP_S), int((s1 - pref) / STEP_S)
+    cands = [round(pref - STEP_S * k, 2) for k in range(n_back + 1)] + [round(pref + STEP_S * k, 2)
+                                                                        for k in range(1, n_fwd + 1)]
+    for gap in (BALL_GAP_S, DUCK_S):  # room for the crowd to swell back first; at the least, room for the duck
+        for a in cands:
+            _, ev = m.holder_at(a)
+            i = next((j for j, p in enumerate(lines) if p.t_in > a), len(lines))
+            near = tuple(p.text for p in lines[max(i - 1, 0):i + 1])
+            score = T.score_words(m, a)
+            due = not any(score in p.text for p in lines if a - SCORE_EVERY_S <= p.t_in < a)
+            d = T.ball(m, a, said.get(ev or "", 0), near, due)
+            if d is None:
+                continue
+            for text in d.texts:
+                dur = duration_of(text, d.style, d.pause_ms)
+                if (any(r0 - EPS <= a and a + dur <= r1 + EPS for r0, r1 in runs)
+                        and _free(m, lines, a, a + dur, d.kind, gap_before=gap, gap_after=gap)):
+                    return Line(d, text, a, dur)
+    return None
 
 
 def _quiet_fill(m: Match, placed: list[Line], duration_of: DurationFn) -> list[Line]:

@@ -4,15 +4,60 @@
   "bytes": 24912,
   "text": "Midfield, far side, Navy. Kelski on the ball."
  },
+ "01c1432f4a3048d81bb99d3c47393efc9cb8595a28379c15957f9ec409f8e9fc": {
+  "duration_ms": 2200,
+  "bytes": 13536,
+  "text": "Attacking third, Navy."
+ },
+ "11b59478e5a1794555f7579e7c66583a9dfc02f83fdc522aaa8e8b8549da0dd2": {
+  "duration_ms": 2550,
+  "bytes": 15696,
+  "text": "Attacking third, Reds."
+ },
+ "1280644e531f4d58284fc24d66762808fedb6ad8ac7ef6ed576f70518b43ba79": {
+  "duration_ms": 2700,
+  "bytes": 16560,
+  "text": "Midfield, far side, Reds keeping it."
+ },
  "1549699b62c3f317cbd600517ef790b73081629ca42755c4b06b022c61b57dd0": {
   "duration_ms": 5250,
   "bytes": 31824,
   "text": "AI commentary, synthetic match. Reds nil, Navy nil."
  },
+ "166b29f1b2d5a23e514fb0497bf4b77db721b5359a7e440088e51c3d0745cca8": {
+  "duration_ms": 4150,
+  "bytes": 25200,
+  "text": "Attacking third, centre, Navy on the ball."
+ },
  "179d2f37f07479117ea135e5860b6da043607a57145c4e5e7bdd18e0091fbc2b": {
   "duration_ms": 4650,
   "bytes": 28224,
   "text": "Midfield, far side, Navy. It's with Olvros."
+ },
+ "202b6b4dd330d0ee6b30ff2854d5b139051a3da96b0356abeb45c3c24531f2b5": {
+  "duration_ms": 3850,
+  "bytes": 23472,
+  "text": "Attacking third, far side, Navy keeping it."
+ },
+ "23adb0c976df2f766dcd2315067cbf0873839272aeb6e6fe6d1fd3ab966071ef": {
+  "duration_ms": 3250,
+  "bytes": 19872,
+  "text": "Attacking third, centre, Navy."
+ },
+ "29ff1c4f2e07de41b7dfe86696624cc8ca53ad14c3896169a2097e601bdd361f": {
+  "duration_ms": 3100,
+  "bytes": 19008,
+  "text": "Midfield, far side, Navy keeping it."
+ },
+ "2b23a3803bb5c64e004ca014e6fab2655ff0c8a6e940ad84d0e432526e3e10af": {
+  "duration_ms": 4100,
+  "bytes": 24912,
+  "text": "Attacking third, far side, Reds."
+ },
+ "2e813e1fd0643af60b88da891cbee1f76c8f82178b93c718af69afbd98cc1c12": {
+  "duration_ms": 1800,
+  "bytes": 11088,
+  "text": "Midfield, Reds."
  },
  "2eaab6403594497ab58735bfb8464979a236638cbb3f60b71f296e83ef5ac758": {
   "duration_ms": 2350,
@@ -54,6 +99,16 @@
   "bytes": 29088,
   "text": "Defensive third, far side, Navy. It's with Olvros."
  },
+ "3987546c9957623ee459c5b530973a4ee30e6f5df4d0cfce5571ae128e2bd8e4": {
+  "duration_ms": 7450,
+  "bytes": 45072,
+  "text": "Defensive third, centre, Navy in possession. Reds nil, Navy one."
+ },
+ "3b304e8d8a14ccc36758fe0069be8158abcbad1fa65470560e7aacd854088ac5": {
+  "duration_ms": 5250,
+  "bytes": 31824,
+  "text": "Attacking third, far side, Navy. Olvholm."
+ },
  "4244c34752c1d0aa28c083ab2f41ccc65510f034969fb37659af6a8858bf7884": {
   "duration_ms": 2950,
   "bytes": 18000,
@@ -69,10 +124,20 @@
   "bytes": 25488,
   "text": "Midfield, far side, Reds. Ashski on the ball."
  },
+ "476cfed1f2d724b0f30dded1ae4b631a1d1be71f27d3f8678919418c848ee2c9": {
+  "duration_ms": 7250,
+  "bytes": 43920,
+  "text": "Defensive third, far side, Reds in possession. Reds nil, Navy one."
+ },
  "4d63033b8d0a05df75c3aa367f8fe64c33eca0b823cba03a47e6091c956c5b8c": {
   "duration_ms": 2400,
   "bytes": 14688,
   "text": "Blocked! Rilford gets in the way."
+ },
+ "4f1bf65a664dd269971d5f978d42d72f0423a51f6b6acea3ba41b8c1ae72bbe2": {
+  "duration_ms": 3250,
+  "bytes": 19872,
+  "text": "Defensive third, far side, Navy."
  },
  "4ff5defc34ffa718c89c094a03d3a17d7371fd242907f7a0b04b4168726f9988": {
   "duration_ms": 3450,
@@ -83,6 +148,21 @@
   "duration_ms": 4300,
   "bytes": 26208,
   "text": "Ball's out. Reds nil, Navy one, sixty minutes played."
+ },
+ "5558ae1da94dcde998866fe142444774d5ec1fde3677f8015c20d3f68527e142": {
+  "duration_ms": 4150,
+  "bytes": 25200,
+  "text": "Defensive third, centre, Navy."
+ },
+ "569420fe6de58da6ddf1ea055fa38d9e5d1559e3c6d4e483fe04e99c46d696b1": {
+  "duration_ms": 5700,
+  "bytes": 34560,
+  "text": "Midfield, far side, Navy. Kelski in possession."
+ },
+ "5eb6d073e9b23d61df384b122949a875e93bb5bf7e5c769fc8713f1828c45a24": {
+  "duration_ms": 2950,
+  "bytes": 18000,
+  "text": "Midfield, far side, Navy."
  },
  "602307293225b7bfa0ae847e6ff9294294d86b8a5bba9948ba1fcbf0c079915c": {
   "duration_ms": 4750,
@@ -99,10 +179,20 @@
   "bytes": 18720,
   "text": "Cut out! Strandford wins it back for Navy."
  },
+ "651b9049e477c468c8dda873a7d267495f59132209006963fee3e7c04ff51d01": {
+  "duration_ms": 4400,
+  "bytes": 26784,
+  "text": "Midfield, far side, Navy. Kelski."
+ },
  "66a8b08503f9f3ba9c8ecddeadae5b6e8467b0ef86fca4356b0e1117b083ca3c": {
   "duration_ms": 3350,
   "bytes": 20448,
   "text": "Midfield, far side, Reds. It's with Ashski."
+ },
+ "69a5b09bbb2cb7bea7254ecbe96e071f6742b8f812d6f6ef1901fe7cc32fd78e": {
+  "duration_ms": 5700,
+  "bytes": 34560,
+  "text": "Attacking third, far side, Navy, Olvholm on the ball."
  },
  "69ce65bb171e346b61fbdf276446fd522aa9c108fe429202c4d21f4a7970023b": {
   "duration_ms": 750,
@@ -138,6 +228,11 @@
   "duration_ms": 3050,
   "bytes": 18720,
   "text": "Intercepted by Olvholm! Navy have it back."
+ },
+ "77c0fd0b9f7d5a7dd27f34f03083d5bde3a1087adb5da986416dfb016ea2ec36": {
+  "duration_ms": 3500,
+  "bytes": 21312,
+  "text": "Defensive third, far side, Reds with the ball."
  },
  "7961a4086b2d039dd843cc0640dd73c47e3ed8242d88e68473299c7a2a73a26c": {
   "duration_ms": 6450,
@@ -179,6 +274,16 @@
   "bytes": 25920,
   "text": "Attacking third, far side, Navy. Fenford has it."
  },
+ "a154d42fa9f9e3ca83f16b4b458304bcce8fd9c7fff47793202475d9cf977547": {
+  "duration_ms": 3900,
+  "bytes": 23760,
+  "text": "Defensive third, centre, Reds."
+ },
+ "ac9013dfa7b542c1f51cd17ae5858cbbcc38649474e1304d61f0e32d59be7487": {
+  "duration_ms": 2400,
+  "bytes": 14688,
+  "text": "Defensive third, Navy."
+ },
  "afa9bd063658e10106e1d1ba9e4d0453ca6dea4d76f296685ecb27f50f735276": {
   "duration_ms": 5700,
   "bytes": 34560,
@@ -188,6 +293,16 @@
   "duration_ms": 5450,
   "bytes": 33120,
   "text": "Attacking third, far side, Navy. Strandford, looking for a way forward."
+ },
+ "b2b54a75b939a2502d56abce0b4fb11f8a40684934f47f5a531ff5c426ff2fca": {
+  "duration_ms": 4450,
+  "bytes": 27072,
+  "text": "Defensive third, centre, Reds. Wexros."
+ },
+ "b37c82bd8b3e8038b538a587daf9eab0d5dc6cbbab6b83ca5d4901ced9972f00": {
+  "duration_ms": 3800,
+  "bytes": 23184,
+  "text": "Attacking third, far side, Reds with the ball."
  },
  "b4599043a524eba4a8054db730b7a78d65f0c799ae04668be8e9e734800be9c5": {
   "duration_ms": 3950,
@@ -204,10 +319,25 @@
   "bytes": 22896,
   "text": "Defensive third, centre, Navy. It's with Galic."
  },
+ "b9c4a209665f340a55646bdc2916c83fca083633ca545e0a3eff026054553d4c": {
+  "duration_ms": 3600,
+  "bytes": 21888,
+  "text": "Defensive third, far side, Reds keeping it."
+ },
+ "ba265c6d3fb5c8a39fc46aa2cfad6d048540921c2565567694ee3ac752132180": {
+  "duration_ms": 3850,
+  "bytes": 23472,
+  "text": "Attacking third, far side, Navy."
+ },
  "be31f7f532817cfece0cda6a06f7e61711374c6ad44a6600a0a6fad6eec5cbb4": {
   "duration_ms": 6500,
   "bytes": 39312,
   "text": "Attacking third, centre, Reds... Orlani... space opening up!"
+ },
+ "c003267d04459a5aa66b72ab7a92767aa7fff010db5b74b465e05cec5171e803": {
+  "duration_ms": 1300,
+  "bytes": 8208,
+  "text": "Midfield, Navy."
  },
  "c0335d1ae44ee438bf9edd447e9dce488e2ca02893cd2b869a05d3f9b231753f": {
   "duration_ms": 5050,
@@ -224,20 +354,50 @@
   "bytes": 40608,
   "text": "Attacking third, Navy... Olvholm... this could open up!"
  },
+ "ca0eb406dd203a83970bb0ee3e38b5808fea451ca5d8bbc563bd87ae18173c51": {
+  "duration_ms": 4800,
+  "bytes": 29088,
+  "text": "Midfield, far side, Navy. Dunaro has it."
+ },
  "cbc49a9e7fc46893554a6254709c8becd74954264200838fed49d7886827c125": {
   "duration_ms": 3150,
   "bytes": 19296,
   "text": "AI commentary, synthetic match."
+ },
+ "cd80a6825f9d7e80a0b497f4f6071b38acd717dc05c3f79e9cba43ff6d04c41b": {
+  "duration_ms": 6100,
+  "bytes": 37008,
+  "text": "Midfield, far side, Navy. Dunaro."
  },
  "ce562153045b09ded8c9e38fff37eb3380ad0597ec8ff3cf513e7aed464bd69f": {
   "duration_ms": 5350,
   "bytes": 32400,
   "text": "Midfield, centre, Reds. Orlani on the ball."
  },
+ "cfa0b858c510e526ae2884632dd257881a88c739178d441d7a42d322b379ce5b": {
+  "duration_ms": 6100,
+  "bytes": 37008,
+  "text": "Attacking third, far side, Reds. Ashski."
+ },
+ "cfd6ed7436ebd4329c06b8763cc71fea6218ca4c03ad33f28d26196b7dd854b2": {
+  "duration_ms": 3000,
+  "bytes": 18288,
+  "text": "Midfield, far side, Reds."
+ },
  "d2060dd5e461faabc598953350d09df924a965295c696c6f2f5934414c6b2812": {
   "duration_ms": 3800,
   "bytes": 23184,
   "text": "Midfield, far side, Reds. It's with Nevaro."
+ },
+ "d451745b5e355dbc8d8a23ce689be98e1d2f8e2610375456bde4e88781cf7992": {
+  "duration_ms": 4450,
+  "bytes": 27072,
+  "text": "Attacking third, near side, Navy on the ball."
+ },
+ "d64813ea3e74dc6b117c2b8e412f324a6a8e4a13068de338bf0e474ac66b04b8": {
+  "duration_ms": 7550,
+  "bytes": 45648,
+  "text": "Attacking third, near side, Navy in possession. Reds nil, Navy one."
  },
  "dd378c2a74dd4e5406cb8eec0f184ab5b567073ff890b9b91b09c551eb5c2ce2": {
   "duration_ms": 4550,
@@ -259,10 +419,25 @@
   "bytes": 41184,
   "text": "Defensive third, far side, Reds. Ashski, looking for a way forward."
  },
+ "e46d1df44479343e9b93482737291ea876f6e5e384f0b29fae54502cd5b3610b": {
+  "duration_ms": 7400,
+  "bytes": 44784,
+  "text": "Midfield, far side, Navy in possession. Reds nil, Navy one."
+ },
+ "e6ca401b4bc1d39b10e42e7e1ec5dd4cc45eccfb383350fbd486cf6b839db37c": {
+  "duration_ms": 5650,
+  "bytes": 34272,
+  "text": "Defensive third, centre, Reds, Wexros on the ball."
+ },
  "e6e84444661873e592b49135439bae699ad6eae4b59d73c8426ab0115e0a0cdc": {
   "duration_ms": 3950,
   "bytes": 24048,
   "text": "Navy coming... Olvholm... this could open up!"
+ },
+ "ea5990deaa0efbe55c981a42cc32f4d80e8084dbd830abf9e87b007e138e350a": {
+  "duration_ms": 3750,
+  "bytes": 22896,
+  "text": "Defensive third, far side, Reds."
  },
  "ecbac34743b9f8e2f4c5e8b402224eca8b2486b1598b12cb5e6ab82581f9e6d8": {
   "duration_ms": 1150,
@@ -273,6 +448,11 @@
   "duration_ms": 4000,
   "bytes": 24336,
   "text": "Midfield, far side, Navy. It's with Olvholm."
+ },
+ "f17c7bd0f403bfbc90a24c43b280d58213004f48c3337f8befbd909661ddab90": {
+  "duration_ms": 7550,
+  "bytes": 45648,
+  "text": "Attacking third, far side, Navy in possession. Reds nil, Navy one."
  },
  "f4763c68dc118e65c39d81d3e80b49f88e5d4474da8f23591ca624cbf722c53c": {
   "duration_ms": 5050,

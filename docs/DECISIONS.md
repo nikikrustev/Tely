@@ -163,3 +163,37 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
 - **What it hit:** the first request failed with a tenant mismatch. Giving the subscription's tenant fixed it.
 - **Evidence:** potencialbg kept a screenshot of the answer for the README and the "How we built it" section. This is
   the BUILD_PLAN Stage 0 Copilot item; A7 still needs the Container Apps question and one real `ai:copilot` commit.
+
+## D15. Commentary density: a ball line at least every ~9 s in play (23 Oct 2026)
+
+- **Why:** Nikolay's listening note on PR #11 said the commentator went quiet for too long. D13's judge cut had 18.2 s
+  between line starts with the ball in play (894.68 → 912.88). A blind listener needs to hear where the ball is
+  often (file 36 rule 1, ball-first grammar, Radio level).
+- **Planner (`planner.py`):** a new ball-fill pass runs after the event lines are placed and before the old state fill.
+  `in_play()` reads the stretches where the ball is alive from B's 25 Hz ticks, and `quiet_in_play()` finds every
+  stretch with the ball in play and no line starting. Any stretch longer than `BALL_EVERY_S` = 9 s is cut into equal
+  parts with ball lines. Each ball line needs 1.5 s of silence on both sides, or at least the 0.6 s the crowd duck
+  needs (0.25 s before a line plus 0.35 s after it, D12). Ball lines are in `HUSHED`, so the gap between a build-up and
+  its reveal stays clear, and they are spoken only while the ball stays alive for the whole line. Dead-ball
+  stoppages (VAR, celebrations, the yellow card) are still covered only by the old 20 s state rule.
+- **Wording (`templates.ball`):** location, team, then name ("Midfield, far side, Navy keeping it."), with phrasings
+  picked by a seeded RNG. A player is named only once the ball has reached them (a completed pass's receiver or an
+  interceptor), never while the pass is in the air, and not after a block or a save. If the line before or after
+  already names that player, the ball line leaves the name out, and gives the score instead when nobody has said it
+  in the last 60 s. The shortest fallback is "Attacking third, Reds.": real Brian durations run longer than the
+  estimate ("Midfield, far side, Reds." takes 3.0 s), and without it one stretch stayed at 10.6 s.
+- **Result (judge cut, real Brian HD durations):** **70 lines (was 48)**: 22 of them are ball lines, and the other 48
+  are unchanged. The longest stretch with the ball in play and no line starting is **9.0 s (was 18.2 s)**. The longest
+  gap between line starts is now 17.0 s (950.25 → 967.28), during the dead-ball yellow-card stoppage, as intended.
+  Speech: 279 s of the 480 s window (was 204 s). Both build-ups are still exactly 4.0 s before their shots.
+  truth_check 70/70, 0 spoiler leaks, and no overlaps; the narrowest silence beside a ball line is 0.60 s.
+- **TTS:** **36 calls** in all (31, then 5 more for the short fallbacks). A rebuild makes 0 calls, and
+  `test_second_build_makes_zero_tts_calls` checks that the cue file comes out byte-identical. B's files came out unchanged. 94 MP3s (3.4 MB bundle): 64 are used by cues. The other 30 are fallback texts whose
+  real durations the final plan reads, so they stay: deleting them would change the next plan and cost new TTS calls.
+- **Tests:** `test_ball_in_play_is_never_quiet_for_more_than_10_s` holds the judge cut to 10 s, both as built with
+  mocked durations and as committed with real ones. The sample cut is exempt: its 11.5 s stretch is its 9.3 s kits
+  line. Other new tests check that ball lines are ball-first, contain no outcome words, leave room for the duck, vary
+  their wording, and never name a receiver while the pass is still in the air.
+- **Deploy:** not done in this session, because the `azd deploy` call was refused at the permission prompt. Run
+  `azd deploy` (env `judge`) from the repo root after merging, then check in Chrome that the site plays with only
+  same-origin requests.

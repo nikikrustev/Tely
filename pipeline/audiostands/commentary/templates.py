@@ -25,7 +25,7 @@ _TENS = {2: "twenty", 3: "thirty", 4: "forty", 5: "fifty", 6: "sixty", 7: "seven
 
 @dataclass
 class Draft:
-    kind: str                       # intro, describe, build, call, react, detail, state
+    kind: str                       # intro, kits, describe, build, call, react, detail, var, foul, ball, state
     t: float                        # wanted start, seconds since kick-off
     prio: int                       # placement order: higher claims its slot first
     texts: list[str]                # preferred text first, then shorter fallbacks
@@ -254,6 +254,41 @@ def detail(m: Match, shot: dict) -> Draft | None:
     state = f"{cap(score_words(m, t))}, {clock_words(m, t)}."
     return Draft("detail", t, 6, [f"{play} {state}", f"{scorer} scores. {state}"], "excited", 0.75, evidence,
                  stale_s=8.0, reveal="outcome", team=side, key=f"detail:{shot['id']}")
+
+
+def ball(m: Match, t: float, k: int = 0, near: tuple[str, ...] = (), score_due: bool = False) -> Draft | None:
+    """In-play fill: where the ball is, whose it is, then who has it (file 36 rule 1), as known at t.
+
+    None while nobody is known to have it (a pass in the air: the receiver is its outcome) or the ball is dead.
+    Only a completed pass's receiver or an interceptor counts: after a block or a save the ball may be loose.
+    k counts earlier ball lines about the same holder, so a long spell on the ball doesn't repeat itself.
+    near: the texts of the lines either side. If one already names the holder, leave the name out, and give the
+    score instead when score_due (nobody has said it for a while).
+    """
+    if not m.ball(t)["alive"]:
+        return None
+    holder, holder_ev = m.holder_at(t)
+    if holder is None or holder_ev is None:
+        return None
+    e = m.by_id(holder_ev)
+    if e["type"] != "pass" and e.get("sub_type") != "interception":
+        return None
+    side = m.players[holder]["side"]
+    where, team, who = cap(zone_of_ball(m, t, side)), m.team_name(side), m.surname(holder)
+    third = f"{where.split(',')[0]}, {team}."  # shortest: a tight gap still hears where the ball is
+    rng = _rng(m, f"ball:{holder_ev}:{k}")
+    if any(who in s for s in near):
+        bare = rng.choice([f"{where}, {team}.", f"{where}, {team} keeping it.", f"{where}, {team} with the ball.",
+                           f"{where}, {team} on the ball."])
+        texts = [f"{where}, {team} in possession. {cap(score_words(m, t))}."] if score_due else []
+        texts = list(dict.fromkeys([*texts, bare, f"{where}, {team}.", third]))
+    else:
+        texts = [rng.choice([f"{where}, {team}. It's with {who}.", f"{where}, {team}. {who} has it.",
+                             f"{where}, {team}, {who} on the ball.", f"{where}, {team} keeping it. {who}.",
+                             f"{where}, {team}. {who} in possession."]),
+                 f"{where}, {team}. {who}.", f"{where}, {team}.", third]
+    return Draft("ball", t, 0, texts, "calm", min(m.second(t)["tension"], 0.3), (holder_ev,), stale_s=0.0, team=side,
+                 key=f"ball:{holder_ev}:{k}")
 
 
 def state(m: Match, t: float, n: int) -> Draft:
