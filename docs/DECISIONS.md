@@ -194,6 +194,7 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   mocked durations and as committed with real ones. The sample cut is exempt: its 11.5 s stretch is its 9.3 s kits
   line. Other new tests check that ball lines are ball-first, contain no outcome words, leave room for the duck, vary
   their wording, and never name a receiver while the pass is still in the air.
-- **Deploy:** not done in this session, because the `azd deploy` call was refused at the permission prompt. Run
-  `azd deploy` (env `judge`) from the repo root after merging, then check in Chrome that the site plays with only
-  same-origin requests.
+- **Deployed** with `azd deploy -e judge` from this branch, which already contains B4 (#12). Checked in Chrome: the
+  site plays with the B4 UI. All 98 requests went to the one host and returned 200. The live manifest lists 104 files
+  and Brian, the 70 cues include 22 ball lines, exactly the 64 cue MP3s were fetched, and the console showed no
+  errors.
