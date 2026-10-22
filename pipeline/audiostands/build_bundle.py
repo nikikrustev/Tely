@@ -5,7 +5,7 @@
 Order (BUILD_PLAN Stage 4, TEAM_SPLIT changes):
     1. B's build_match      -> meta.json, events.jsonl, signals.json, ticks.json.gz
     2. A's build_commentary -> cues.en.radio.jsonl, audio/en/radio/*.mp3, captions_sdh.vtt, descriptions.vtt
-    3. B's build_segments   -> segments.json (Stage 2; skipped, and reported, until it exists)
+    3. B's build_segments   -> segments.json (B's Stage 2, on main since #7; skipped and reported if it is ever missing)
     4. manifest.json        -> file 43 §6 shape, with the sha256 of every file
 Cues are NOT merged into segments.json: A's commentary track loads the cue file itself (TEAM_SPLIT.md).
 
@@ -75,9 +75,10 @@ def run_b_match(cut: str, out_dir: Path) -> None:
 
 
 def run_b_segments(cut: str, out_dir: Path) -> str:
-    # SEAM(A->B): B's Stage 2 segments builder. Until B3 merges it doesn't exist, and the bundle simply has no segments.
+    # SEAM(A->B): B's Stage 2 segments builder, build(cut, out_dir) (pipeline/audiostands/build_segments.py, on main
+    # since #7). The guards only matter if it is renamed or removed: the bundle then ships without segments.json.
     if importlib.util.find_spec("audiostands.build_segments") is None:
-        return "skipped: audiostands.build_segments is not on main yet (B's Stage 2)"
+        return "skipped: audiostands.build_segments not found (B's Stage 2)"
     mod = importlib.import_module("audiostands.build_segments")
     builder = getattr(mod, "build", None)
     if builder is None:
