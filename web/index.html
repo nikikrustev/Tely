@@ -5,28 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Audio Stands</title>
     <style>
-      :root { color-scheme: light dark; --bg: #fff; --fg: #111; --accent: #b00020; --muted: #555; }
-      @media (prefers-color-scheme: dark) { :root { --bg: #111; --fg: #f2f2f2; --accent: #ff6b7d; --muted: #bbb; } }
+      :root { color-scheme: light dark; --bg: #fff; --fg: #111; --accent: #b00020; --muted: #555; --panel: #f3f3f3; }
+      @media (prefers-color-scheme: dark) { :root { --bg: #111; --fg: #f2f2f2; --accent: #ff6b7d; --muted: #bbb; --panel: #1d1d1d; } }
       body { margin: 0; background: var(--bg); color: var(--fg); font: 1.125rem/1.5 system-ui, sans-serif; }
       main { max-width: 40rem; margin: 0 auto; padding: 1.5rem 1rem; }
       h1 { font-size: 2rem; margin: 0 0 0.5rem; }
+      h2 { font-size: 1.4rem; margin: 0 0 0.75rem; }
       .notice { color: var(--muted); }
-      #start { display: block; width: 100%; min-height: 6rem; margin: 1.5rem 0; font-size: 2rem; font-weight: 700;
-               border: 3px solid var(--fg); border-radius: 1rem; background: var(--accent); color: #fff; cursor: pointer; }
-      #start:focus-visible { outline: 4px solid var(--fg); outline-offset: 4px; }
+      /* Every control is at least 44 x 44 px (WCAG 2.5.5 / file 32) and shows a strong focus ring. */
+      button, select, input[type="range"] { min-height: 44px; min-width: 44px; font: inherit; }
+      button { border: 2px solid var(--fg); border-radius: 0.75rem; background: var(--bg); color: var(--fg); padding: 0.5rem 1rem; cursor: pointer; }
+      button:disabled { opacity: 0.5; cursor: not-allowed; }
+      :is(button, select, input):focus-visible { outline: 4px solid var(--fg); outline-offset: 3px; }
+      #start { display: block; width: 100%; min-height: 6rem; margin: 1.5rem 0 0.75rem; font-size: 2rem; font-weight: 700;
+               background: var(--accent); color: #fff; border-width: 3px; }
+      .row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+      .row button { flex: 1 1 12rem; min-height: 3.5rem; font-weight: 600; }
+      #settings { background: var(--panel); border-radius: 0.75rem; padding: 1rem; margin-top: 1rem; }
+      fieldset { border: 1px solid var(--muted); border-radius: 0.5rem; margin: 0 0 1rem; padding: 0.5rem 0.75rem 0.75rem; }
+      fieldset label { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; }
+      input[type="radio"] { width: 1.4rem; height: 1.4rem; }
+      input[type="range"] { width: 100%; }
       .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-      #debug { font: 0.95rem/1.4 ui-monospace, monospace; border: 1px dashed var(--muted); padding: 0.75rem; }
+      #debug { font: 0.95rem/1.4 ui-monospace, monospace; border: 1px dashed var(--muted); padding: 0.75rem; margin-top: 1rem; }
     </style>
   </head>
   <body>
     <main id="app">
       <h1>Audio Stands</h1>
       <p class="notice" id="notice">A synthetic match with fictional clubs. Commentary uses AI voices. Headphones recommended.</p>
-      <button id="start" type="button">Start</button>
+      <button id="start" type="button" autofocus>Start</button>
+      <div class="row">
+        <button id="next" type="button" disabled>Next big moment</button>
+        <button id="settings-toggle" type="button" aria-expanded="false" aria-controls="settings">Settings</button>
+      </div>
       <p id="status">Loading…</p>
+
+      <section id="settings" hidden aria-labelledby="settings-h">
+        <h2 id="settings-h">Settings</h2>
+        <fieldset>
+          <legend>Your end of the stadium</legend>
+          <label><input type="radio" name="club" value="H" /> Reds (home end)</label>
+          <label><input type="radio" name="club" value="A" /> Navy (away end)</label>
+        </fieldset>
+        <label for="crowd">Crowd level</label>
+        <input id="crowd" type="range" min="0" max="100" step="5" />
+        <fieldset>
+          <legend>Vibration (Android phones)</legend>
+          <label><input type="radio" name="haptics" value="off" /> Off</label>
+          <label><input type="radio" name="haptics" value="events" /> Key moments</label>
+          <label><input type="radio" name="haptics" value="full" /> Heartbeat and key moments</label>
+          <label for="strength">Strength
+            <select id="strength">
+              <option value="0.7">Low</option>
+              <option value="1">Medium</option>
+              <option value="1.4">High</option>
+            </select>
+          </label>
+          <button id="htest" type="button">Test vibration: did you feel it?</button>
+          <p id="hstatus"></p>
+        </fieldset>
+      </section>
+
       <div id="debug" hidden aria-hidden="true"></div>
     </main>
-    <!-- Live regions exist from page load, so screen readers announce later changes (file 32, WCAG 4.1.3). -->
+    <!-- Live regions exist from page load, so screen readers announce later changes (file 32, WCAG 4.1.3).
+         They carry state changes only (playing, paused, score, a jump), never every sound. -->
     <div id="sr-polite" class="sr-only" role="status" aria-live="polite"></div>
     <div id="sr-assertive" class="sr-only" aria-live="assertive"></div>
     <script type="module" src="/src/main.ts"></script>
