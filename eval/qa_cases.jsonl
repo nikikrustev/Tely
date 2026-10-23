@@ -1,0 +1,31 @@
+{"id":"score_before_goal","question":"What's the score?","playhead_s":676,"expect":{"kind":"answer","intent":"score","must_include":["Navy nil"]}}
+{"id":"score_during_var","question":"What's the score?","playhead_s":700,"expect":{"kind":"answer","intent":"score","must_include":["Navy nil"],"spoiler_words":["one"]}}
+{"id":"score_after_goal","question":"What's the score?","playhead_s":712,"expect":{"kind":"answer","intent":"score","must_include":["Navy one"]}}
+{"id":"winning","question":"Who's winning right now?","playhead_s":930,"expect":{"kind":"answer","intent":"score","must_include":["Navy one"]}}
+{"id":"minute","question":"What minute is it?","playhead_s":930,"expect":{"kind":"answer","intent":"score","must_include":["60 minutes"]}}
+{"id":"ball_attack","question":"Where's the ball?","playhead_s":676,"expect":{"kind":"answer","intent":"ball","must_include":["Navy have it","attacking third"]}}
+{"id":"ball_dead_var","question":"Where's the ball?","playhead_s":700,"expect":{"kind":"answer","intent":"ball","must_include":["out of play"]}}
+{"id":"who_has_it","question":"Who has the ball?","playhead_s":930,"expect":{"kind":"answer","intent":"ball","must_include":["have it"]}}
+{"id":"last_during_var","question":"What just happened?","playhead_s":700,"expect":{"kind":"answer","intent":"last","spoiler_words":["Goal","heads it in","stands","scored"]}}
+{"id":"last_after_goal","question":"What just happened?","playhead_s":712,"expect":{"kind":"answer","intent":"last","must_include":["VAR","Goal for Navy"]}}
+{"id":"missed_during_var","question":"What did I miss?","playhead_s":700,"expect":{"kind":"answer","intent":"missed","must_include":["Nothing big happened"],"spoiler_words":["scored","Goal"]}}
+{"id":"missed_after_goal","question":"Can you catch me up?","playhead_s":712,"expect":{"kind":"answer","intent":"missed","must_include":["scored for Navy"]}}
+{"id":"recap_late","question":"Quick recap please","playhead_s":1100,"expect":{"kind":"answer","intent":"missed"}}
+{"id":"who_scores_next","question":"Who scores next?","playhead_s":676,"expect":{"kind":"refuse","intent":"no_spoilers"}}
+{"id":"who_wins","question":"Who wins?","playhead_s":676,"expect":{"kind":"refuse","intent":"no_spoilers"}}
+{"id":"will_navy_win","question":"Will Navy win this?","playhead_s":930,"expect":{"kind":"refuse","intent":"no_spoilers"}}
+{"id":"final_score","question":"What's the final score going to be?","playhead_s":930,"expect":{"kind":"refuse","intent":"no_spoilers"}}
+{"id":"next_goal_before","question":"Is there a goal coming?","playhead_s":676,"expect":{"kind":"refuse","intent":"no_spoilers"}}
+{"id":"odds","question":"What are the odds on Reds?","playhead_s":930,"expect":{"kind":"refuse","intent":"no_betting"}}
+{"id":"bet","question":"Should I bet on Navy?","playhead_s":930,"expect":{"kind":"refuse","intent":"no_betting"}}
+{"id":"weather","question":"What's the weather like?","playhead_s":930,"expect":{"kind":"redirect","intent":"off_topic"}}
+{"id":"joke","question":"Tell me a joke","playhead_s":930,"expect":{"kind":"redirect","intent":"off_topic"}}
+{"id":"number_9","question":"Where is number 9?","playhead_s":930,"expect":{"kind":"clarify"}}
+{"id":"first_name_gus","question":"Where is Gus?","playhead_s":930,"expect":{"kind":"clarify"}}
+{"id":"first_name_teo","question":"Stats for Teo","playhead_s":930,"expect":{"kind":"clarify"}}
+{"id":"surname","question":"Where is Fenford?","playhead_s":930,"expect":{"kind":"answer","intent":"where_is","must_include":["Fenford"]}}
+{"id":"typo","question":"Where is Fenfrd?","playhead_s":930,"expect":{"kind":"answer","intent":"where_is","must_include":["Fenford"]}}
+{"id":"team_and_number","question":"Where is Reds number 9?","playhead_s":930,"expect":{"kind":"answer","intent":"where_is","must_include":["Orlani"]}}
+{"id":"stats_surname","question":"How far has Orlani run?","playhead_s":930,"expect":{"kind":"answer","intent":"stats","must_include":["Orlani","metres"]}}
+{"id":"the_keeper","question":"Where is the keeper?","playhead_s":930,"expect":{"kind":"clarify"}}
+{"id":"reds_keeper","question":"Where is the Reds keeper?","playhead_s":930,"expect":{"kind":"answer","intent":"where_is","must_include":["Vaston"]}}
