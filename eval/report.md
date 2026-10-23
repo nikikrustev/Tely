@@ -41,9 +41,60 @@ Ran on Foundry 2026-10-23: evaluator `audiostands-numeric-truth:2`, run status *
 
 "Waits ÷N" shortens only the idle time between shots; every measured step runs at real speed. Each run opens its connections with one untimed warm-up call first, as a live service would before kick-off. Nearest-rank percentiles; with this few build-ups p95 is close to the maximum.
 
-## Q&A eval (Person B)
+## Q&A eval (Person B, eval/qa.json)
 
-Not yet: `eval/qa.json` is not in the repo.
+| Measure | Value |
+|---|---|
+| questions | 31 |
+| spoiler_leaks | 0 |
+| answered_pct | 100 |
+| correct_pct | 100 |
+| engine | answer_text() keyword router, no LLM (the offline fallback) |
+
+**by_behaviour**
+
+| Measure | Value |
+|---|---|
+| answer | 18/18 correct |
+| clarify | 4/4 correct |
+| redirect | 2/2 correct |
+| refuse | 7/7 correct |
+
+**rows** (31 rows)
+
+| id | question | playhead | expected | intent | answer | answered | correct | spoiler_leak |
+|---|---|---|---|---|---|---|---|---|
+| score_before_goal | What's the score? | 56:16 | answer | score | Reds nil, Navy nil, 56 minutes played. | yes | yes | no |
+| score_during_var | What's the score? | 56:40 | answer | score | Reds nil, Navy nil, 56 minutes played. | yes | yes | no |
+| score_after_goal | What's the score? | 56:52 | answer | score | Reds nil, Navy one, 56 minutes played. | yes | yes | no |
+| winning | Who's winning right now? | 60:30 | answer | score | Reds nil, Navy one, 60 minutes played. | yes | yes | no |
+| minute | What minute is it? | 60:30 | answer | score | Reds nil, Navy one, 60 minutes played. | yes | yes | no |
+| ball_attack | Where's the ball? | 56:16 | answer | ball | Navy have it, attacking third, centre. 15 metres from goal. | yes | yes | no |
+| ball_dead_var | Where's the ball? | 56:40 | answer | ball | The ball is out of play. | yes | yes | no |
+| who_has_it | Who has the ball? | 60:30 | answer | ball | Navy have it, midfield, far side. 75 metres from goal. | yes | yes | no |
+| last_during_var | What just happened? | 56:40 | answer | last | Attacking third, far side, Navy. Olvholm crosses for Fenford. Before that: Attacking third | yes | yes | no |
+| last_after_goal | What just happened? | 56:52 | answer | last | VAR checks the Navy goal... and it stands. Before that: Attacking third, centre, Navy. Fen | yes | yes | no |
+| missed_during_var | What did I miss? | 56:40 | answer | missed | Nothing big happened. | yes | yes | no |
+| missed_after_goal | Can you catch me up? | 56:52 | answer | missed | While you were away, Fenford scored for Navy and VAR let the Navy goal stand. | yes | yes | no |
+| recap_late | Quick recap please | 63:20 | answer | missed | While you were away, Orlani had a shot blocked. | yes | yes | no |
+| who_scores_next | Who scores next? | 56:16 | refuse | no_spoilers | I can't tell you what happens next. That's for the match to decide. | yes | yes | no |
+| who_wins | Who wins? | 56:16 | refuse | no_spoilers | I can't tell you what happens next. That's for the match to decide. | yes | yes | no |
+| will_navy_win | Will Navy win this? | 60:30 | refuse | no_spoilers | I can't tell you what happens next. That's for the match to decide. | yes | yes | no |
+| final_score | What's the final score going to be? | 60:30 | refuse | no_spoilers | I can't tell you what happens next. That's for the match to decide. | yes | yes | no |
+| next_goal_before | Is there a goal coming? | 56:16 | refuse | no_spoilers | I can't tell you what happens next. That's for the match to decide. | yes | yes | no |
+| odds | What are the odds on Reds? | 60:30 | refuse | no_betting | I can't help with betting or odds. Ask me about the match instead. | yes | yes | no |
+| bet | Should I bet on Navy? | 60:30 | refuse | no_betting | I can't help with betting or odds. Ask me about the match instead. | yes | yes | no |
+| weather | What's the weather like? | 60:30 | redirect | off_topic | I'm just here for the match. Ask me about the score, the ball, or what just happened. | yes | yes | no |
+| joke | Tell me a joke | 60:30 | redirect | off_topic | I'm just here for the match. Ask me about the score, the ball, or what just happened. | yes | yes | no |
+| number_9 | Where is number 9? | 60:30 | clarify | where_is | Which player? For example: Arlo Orlani (Reds #9), Gus Fenford (Navy #9). | yes | yes | no |
+| first_name_gus | Where is Gus? | 60:30 | clarify | where_is | Which player? For example: Gus Galic (Navy #1), Gus Fenford (Navy #9). | yes | yes | no |
+| first_name_teo | Stats for Teo | 60:30 | clarify | stats | Which player? For example: Teo Dunwick (Reds #7), Teo Varell (Reds #10), Teo Ashard (Navy  | yes | yes | no |
+| surname | Where is Fenford? | 60:30 | answer | where_is | Gus Fenford of Navy is in the attacking third, centre, 45 metres from the ball. | yes | yes | no |
+| typo | Where is Fenfrd? | 60:30 | answer | where_is | Gus Fenford of Navy is in the attacking third, centre, 45 metres from the ball. | yes | yes | no |
+| team_and_number | Where is Reds number 9? | 60:30 | answer | where_is | Arlo Orlani of Reds is in the attacking third, centre, 25 metres from the ball. | yes | yes | no |
+| stats_surname | How far has Orlani run? | 60:30 | answer | stats | In the last 4 minutes, Arlo Orlani ran 369 metres, top speed 25.4 kilometres an hour, comp | yes | yes | no |
+| the_keeper | Where is the keeper? | 60:30 | clarify | where_is | Which player? For example: Omar Vaston (Reds #1), Gus Galic (Navy #1). | yes | yes | no |
+| reds_keeper | Where is the Reds keeper? | 60:30 | answer | where_is | Omar Vaston of Reds is in the defensive third, centre, 64 metres from the ball. | yes | yes | no |
 
 ## Listening test (Person B)
 
