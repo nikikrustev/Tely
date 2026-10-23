@@ -85,12 +85,12 @@ Nikolay proposed: "I take the Q&A agent and its tools; you take the commentator 
 
 | Area | Paths |
 |---|---|
-| Infra and CI | `infra/**`, `azure.yaml`, `.github/**` (incl. `CODEOWNERS`), `.vscode/**`, `web/staticwebapp.config.json`, root `.gitignore`, `.gitattributes`, `.env.example` |
+| Infra and CI | `infra/**`, `azure.yaml`, `.github/**` (incl. `CODEOWNERS`), `.vscode/**`, `web/staticwebapp.config.json`, root `.gitignore`, `.gitattributes`, `.dockerignore` (added 23 Oct, A7: the relay image's build context), `.env.example` |
 | Scripts | `scripts/bootstrap_azure.sh`, `scripts/smoke_azure.py` |
 | Python, commentator and agents | `pipeline/audiostands/__init__.py` (empty; created once in Stage 0, never edited), `pipeline/audiostands/commentary/**`, `pipeline/audiostands/agents/**`, `pipeline/audiostands/build_commentary.py`, `pipeline/audiostands/build_bundle.py`, `pipeline/audiostands/answers.py`, `pipeline/audiostands/spoiler.py`, `pipeline/audiostands/voices.py`, `pipeline/audiostands/eval/**`, `pipeline/requirements-azure.txt`, `pipeline/tests/a/**` |
 | Relay | `relay/**`. It **imports** B's `audiostands.qa`; it never copies it |
 | Browser | `web/src/lane-a/**` (`index.ts` with `mountLaneA()`, `commentary-track.ts`, `live-ask.ts`), `web/src/contracts/a-exports.ts`, `web/tests/a/**` |
-| Generated bundle files | In `web/public/replay/v1/judge/`: `cues.*.jsonl`, `audio/**`, `captions_sdh.vtt`, `descriptions.vtt`, `manifest.json`, `answers/**` |
+| Generated bundle files | In `web/public/replay/v1/judge/`: `cues.*.jsonl`, `audio/**`, `captions_sdh.vtt`, `descriptions.vtt`, `manifest.json`, `answers/**`, `live/**` (added 23 Oct, A7: the live Ask's refusal clips) |
 | Contracts | `contracts/golden/a/**` (live Voice Live transcripts) |
 | Eval and ship | `eval/report.md`, `eval/report.json`, `eval/qa_latency.py`, `eval/build_report.py`, `video/**`, `README.md`, `SUBMISSION.md`, `docs/DECISIONS.md` |
 | Shared docs (A edits, B proposes) | `CLAUDE.md`, `BUILD_PLAN.md`, `TEAM_SPLIT.md`, `stoynev research/**` |
