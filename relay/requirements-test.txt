@@ -1,0 +1,3 @@
+# OWNER: A (potencialbg). What CI needs to test the relay: no Azure packages, no keys (TEAM_SPLIT.md rule 3).
+fastapi>=0.141,<1
+httpx>=0.28,<1
