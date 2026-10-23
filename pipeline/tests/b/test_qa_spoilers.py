@@ -63,8 +63,16 @@ def test_catch_up_mentions_only_what_was_revealed_in_the_window(p):
     for eid, s in SIG.items():
         past = s["spoken_past"]
         if past in text:
-            assert since < s["t"] <= p and s["reveal_t"] <= p, (eid, past)
+            assert since < s["reveal_t"] <= p and s["t"] <= p, (eid, past)
 
 
 def test_hold_that_thought_says_that_never_what():
     assert all(isinstance(qa.hold_that_thought(p, B), bool) for p in playheads(200, seed=7))
+
+
+def test_catch_up_during_the_var_check_includes_the_confirmed_goal():
+    # Martin's review: the goal is struck before the Ask (t 679.4) and confirmed during it (reveal 703.76).
+    goal = next(e for e in B.events if e["type"] == "shot" and e["outcome_type"] == "successful")
+    assert SIG[goal["id"]]["t"] < 690 < SIG[goal["id"]]["reveal_t"] <= 730
+    assert SIG[goal["id"]]["spoken_past"] in qa.catch_up(690, 730, B)
+    assert qa.catch_up(690, 700, B) == "Back to the action."   # not yet confirmed at 700

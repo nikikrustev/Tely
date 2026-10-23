@@ -150,11 +150,7 @@ def answer_text(question: str, *, playhead_s: float, bundle: Any) -> dict[str, A
 def catch_up(since_s: float, until_s: float, bundle: Any) -> str:
     """Spoken summary of the key events in ``[since_s, until_s]``."""
     # SEAM(A->B): the relay calls this when a listener comes back after a pause.
-    b = _bundle(bundle)
-    ev = tools._missed(b, since_s, b.clamp(until_s))
-    if not ev:
-        return "Back to the action."
-    return "Back to the action. " + " ".join(t for _, t in tools._missed_parts(b, "while_we_talked", ev)) + "."
+    return tools.catch_up_answer(_bundle(bundle), since_s, until_s)["say"]
 
 
 HOLD_LOOKAHEAD_S = 8.0   # a build-up line plays 4 s before a shot (file 39 LEAD_S); "due within 4 s" -> shot within 8 s
