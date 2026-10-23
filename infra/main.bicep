@@ -1,4 +1,5 @@
-// OWNER: A (potencialbg). Stage 4 hosting: one Static Web App (Free) for the zero-backend replay. Nothing else.
+// OWNER: A (potencialbg). Stage 4 hosting: one Static Web App (Free) for the zero-backend replay.
+// Stage 5: a workspace-based Application Insights (1 GB/day cap) for the Director workflow's traces (monitor.bicep).
 // azd env "judge" -> resource group rg-as-judge (BUILD_PLAN Stage 4). D6: no money, so the SKU is Free only.
 targetScope = 'subscription'
 
@@ -38,5 +39,19 @@ module web 'web.bicep' = {
   }
 }
 
+module monitor 'monitor.bicep' = {
+  name: 'monitor'
+  scope: rg
+  params: {
+    location: location
+    tags: tags
+    workspaceName: 'log-as-${environmentName}'
+    appInsightsName: 'appi-as-${environmentName}'
+  }
+}
+
 output AZURE_RESOURCE_GROUP string = rg.name
 output WEB_URL string = 'https://${web.outputs.defaultHostname}'
+output APPLICATIONINSIGHTS_NAME string = monitor.outputs.appInsightsName
+// azd keeps outputs in .azure/judge/.env (git-ignored). tracing.py reads it with `azd env get-value`; nothing prints it.
+output APPLICATIONINSIGHTS_CONNECTION_STRING string = monitor.outputs.connectionString

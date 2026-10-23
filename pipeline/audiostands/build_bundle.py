@@ -2,8 +2,14 @@
 
     python -m audiostands.build_bundle --cut judge
 
-Order (BUILD_PLAN Stage 4, TEAM_SPLIT changes):
+    DIRECTOR=foundry python -m audiostands.build_bundle --cut judge   # live Director on Foundry, traced
+
+Order (BUILD_PLAN Stages 4-5, TEAM_SPLIT changes):
     1. B's build_match      -> meta.json, events.jsonl, signals.json, ticks.json.gz
+    1b. A's Director workflow (Stage 5): Director -> Commentator -> Verifier -> TTS, one window per shot.
+        DIRECTOR=foundry  calls the Foundry model and records every reply in agents/recorded/<cut>.json;
+        DIRECTOR=replay   (default when that file exists) replays it: no Azure, same plans, byte-identical bundle;
+        DIRECTOR=rules    the rules Director only (no quota; BUILD_PLAN drop-list item 5).
     2. A's build_commentary -> cues.en.radio.jsonl, audio/en/radio/*.mp3, captions_sdh.vtt, descriptions.vtt
     3. B's build_segments   -> segments.json (B's Stage 2, on main since #7; skipped and reported if it is ever missing)
     4. manifest.json        -> file 43 §6 shape, with the sha256 of every file
@@ -23,14 +29,18 @@ import hashlib
 import importlib
 import importlib.util
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Callable
 
 from audiostands import build_commentary
+from audiostands.agents import director as dir_agent
+from audiostands.agents import tracing
+from audiostands.agents import workflow as dir_workflow
 from audiostands.commentary.source import BUNDLE, Match, load_match
-from audiostands.commentary.ssml import DEFAULT_VOICE
-from audiostands.commentary.tts import AzureSynthesiser, Synthesiser, TtsError, load_env
+from audiostands.commentary.ssml import DEFAULT_VOICE, build_ssml, ssml_sha256
+from audiostands.commentary.tts import AzureSynthesiser, Synthesiser, TtsCache, TtsError, load_env
 
 B_FILES = ("meta.json", "events.jsonl", "signals.json", "ticks.json.gz", "segments.json")
 MAX_BYTES = 200 * 1024 * 1024   # BUILD_PLAN Stage 4; SWA Free allows 250 MB per environment (file 21)
@@ -38,6 +48,7 @@ MAX_FILES = 15_000              # SWA limit (file 21)
 DELAY_S = 10.0                  # the broadcast delay D the look-ahead uses (files 39, 43)
 CHAPTER_LEAD_S = 6.0            # a chapter starts this long before the build-up, so the rise is heard whole
 AI_VOICE_NOTICE = "Commentary uses Azure AI voices. Match data is synthetic."
+RECORDED = Path(dir_agent.__file__).parent / "recorded"  # agents/recorded/<cut>.json: the Foundry Director's replies
 
 
 class DeterminismError(RuntimeError):
@@ -95,7 +106,41 @@ def chapters(cues: list[dict], m: Match) -> list[dict]:
             for i, t in enumerate(moments, 1)]
 
 
-def manifest(cut: str, out_dir: Path, m: Match, voice: str) -> dict:
+def recorded(cut: str) -> Path:
+    return RECORDED / f"{cut}.json"
+
+
+def director_mode(cut: str) -> str:
+    mode = os.environ.get("DIRECTOR") or ("replay" if recorded(cut).is_file() else "rules")
+    if mode not in dir_workflow.MODES:
+        raise SystemExit(f"DIRECTOR={mode!r}: use one of {dir_workflow.MODES}")
+    return mode
+
+
+def director_model(cut: str, mode: str, env: dict[str, str]):
+    """foundry: live model, recorded; replay: the recorded replies; rules: no model."""
+    if mode == "foundry":
+        return dir_agent.RecordingDirector(dir_agent.FoundryDirector(env))
+    if mode == "replay":
+        return dir_agent.ReplayDirector(recorded(cut))
+    return None
+
+
+def run_director(cut: str, out_dir: Path, synth_factory: Callable[[], Synthesiser], voice: str, mode: str,
+                 model) -> tuple[dir_workflow.DirectorRun, int]:
+    """Stage 5 workflow over every window. Its TTS step pre-renders each build-up into the bundle's MP3 cache."""
+    cache = TtsCache(out_dir / "audio" / build_commentary.LANG / build_commentary.LEVEL, synth_factory)
+
+    def render(d) -> tuple[str, int]:
+        ssml = build_ssml(d.texts[0], d.style, voice, pause_after_ms=d.pause_ms)
+        sha = ssml_sha256(ssml)
+        return sha, cache.ensure(sha, ssml, d.texts[0])
+
+    run = dir_workflow.direct(load_match(cut), model, render, mode)
+    return run, cache.calls
+
+
+def manifest(cut: str, out_dir: Path, m: Match, voice: str, director: str | None = None) -> dict:
     cues_file = out_dir / f"cues.{build_commentary.LANG}.{build_commentary.LEVEL}.jsonl"
     cues = [json.loads(s) for s in cues_file.read_text(encoding="utf-8").splitlines() if s.strip()]
     files = sorted(p for p in out_dir.rglob("*") if p.is_file() and p.name != "manifest.json")
@@ -111,7 +156,7 @@ def manifest(cut: str, out_dir: Path, m: Match, voice: str) -> dict:
         "kits": {"H": teams["home"]["kit"]["words"], "A": teams["away"]["kit"]["words"]},
         "chapters": chapters(cues, m),
         "tracks": {"en": {"radio": cues_file.name}},
-        "voice": voice,
+        "voice": voice, "director": director,
         "meta": "meta.json", "events": "events.jsonl", "signals": "signals.json", "ticks": "ticks.json.gz",
         "segments": "segments.json" if (out_dir / "segments.json").is_file() else None,
         "captions": "captions_sdh.vtt", "descriptions": "descriptions.vtt",
@@ -124,22 +169,31 @@ def manifest(cut: str, out_dir: Path, m: Match, voice: str) -> dict:
 
 def build(cut: str, out_dir: Path, synth_factory: Callable[[], Synthesiser], voice: str = DEFAULT_VOICE,
           *, run_match: Callable[[str, Path], None] = run_b_match,
-          run_segments: Callable[[str, Path], str] = run_b_segments) -> dict:
+          run_segments: Callable[[str, Path], str] = run_b_segments,
+          director: str = "rules", model=None) -> dict:
     before = b_snapshot(out_dir)
     run_match(cut, out_dir)
     changed = check_b_unchanged(out_dir, before)
     if changed:
         raise DeterminismError(f"B's files changed after build_match: {changed}. Don't commit them; tell B.")
-    commentary = build_commentary.build(cut, out_dir, synth_factory, voice)
+    run, director_tts = run_director(cut, out_dir, synth_factory, voice, director, model)
+    commentary = build_commentary.build(cut, out_dir, synth_factory, voice, run.plans,
+                                        {s.window.key: s.director for s in run.steps})
     segments = run_segments(cut, out_dir)
-    man = manifest(cut, out_dir, load_match(cut), voice)
+    man = manifest(cut, out_dir, load_match(cut), voice, run.name)
     if man["bytes"] > MAX_BYTES or man["files"] > MAX_FILES:
         raise RuntimeError(f"bundle too big: {man['bytes']} bytes in {man['files']} files "
                            f"(limits {MAX_BYTES} bytes, {MAX_FILES} files)")
     body = json.dumps(man, indent=1, ensure_ascii=False) + "\n"
     (out_dir / "manifest.json").write_text(body, encoding="utf-8", newline="\n")
     return {"commentary": commentary, "segments": segments, "files": man["files"], "bytes": man["bytes"],
-            "chapters": man["chapters"]}
+            "chapters": man["chapters"], "director": {**run.summary(), "name": run.name, "tts_calls": director_tts}}
+
+
+def dir_env(env: dict[str, str]) -> dict[str, str]:
+    """FOUNDRY_* from .env, overlaid by the process env. load_env() itself only overlays SPEECH_* and TTS_*."""
+    return {**{k: v for k, v in env.items() if k.startswith("FOUNDRY_")},
+            **{k: v for k, v in os.environ.items() if k.startswith(("FOUNDRY_", "APPLICATIONINSIGHTS_"))}}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -149,14 +203,27 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     env = load_env()
     voice = args.voice or env.get("TTS_VOICE") or DEFAULT_VOICE
+    mode = director_mode(args.cut)
+    traces = tracing.setup(dir_env(env)) if mode == "foundry" else "off (no model calls)"
+    model = director_model(args.cut, mode, dir_env(env))
     try:
-        rep = build(args.cut, BUNDLE / args.cut, lambda: AzureSynthesiser(env), voice)
+        rep = build(args.cut, BUNDLE / args.cut, lambda: AzureSynthesiser(env), voice, director=mode, model=model)
     except DeterminismError as exc:
         print(f"DETERMINISM BUG: {exc}")
         return 2
     except TtsError as exc:
         print(f"FAIL: {exc}")
         return 1
+    finally:
+        tracing.flush()
+    if mode == "foundry":
+        model.save(recorded(args.cut))
+    d = rep["director"]
+    print(f"Director: DIRECTOR={mode} ({d['engine']}), {d['name']}: {d['windows']} windows, {d['director_calls']} calls, "
+          f"{d['model_plans']} model plans, {d['fallbacks']} fallbacks to rules; traces {traces}")
+    for row in d["log"]:
+        print(f"  {row['key']} t={row['t_shot']}: {row['director']} {row['plan']}"
+              + (f"  [fallback: {row['fallback']}]" if row["fallback"] else ""))
     c = rep["commentary"]
     ok = not c["failed"] and not c["spoiler_leaks"]
     print(f"{'PASS' if ok else 'FAIL'}: commentary {c['lines']} lines, {c['tts_calls']} TTS calls, "

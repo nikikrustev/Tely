@@ -17,7 +17,7 @@ Durations come from duration_of(text, style, pause_ms): real MP3 durations once 
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Callable
 
 from audiostands.commentary import templates as T
@@ -57,13 +57,15 @@ def estimate(text: str, style: str, pause_ms: int) -> float:
     return len(text.split()) / WPS + text.count("...") * ELLIPSIS_S + pause_ms / 1000
 
 
-def drafts(m: Match) -> list[T.Draft]:
+def drafts(m: Match, plans: dict | None = None) -> list[T.Draft]:
+    """plans: shot id -> the Director's verified tension plan (Stage 5). A shot without one uses the Stage 3 rules."""
+    plans = plans or {}
     out = [T.opener(m), T.kits(m)]
     for e in m.events:
         if e.get("sub_type") == "kick_off" and m.t(e) <= m.t_start + 1:
             continue  # the opener says who kicks off
         if e["type"] == "shot":
-            out += [T.build(m, e), T.call(m, e), T.react(m, e), T.detail(m, e)]
+            out += [T.build(m, e, plans.get(e["id"])), T.call(m, e), T.react(m, e), T.detail(m, e)]
         elif e["type"] == "referee":
             out += T.var_check(m, e) if e.get("sub_type") == "var_check" else []
         elif e["type"] == "misc":
@@ -73,19 +75,29 @@ def drafts(m: Match) -> list[T.Draft]:
     return [d for d in out if d is not None and m.t_start <= d.t < m.t_end]
 
 
-def plan(m: Match, duration_of: DurationFn = estimate) -> list[Line]:
+def plan(m: Match, duration_of: DurationFn = estimate, plans: dict | None = None) -> list[Line]:
     placed: list[Line] = []
 
     def place(d: T.Draft, gap_before: float = MIN_GAP_S) -> None:
-        for text in d.texts:
-            dur = duration_of(text, d.style, d.pause_ms)
-            for k in range(int(round(d.stale_s / STEP_S)) + 1):
-                a = round(d.t + STEP_S * k, 2)
-                if _free(m, placed, a, a + dur, d.kind, gap_before):
-                    placed.append(Line(d, text, a, dur))
-                    return
+        # A build-up's hold (the Director's hold_ms) is dropped before its words are: each text is tried with the
+        # hold, then without it, and only then the next, shorter text.
+        held = (d, replace(d, pause_ms=0)) if d.kind == "build" and d.pause_ms else (d,)
+        # A build-up should end by its shot, so the call ("Fenford, the header!") at shot + 0.2 s can still be heard
+        # (file 39). Only if no text fits that way does it run on (BUILD_PLAN: never cut the build-up).
+        shot_t = m.t(m.by_id(d.evidence[0])) if d.kind == "build" else None
+        for by_shot in ((True, False) if shot_t is not None else (False,)):
+            for text in d.texts:
+                for dd in held:
+                    dur = duration_of(text, dd.style, dd.pause_ms)
+                    for k in range(int(round(dd.stale_s / STEP_S)) + 1):
+                        a = round(dd.t + STEP_S * k, 2)
+                        if by_shot and a + dur > shot_t + EPS:
+                            break
+                        if _free(m, placed, a, a + dur, dd.kind, gap_before):
+                            placed.append(Line(dd, text, a, dur))
+                            return
 
-    ds = drafts(m)
+    ds = drafts(m, plans)
     for d in sorted((d for d in ds if d.prio > 0), key=lambda d: (-d.prio, d.t)):
         place(d)
     for d in sorted((d for d in ds if d.prio == 0), key=lambda d: d.t):

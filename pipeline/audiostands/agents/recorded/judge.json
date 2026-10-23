@@ -1,0 +1,133 @@
+{
+ "director": "dir_v1@gpt-5-mini",
+ "recorded": "2026-10-23",
+ "calls": [
+  {
+   "key": "e00675",
+   "features": {
+    "minute": 56,
+    "score": {
+     "attacking": 0,
+     "defending": 0
+    },
+    "tension_now": 0.08,
+    "tension_before_shot": 0.19,
+    "events": [
+     {
+      "in_s": 2.4,
+      "type": "pass",
+      "sub_type": null,
+      "team": "attacking",
+      "zone": "attacking third, far side"
+     },
+     {
+      "in_s": 6.1,
+      "type": "pass",
+      "sub_type": null,
+      "team": "attacking",
+      "zone": "attacking third, far side"
+     }
+    ],
+    "shot": {
+     "in_s": 10.0,
+     "xg": 0.217,
+     "zone": "attacking third, centre",
+     "in_box": true,
+     "body_part": "head"
+    }
+   },
+   "raw": "{\"build_up_level\":0.62,\"lead_s\":4.0,\"hold_ms\":300,\"hint_type\":\"danger\"}",
+   "latency_ms": 6203.4,
+   "tokens": {
+    "input": 475,
+    "output": 49
+   }
+  },
+  {
+   "key": "e00706",
+   "features": {
+    "minute": 59,
+    "score": {
+     "attacking": 1,
+     "defending": 0
+    },
+    "tension_now": 0.06,
+    "tension_before_shot": 0.06,
+    "events": [
+     {
+      "in_s": 8.2,
+      "type": "pass",
+      "sub_type": null,
+      "team": "attacking",
+      "zone": "attacking third, near side"
+     }
+    ],
+    "shot": {
+     "in_s": 10.0,
+     "xg": 0.014,
+     "zone": "attacking third, near side",
+     "in_box": false,
+     "body_part": "right_foot"
+    }
+   },
+   "raw": "{\"build_up_level\":0.12,\"lead_s\":4.2,\"hold_ms\":300,\"hint_type\":\"none\"}",
+   "latency_ms": 2462.4,
+   "tokens": {
+    "input": 448,
+    "output": 49
+   }
+  },
+  {
+   "key": "e00740",
+   "features": {
+    "minute": 62,
+    "score": {
+     "attacking": 0,
+     "defending": 1
+    },
+    "tension_now": 0.56,
+    "tension_before_shot": 0.52,
+    "events": [],
+    "shot": {
+     "in_s": 10.0,
+     "xg": 0.083,
+     "zone": "attacking third, centre",
+     "in_box": true,
+     "body_part": "right_foot"
+    }
+   },
+   "raw": "{\"build_up_level\":0.68,\"lead_s\":4.0,\"hold_ms\":350,\"hint_type\":\"danger\"}",
+   "latency_ms": 1471.8,
+   "tokens": {
+    "input": 416,
+    "output": 49
+   }
+  },
+  {
+   "key": "e00754",
+   "features": {
+    "minute": 63,
+    "score": {
+     "attacking": 1,
+     "defending": 0
+    },
+    "tension_now": 0.07,
+    "tension_before_shot": 0.07,
+    "events": [],
+    "shot": {
+     "in_s": 10.0,
+     "xg": 0.011,
+     "zone": "attacking third, far side",
+     "in_box": false,
+     "body_part": "right_foot"
+    }
+   },
+   "raw": "{\"build_up_level\":0.12,\"lead_s\":4.2,\"hold_ms\":200,\"hint_type\":\"none\"}",
+   "latency_ms": 1006.2,
+   "tokens": {
+    "input": 417,
+    "output": 49
+   }
+  }
+ ]
+}
