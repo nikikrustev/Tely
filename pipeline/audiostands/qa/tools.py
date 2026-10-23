@@ -73,7 +73,8 @@ def _player_xy(b: Bundle, pid: str, p: float) -> tuple[float, float, list[list[f
 def get_score_and_clock(b: Bundle, p: float) -> dict:
     sc = b.score(p)
     minute = int(math.floor(b.clock_s(b.clamp(p)) / 60))
-    goals = [e["id"] for e in b.known(p) if e["type"] == "shot" and e["outcome_type"] == "successful"]
+    # Same second as the score row: a goal revealed at 703.76 counts from 704, so the evidence never contradicts "nil".
+    goals = [e["id"] for e in b.known(math.floor(p)) if e["type"] == "shot" and e["outcome_type"] == "successful"]
     return _ok(b, p, [score_frag(b.team_name("home"), b.team_name("away"), minute, sc["home"], sc["away"])],
                evidence=goals)
 
@@ -165,9 +166,9 @@ def explain_moment(b: Bundle, p: float, moment_id: str) -> dict:
 
 
 def _missed(b: Bundle, since: float, until: float) -> list[dict]:
-    """Big moments (priority >= 2) that started after `since` and were revealed by `until`; top 2, in time order."""
-    m = [e for e in b.events if since < b.sig(e["id"])["t"] <= until and b.sig(e["id"])["reveal_t"] <= until
-         and b.sig(e["id"])["priority"] >= 2]
+    """Big moments (priority >= 2) whose outcome was revealed in (since, until]; top 2, in time order.
+    Filter on reveal_t, not the start: a goal struck before the Ask but confirmed by VAR during it is news."""
+    m = [e for e in b.events if since < b.sig(e["id"])["reveal_t"] <= until and b.sig(e["id"])["priority"] >= 2]
     top: list[dict] = []
     for e in sorted(m, key=lambda e: (-b.sig(e["id"])["priority"], b.sig(e["id"])["t"])):
         if e["type"] == "goalkeeping" and any(t["id"] in (e.get("related_event_ids") or ()) for t in top):
@@ -185,6 +186,16 @@ def _missed_parts(b: Bundle, lead: str, events: list[dict]) -> list[tuple[str, s
             parts.append(_static("and"))
         parts.append((f"past_{e['id']}", b.sig(e["id"])["spoken_past"]))
     return parts
+
+
+def catch_up_answer(b: Bundle, since_s: float, until_s: float) -> dict:
+    """"Back to the action", plus the big moments revealed while the fan was asking (file 40 catch_up_line)."""
+    until = b.clamp(until_s)
+    ev = _missed(b, since_s, until)
+    if not ev:
+        return _ok(b, until, [_static("back")])
+    parts = [_static("back")] + _missed_parts(b, "while_we_talked", ev)
+    return _ok(b, until, parts, say=" ".join(t for _, t in parts) + ".", evidence=[e["id"] for e in ev])
 
 
 def what_did_i_miss(b: Bundle, p: float, since: str) -> dict:

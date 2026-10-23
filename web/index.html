@@ -20,6 +20,10 @@
       #start { display: block; width: 100%; min-height: 6rem; margin: 1.5rem 0 0.75rem; font-size: 2rem; font-weight: 700;
                background: var(--accent); color: #fff; border-width: 3px; }
       .row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+      #ask { display: block; width: 100%; min-height: 4.5rem; margin: 0.75rem 0 0; font-size: 1.5rem; font-weight: 700; }
+      #ask-menu { display: grid; gap: 0.5rem; margin-top: 0.5rem; }
+      #ask-menu[hidden] { display: none; }
+      #ask-menu button { min-height: 3.25rem; text-align: left; }
       .row button { flex: 1 1 12rem; min-height: 3.5rem; font-weight: 600; }
       #settings { background: var(--panel); border-radius: 0.75rem; padding: 1rem; margin-top: 1rem; }
       fieldset { border: 1px solid var(--muted); border-radius: 0.5rem; margin: 0 0 1rem; padding: 0.5rem 0.75rem 0.75rem; }
@@ -38,6 +42,16 @@
       <div class="row">
         <button id="next" type="button" disabled>Next big moment</button>
         <button id="settings-toggle" type="button" aria-expanded="false" aria-controls="settings">Settings</button>
+      </div>
+      <button id="ask" type="button" aria-expanded="false" aria-controls="ask-menu" aria-keyshortcuts="A" disabled>
+        Ask the commentator
+      </button>
+      <div id="ask-menu" role="group" aria-label="Questions for the commentator" hidden>
+        <button type="button" data-preset="ball">Where's the ball?</button>
+        <button type="button" data-preset="score">What's the score?</button>
+        <button type="button" data-preset="last">What just happened?</button>
+        <button type="button" data-preset="missed">What did I miss?</button>
+        <button type="button" id="ask-live" hidden>Ask out loud</button>
       </div>
       <p id="status">Loading…</p>
 
