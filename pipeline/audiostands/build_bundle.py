@@ -11,6 +11,7 @@ Order (BUILD_PLAN Stages 4-5, TEAM_SPLIT changes):
         DIRECTOR=replay   (default when that file exists) replays it: no Azure, same plans, byte-identical bundle;
         DIRECTOR=rules    the rules Director only (no quota; BUILD_PLAN drop-list item 5).
     2. A's build_commentary -> cues.en.radio.jsonl, audio/en/radio/*.mp3, captions_sdh.vtt, descriptions.vtt
+    2b. A's answers         -> answers/<sha>.mp3 + answers/index.json: B's Q&A FRAGMENTS in the same voice (Stage 6)
     3. B's build_segments   -> segments.json (B's Stage 2, on main since #7; skipped and reported if it is ever missing)
     4. manifest.json        -> file 43 §6 shape, with the sha256 of every file
 Cues are NOT merged into segments.json: A's commentary track loads the cue file itself (TEAM_SPLIT.md).
@@ -34,7 +35,7 @@ import sys
 from pathlib import Path
 from typing import Callable
 
-from audiostands import build_commentary
+from audiostands import answers, build_commentary
 from audiostands.agents import director as dir_agent
 from audiostands.agents import tracing
 from audiostands.agents import workflow as dir_workflow
@@ -160,7 +161,7 @@ def manifest(cut: str, out_dir: Path, m: Match, voice: str, director: str | None
         "meta": "meta.json", "events": "events.jsonl", "signals": "signals.json", "ticks": "ticks.json.gz",
         "segments": "segments.json" if (out_dir / "segments.json").is_file() else None,
         "captions": "captions_sdh.vtt", "descriptions": "descriptions.vtt",
-        "answers": None,  # Stage 6 (A6) adds answers/index.json
+        "answers": f"{answers.FOLDER}/index.json" if (out_dir / answers.FOLDER / "index.json").is_file() else None,
         "ai_voice_notice": AI_VOICE_NOTICE,
         "files": len(files), "bytes": sum(p.stat().st_size for p in files),
         "sha256": {rel(p): sha256(p) for p in files},
@@ -179,6 +180,7 @@ def build(cut: str, out_dir: Path, synth_factory: Callable[[], Synthesiser], voi
     run, director_tts = run_director(cut, out_dir, synth_factory, voice, director, model)
     commentary = build_commentary.build(cut, out_dir, synth_factory, voice, run.plans,
                                         {s.window.key: s.director for s in run.steps})
+    ans = answers.build(out_dir, synth_factory, voice)
     segments = run_segments(cut, out_dir)
     man = manifest(cut, out_dir, load_match(cut), voice, run.name)
     if man["bytes"] > MAX_BYTES or man["files"] > MAX_FILES:
@@ -186,7 +188,7 @@ def build(cut: str, out_dir: Path, synth_factory: Callable[[], Synthesiser], voi
                            f"(limits {MAX_BYTES} bytes, {MAX_FILES} files)")
     body = json.dumps(man, indent=1, ensure_ascii=False) + "\n"
     (out_dir / "manifest.json").write_text(body, encoding="utf-8", newline="\n")
-    return {"commentary": commentary, "segments": segments, "files": man["files"], "bytes": man["bytes"],
+    return {"commentary": commentary, "answers": ans, "segments": segments, "files": man["files"], "bytes": man["bytes"],
             "chapters": man["chapters"], "director": {**run.summary(), "name": run.name, "tts_calls": director_tts}}
 
 
@@ -229,6 +231,9 @@ def main(argv: list[str] | None = None) -> int:
     print(f"{'PASS' if ok else 'FAIL'}: commentary {c['lines']} lines, {c['tts_calls']} TTS calls, "
           f"truth_check {c['truth_check_pass']}, spoiler leaks {len(c['spoiler_leaks'])}; segments {rep['segments']}; "
           f"{rep['files']} files, {rep['bytes'] / 1e6:.1f} MB; {len(rep['chapters'])} chapters")
+    a = rep["answers"]
+    print(f"answers: {a['fragments']} fragments, {a['clips']} clips, {a['tts_calls']} TTS calls, "
+          f"{a['chars_text']} characters synthesised ({a['chars_total']} in all), {a['pruned']} stale removed")
     return 0 if ok else 1
 
 
