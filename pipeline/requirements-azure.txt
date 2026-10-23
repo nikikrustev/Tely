@@ -3,3 +3,11 @@
 azure-cognitiveservices-speech>=1.52,<2
 azure-identity>=1.26,<2
 openai>=3.35,<4
+# Stage 5 Director (file 18 §3): Agent Framework core (workflows, Agent) + the Foundry chat client.
+# Not the `agent-framework` meta package: it pulls ~30 sub-packages we don't use.
+agent-framework-core>=1.23,<2
+agent-framework-foundry>=1.15,<2
+# Foundry code-based custom evaluator (preview, beta.evaluators); also a dependency of agent-framework-foundry.
+azure-ai-projects>=2.7,<3
+# Traces to Application Insights (configure_azure_monitor + enable_instrumentation, file 18 §5)
+azure-monitor-opentelemetry>=1.8.10,<2

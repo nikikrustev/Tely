@@ -41,7 +41,7 @@ def tc(t: float, fps: int = 25) -> str:
     return f"{h:02d}:{mi:02d}:{s:02d}:{f:02d}"
 
 
-def render_lines(m: Match, cache: TtsCache, voice: str) -> list[planner.Line]:
+def render_lines(m: Match, cache: TtsCache, voice: str, plans: dict | None = None) -> list[planner.Line]:
     """Plan, render whatever is missing, re-plan with real durations; stop when every placed line is cached."""
     def ssml_of(text: str, style: str, pause_ms: int) -> str:
         return build_ssml(text, style, voice, pause_after_ms=pause_ms)
@@ -51,7 +51,7 @@ def render_lines(m: Match, cache: TtsCache, voice: str) -> list[planner.Line]:
         return ms / 1000 if ms is not None else planner.estimate(text, style, pause_ms)
 
     for _ in range(MAX_ROUNDS):
-        lines = planner.plan(m, duration_of)
+        lines = planner.plan(m, duration_of, plans)
         missing = [(ssml_of(ln.text, ln.draft.style, ln.draft.pause_ms), ln.text) for ln in lines]
         missing = [(s, t) for s, t in missing if not cache.has(ssml_sha256(s))]
         if not missing:
@@ -61,7 +61,7 @@ def render_lines(m: Match, cache: TtsCache, voice: str) -> list[planner.Line]:
     raise BuildError(f"plan did not settle in {MAX_ROUNDS} rounds")
 
 
-def to_cue(m: Match, seq: int, ln: planner.Line, voice: str, cache: TtsCache) -> dict:
+def to_cue(m: Match, seq: int, ln: planner.Line, voice: str, cache: TtsCache, director: str | None = None) -> dict:
     d = ln.draft
     ssml = build_ssml(ln.text, d.style, voice, pause_after_ms=d.pause_ms)
     sha = ssml_sha256(ssml)
@@ -88,7 +88,9 @@ def to_cue(m: Match, seq: int, ln: planner.Line, voice: str, cache: TtsCache) ->
         "truth_check": "pass" if not truth else "fail", "spoiler_check": "pass" if not spoil else "fail",
         "errors": truth + spoil,
         "source": {"cut": m.meta["judge_cut"].get("source"), "generator_seed": m.meta["judge_cut"].get("seed"),
-                   "planner": "lookahead_v1", "templates": "radio_v1", "director": None},
+                   "planner": "lookahead_v1", "templates": "radio_v1",
+                   # Stage 5: who planned this build-up's tension (file 43 §3 "source.director")
+                   "director": director if d.kind == "build" else None},
     }
 
 
@@ -97,11 +99,15 @@ def _write(path: Path, text: str) -> None:
     path.write_text(text if text.endswith("\n") else text + "\n", encoding="utf-8", newline="\n")
 
 
-def build(cut: str, out_dir: Path, synth_factory: Callable[[], Synthesiser], voice: str = DEFAULT_VOICE) -> dict:
+def build(cut: str, out_dir: Path, synth_factory: Callable[[], Synthesiser], voice: str = DEFAULT_VOICE,
+          plans: dict | None = None, directors: dict[str, str] | None = None) -> dict:
+    """plans / directors: shot id -> the Director's verified plan / its name (Stage 5). None: Stage 3 rules."""
     m = load_match(cut)
     cache = TtsCache(out_dir / "audio" / LANG / LEVEL, synth_factory)
-    lines = render_lines(m, cache, voice)
-    cues = [to_cue(m, i + 1, ln, voice, cache) for i, ln in enumerate(lines)]
+    lines = render_lines(m, cache, voice, plans)
+    directors = directors or {}
+    cues = [to_cue(m, i + 1, ln, voice, cache, directors.get(ln.draft.evidence[0]) if ln.draft.evidence else None)
+            for i, ln in enumerate(lines)]
     failed = [(c["cue_id"], c["text"]["radio"], c["errors"]) for c in cues if c["errors"]]
     for c in cues:
         if not c["errors"]:
