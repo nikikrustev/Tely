@@ -102,7 +102,8 @@ export class LocalTools {
     const p = this.clamp(playhead), sc = this.score(p);
     const minute = Math.floor(this.clockS(p) / 60);
     const num = (n: number) => NUM[n] ?? String(n);
-    const goals = this.known(p).filter((e) => e.type === 'shot' && e.outcome_type === 'successful').map((e) => e.id);
+    // Same second as the score row: a goal revealed at 703.76 counts from 704 (never contradicts "nil").
+    const goals = this.known(Math.floor(p)).filter((e) => e.type === 'shot' && e.outcome_type === 'successful').map((e) => e.id);
     return this.ok(p, [[`score_m${minute}_${sc.home}_${sc.away}`,
       `${this.team('home')} ${num(sc.home)}, ${this.team('away')} ${num(sc.away)}, ${minute} minutes played.`]], undefined, goals);
   }
@@ -133,11 +134,12 @@ export class LocalTools {
     return this.ok(p, parts, undefined, ev.map((e) => e.id));
   }
 
-  /** Big moments that started after `since` and were revealed by `until`; top 2, a shot and its save said once. */
+  /** Big moments whose outcome was revealed in (since, until]; top 2, a shot and its save said once.
+   *  Filter on reveal_t, not the start: a goal confirmed by VAR during the Ask is news. */
   missed(since: number, until: number): QaEvent[] {
     const m = this.b.events.filter((e) => {
       const s = this.sig(e.id);
-      return since < s.t && s.t <= until && s.reveal_t <= until && s.priority >= 2;
+      return since < s.reveal_t && s.reveal_t <= until && s.priority >= 2;
     });
     const order = [...m].sort((a, b) => this.sig(b.id).priority - this.sig(a.id).priority || this.sig(a.id).t - this.sig(b.id).t);
     const top: QaEvent[] = [];

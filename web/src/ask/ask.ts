@@ -14,6 +14,7 @@ export const PRESETS: { id: Preset; label: string }[] = [
   { id: 'missed', label: 'What did I miss?' },
 ];
 export const DUCK_DB = -12, DUCK_MS = 240, UNDUCK_MS = 1500;   // file 38: speech +12 dB over the crowd; fast down, slow up
+export const HOLD_CUE_GAP_S = 2.5;                              // A's review: never say "hold" over a line due this soon
 
 export interface AskDeps {
   tools: LocalTools;
@@ -85,19 +86,23 @@ export class AskController implements Ask {
     if (this.busy) return [];
     this.busy = true;
     const said: string[] = [];
-    const start = this.d.clock.now();
     try {
-      if (this.d.tools.hold_that_thought(start)) {         // a chance is coming: never say what, just wait for it
-        said.push(STATIC.hold as string);
-        this.d.show?.(STATIC.hold as string);
-        await this.d.speak(['hold'], STATIC.hold as string);
+      if (this.d.tools.hold_that_thought(this.d.clock.now())) { // a chance is coming: never say what, just wait for it
+        // Don't talk over A's build-up line: if one starts within 2.5 s, stay quiet and let it play.
+        if (!this.d.commentary.nextCueWithin(HOLD_CUE_GAP_S)) {
+          said.push(STATIC.hold as string);
+          this.d.show?.(STATIC.hold as string);
+          await this.d.speak(['hold'], STATIC.hold as string);
+        }
         await (this.d.wait ?? sleep)(HOLD_LOOKAHEAD_S * 1000);
       }
-      this.d.crowd.duck(DUCK_DB, DUCK_MS);
-      // SEAM(B->A): CommentaryTrack.pause() (a-exports.ts): the queue pauses while the playhead keeps running
+      // SEAM(B->A): CommentaryTrack.pause() first (a-exports.ts; A's pause() also unducks), THEN duck the crowd,
+      // so the answer always sits over a lowered crowd. The playhead keeps running.
       this.d.commentary.pause();
+      this.d.crowd.duck(DUCK_DB, DUCK_MS);
+      const paused = this.d.clock.now();                   // catch-up covers what was revealed from the pause on
       said.push(...(await body()));
-      const back = this.d.tools.catch_up(start, this.d.clock.now());
+      const back = this.d.tools.catch_up(paused, this.d.clock.now());
       said.push(back.say);
       this.d.show?.(back.say);
       await this.d.speak(back.fragments, back.say);
@@ -116,9 +121,12 @@ const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 export class LazyAsk implements Ask {
   private handler: LiveAskHandler | null = null;
   target: AskController | null = null;
+  /** Called whenever the live mode is registered (A's live mode may register after Start). */
+  onRegister: (() => void) | null = null;
   registerLiveMode(handler: LiveAskHandler): void {
     this.handler = handler;
     this.target?.registerLiveMode(handler);
+    this.onRegister?.();
   }
   attach(c: AskController): void {
     this.target = c;
@@ -180,13 +188,27 @@ export class FragmentPlayer {
   }
 }
 
-function speakFallback(text: string): Promise<void> {
+const speaking = new Set<SpeechSynthesisUtterance>(); // keep a reference: Chrome can drop a collected utterance's events
+
+/** Browser voice fallback. Chrome sometimes never fires onend/onerror, so a timeout (2 s + 90 ms per character)
+ *  cancels the speech and resolves anyway: the Ask can never get stuck (A's review). */
+export function speakFallback(text: string): Promise<void> {
   if (typeof speechSynthesis === 'undefined') return Promise.resolve();
   return new Promise((resolve) => {
     const u = new SpeechSynthesisUtterance(text);
     u.lang = 'en-GB';
-    u.onend = () => resolve();
-    u.onerror = () => resolve();
+    speaking.add(u);
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      speaking.delete(u);
+      resolve();
+    };
+    const timer = setTimeout(() => { speechSynthesis.cancel(); finish(); }, 2000 + text.length * 90);
+    u.onend = finish;
+    u.onerror = finish;
     speechSynthesis.speak(u);
   });
 }

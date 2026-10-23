@@ -65,14 +65,19 @@ describe('spoiler firewall in the browser', () => {
   });
 
   it('the catch-up covers exactly the big moments revealed between the start and end of the Ask', () => {
-    const start = 690, end = 730;                     // the goal and its VAR decision land inside this Ask
+    // Asked during the VAR check: the goal was struck (t 679.4) before the Ask but confirmed (reveal 703.76) during it.
+    const start = 690, end = 730;
     const a = T.catch_up(start, end);
-    const expected = bundle.events.filter((e) => {
+    const revealed = bundle.events.filter((e) => {
       const s = T.sig(e.id);
-      return start < s.t && s.t <= end && s.reveal_t <= end && s.priority >= 2;
+      return start < s.reveal_t && s.reveal_t <= end && s.priority >= 2;
     }).map((e) => e.id);
-    expect(a.evidence_ids.every((id) => expected.includes(id))).toBe(true);
-    expect(a.say.startsWith('Back to the action.')).toBe(true);
+    const goal = bundle.events.find((e) => e.type === 'shot' && e.outcome_type === 'successful')!;
+    expect(revealed).toContain(goal.id);                 // the window really holds the goal (not a vacuous check)
+    expect(a.evidence_ids.length).toBeGreaterThan(0);
+    expect(revealed).toEqual(expect.arrayContaining(a.evidence_ids));
+    expect(a.evidence_ids).toContain(goal.id);
+    expect(a.say).toMatch(/^Back to the action\. While we talked, .*scored/);
     const before = T.catch_up(start, 700);              // the goal is not revealed yet at 700: not mentioned
     expect(before.say).toBe('Back to the action.');
   });
@@ -102,8 +107,8 @@ describe('Ask flow', () => {
     expect(T.hold_that_thought(quiet)).toBe(false);
     const { ctl, log } = harness(quiet);
     await ctl.ask('ball');
-    expect(log[0]).toBe('duck -12');
-    expect(log[1]).toBe('pause');
+    expect(log[0]).toBe('pause');                       // A's pause() unducks, so pause first...
+    expect(log[1]).toBe('duck -12');                    // ...then duck: the answer sits over a lowered crowd
     expect(log).toContain('ping');
     expect(log.filter((l) => l.startsWith('say:'))).toHaveLength(2);
     expect(log.at(-3)).toMatch(/^say: Back to the action\./);

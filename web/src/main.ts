@@ -174,7 +174,9 @@ async function startApp(): Promise<void> {
         show: (text) => { status.textContent = text; },
       });
       lazyAsk.attach(askCtl);
-      askLive.hidden = !askCtl.hasLive;
+      const ctl = askCtl;
+      lazyAsk.onRegister = () => { askLive.hidden = !ctl.hasLive; };   // A's live mode may register later
+      askLive.hidden = !ctl.hasLive;
       askBtn.disabled = false;
     } catch {
       askBtn.disabled = true;                            // no data: the button stays off rather than failing mid-match
