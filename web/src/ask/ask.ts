@@ -132,6 +132,12 @@ export class LazyAsk implements Ask {
     this.target = c;
     if (this.handler) c.registerLiveMode(this.handler);
   }
+  /** Opens the preset menu; main.ts sets this (the menu is DOM). Before that it does nothing. */
+  onShowPresets: (() => void) | null = null;
+  // SEAM(B->A): b-exports.ts Ask.showPresets. A's live-ask.ts calls it after a refusal instead of clicking #ask.
+  showPresets(): void {
+    this.onShowPresets?.();
+  }
 }
 
 /**

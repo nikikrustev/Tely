@@ -42,6 +42,7 @@ _NOT_NAMES = {"where", "is", "the", "how", "far", "has", "have", "run", "ran", "
               "stat", "for", "of", "did", "does", "what", "about", "player", "fast", "shots", "shot", "got", "scored",
               "played", "doing", "now", "right", "and", "his", "her", "their", "reds", "red", "navy", "number", "keeper"}
 SURNAME_MIN, FIRST_MIN, CLEAR_MARGIN = 0.75, 0.85, 0.1   # ours: tuned on eval/qa_cases.jsonl (typos, shared first names)
+NEAR_MIN = 0.65  # ours: nothing matched -> offer names this close (speech-to-text "Tio" for Teo, A7 golden turns)
 
 
 def _match_names(pool: list[dict], text: str) -> list[dict]:
@@ -64,20 +65,39 @@ def _match_names(pool: list[dict], text: str) -> list[dict]:
     return [p for s, p in scored if s > top - CLEAR_MARGIN]
 
 
+def _near_names(pool: list[dict], text: str) -> list[dict]:
+    """Nothing matched: the players whose first or last name is closest (>= NEAR_MIN) to a word, as "did you mean"
+    candidates. Never a random list: the model would read it out as if it were a real choice."""
+    words = [w for w in re.findall(r"[a-z][a-z'-]+", text) if w not in _NOT_NAMES and len(w) >= 3]
+    ratio = lambda a, c: difflib.SequenceMatcher(None, a, c).ratio()
+    scored = [(max((ratio(w, n.lower()) for w in words for n in (p["first_name"], p["last_name"])), default=0.0), p)
+              for p in pool]
+    top = max((s for s, _ in scored), default=0.0)
+    return [p for s, p in scored if s >= NEAR_MIN and s > top - CLEAR_MARGIN]
+
+
 def find_player(b: Bundle, q: str) -> tuple[dict | None, dict | None]:
     """By shirt number ("9", "number 9", "Navy 9") or by name (fuzzy). Ambiguous -> {error, candidates}."""
     text = str(q).strip().lower()
-    team = "home" if b.team_name("home").lower() in text else "away" if b.team_name("away").lower() in text else None
+    # "Reds", "Red", "Red's": the live model rewrites what the fan said ("Red keeper", A7 golden turns).
+    said = lambda side: re.search(rf"\b{re.escape(b.team_name(side).lower().rstrip('s'))}s?\b", text)
+    team = "home" if said("home") else "away" if said("away") else None
     pool = [p for p in b.players.values() if team is None or p["side"] == team]
     num = re.search(r"\b(\d{1,2})\b", text)
+    names = _match_names(pool, text)
+    near = False
     if num:
-        hits = [p for p in pool if p["jersey_number"] == int(num.group(1))]
+        nums = [p for p in pool if p["jersey_number"] == int(num.group(1))]
+        both = [p for p in nums if p in names]
+        # "Gus Fenford #9": the name picks one of the two number 9s. A name and a number that disagree -> ask.
+        hits = both or (nums + [p for p in names if p not in nums] if names else nums)
     elif re.search(r"\b(goal)?keeper\b|\bgoalie\b", text):
         hits = [p for p in pool if p["position"] == "GK"]       # "the keeper" -> both, "Reds keeper" -> one
     else:
-        hits = _match_names(pool, text)
-    if len(hits) != 1:
-        cands = [f"{p['name']} ({b.team_name(p['side'])} #{p['jersey_number']})" for p in (hits or pool)[:4]]
+        hits = names or _near_names(pool, text)
+        near = not names
+    if len(hits) != 1 or near:                                  # a near miss ("Tio") is a question, never an answer
+        cands = [f"{p['name']} ({b.team_name(p['side'])} #{p['jersey_number']})" for p in hits[:4]]
         return None, {"error": "ambiguous_or_unknown_player", "candidates": cands}
     return hits[0], None
 
