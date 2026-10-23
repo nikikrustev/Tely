@@ -1,0 +1,522 @@
+{
+ "0243fe855747334633daace0aa0734d1dac5bd3e410db8957cf2d0a674620e78": {
+  "duration_ms": 1750,
+  "bytes": 10800,
+  "text": "Nothing big has happened yet."
+ },
+ "049d63281c6224d632aa2492b2d37b1696411ad3eec1428b199c75da81ff2521": {
+  "duration_ms": 3550,
+  "bytes": 21600,
+  "text": "Navy have it, defensive third, near side."
+ },
+ "08ab048fae56a2f225802ad01f7f1f9ceb04d71f87e891dac7daea670e92f8b3": {
+  "duration_ms": 3850,
+  "bytes": 23472,
+  "text": "VAR checks the Navy goal... and it stands."
+ },
+ "0acfdc6fb8886079388d394f45ffcd2a6140e7462527a6f60a0a1ce7caa64270": {
+  "duration_ms": 4550,
+  "bytes": 27648,
+  "text": "Morani intercepts for Reds, midfield, centre."
+ },
+ "0c22fbe267649d858257f768ec7dd3877a3761b766844abe068b2325c10920d8": {
+  "duration_ms": 1400,
+  "bytes": 8784,
+  "text": "20 metres from goal."
+ },
+ "0cc97493e81e068b8e611ea56f13407c7fcd787e8b67a2b1fbef066773224462": {
+  "duration_ms": 1250,
+  "bytes": 7920,
+  "text": "While you were away,"
+ },
+ "0eaef0211096edf2752e2bca7186327c0527f3b9d196a2778f35b96f19b66661": {
+  "duration_ms": 750,
+  "bytes": 4896,
+  "text": "Before that:"
+ },
+ "1be16e641b731c38172e7d8eb2bf3b694fa0aa37d502df333c186f1807b4d46e": {
+  "duration_ms": 1050,
+  "bytes": 6624,
+  "text": "While we talked,"
+ },
+ "1cbce697e7b20a19e9be3f9f72701c058e0ab946c693069306c99c4158542436": {
+  "duration_ms": 2550,
+  "bytes": 15696,
+  "text": "Reds have it, attacking third, centre."
+ },
+ "1e4e574d3412ae146ab6426441a7c4d1caa8d6989dd038232c05b065b4c2fa2a": {
+  "duration_ms": 4600,
+  "bytes": 27936,
+  "text": "Midfield, far side, Reds. Ashski to Nevford."
+ },
+ "22961ce9670c4d43e14b64af5bb2535551cac6478c05558461688e349ca6cfa8": {
+  "duration_ms": 4300,
+  "bytes": 26208,
+  "text": "Ashard intercepts for Navy, midfield, near side."
+ },
+ "2314ea6a89f6fbaa0a300c198c377268b69afbf8fcf2b90d93ee6daee66e0ed6": {
+  "duration_ms": 3750,
+  "bytes": 22896,
+  "text": "Reds nil, Navy one, 61 minutes played."
+ },
+ "2717c81e5772fa74d2e7aba9eca263f28b7185d5181366107d9aa1d9d7fcf442": {
+  "duration_ms": 1350,
+  "bytes": 8496,
+  "text": "The ball is out of play."
+ },
+ "29bb8ba55265c5184247b63f0a2c6c4460056870bc066234e7eb6cd6bf5e713d": {
+  "duration_ms": 1750,
+  "bytes": 10800,
+  "text": "100 metres from goal."
+ },
+ "2d1a6ac5971175181aabb7314cda8395128ce2a4097218975afcfb21c85e61cd": {
+  "duration_ms": 4500,
+  "bytes": 27360,
+  "text": "Midfield, far side, Reds. Nevford to Ashski."
+ },
+ "2dcefd5b7d234b27184cd6dbee8318402a1f83dd9c33bde3f657d4a4b3922123": {
+  "duration_ms": 3850,
+  "bytes": 23472,
+  "text": "Rilford blocks it for Navy, defensive third, centre."
+ },
+ "30b716267f3d8972dfc0631245a33aa0f44c831c17d97a4bf84d25087cb62121": {
+  "duration_ms": 1600,
+  "bytes": 9936,
+  "text": "70 metres from goal."
+ },
+ "325f6f3ac2188a0d9f4ae9b2b0992f433c0e4c3b989dbe0ebdf77770206c8f47": {
+  "duration_ms": 3550,
+  "bytes": 21600,
+  "text": "Reds nil, Navy one, 60 minutes played."
+ },
+ "327506a7624bb4af5a45bb83e6c3dc1f8c8b033b53561a0d95d9405defb24e7b": {
+  "duration_ms": 3250,
+  "bytes": 19872,
+  "text": "Navy have it, attacking third, near side."
+ },
+ "36cc326a136b308ce56da57b2dd678a4346d1931200000316e66ff9d7e0748d4": {
+  "duration_ms": 1200,
+  "bytes": 7488,
+  "text": "Nothing big happened."
+ },
+ "36ef9e561b543b7d7cbb78849c3d340b67148438504548efcf514a14db7b58db": {
+  "duration_ms": 3700,
+  "bytes": 22608,
+  "text": "Reds nil, Navy one, 58 minutes played."
+ },
+ "39ba35fff5f20ef59a562c2ae7ede022081fd9f7b3bdfcc63b22bb3cbc5c8dce": {
+  "duration_ms": 4850,
+  "bytes": 29520,
+  "text": "Attacking third, far side, Navy. Strandford to Olvholm."
+ },
+ "3cc23bce957ba781cf86b8c1f711233d52284e9dc66280e2ca4dba963a744791": {
+  "duration_ms": 5350,
+  "bytes": 32400,
+  "text": "Attacking third, far side, Navy. Olvholm crosses for Fenford."
+ },
+ "3e42995acbc9b01576022ae5926119d34e32a2b737dd995db01e6113e8b5fbaa": {
+  "duration_ms": 4600,
+  "bytes": 27936,
+  "text": "Reds have it, attacking third, near side."
+ },
+ "3fe84730c85116996856cf465d9d3b132589061b89cc9345d8eee34b80ced01c": {
+  "duration_ms": 3000,
+  "bytes": 18288,
+  "text": "Reds have it, defensive third, near side."
+ },
+ "405045694a0b5155a5256e4e60479b4049a4addea471ec002d4f48fde60e026f": {
+  "duration_ms": 3900,
+  "bytes": 23760,
+  "text": "Sorry, I didn't catch that. Try: what's the score, or where's the ball."
+ },
+ "4460f1542df9437ce03ab15701f20e20f6ba4e20739881480a5a57c93620dfa6": {
+  "duration_ms": 4200,
+  "bytes": 25488,
+  "text": "Nevaro intercepts for Reds, defensive third, centre."
+ },
+ "470c9a5c0a2e5f6b8ec305681ccb31102ae13b5130902fe5e85b9c4497abba9a": {
+  "duration_ms": 1650,
+  "bytes": 10224,
+  "text": "90 metres from goal."
+ },
+ "4a5b04ab727a6215227a503be18753682736233e8dc414ea1839a4d7d01376ac": {
+  "duration_ms": 2850,
+  "bytes": 17424,
+  "text": "Navy have it, midfield, far side."
+ },
+ "4bfa24e62cc45028574fc10671b393e0e0c393c6cdf7781a5dd18b4e3349875e": {
+  "duration_ms": 4400,
+  "bytes": 26784,
+  "text": "Reds nil, Navy one, 59 minutes played."
+ },
+ "4bfef2c3e49a8d15e3e6c54141725f8408b66e0a3845150d7760c84efb644932": {
+  "duration_ms": 1850,
+  "bytes": 11520,
+  "text": "Hold that thought, watch this!"
+ },
+ "4f257e701957a8d0ad6ec2aeac63c9192489c84119a1f15c49104d399e388d6d": {
+  "duration_ms": 2950,
+  "bytes": 18000,
+  "text": "Reds have it, midfield, near side."
+ },
+ "50517f847bb31e456f9888ec603d39b6b6246ae729b6fcc6fcb1cfe169178f6a": {
+  "duration_ms": 3050,
+  "bytes": 18720,
+  "text": "Navy have it, defensive third, centre."
+ },
+ "53cbf89a26662220b896875887cbf980eec45da4f2c2e3c935c5c474c68d863f": {
+  "duration_ms": 1600,
+  "bytes": 9936,
+  "text": "80 metres from goal."
+ },
+ "5b229f85b69583492890dd622e003122c09a5bcb3f5adeb990fe4be27c3546cd": {
+  "duration_ms": 4800,
+  "bytes": 29088,
+  "text": "Olvros intercepts for Navy, defensive third, far side."
+ },
+ "5b83da4d3c4d1f68c03aadd41c81087ce7fd310348a51deb2d782609cdd1458b": {
+  "duration_ms": 3700,
+  "bytes": 22608,
+  "text": "Reds nil, Navy one, 56 minutes played."
+ },
+ "5eb94f8095eb03cd45e9c8fa016f0fb0eee6028c23b246667aab240700d823d5": {
+  "duration_ms": 3150,
+  "bytes": 19296,
+  "text": "Reds have it, midfield, far side."
+ },
+ "60d76e2e639ec08b7b9e2bcf19beca6fa37f781054cc21a64420c03afb9164ee": {
+  "duration_ms": 7050,
+  "bytes": 42624,
+  "text": "Attacking third, centre, Navy. Fenford's pass is cut out by Nevaro."
+ },
+ "622c818750821225767bdf43bbe8cd71eb41d3901303f763a5bf66c7ed364d55": {
+  "duration_ms": 1550,
+  "bytes": 9648,
+  "text": "10 metres from goal."
+ },
+ "63e40ffe30a4991312597bd5305816dd0cb74752d8d29d3bf06a66fe0a4d60ae": {
+  "duration_ms": 3400,
+  "bytes": 20736,
+  "text": "Navy have it, defensive third, far side."
+ },
+ "680640914a5897cb98455832f27c613fb1e053432544404e87cbb2684cf1a5bf": {
+  "duration_ms": 5800,
+  "bytes": 35136,
+  "text": "Foul by Nevford of Reds, midfield, far side. Yellow card."
+ },
+ "68444014d5cce1c4ae9b0a33674bcb61774b41c95e87cb0d9b8b5dd6ca6400f3": {
+  "duration_ms": 1750,
+  "bytes": 10800,
+  "text": "35 metres from goal."
+ },
+ "6c9d3166eb1042cd95cd23b45316ec678f0370bd93f3e8202d8a7c689e9e0d86": {
+  "duration_ms": 2050,
+  "bytes": 12672,
+  "text": "25 metres from goal."
+ },
+ "6d96224bd4d2d3bbe675a37422b86fcfe340299cd6f3d8b3f372059cd645df40": {
+  "duration_ms": 650,
+  "bytes": 4320,
+  "text": "and"
+ },
+ "6eb4dd29571f83d0a0aeb6497ba2ea47d8856da6b044820ef25bae12cf60f7cc": {
+  "duration_ms": 6000,
+  "bytes": 36288,
+  "text": "Attacking third, far side, Navy. Olvros to Olvholm."
+ },
+ "6f808385bf6906992246017e054bae0723f5a8fc2fe7732eb0f1ae07f0a5932f": {
+  "duration_ms": 1800,
+  "bytes": 11088,
+  "text": "55 metres from goal."
+ },
+ "72e70dd82369e62e2d4fdc98cce22d8eee99edb99875b63393947a65293568b2": {
+  "duration_ms": 7500,
+  "bytes": 45360,
+  "text": "Attacking third, centre, Navy. Fenford heads it in! Goal for Navy."
+ },
+ "73542c9b83a549a1fd63549d2a686277308f7cd29bf90330ab63beb4f69fc38b": {
+  "duration_ms": 5050,
+  "bytes": 30672,
+  "text": "Reds nil, Navy nil, 56 minutes played."
+ },
+ "74ce4a8a8880afbe6d0050700a9a8830e8fd969f783ebd699f864fd36b5bc921": {
+  "duration_ms": 5350,
+  "bytes": 32400,
+  "text": "Midfield, far side, Navy. Kelski to Strandford."
+ },
+ "79aeb549aa5e6d759bf672800184b20733ae616e1f2af8eb651357eb96c70916": {
+  "duration_ms": 2250,
+  "bytes": 13824,
+  "text": "Fenford scored for Navy"
+ },
+ "7a33921d31eb45eb9d9b1e3d8a4ac6c3a82f6e11c18b5da93874af08d9bd313a": {
+  "duration_ms": 1400,
+  "bytes": 8784,
+  "text": "50 metres from goal."
+ },
+ "7b6b375872de6267b8b26a1912dc025d53e98eb82faa135ff5bad1c9ab184e3f": {
+  "duration_ms": 1500,
+  "bytes": 9360,
+  "text": "30 metres from goal."
+ },
+ "7dde0a9a76197f893c128dedcad24ebb102675906b0f070920325c0c5d168b9a": {
+  "duration_ms": 1900,
+  "bytes": 11808,
+  "text": "65 metres from goal."
+ },
+ "823d02eb1a61c012eac1c69563d65adfa2fba5698bd986114fbb66b3a36432a5": {
+  "duration_ms": 4550,
+  "bytes": 27648,
+  "text": "Reds nil, Navy one, 62 minutes played."
+ },
+ "828a13895b73bc90b90dc8d0b46d2c4a6ed968b4fdbb62e2900d417440053759": {
+  "duration_ms": 6200,
+  "bytes": 37584,
+  "text": "Attacking third, far side, Navy. Strandford crosses for Fenford."
+ },
+ "82edfbc640d2182cdc879d3669d6e04b1b6fa7d06134b58177a016e2fbe961d5": {
+  "duration_ms": 1500,
+  "bytes": 9360,
+  "text": "Kelski shot wide"
+ },
+ "845383bc28681eacd5f30b63e6d0a8ce97bee13f2d7f230d6e07aa27302fb935": {
+  "duration_ms": 1400,
+  "bytes": 8784,
+  "text": "5 metres from goal."
+ },
+ "88d0bb5a7bb4256d5adb0443f3b098c9b817783514df8967e0aa3cb3ae339b11": {
+  "duration_ms": 1650,
+  "bytes": 10224,
+  "text": "95 metres from goal."
+ },
+ "8c0e719b8ce9b8d0bd73cc411c0a0cd43530da17d31ab1c9f34bf595436e2b38": {
+  "duration_ms": 4700,
+  "bytes": 28512,
+  "text": "Attacking third, far side, Reds. Nevford to Ashski."
+ },
+ "8c3e8cab8fda9970ae5a67324b657b8a6eb538b6d02f0e627b09ccbce3b39f14": {
+  "duration_ms": 6850,
+  "bytes": 41472,
+  "text": "Attacking third, far side, Navy. Fenford's pass is cut out by Nevaro."
+ },
+ "933274389237a3d8ae61c02e90775dbba235aa1fef7300b7866264fb160393b4": {
+  "duration_ms": 3100,
+  "bytes": 19008,
+  "text": "Navy have it, attacking third, centre."
+ },
+ "94038b39a0ef4f9e6c624a79667c0c911f8dfaedd252c4717be8766f97778e69": {
+  "duration_ms": 4650,
+  "bytes": 28224,
+  "text": "Dunani intercepts for Reds, midfield, far side."
+ },
+ "9443718496c645865db5442f051a0a91977bd6fb85ba581ad3714fa228071841": {
+  "duration_ms": 5900,
+  "bytes": 35712,
+  "text": "Attacking third, centre, Reds. Ashski to Orlani."
+ },
+ "967d21f91aa95116a705d2f679fb99ca8a10ae243d4d5860f16b6acac5761671": {
+  "duration_ms": 1700,
+  "bytes": 10512,
+  "text": "15 metres from goal."
+ },
+ "97558b77e2fcd14bc3c14c3177c03e74e745c382286ad106a342531ef9f9af18": {
+  "duration_ms": 5000,
+  "bytes": 30384,
+  "text": "Reds nil, Navy one, 64 minutes played."
+ },
+ "991fbccd39c4f50d4a77677f3c6f2c8471f596eb1e3d287d792a39186dc60f0c": {
+  "duration_ms": 5200,
+  "bytes": 31536,
+  "text": "I'm just here for the match. Ask me about the score, the ball, or what just happened."
+ },
+ "99fac46164027f57249b323c8ab588a7fa3581736efb3553d61d00119f91a1fe": {
+  "duration_ms": 2700,
+  "bytes": 16560,
+  "text": "Navy have it, midfield, centre."
+ },
+ "9cb863c28a1b23fb7ac83f5bcac98e02ee9e62aefb212e940242e18b150fe4af": {
+  "duration_ms": 6850,
+  "bytes": 41472,
+  "text": "Attacking third, near side, Navy. Fenford shoots, saved by Vaston."
+ },
+ "9e52d33175630fed8c028b92533fb446ef8c51d91524f622c57f46ffe3cf2684": {
+  "duration_ms": 950,
+  "bytes": 6048,
+  "text": "On the goal line."
+ },
+ "a307310ef9195e9e80f9f0006a0c95435237193e7e90adc5d0aa12c25b40550d": {
+  "duration_ms": 1850,
+  "bytes": 11520,
+  "text": "Vaston saved from Fenford"
+ },
+ "a4400e4eb5012e29d51c620209bb3b1e0eddd34ba9aaa24ff7cd1ec656cb5c30": {
+  "duration_ms": 1500,
+  "bytes": 9360,
+  "text": "40 metres from goal."
+ },
+ "a49009d766b4b68c21172fc897bc0fc48951637cf9338dc7554f31e5b7ae818c": {
+  "duration_ms": 2400,
+  "bytes": 14688,
+  "text": "Navy have it, midfield, near side."
+ },
+ "a73017f77d4ce573d0ad5d925ff08fe49c359414c74f13fad7ed055ceb8eb47c": {
+  "duration_ms": 1700,
+  "bytes": 10512,
+  "text": "85 metres from goal."
+ },
+ "a856dd19056c1b8350fe10c535dd35981c7a1ef68542358c71a7a7e1b98764da": {
+  "duration_ms": 1750,
+  "bytes": 10800,
+  "text": "Saved by Vaston, who holds on."
+ },
+ "a8a7f3c25119e81737fcf26c1ac591176422d8eae2eb8014433db2e1c1cf807d": {
+  "duration_ms": 5300,
+  "bytes": 32112,
+  "text": "Attacking third, near side, Navy. Ashard to Fenford."
+ },
+ "b297a686526849f4875b5e3be422f94b6d567f78fd98ace4bf61ef6fbc80afff": {
+  "duration_ms": 3300,
+  "bytes": 20160,
+  "text": "Reds have it, defensive third, centre."
+ },
+ "b8f6b849850513f6f0a45f9d298323496601f39cb83f89f02aa650e80946afb4": {
+  "duration_ms": 1800,
+  "bytes": 11088,
+  "text": "75 metres from goal."
+ },
+ "ba6467f498022b2dcebe90344d3628ec5a7a145f4ed854ad480143e3ccd0aabe": {
+  "duration_ms": 2600,
+  "bytes": 15984,
+  "text": "VAR let the Navy goal stand"
+ },
+ "baee20e474b77095c682f3a436c2d414da5a49ae63b0fca5a614eeda90f60916": {
+  "duration_ms": 2700,
+  "bytes": 16560,
+  "text": "Reds have it, midfield, centre."
+ },
+ "bb1b88ae204b259f2d67b89613a490b72c55c145e6e5f44b2d5deed2fc0bb047": {
+  "duration_ms": 1850,
+  "bytes": 11520,
+  "text": "45 metres from goal."
+ },
+ "bd46ae2f814b8a01ab0a3578b6ffd0b9d2fbc7f344bee77e8f58cd853afe1c52": {
+  "duration_ms": 1500,
+  "bytes": 9360,
+  "text": "Orlani had a shot blocked"
+ },
+ "c149a6b02ac45ae99a0cb426fff19f55558b9cce3bd1341d9e07267df7fb5baf": {
+  "duration_ms": 3800,
+  "bytes": 23184,
+  "text": "Reds nil, Navy one, 63 minutes played."
+ },
+ "c2de770d4b3ed2637da2393f44f10c168e80475993f810c2e37268e009da34f8": {
+  "duration_ms": 2750,
+  "bytes": 16848,
+  "text": "Reds have it, attacking third, far side."
+ },
+ "cd0a853af0a73b58decde11b6bea6325082c1f910ae50dda60a8e601f67b0563": {
+  "duration_ms": 1650,
+  "bytes": 10224,
+  "text": "60 metres from goal."
+ },
+ "cfbc66fc95c9529551b871184af1e6482a88f68149bcc9490bb4df6e9ca97711": {
+  "duration_ms": 750,
+  "bytes": 4896,
+  "text": "Done."
+ },
+ "cfeb06c8a3402dcb25431a5548f695c4179d8ccdd7cec88381b4e51055e9f3e8": {
+  "duration_ms": 2200,
+  "bytes": 13536,
+  "text": "Fenford had a shot saved by Vaston"
+ },
+ "d0ad3dabf12795f52d51390b7c636e4fcea91fda36f389cf92c89a4f6a210a1b": {
+  "duration_ms": 3750,
+  "bytes": 22896,
+  "text": "Strandford intercepts for Navy, attacking third, centre."
+ },
+ "d26a0db2042759e2885f15c38c6b820e25f32bb26d2753433a35ad2fbdab3ac2": {
+  "duration_ms": 1050,
+  "bytes": 6624,
+  "text": "Back to the action."
+ },
+ "d4283a8cdd07651349d92d00e09278b34da957897623946f18d48c1bdbd47e87": {
+  "duration_ms": 3350,
+  "bytes": 20448,
+  "text": "Navy have it, attacking third, far side."
+ },
+ "d6348395b0ec3c5a2b4e1b72a51937f686c45b96416f335965414851eb9d6135": {
+  "duration_ms": 4850,
+  "bytes": 29520,
+  "text": "Attacking third, far side, Navy. Olvholm to Strandford."
+ },
+ "dd549fae1b1d4b573456d977941932a94636730747467234fcb987ec89afe7f6": {
+  "duration_ms": 5400,
+  "bytes": 32688,
+  "text": "Attacking third, far side, Navy. Kelski shoots, wide."
+ },
+ "e13df5abb0bc8537d48bde32e0c7dcab7991959efa61abd25eae4b969b5385de": {
+  "duration_ms": 3350,
+  "bytes": 20448,
+  "text": "I can't tell you what happens next. That's for the match to decide."
+ },
+ "e26b4106eb45b0255a9193eabf616bd0a2b287afe7920668e732f621e99799d6": {
+  "duration_ms": 3700,
+  "bytes": 22608,
+  "text": "Kick-off, Reds. Orlani to Wexros."
+ },
+ "e4a37d49c2f734a1d5b4f1b9bb82402294997ea85d2448beb9866b034dc82bfe": {
+  "duration_ms": 5900,
+  "bytes": 35712,
+  "text": "Midfield, far side, Navy. Olvros to Kelski."
+ },
+ "e4e54a5daac88910022e8266c269610d1da9aed8c1124c33424818c88fb7ba5a": {
+  "duration_ms": 6550,
+  "bytes": 39600,
+  "text": "Attacking third, far side, Navy. Kelski to Olvholm."
+ },
+ "ea4ae33fd6a2b7e007dba456ebc97c422635e7d4f6c122538aeb512a4a80a60e": {
+  "duration_ms": 6100,
+  "bytes": 37008,
+  "text": "Attacking third, centre, Navy. Strandford to Fenford."
+ },
+ "ea678e1ea6a780fd85e7d61b76e48b2e2318fd809ad847d4feb5c29dbb9b2f65": {
+  "duration_ms": 2700,
+  "bytes": 16560,
+  "text": "Reds have it, defensive third, far side."
+ },
+ "eab501165338059e80187418d415a46f2beec1fa29be921575ddacd34ba96c55": {
+  "duration_ms": 3700,
+  "bytes": 22608,
+  "text": "Reds nil, Navy one, 57 minutes played."
+ },
+ "ee39362e98778779ddc1fb7aa101bea020d9d597fce35b96d0da0e96eec8b17f": {
+  "duration_ms": 5700,
+  "bytes": 34560,
+  "text": "Attacking third, far side, Navy. Olvholm to Kelski."
+ },
+ "ef124947c079b872e8fcb041eb9ac039cf2b05061000c4a098707d379461c4eb": {
+  "duration_ms": 4100,
+  "bytes": 24912,
+  "text": "I can't help with betting or odds. Ask me about the match instead."
+ },
+ "f3a8c9cee20c8dc9a1951c3a967a262b3456f3a8e815c4cf75fe32d2ff6060ae": {
+  "duration_ms": 4800,
+  "bytes": 29088,
+  "text": "Olvholm intercepts for Navy, midfield, far side."
+ },
+ "f8edf10a19fc9067c74c4cbd3322485dd2902b95b5f09d222cb475a40ade875a": {
+  "duration_ms": 6050,
+  "bytes": 36720,
+  "text": "Attacking third, far side, Navy. Fenford to Strandford."
+ },
+ "fa4e6a7e08ddace264ed434d7d657ed34a45ca4d7f8f66c020122f44d6cfe90d": {
+  "duration_ms": 5500,
+  "bytes": 33408,
+  "text": "Attacking third, centre, Reds. Orlani shoots, blocked."
+ },
+ "ffb04f79bdc91bd3bf180b51238653e54b77e208bbfd4cca49b7025aa303407b": {
+  "duration_ms": 1250,
+  "bytes": 7920,
+  "text": "Nevford was booked"
+ }
+}

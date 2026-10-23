@@ -130,6 +130,7 @@ class TtsCache:
 
     folder: Path
     synth_factory: Callable[[], Synthesiser]
+    index_name: str = "index.json"  # answers/ keeps it as cache.json: its index.json is the id -> file map (Stage 6)
     calls: int = 0
     chars_text: int = 0
     chars_ssml: int = 0
@@ -137,7 +138,7 @@ class TtsCache:
 
     def __post_init__(self) -> None:
         self.folder.mkdir(parents=True, exist_ok=True)
-        idx = self.folder / "index.json"
+        idx = self.folder / self.index_name
         self.index: dict[str, dict] = json.loads(idx.read_text(encoding="utf-8")) if idx.is_file() else {}
 
     def has(self, sha: str) -> bool:
@@ -163,4 +164,4 @@ class TtsCache:
 
     def save(self) -> None:
         body = json.dumps(dict(sorted(self.index.items())), indent=1, ensure_ascii=False) + "\n"
-        (self.folder / "index.json").write_text(body, encoding="utf-8", newline="\n")
+        (self.folder / self.index_name).write_text(body, encoding="utf-8", newline="\n")
