@@ -125,6 +125,27 @@ def a_section(r: dict) -> list[str]:
         out += ["\"Waits ÷N\" shortens only the idle time between shots; every measured step runs at real speed. "
                 "Each run opens its connections with one untimed warm-up call first, as a live service would "
                 "before kick-off. Nearest-rank percentiles; with this few build-ups p95 is close to the maximum.", ""]
+    out += qa_latency_section(r.get("qa_latency"))
+    return out
+
+
+def qa_latency_section(q: dict | None) -> list[str]:
+    out = ["**Live spoken questions (Stage 7): end of the fan's speech → first answer audio**", ""]
+    if not q:
+        return out + ["Not measured yet: `python eval/qa_latency.py run …` then `summarise` (needs the deployed relay).", ""]
+    out += table(["Measured", "Questions (answered)", "p50", "p95", "Max", "p50 / p95 to the facts", "Client p50 / p95",
+                  "Tool calls", "Spoiler hits", "Model / voice"],
+                 [[q["measured"], f"{q['questions']} ({q['answered']})", ms(q["p50_ms"]), ms(q["p95_ms"]),
+                   ms(q["max_ms"]), f"{ms(q.get('facts_p50_ms'))} / {ms(q.get('facts_p95_ms'))}",
+                   f"{ms(q['client_p50_ms'])} / {ms(q['client_p95_ms'])}", q["tool_calls"], q["spoiler_hits"],
+                   f"{', '.join(q['model'])} / {', '.join(q['voice'])}"]]) + [""]
+    out += [f"Outcomes: {cell(q['outcomes'])}. Latency is measured in the relay ({q['definition']}). "
+            f"\"To the facts\" runs to the first audio after the tool results went back, so a short \"Let me check\" "
+            f"preamble doesn't flatter it. No target; for comparison only, a rival's median is {q['rival_median_s']} s "
+            "(file 42). Golden turns: " + ", ".join(f"`{f}`" for f in q["files"]) + ". Nearest-rank percentiles.", ""]
+    if q["spoiler_hit_list"]:
+        out += table(["Case", "Words", "Answer"], [[h["case_id"], ", ".join(h["words"]), h["answer"]]
+                                                   for h in q["spoiler_hit_list"]]) + [""]
     return out
 
 

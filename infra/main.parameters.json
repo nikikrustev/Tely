@@ -4,6 +4,11 @@
   "parameters": {
     "environmentName": { "value": "${AZURE_ENV_NAME}" },
     "location": { "value": "${AZURE_LOCATION=swedencentral}" },
-    "swaLocation": { "value": "${SWA_LOCATION=eastus2}" }
+    "swaLocation": { "value": "${SWA_LOCATION=eastus2}" },
+    "foundryName": { "value": "${FOUNDRY_RESOURCE}" },
+    "foundryResourceGroup": { "value": "${FOUNDRY_RESOURCE_GROUP=rg-as-dev}" },
+    "relayExists": { "value": "${SERVICE_RELAY_RESOURCE_EXISTS=false}" },
+    "ttsVoice": { "value": "${TTS_VOICE=en-US-Brian:DragonHDLatestNeural}" },
+    "demoMode": { "value": "${DEMO_MODE=live}" }
   }
 }

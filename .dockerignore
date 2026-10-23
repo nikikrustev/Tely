@@ -1,0 +1,13 @@
+# OWNER: A (potencialbg). Build context for relay/Dockerfile (context = repo root): an allow-list, so no .env, .azure/,
+# out/ or other file can ever reach an image.
+*
+!relay/
+!pipeline/pyproject.toml
+!pipeline/audiostands/
+!web/public/replay/v1/judge/meta.json
+!web/public/replay/v1/judge/events.jsonl
+!web/public/replay/v1/judge/signals.json
+!web/public/replay/v1/judge/ticks.json.gz
+**/__pycache__
+**/*.pyc
+relay/tests/

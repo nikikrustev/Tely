@@ -1,11 +1,23 @@
-# OWNER: A (potencialbg). `azd up` in env "judge" deploys the zero-backend replay to Static Web Apps Free.
+# OWNER: A (potencialbg). `azd up` in env "judge": the zero-backend replay on Static Web Apps Free (web), and from Stage 7
+# the relay on Container Apps (live spoken questions through Voice Live, plus B's Stats MCP server at /mcp).
 # Before deploying: python -m audiostands.build_bundle --cut judge (from pipeline/), so web/public/replay/v1/judge/ is
 # current. The bundle is committed, so the deploy itself needs no Python, no TTS and no keys.
+# One-time: azd env set FOUNDRY_RESOURCE <name> (the Voice Live resource, D8; a name, not a secret).
 name: audiostands
+requiredVersions:
+  azd: ">= 1.23.8"
 infra:
   provider: bicep
   path: infra
 services:
+  relay:
+    project: ./relay
+    language: docker
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      context: ..          # the repo root: the relay imports pipeline/audiostands and reads the judge bundle
+      remoteBuild: true    # built in ACR: no Docker needed on the deploying machine
   web:
     project: ./web
     language: ts
@@ -14,10 +26,11 @@ services:
     hooks:
       # staticwebapp.config.json lives in web/ (TEAM_SPLIT.md) but must ship inside the deployed folder.
       # Whether azd would also pick it up from web/ on its own is (unverified); copying it is safe either way.
+      # live.json tells the page where the relay is (lane-a/index.ts liveRelayUrl). RELAY_URL is a Bicep output.
       predeploy:
         posix:
           shell: sh
-          run: cp staticwebapp.config.json dist/staticwebapp.config.json
+          run: cp staticwebapp.config.json dist/staticwebapp.config.json && printf '{"relay":"%s"}\n' "$RELAY_URL" > dist/live.json
         windows:
           shell: pwsh
-          run: Copy-Item staticwebapp.config.json dist/staticwebapp.config.json -Force
+          run: Copy-Item staticwebapp.config.json dist/staticwebapp.config.json -Force; Set-Content -Path dist/live.json -Value ('{"relay":"' + $env:RELAY_URL + '"}') -Encoding ascii

@@ -41,6 +41,10 @@ Ran on Foundry 2026-10-23: evaluator `audiostands-numeric-truth:2`, run status *
 
 "Waits ÷N" shortens only the idle time between shots; every measured step runs at real speed. Each run opens its connections with one untimed warm-up call first, as a live service would before kick-off. Nearest-rank percentiles; with this few build-ups p95 is close to the maximum.
 
+**Live spoken questions (Stage 7): end of the fan's speech → first answer audio**
+
+Not measured yet: `python eval/qa_latency.py run …` then `summarise` (needs the deployed relay).
+
 ## Q&A eval (Person B)
 
 Not yet: `eval/qa.json` is not in the repo.
