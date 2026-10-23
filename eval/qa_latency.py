@@ -2,9 +2,14 @@
 
     python eval/qa_latency.py audio                         # once: B's questions as speech (Azure TTS, a "fan" voice)
     python eval/qa_latency.py run --relay wss://<relay>/voice --origin https://<site>
+    python eval/qa_latency.py browser --site https://<site> [--relay https://<relay>] --only ball_attack
+                                                            # the real page in Chromium, question as a fake mic
     python eval/qa_latency.py summarise                     # contracts/golden/a/live_*.jsonl -> eval/report.json
     python eval/build_report.py                             # -> eval/report.md
 
+`browser` drives the deployed page itself (Playwright library; Chromium's fake mic plays the question as a WAV):
+Start -> Ask -> "Ask out loud", then reads the page's golden turns (?debug=1 exposes them). The crowd duck around the
+answer is B's AskController.run() and B's tests check it; the ?debug=1 panel shows the excitement level, not the duck.
 `run` is a headless fan: it streams each question's PCM to the relay in real time (20 ms chunks, then silence, like an
 open mic), so Voice Live's own VAD, transcription, tools and voice all run as they do for the browser. Each answered
 turn is a golden record (TEAM_SPLIT.md seam 4: question, tool calls with args, results, spoken answer, latency; no keys,
@@ -164,6 +169,63 @@ async def run(relay: str, origin: str | None, only: list[str] | None) -> int:
     return 0
 
 
+# ---------------------------------------------------------------- browser
+def wav(case: dict) -> Path:
+    """The question as a mono 16-bit WAV for Chromium's fake mic: 1 s of quiet, the question, then 14 s of quiet."""
+    import wave
+
+    out = AUDIO / f"{case['id']}.wav"
+    pcm = bytes(2 * RATE) + (AUDIO / f"{case['id']}.pcm").read_bytes() + bytes(2 * RATE * 14)
+    with wave.open(str(out), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(RATE)
+        w.writeframes(pcm)
+    return out
+
+
+def browser(site: str, relay: str | None, only: list[str] | None, play_s: float, headed: bool) -> int:
+    from playwright.sync_api import sync_playwright
+
+    todo = [c for c in cases() if not only or c["id"] in only]
+    url = site.rstrip("/") + "/?debug=1" + (f"&relay={relay}" if relay else "")
+    GOLDEN.mkdir(parents=True, exist_ok=True)
+    out = GOLDEN / f"live_{date.today().isoformat()}.jsonl"
+    run_id, rows = time.strftime("%Y%m%dT%H%M%S"), []
+    for c in todo:
+        with sync_playwright() as pw:
+            b = pw.chromium.launch(headless=not headed, args=[
+                "--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream",
+                f"--use-file-for-fake-audio-capture={wav(c)}", "--autoplay-policy=no-user-gesture-required"])
+            page = b.new_context(permissions=["microphone"]).new_page()
+            page.goto(url)
+            page.wait_for_function("() => /Ready/.test(document.getElementById('status').textContent)", timeout=60_000)
+            page.click("#start")                           # before "Ready" B's Start ignores the press
+            page.wait_for_function("() => !document.getElementById('ask').disabled && window.audioStandsLive",
+                                   timeout=60_000)
+            page.wait_for_timeout(play_s * 1000)           # let the match play a little before asking
+            page.click("#ask")
+            page.click("#ask-live")
+            page.wait_for_function("() => window.audioStandsLive.turns.length > 0 || "
+                                   "!document.getElementById('ask-menu').hidden", timeout=60_000)
+            page.wait_for_timeout(500)
+            turns = page.evaluate("() => window.audioStandsLive.turns")
+            presets = page.evaluate("() => !document.getElementById('ask-menu').hidden")
+            b.close()
+        t = turns[0] if turns else {"outcome": "fallback_to_presets" if presets else "no_turn", "latency_ms": None}
+        t.update({"case_id": c["id"], "asked": c["question"], "source": f"eval/qa_latency.py browser ({site})",
+                  "run": run_id,
+                  "spoiler_hits": spoiler_hits(t.get("answer") or "", c.get("expect", {}).get("spoiler_words", []))})
+        rows.append(t)
+        print(f"{c['id']:<24} {t.get('outcome')!s:<10} {t.get('latency_ms')!s:>6} ms  "
+              f"Q: {t.get('question')!r}  A: {(t.get('answer') or '')[:80]!r}")
+    with out.open("a", encoding="utf-8", newline="\n") as f:
+        for t in rows:
+            f.write(json.dumps(t, ensure_ascii=False) + "\n")
+    print(f"wrote {len(rows)} turns to {out.relative_to(ROOT)}")
+    return 0
+
+
 # ---------------------------------------------------------------- summarise
 def pct(xs: list[float], p: float) -> float | None:
     if not xs:
@@ -225,11 +287,19 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--relay", required=True, help="wss://<relay host>/voice (or ws://localhost:8080/voice)")
     r.add_argument("--origin", help="Origin header, e.g. the site URL (the relay accepts only its own pages)")
     r.add_argument("--only", nargs="*", help="case ids")
+    w = sub.add_parser("browser")
+    w.add_argument("--site", required=True, help="the page, e.g. https://<swa host> or http://localhost:5173")
+    w.add_argument("--relay", help="relay base URL to use instead of /live.json (debug override)")
+    w.add_argument("--only", nargs="*", help="case ids")
+    w.add_argument("--play-s", type=float, default=8.0, help="seconds of match before asking")
+    w.add_argument("--headed", action="store_true")
     s = sub.add_parser("summarise")
     s.add_argument("files", nargs="*", type=Path)
     a = ap.parse_args(argv)
     if a.cmd == "audio":
         return make_audio()
+    if a.cmd == "browser":
+        return browser(a.site, a.relay, a.only, a.play_s, a.headed)
     if a.cmd == "run":
         return asyncio.run(run(a.relay, a.origin, a.only))
     return summarise([f.resolve() for f in a.files])
