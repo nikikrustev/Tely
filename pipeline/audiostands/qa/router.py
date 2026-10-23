@@ -14,7 +14,9 @@ from . import tools
 
 RULES: list[tuple[str, re.Pattern]] = [
     ("no_spoilers", re.compile(r"\b(who (will|is going to|gonna)|will (they|we|\w+) (win|score|lose)|scores? next|next goal"
-                               r"|predict|what happens next|going to happen|final score|who wins)\b")),
+                               r"|predict|what happens next|going to happen|final score|who wins"
+                               r"|(is|are) (there )?(a |another )?(goal|chance|shot|something)s? (coming|about to)"
+                               r"|will there be|are (they|we) going to|about to (score|happen))\b")),
     ("no_betting", re.compile(r"\b(bet|bets|betting|odds|gambl\w*|wager|bookie\w*)\b")),
     ("missed", re.compile(r"\b(miss|missed|catch (me )?up|while i was|i was away|recap)\b")),
     ("last", re.compile(r"\b(what (just )?happened|just now|last (event|thing|play)|recent|replay)\b")),

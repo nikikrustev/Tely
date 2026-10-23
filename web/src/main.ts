@@ -183,29 +183,135 @@ async function startApp(): Promise<void> {
     }
   };
 
+  // ---- one audio setup, shared by Start, "Learn the sounds" and Bluetooth calibration (each needs a tap first) ----
+  let audio: { ctx: AudioContext; st: InstanceType<typeof AudioStands>; c: InstanceType<typeof CrowdEngine> } | null = null;
+  const ensureAudio = async () => {
+    if (audio) { await audio.ctx.resume(); return audio; }
+    const actx = new AudioContext({ latencyHint: 'balanced' });
+    const nav = navigator as Navigator & { audioSession?: { type: string } };
+    if (nav.audioSession) nav.audioSession.type = 'playback'; // iOS: play even with the silent switch on (file 37)
+    await actx.resume();
+    const st = new AudioStands(actx);
+    const c = new CrowdEngine(actx, st.crowdIn, await loadCrowdBuffers(actx));
+    c.setOutputGain(crowdGainFor(settings.crowdMix));
+    crowdBus.target = c;
+    c.start();
+    audio = { ctx: actx, st, c };
+    stands = st;
+    crowd = c;
+    return audio;
+  };
+
+  // ---- "Learn the sounds" (Stage 8 item 2): skippable guided tour on the Start screen ----
+  const learnBtn = $<HTMLButtonElement>('learn');
+  let tour: { skip(): void } | null = null;
+  const stopTour = () => {
+    if (!tour) return;
+    tour.skip();
+    if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();   // stop mid-sentence, not after it
+  };
+  learnBtn.addEventListener('click', async () => {
+    if (tour) { stopTour(); return; }
+    const [{ Tour }, { speakFallback }] = await Promise.all([import('./learn/learn'), import('./ask/ask')]);
+    const a = await ensureAudio();
+    const t = new Tour({
+      stage: {
+        ball: (x, y, speed, at) => a.st.ballAt({ x, y, z: 0.11, speed, alive: true }, at),
+        ballOff: (at) => a.st.ballAt({ x: 0, y: 0, z: 0.11, speed: 0, alive: false }, at),
+        earcon: (kind, x, y, at) => { a.st.earcon(kind, x, y, at); },
+        crowd: (e, at) => a.c.setState({ excitement: e, valence: 0.2, danger: e > 0.5 ? 0.6 : 0 }, at),
+        heartbeat: (x) => { if (x > 0) haptics.setTension(x); else haptics.stopAll(); },
+        now: () => a.ctx.currentTime,
+      },
+      speak: (text) => speakFallback(text),                 // the browser's voice (no keys); fixed phrases only
+      show: (text) => { status.textContent = text; },
+    });
+    tour = t;
+    learnBtn.textContent = 'Skip the tour';
+    say('Sound tour started. Press Escape to skip.');
+    try { await t.run(); } finally {
+      tour = null;
+      learnBtn.textContent = 'Learn the sounds again';
+      say(t.skipped ? 'Tour skipped. Press Start to hear the match.' : 'Tour finished. Press Start to hear the match.');
+      start.focus();
+    }
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && tour) stopTour(); });
+
+  // ---- Bluetooth calibration (Stage 8 item 3) ----
+  const calBtn = $<HTMLButtonElement>('calibrate'), tapBtn = $<HTMLButtonElement>('tap'), cstatus = $('cstatus');
+  const showOffset = () => {
+    cstatus.textContent = settings.audioOffsetMs === null ? 'Not calibrated: using what the browser reports.'
+      : `Your headphones add about ${settings.audioOffsetMs} milliseconds. Vibrations are timed for that.`;
+  };
+  showOffset();
+  calBtn.addEventListener('click', async () => {
+    const { Calibration, perfMapper } = await import('./haptics/calibrate');
+    const a = await ensureAudio();
+    const cal = new Calibration({
+      click: (at) => { a.st.earcon('ping', 0, 0, at); },
+      ctxNow: () => a.ctx.currentTime,
+      toPerf: perfMapper(a.ctx),
+      perfNow: () => performance.now(),
+      wait: (ms) => new Promise((r) => setTimeout(r, ms)),
+    });
+    const onTap = () => cal.tap();
+    tapBtn.addEventListener('click', onTap);
+    calBtn.disabled = true;
+    tapBtn.hidden = false;
+    tapBtn.focus();
+    cstatus.textContent = 'Listen for 8 beats and tap on each one.';
+    await cal.play();
+    tapBtn.removeEventListener('click', onTap);
+    tapBtn.hidden = true;
+    calBtn.disabled = false;
+    const ms = cal.finish();
+    if (ms === null) {
+      cstatus.textContent = 'Not enough taps on the beat. Please try again.';
+    } else {
+      update({ audioOffsetMs: ms });
+      showOffset();
+    }
+    say(cstatus.textContent ?? '');
+    calBtn.focus();
+  });
+
+  // ---- sound radar (Stage 8 item 1): ?radar=1 or Settings ----
+  const radarToggle = $<HTMLInputElement>('radar-toggle');
+  const radarWanted = () => settings.radar || new URLSearchParams(location.search).get('radar') === '1';
+  radarToggle.checked = radarWanted();
+  let radar: { stop(): void } | null = null;
+  const syncRadar = async () => {
+    if (!src || !radarWanted()) { radar?.stop(); radar = null; return; }
+    if (radar) return;
+    const { startRadar, parseVtt } = await import('./radar/radar');
+    let cues: ReturnType<typeof parseVtt> = [];
+    try { cues = parseVtt(await (await fetch('/replay/v1/judge/captions_sdh.vtt')).text()); } catch { cues = []; }
+    const s = src;
+    // SEAM(B->A): reads A's captions_sdh.vtt (same seconds as the playhead) for the radar's caption line
+    radar = startRadar($('radar'), { now: () => s.now(), doc: s.doc, pulses: () => haptics.played.length, cues,
+      reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches });
+  };
+  radarToggle.addEventListener('change', () => { update({ radar: radarToggle.checked }); void syncRadar(); });
+
   start.addEventListener('click', async () => {
     if (!ctx) {
       start.disabled = true;
+      stopTour();
+      learnBtn.hidden = true;
       say('Loading the stadium…');
-      ctx = new AudioContext({ latencyHint: 'balanced' });
-      const nav = navigator as Navigator & { audioSession?: { type: string } };
-      if (nav.audioSession) nav.audioSession.type = 'playback'; // iOS: play even with the silent switch on (file 37)
-      await ctx.resume();
-      const st = new AudioStands(ctx);
-      stands = st;
-      const [buffers, doc, ch] = await Promise.all([loadCrowdBuffers(ctx), loadSegments(), loadChapters()]);
+      const a = await ensureAudio();
+      ctx = a.ctx;
+      const st = a.st, c = a.c;
+      const [doc, ch] = await Promise.all([loadSegments(), loadChapters()]);
       chapters = ch;
-      const c = new CrowdEngine(ctx, st.crowdIn, buffers);
-      crowd = c;
-      c.setOutputGain(crowdGainFor(settings.crowdMix));
-      crowdBus.target = c;
       const s = new ReplaySource(ctx, doc);
       src = s;
       clock.attach(s);
       const wired = wire(s, st, c, settings.club, undefined, {
         club: () => settings.club,
         haptics,
-        outputDelayMs: () => st.outputDelay * 1000,
+        outputDelayMs: () => settings.audioOffsetMs ?? st.outputDelay * 1000,   // calibrated delay wins
         onSecond: (sec) => {
           const line = scoreLine(sec.score);
           if (lastScore && line !== lastScore) say(line);
@@ -213,12 +319,12 @@ async function startApp(): Promise<void> {
         },
       });
       w = wired;
-      c.start();
       hap.keepAwake();
       s.play();
       wired.pump();
       setInterval(() => wired.pump(), 250);
       void setupAsk(ctx, st, c, s);
+      void syncRadar();
       if (new URLSearchParams(location.search).get('debug') === '1') {
         startDebugPanel($('debug'), { playhead: () => s.now(), crowdGain: () => c.level.gain.value, ballX: () => st.last.x });
       }

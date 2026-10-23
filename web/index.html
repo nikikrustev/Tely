@@ -8,6 +8,7 @@
       :root { color-scheme: light dark; --bg: #fff; --fg: #111; --accent: #b00020; --muted: #555; --panel: #f3f3f3; }
       @media (prefers-color-scheme: dark) { :root { --bg: #111; --fg: #f2f2f2; --accent: #ff6b7d; --muted: #bbb; --panel: #1d1d1d; } }
       body { margin: 0; background: var(--bg); color: var(--fg); font: 1.125rem/1.5 system-ui, sans-serif; }
+      [hidden] { display: none !important; }   /* a control's own display rule must never un-hide it */
       main { max-width: 40rem; margin: 0 auto; padding: 1.5rem 1rem; }
       h1 { font-size: 2rem; margin: 0 0 0.5rem; }
       h2 { font-size: 1.4rem; margin: 0 0 0.75rem; }
@@ -32,6 +33,13 @@
       input[type="range"] { width: 100%; }
       .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
       #debug { font: 0.95rem/1.4 ui-monospace, monospace; border: 1px dashed var(--muted); padding: 0.75rem; margin-top: 1rem; }
+      #learn { display: block; width: 100%; min-height: 3.25rem; margin-bottom: 0.75rem; }
+      #tap { min-height: 5rem; width: 100%; font-size: 1.5rem; font-weight: 700; }
+      #radar { margin-top: 1rem; }
+      #radar canvas { display: block; width: 100%; border-radius: 0.5rem; background: var(--panel); }
+      .radar-caption { min-height: 3em; font-size: 1.25rem; font-weight: 600; margin: 0.5rem 0 0; }
+      #settings > label { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; }
+      input[type="checkbox"] { width: 1.4rem; height: 1.4rem; }
     </style>
   </head>
   <body>
@@ -39,6 +47,7 @@
       <h1>Audio Stands</h1>
       <p class="notice" id="notice">A synthetic match with fictional clubs. Commentary uses AI voices. Headphones recommended.</p>
       <button id="start" type="button" autofocus>Start</button>
+      <button id="learn" type="button">Learn the sounds first (2 minutes)</button>
       <div class="row">
         <button id="next" type="button" disabled>Next big moment</button>
         <button id="settings-toggle" type="button" aria-expanded="false" aria-controls="settings">Settings</button>
@@ -79,8 +88,17 @@
           <button id="htest" type="button">Test vibration: did you feel it?</button>
           <p id="hstatus"></p>
         </fieldset>
+        <fieldset>
+          <legend>Bluetooth headphones delay</legend>
+          <p>Tap the Tap button (or press Space) on every beat you hear. It measures your headphones' delay so vibrations land with the sound.</p>
+          <button id="calibrate" type="button">Calibrate: tap along to 8 beats</button>
+          <button id="tap" type="button" hidden>Tap</button>
+          <p id="cstatus"></p>
+        </fieldset>
+        <label><input id="radar-toggle" type="checkbox" /> Show the sound radar (a visual pitch for sighted viewers)</label>
       </section>
 
+      <div id="radar" hidden aria-hidden="true"></div>
       <div id="debug" hidden aria-hidden="true"></div>
     </main>
     <!-- Live regions exist from page load, so screen readers announce later changes (file 32, WCAG 4.1.3).

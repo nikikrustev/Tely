@@ -12,7 +12,8 @@ requires-python = ">=3.12"
 dependencies = ["numpy>=2.0,<3"]   # movement.py only (element-wise maths; see its docstring)
 
 [project.optional-dependencies]
-dev = ["pytest>=9.1", "common-data-format-validator==0.1.1"]   # CDF v0.3.2 checker (MIT, file 26)
+dev = ["pytest>=9.1", "common-data-format-validator==0.1.1", "mcp==2.3.0"]   # CDF checker (MIT, file 26); MCP SDK (MIT)
+mcp = ["mcp==2.3.0"]   # the Stats MCP server (qa/mcp_server.py, file 18); open protocol, not Microsoft
 
 [tool.setuptools.packages.find]
 include = ["audiostands*"]

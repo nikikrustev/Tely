@@ -93,7 +93,7 @@ describe('settings', () => {
   it('round-trip through storage, and bad stored values fall back to defaults', () => {
     const mem = new Map<string, string>();
     const store: StorageLike = { getItem: (k) => mem.get(k) ?? null, setItem: (k, v) => { mem.set(k, v); } };
-    const mine = { club: 'A' as const, crowdMix: 0.2, haptics: 'events' as const, hapticStrength: 1.4 };
+    const mine = { ...DEFAULTS, club: 'A' as const, crowdMix: 0.2, haptics: 'events' as const, hapticStrength: 1.4, radar: true, audioOffsetMs: 180 };
     expect(saveSettings(mine, store)).toBe(true);
     expect(loadSettings(store)).toEqual(mine);
     mem.set(STORAGE_KEY, '{not json');
