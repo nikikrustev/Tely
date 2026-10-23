@@ -38,6 +38,32 @@ def _static(key: str) -> tuple[str, str]:
 
 
 # ---------------------------------------------------------------- players
+_NOT_NAMES = {"where", "is", "the", "how", "far", "has", "have", "run", "ran", "made", "many", "passes", "pass", "stats",
+              "stat", "for", "of", "did", "does", "what", "about", "player", "fast", "shots", "shot", "got", "scored",
+              "played", "doing", "now", "right", "and", "his", "her", "their", "reds", "red", "navy", "number", "keeper"}
+SURNAME_MIN, FIRST_MIN, CLEAR_MARGIN = 0.75, 0.85, 0.1   # ours: tuned on eval/qa_cases.jsonl (typos, shared first names)
+
+
+def _match_names(pool: list[dict], text: str) -> list[dict]:
+    """Players the words in `text` point to. A close surname scores its similarity (typos are fine); an exact first
+    name adds 0.5. One clear winner (>= CLEAR_MARGIN ahead of the next) is returned alone; a tie returns all tied
+    (e.g. "Gus" when two players are called Gus), so the caller asks "Which player?"."""
+    words = [w for w in re.findall(r"[a-z][a-z'-]+", text) if w not in _NOT_NAMES and len(w) >= 3]
+    ratio = lambda a, c: difflib.SequenceMatcher(None, a, c).ratio()
+    scored = []
+    for p in pool:
+        last = max((ratio(w, p["last_name"].lower()) for w in words), default=0.0)
+        first = max((ratio(w, p["first_name"].lower()) for w in words), default=0.0)
+        s = (last if last >= SURNAME_MIN else 0.0) + (0.5 if first >= FIRST_MIN else 0.0)
+        if s > 0:
+            scored.append((s, p))
+    if not scored:
+        return []
+    scored.sort(key=lambda x: -x[0])
+    top = scored[0][0]
+    return [p for s, p in scored if s > top - CLEAR_MARGIN]
+
+
 def find_player(b: Bundle, q: str) -> tuple[dict | None, dict | None]:
     """By shirt number ("9", "number 9", "Navy 9") or by name (fuzzy). Ambiguous -> {error, candidates}."""
     text = str(q).strip().lower()
@@ -46,16 +72,10 @@ def find_player(b: Bundle, q: str) -> tuple[dict | None, dict | None]:
     num = re.search(r"\b(\d{1,2})\b", text)
     if num:
         hits = [p for p in pool if p["jersey_number"] == int(num.group(1))]
+    elif re.search(r"\b(goal)?keeper\b|\bgoalie\b", text):
+        hits = [p for p in pool if p["position"] == "GK"]       # "the keeper" -> both, "Reds keeper" -> one
     else:
-        name = re.sub(r"\b(reds?|navy|number|no\.?)\b", " ", text).strip()
-        keys: dict[str, list[dict]] = {}
-        for p in pool:
-            for k in (p["name"].lower(), p["last_name"].lower(), p["first_name"].lower()):
-                keys.setdefault(k, []).append(p)
-        close = difflib.get_close_matches(name, list(keys), n=3, cutoff=0.6)
-        hits = list({p["id"]: p for k in close for p in keys[k]}.values())
-        if close and close[0] in (name,) and len(keys[close[0]]) == 1:
-            hits = keys[close[0]]
+        hits = _match_names(pool, text)
     if len(hits) != 1:
         cands = [f"{p['name']} ({b.team_name(p['side'])} #{p['jersey_number']})" for p in (hits or pool)[:4]]
         return None, {"error": "ambiguous_or_unknown_player", "candidates": cands}

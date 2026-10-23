@@ -11,9 +11,13 @@ export interface Settings {
   haptics: HapticMode;
   /** Vibration strength: 0.7 low, 1 medium, 1.4 high (file 41). */
   hapticStrength: number;
+  /** Show the visible sound radar (for sighted friends and the video). */
+  radar: boolean;
+  /** Measured headphone delay in ms (Bluetooth calibration), or null to use what the browser reports. */
+  audioOffsetMs: number | null;
 }
 
-export const DEFAULTS: Settings = { club: 'H', crowdMix: 0.5, haptics: 'full', hapticStrength: 1 };
+export const DEFAULTS: Settings = { club: 'H', crowdMix: 0.5, haptics: 'full', hapticStrength: 1, radar: false, audioOffsetMs: null };
 export const STORAGE_KEY = 'audiostands.settings.v1';
 
 /** The parts of Storage we use, so tests can pass a fake (or one that throws). */
@@ -38,6 +42,8 @@ export function sanitize(x: unknown): Settings {
     crowdMix: num(o.crowdMix, DEFAULTS.crowdMix, 0, 1),
     haptics: o.haptics === 'off' || o.haptics === 'events' || o.haptics === 'full' ? o.haptics : DEFAULTS.haptics,
     hapticStrength: num(o.hapticStrength, DEFAULTS.hapticStrength, 0.5, 1.5),
+    radar: o.radar === true,
+    audioOffsetMs: typeof o.audioOffsetMs === 'number' && Number.isFinite(o.audioOffsetMs) ? num(o.audioOffsetMs, 0, 0, 500) : null,
   };
 }
 
