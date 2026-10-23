@@ -8,7 +8,7 @@ param token string                       // short unique suffix
 param workspaceName string               // monitor.bicep's Log Analytics workspace (console logs, golden turns)
 param foundryName string
 param siteUrl string                     // the Static Web App, the only page origin allowed to open /voice
-param relayExists bool = false           // azd sets SERVICE_RELAY_RESOURCE_EXISTS; keeps the deployed image on re-provision
+param relayImage string = ''             // RELAY_IMAGE from relay/deploy.py (azd predeploy hook); '' before the first push
 param ttsVoice string
 param voiceLiveModel string
 param demoMode string
@@ -60,16 +60,12 @@ resource cae 'Microsoft.App/managedEnvironments@2025-01-01' = {
   }
 }
 
-resource old 'Microsoft.App/containerApps@2025-01-01' existing = if (relayExists) {
-  name: appName
-}
-
 var fqdn = '${appName}.${cae.properties.defaultDomain}'
 
 resource app 'Microsoft.App/containerApps@2025-01-01' = {
   name: appName
   location: location
-  tags: union(tags, { 'azd-service-name': 'relay' })   // azd finds the deploy target by this tag
+  tags: tags
   identity: { type: 'UserAssigned', userAssignedIdentities: { '${id.id}': {} } }
   dependsOn: [ acrPull ]
   properties: {
@@ -89,7 +85,7 @@ resource app 'Microsoft.App/containerApps@2025-01-01' = {
       containers: [
         {
           name: 'relay'
-          image: relayExists ? old!.properties.template.containers[0].image : 'mcr.microsoft.com/k8se/quickstart:latest'
+          image: empty(relayImage) ? 'mcr.microsoft.com/k8se/quickstart:latest' : relayImage
           resources: { cpu: json('0.25'), memory: '0.5Gi' }
           env: [
             { name: 'FOUNDRY_RESOURCE', value: foundryName }
@@ -112,3 +108,4 @@ output url string = 'https://${fqdn}'
 output identityPrincipalId string = id.properties.principalId
 output registryEndpoint string = acr.properties.loginServer
 output registryName string = acr.name
+output appName string = app.name

@@ -220,6 +220,18 @@ def test_latency_restarts_with_each_question():
     run(go())
 
 
+def test_ai_voice_disclosure_is_said_once():
+    async def go():
+        link = FakeLink()
+        br, _, _, _ = make_bridge(link=link)
+        await br.ask(B.t0)
+        for _ in range(2):
+            await br.handle({"type": "response.audio_transcript.done", "transcript": "I'm an AI voice. Nil nil."})
+        notes = [e for e in link.sent if "already told the fan" in json.dumps(e)]
+        assert len(notes) == 1 and notes[0]["item"]["role"] == "system"
+    run(go())
+
+
 def test_tool_budget_per_answer():
     async def go():
         br, _, _, _ = make_bridge(Caps(tool_calls_per_answer=2))

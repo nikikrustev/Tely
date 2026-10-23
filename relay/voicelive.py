@@ -39,12 +39,19 @@ def voice() -> str:
     return os.environ.get("TTS_VOICE", "en-US-Brian:DragonHDLatestNeural")
 
 
-# Ours, appended to B's PERSONA: how the relay's notes and the tools' clock relate. No facts, no match content.
+# Ours, appended to B's PERSONA: how the relay's notes and the tools relate. No facts, no match content.
 HOSTING_NOTE = """
 # Listening position
 Before each question the system notes the match clock the fan is hearing, as [LISTENER AT mm:ss]. The tools already
 answer as of that moment; you can't ask them about any other time, and there is nothing later to know.
+
+# Tool speed
+The tools answer instantly. Don't say you are going to check or look something up: call the tool, then answer.
 """
+
+# Sent once, after the first answer that said it (the first 31-question run said "I'm an AI voice" in every answer,
+# often twice: the pre-tool and post-tool responses each took themselves for the "first answer" in B's PERSONA).
+DISCLOSED_NOTE = "[NOTE] You have already told the fan you are an AI voice. Don't say it again."
 
 
 def transcription_prompt(b: Bundle) -> str:
@@ -149,6 +156,7 @@ class Bridge:
         self._eos: float | None = None
         self._first_audio: float | None = None
         self._after_tools = False
+        self.disclosed = False
 
     async def start(self) -> None:
         await self.link.send(session_update(self.bundle))
@@ -251,7 +259,12 @@ class Bridge:
                 turn["facts_latency_ms"] = round((now - self._eos) * 1000)
             await self.to_client_audio(base64.b64decode(ev.get("delta") or ""))
         elif t in ("response.audio_transcript.done", "response.output_audio_transcript.done") and turn is not None:
-            turn["answer"] = " ".join(s for s in (turn["answer"], (ev.get("transcript") or "").strip()) if s)
+            said = (ev.get("transcript") or "").strip()
+            turn["answer"] = " ".join(s for s in (turn["answer"], said) if s)
+            if not self.disclosed and "ai voice" in said.lower():
+                self.disclosed = True
+                await self.link.send({"type": "conversation.item.create", "item": {
+                    "type": "message", "role": "system", "content": [{"type": "input_text", "text": DISCLOSED_NOTE}]}})
         elif t == "response.function_call_arguments.done":
             await self._tool(ev)
         elif t == "response.done":

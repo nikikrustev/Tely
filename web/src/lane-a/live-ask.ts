@@ -67,6 +67,8 @@ type Msg = { type: string; [k: string]: unknown };
 export class LiveAsk implements LiveAskHandler {
   /** Golden turns this page saw (relay records: question, tools, answer, latency). eval reads them in ?debug=1. */
   readonly turns: unknown[] = [];
+  /** [ms, what] for each ask, refusal and fallback: how fast the presets took over (eval, ?debug=1). */
+  readonly events: [number, string][] = [];
   private sock: RelaySocket | null = null;
   private ready: Promise<Refusal | null> | null = null;
   private listener: ((m: Msg | ArrayBuffer) => void) | null = null;
@@ -77,6 +79,7 @@ export class LiveAsk implements LiveAskHandler {
 
   async ask(playheadS: number): Promise<void> {
     if (this.stopCurrent) return;
+    this.events.push([this.io.now(), 'ask']);
     let r: Refusal | null;
     if (this.io.now() < this.downUntil) r = UNAVAILABLE;
     else {
@@ -94,11 +97,13 @@ export class LiveAsk implements LiveAskHandler {
   }
 
   private async refuse(r: Refusal): Promise<void> {
+    this.events.push([this.io.now(), `refusal:${r.reason}`]);
     if (LASTING.has(r.reason)) {
       this.downUntil = this.io.now() + DOWN_FOR_MS;
       this.drop();
     }
     await this.io.clip(r.clip, r.say);    // the fan is told why, in the commentator's voice
+    this.events.push([this.io.now(), 'presets']);
     this.io.showPresets();
   }
 

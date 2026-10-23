@@ -43,7 +43,11 @@ Ran on Foundry 2026-10-23: evaluator `audiostands-numeric-truth:2`, run status *
 
 **Live spoken questions (Stage 7): end of the fan's speech → first answer audio**
 
-Not measured yet: `python eval/qa_latency.py run …` then `summarise` (needs the deployed relay).
+| Measured | Questions (answered) | p50 | p95 | Max | p50 / p95 to the facts | Client p50 / p95 | Tool calls | Spoiler hits | Model / voice |
+|---|---|---|---|---|---|---|---|---|---|
+| 2026-10-23 16:40 | 31 (31) | 1.14 s | 1.82 s | 2.85 s | 2.66 s / 3.35 s | 0.95 s / 1.69 s | 43 | 0 | gpt-realtime-2.1-mini / en-US-Brian:DragonHDLatestNeural |
+
+Outcomes: {"answered": 31}. Latency is measured in the relay (relay: fan's last word reached the relay -> first answer audio from Voice Live (includes the 500 ms VAD silence; often a short preamble); facts: the same, to the first audio after the tool results went back; client: relay speech_stopped message -> first answer bytes). "To the facts" runs to the first audio after the tool results went back, so a short "Let me check" preamble doesn't flatter it. No target; for comparison only, a rival's median is 4.66 s (file 42). Golden turns: `contracts/golden/a/live_2026-10-23.jsonl`. Nearest-rank percentiles.
 
 ## Q&A eval (Person B)
 

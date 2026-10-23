@@ -1,6 +1,7 @@
 {
   "inputs": [
-    { "type": "promptString", "id": "azure-sub", "description": "Azure subscription ID (dev)" }
+    { "type": "promptString", "id": "azure-sub", "description": "Azure subscription ID (dev)" },
+    { "type": "promptString", "id": "playhead", "description": "Listener's playhead in seconds since the period start (judge cut 670-1150; 860 = 59:20)", "default": "860" }
   ],
   "servers": {
     "azure": {
@@ -10,6 +11,11 @@
                "--namespace", "group", "--namespace", "monitor", "--namespace", "containerapps",
                "--namespace", "deploy", "--namespace", "resourcehealth", "--namespace", "bicepschema"],
       "env": { "AZURE_SUBSCRIPTION_ID": "${input:azure-sub}" }
+    },
+    "audiostands-stats": {
+      "type": "http",
+      "url": "https://ca-relay-calef3.icycliff-4b45d13b.swedencentral.azurecontainerapps.io/mcp",
+      "headers": { "X-AudioStands-Playhead": "${input:playhead}" }
     }
   }
 }

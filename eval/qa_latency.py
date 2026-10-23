@@ -205,19 +205,23 @@ def browser(site: str, relay: str | None, only: list[str] | None, play_s: float,
                                    timeout=60_000)
             page.wait_for_timeout(play_s * 1000)           # let the match play a little before asking
             page.click("#ask")
+            clicked = page.evaluate("() => performance.now()")
             page.click("#ask-live")
             page.wait_for_function("() => window.audioStandsLive.turns.length > 0 || "
                                    "!document.getElementById('ask-menu').hidden", timeout=60_000)
             page.wait_for_timeout(500)
             turns = page.evaluate("() => window.audioStandsLive.turns")
             presets = page.evaluate("() => !document.getElementById('ask-menu').hidden")
+            events = page.evaluate("() => window.audioStandsLive.events")
             b.close()
         t = turns[0] if turns else {"outcome": "fallback_to_presets" if presets else "no_turn", "latency_ms": None}
         t.update({"case_id": c["id"], "asked": c["question"], "source": f"eval/qa_latency.py browser ({site})",
                   "run": run_id,
+                  # ms from pressing "Ask out loud": B's hold (if a chance is coming), our refusal, the presets
+                  "page_events": [[round(t - clicked), what] for t, what in events],
                   "spoiler_hits": spoiler_hits(t.get("answer") or "", c.get("expect", {}).get("spoiler_words", []))})
         rows.append(t)
-        print(f"{c['id']:<24} {t.get('outcome')!s:<10} {t.get('latency_ms')!s:>6} ms  "
+        print(f"{c['id']:<24} {t.get('outcome')!s:<10} {t.get('latency_ms')!s:>6} ms  {t['page_events']}  "
               f"Q: {t.get('question')!r}  A: {(t.get('answer') or '')[:80]!r}")
     with out.open("a", encoding="utf-8", newline="\n") as f:
         for t in rows:
@@ -261,18 +265,20 @@ def summary(turns: list[dict]) -> dict:
     }
 
 
-def summarise(files: list[Path]) -> int:
+def summarise(files: list[Path], runs: list[str] | None = None) -> int:
     files = files or sorted(GOLDEN.glob("live_*.jsonl"))
     turns = []
     for f in files:
         for s in f.read_text(encoding="utf-8").splitlines():
             if s.strip():
                 turns.append({**json.loads(s), "_file": f.relative_to(ROOT).as_posix()})
+    if runs:                                         # e.g. only the run on the current prompt and relay
+        turns = [t for t in turns if t.get("run") in runs]
     if not turns:
         print("no golden turns yet")
         return 1
     rep = json.loads(REPORT.read_text(encoding="utf-8")) if REPORT.is_file() else {}
-    rep["qa_latency"] = s = summary(turns)
+    rep["qa_latency"] = s = {**summary(turns), "runs": sorted({t.get("run") for t in turns if t.get("run")})}
     REPORT.write_text(json.dumps(rep, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     print(f"qa_latency: {s['answered']}/{s['questions']} answered, p50 {s['p50_ms']} ms, p95 {s['p95_ms']} ms "
           f"(client p50 {s['client_p50_ms']} ms), spoiler hits {s['spoiler_hits']}")
@@ -295,6 +301,7 @@ def main(argv: list[str] | None = None) -> int:
     w.add_argument("--headed", action="store_true")
     s = sub.add_parser("summarise")
     s.add_argument("files", nargs="*", type=Path)
+    s.add_argument("--run", action="append", help="only these run ids (repeatable)")
     a = ap.parse_args(argv)
     if a.cmd == "audio":
         return make_audio()
@@ -302,7 +309,7 @@ def main(argv: list[str] | None = None) -> int:
         return browser(a.site, a.relay, a.only, a.play_s, a.headed)
     if a.cmd == "run":
         return asyncio.run(run(a.relay, a.origin, a.only))
-    return summarise([f.resolve() for f in a.files])
+    return summarise([f.resolve() for f in a.files], a.run)
 
 
 if __name__ == "__main__":

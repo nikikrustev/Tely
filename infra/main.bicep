@@ -27,8 +27,8 @@ param foundryName string
 @description('Its resource group (the bootstrap made it in rg-as-dev)')
 param foundryResourceGroup string = 'rg-as-dev'
 
-@description('azd sets SERVICE_RELAY_RESOURCE_EXISTS after the first deploy, so re-provisioning keeps the image')
-param relayExists bool = false
+@description('Relay image, saved by relay/deploy.py (azd predeploy hook) so re-provisioning keeps it; empty before the first push')
+param relayImage string = ''
 
 @description('Answer voice: the commentary voice (D13)')
 param ttsVoice string = 'en-US-Brian:DragonHDLatestNeural'
@@ -83,7 +83,7 @@ module relay 'relay.bicep' = {
     workspaceName: monitor.outputs.workspaceName
     foundryName: foundryName
     siteUrl: 'https://${web.outputs.defaultHostname}'
-    relayExists: relayExists
+    relayImage: relayImage
     ttsVoice: ttsVoice
     voiceLiveModel: voiceLiveModel
     demoMode: demoMode
@@ -105,6 +105,7 @@ output WEB_URL string = 'https://${web.outputs.defaultHostname}'
 output APPLICATIONINSIGHTS_NAME string = monitor.outputs.appInsightsName
 // azd keeps outputs in .azure/judge/.env (git-ignored). tracing.py reads it with `azd env get-value`; nothing prints it.
 output APPLICATIONINSIGHTS_CONNECTION_STRING string = monitor.outputs.connectionString
-// azd pushes the relay image here (remoteBuild); the web predeploy hook writes RELAY_URL into dist/live.json.
+// relay/deploy.py pushes the relay image here; the web predeploy hook writes RELAY_URL into dist/live.json.
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = relay.outputs.registryEndpoint
+output RELAY_APP_NAME string = relay.outputs.appName
 output RELAY_URL string = relay.outputs.url
