@@ -198,3 +198,61 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   site plays with the B4 UI. All 98 requests went to the one host and returned 200. The live manifest lists 104 files
   and Brian, the 70 cues include 22 ball lines, exactly the 64 cue MP3s were fetched, and the console showed no
   errors.
+
+## D16. Stage 5: the Director on Foundry, its firewall, tracing and the eval (23 Oct 2026)
+
+- **Quota is there, so `DIRECTOR=foundry`.** `scripts/smoke_azure.py` passed for `gpt-5-mini` (D7) on 23 Oct, so the rules-only
+  fallback (BUILD_PLAN drop-list item 5) was not needed. The Director is an Agent Framework `Agent` on `FoundryChatClient`
+  (`agent-framework-core` 1.23, `agent-framework-foundry` 1.15; keyless), with strict JSON-schema output and
+  `reasoning.effort = minimal`.
+- **One window per shot, not per 10 s tick.** The Director first learns of a shot when truth time reaches it (file 43 §2), so
+  each shot is one window [shot − D, shot] and one call. A shot less than 10 s after the last call is planned by rules and logged
+  as `budget` (file 43 §4: at most one call per 10 s). The judge cut has 4 shots, so **4 calls, about 490 tokens each**.
+- **The firewall is an allow-list.** `features()` copies event types, sub-types, attacking/defending, zones, xG, body part,
+  seconds to the shot, minute, score and tension at P and 4 s before the shot. It never copies `outcome_type`, the shot's end point, VAR,
+  related saves/blocks, or B's `spoken`/`spoken_past` text. A test rewrites each shot's ending and checks the features are
+  byte-identical.
+- **The Verifier is code.** It checks the schema by hand (types, ranges, enum, no extra fields), plus two facts: `counter` needs a
+  regain by the attacking team in the window, and `set_piece` needs a set piece. The very first live reply (`build_up_level 2,
+  lead_s 1, hold_ms 1200`, before the prompt gave ranges) is now a test case it must reject. `lead_s` is held to 3.5–4.5 s (Stage 3:
+  LEAD_S ± 0.5), which keeps at least 5.5 s of the 6 s wall budget. Then truth_check + spoiler_check run on every text the build-up
+  may speak. Any failure (429, timeout, quota, bad JSON, schema, a failed check) sends that window to the rules Director, and the
+  reason is logged.
+- **The rules Director is Stage 3, byte for byte.** `DIRECTOR=rules` rebuilds the judge cut with 0 TTS calls and only the new
+  `source.director` field changed. So falling back can never make the show worse than the MVP.
+- **What the plan changes.** `build_up_level` (below 0.3: no build-up; else the voice intensity and style band), `lead_s`, `hold_ms`
+  (an SSML break after the line) and `hint_type`, which picks the tail ("on the break!", "from the set piece!", "real danger here!").
+  A hold is dropped before any words are: the planner tries each text with the hold, then without, then the next shorter text.
+  A new short tail ("Reds... Orlani... danger!") keeps the hint when only 3.8 s are free before the reveal.
+  A build-up must now also **end by its shot** (planner, strict pass first; it runs on only if no text fits): a shorter
+  Director tail once let "Attacking third, Navy... Olvholm... here's a chance!" run 1.5 s past the header and push out the call
+  "Fenford, the header!". Every Stage 3 build-up already ended by its shot, so the rules output is unchanged (checked).
+- **Result on the judge cut (Brian HD):** the Director built up for the same two chances as the rules (xG 0.217 and 0.083) and
+  skipped the two hopeful shots (0.014, 0.011). It chose "danger" for both and a 300–350 ms hold. 70 lines (same as Stage 3),
+  truth_check 70/70, **0 spoiler leaks**, 10/10 spoken numbers verified, 0 fallbacks. Build-ups: "Navy coming... Olvholm...
+  here's a chance!" and "Reds... Orlani... danger!". 13 new MP3s (117 files, 3.8 MB). One orphan MP3 from a discarded hold
+  variant was deleted, and every cached MP3 is read by the replay plan or the rules plan (0 orphans).
+- **Replay keeps the bundle deterministic.** `DIRECTOR=foundry` records every reply to `pipeline/audiostands/agents/recorded/judge.json`
+  (features, raw reply, latency, tokens; no keys or audio). Without `DIRECTOR` set, `build_bundle` replays that file, so a rebuild,
+  CI, or Nikolay gets the same plans with no Azure. If B's match changes, the replay no longer matches, those windows fall back to
+  rules, and a test fails, asking for a re-record.
+- **Tracing:** a workspace-based Application Insights `appi-as-judge` + Log Analytics `log-as-judge` (1 GB/day cap) were added to
+  `infra/` and provisioned with `azd provision`. The connection string lives only in the git-ignored azd env.
+  `configure_azure_monitor()` + `enable_instrumentation()` (file 18 §5); prompt text isn't captured. Verified with a Log
+  Analytics query: `workflow.run`, `executor.process director|commentator|verifier|tts`, `invoke_agent Director`, `chat gpt-5-mini`
+  under service `audiostands-director`. The App Insights resource is not linked to the Foundry project, so the Foundry "Traces"
+  tab stays empty (manual step if we want it there).
+- **Seen in the traces:** each new `DefaultAzureCredential` first probes the managed-identity endpoint on a laptop (~1 s per
+  token fetch) before it uses the az login. The token is then cached, and the real-time harness opens connections with one
+  untimed warm-up call.
+- **Numeric truth on Foundry:** the same `grade()` from file 18 ran as a code-based custom evaluator (preview,
+  `beta.evaluators.create_version` + an OpenAI-style eval run): `audiostands-numeric-truth`, 4/4 items passed, matching the local grader.
+- **Real-time latency (`python -m audiostands.eval --realtime`):** plan → verify → TTS per build-up, from the moment the shot
+  enters the look-ahead to the moment its MP3 exists, against D − lead_s. Wall clock, 1 run: 2/2 within budget, 3.75 s each.
+  Waits ÷10, 5 runs: 10/10 within budget (5.8–6.0 s), p50 2.98 s, p95 3.56 s (plan p95 2.41 s, TTS p95 1.64 s). Each run opens
+  its connections with one untimed warm-up call. The cold first call on 23 Oct took 6.2 s, which alone would miss the budget,
+  so a live service must warm up before kick-off.
+- **Skipped (BUILD_PLAN "optional, only if < 3 h used"):** LLM colour lines. The stage took longer than 3 h, so every spoken line
+  stays a template, and the report says "LLM lines: 0".
+- **A/B listen still to do (potencialbg):** rules vs Director differ only in the two build-ups' wording ("this could open up!" →
+  "here's a chance!"; "Reds coming... Orlani... space opening up!" → "Reds... Orlani... danger!") and the hold. Record the pick here.

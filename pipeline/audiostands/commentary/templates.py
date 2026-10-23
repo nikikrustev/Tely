@@ -141,12 +141,33 @@ def describe(m: Match, e: dict) -> Draft | None:
     return None
 
 
-def build(m: Match, shot: dict) -> Draft | None:
-    """Look-ahead build-up at shot - LEAD_S. Uses the shot's time, team and xG only, never its outcome (file 39)."""
+# What the build-up says about the kind of danger: the Director's hint_type (Stage 5). "danger" and "none" are the
+# Stage 3 phrasings, so the rules Director reproduces the Stage 3 script word for word.
+HINT_TAILS = {"danger": ["here's a chance!", "real danger here!"],
+              "none": ["this could open up!", "space opening up!"],
+              "counter": ["on the break!", "they're breaking quickly!"],
+              "set_piece": ["from the set piece!", "bodies in the box!"]}
+SHORT_TAILS = {"danger": "danger!", "none": "space!", "counter": "on the break!", "set_piece": "set piece!"}
+BUILD_MIN_LEVEL = 0.3  # a Director plan below this level means "no build-up for this chance"
+
+
+def build(m: Match, shot: dict, plan=None) -> Draft | None:
+    """Look-ahead build-up at shot - lead_s. Uses the shot's time, team and xG only, never its outcome (file 39).
+
+    plan is the Director's verified tension plan (audiostands.agents: build_up_level, lead_s, hold_ms, hint_type).
+    None means the Stage 3 rules, which the rules Director also returns.
+    """
     xg = m.sig(shot["id"])["xg"] or 0.0
-    if xg < BUILD_MIN_XG:
-        return None
-    t = m.t(shot) - LEAD_S
+    if plan is None:
+        if xg < BUILD_MIN_XG:
+            return None
+        lead_s, hold_ms, hint = LEAD_S, 0, "danger" if xg >= 0.25 else "none"
+        intensity = None
+    else:
+        if plan.build_up_level < BUILD_MIN_LEVEL:
+            return None
+        lead_s, hold_ms, hint, intensity = plan.lead_s, plan.hold_ms, plan.hint_type, plan.build_up_level
+    t = m.t(shot) - lead_s
     if t < m.t_start:
         return None
     side = m.ball(t)["poss"] or m.side(shot)
@@ -154,17 +175,17 @@ def build(m: Match, shot: dict) -> Draft | None:
     holder, holder_ev = m.holder_at(t)
     who = f" {m.surname(holder)}..." if holder and m.players[holder]["side"] == side else ""
     rng = _rng(m, f"build:{shot['id']}")
-    tail = rng.choice(["here's a chance!", "real danger here!"] if xg >= 0.25 else
-                      ["this could open up!", "space opening up!"])
+    tail = rng.choice(HINT_TAILS[hint])
     where = zone_of_ball(m, t, side)
-    # Shorter fallbacks: the build-up must fit between shot - LEAD_S and the reveal, and is never dropped for length.
+    # Shorter fallbacks: the build-up must fit between shot - lead_s and the reveal, and is never dropped for length.
     texts = [f"{cap(where)}, {team}...{who} {tail}", f"{cap(where.split(',')[0])}, {team}...{who} {tail}",
-             f"{team} coming...{who} {tail}", f"{team}...{who}"]
+             f"{team} coming...{who} {tail}", f"{team}...{who} {SHORT_TAILS[hint]}", f"{team}...{who}"]
     evidence = (shot["id"],) + ((holder_ev,) if who else ())
-    # Intensity from tension (xG-weighted look-ahead, B's signals) and xG only: identical for a goal and a save.
-    intensity = min(1.0, max(m.second(t)["tension"] * 0.8, 0.5 + xg))
+    if intensity is None:
+        # Intensity from tension (xG-weighted look-ahead, B's signals) and xG only: identical for a goal and a save.
+        intensity = min(1.0, max(m.second(t)["tension"] * 0.8, 0.5 + xg))
     return Draft("build", t, 5, texts, "urgent" if intensity < 0.75 else "excited", intensity, evidence,
-                 stale_s=0.5, team=m.side(shot), tacton="attack", key=f"build:{shot['id']}")
+                 stale_s=0.5, pause_ms=hold_ms, team=m.side(shot), tacton="attack", key=f"build:{shot['id']}")
 
 
 def call(m: Match, shot: dict) -> Draft:
