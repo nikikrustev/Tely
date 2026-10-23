@@ -1,6 +1,6 @@
-# OWNER: A (potencialbg). Needs no Azure credentials, ever: it installs pipeline/pyproject.toml only,
-# never pipeline/requirements-azure.txt. Tests are found by folder (pipeline/tests/{a,b}, web/tests/{a,b}),
-# so a new test file in either lane runs without editing this workflow.
+# OWNER: A (potencialbg). Needs no Azure credentials, ever: it installs pipeline/pyproject.toml (and the relay's
+# requirements-test.txt) only, never pipeline/requirements-azure.txt or relay/requirements.txt. Tests are found by
+# folder (pipeline/tests/{a,b}, web/tests/{a,b}, relay/tests), so a new test file runs without editing this workflow.
 name: CI
 
 on:
@@ -30,6 +30,27 @@ jobs:
             echo "::error::Azure/Foundry/OpenAI packages belong in pipeline/requirements-azure.txt"; exit 1
           fi
       - run: pytest
+
+  relay:
+    # Stage 7 relay: Voice Live is a fake in the tests, so no Azure package or credential is installed here either.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            pipeline/pyproject.toml
+            relay/requirements-test.txt
+      - run: pip install -e "./pipeline[dev]" -r relay/requirements-test.txt
+      - name: No Microsoft packages in the relay's test requirements (TEAM_SPLIT.md rule 3)
+        run: |
+          if grep -nEi '^(azure-|agent-framework|openai)' relay/requirements-test.txt; then
+            echo "::error::Azure packages belong in relay/requirements.txt (the image), never in CI"; exit 1
+          fi
+      - run: pytest
+        working-directory: relay
 
   web:
     runs-on: ubuntu-latest

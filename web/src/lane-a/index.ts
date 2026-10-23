@@ -1,7 +1,7 @@
-// OWNER: A (potencialbg). Entry point for A's browser code: the Stage 4 commentary track; Stage 7 (live-ask.ts)
-// lands here too.
+// OWNER: A (potencialbg). Entry point for A's browser code: the Stage 4 commentary track and the Stage 7 live Ask.
 import type { LaneAHandle, MountLaneA } from '../contracts/a-exports';
-import { CommentaryTrackPlayer, parseCues, type VoiceContext } from './commentary-track';
+import { CommentaryTrackPlayer, parseCues } from './commentary-track';
+import { browserIO, LiveAsk } from './live-ask';
 
 export const BUNDLE_BASE = '/replay/v1/judge';
 
@@ -25,7 +25,7 @@ export async function loadRadioCues(base = BUNDLE_BASE) {
 
 /** Browsers start audio only from a tap or key press. Create and resume the voice context in the first one, in the
  *  capture phase, so it happens inside the same gesture as B's Start button (iOS needs that; file 37). */
-function unlockOnGesture(onContext: (ctx: VoiceContext) => void): void {
+function unlockOnGesture(onContext: (ctx: AudioContext) => void): void {
   const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
   if (!Ctor) return;
   let ctx: AudioContext | null = null;
@@ -47,6 +47,23 @@ function unlockOnGesture(onContext: (ctx: VoiceContext) => void): void {
   events.forEach((e) => window.addEventListener(e, unlock, true));
 }
 
+/** The relay's /voice URL: `relay` from /live.json (written at deploy by azure.yaml from the relay's azd output), or
+ *  `?relay=` with `?debug=1` for local testing. None (no live Ask, presets only) if neither, or with `?live=0`. */
+export async function liveRelayUrl(search: string, fetchJson: (u: string) => Promise<unknown>): Promise<string | null> {
+  const q = new URLSearchParams(search);
+  if (q.get('live') === '0') return null;
+  let base = q.get('debug') === '1' ? q.get('relay') : null;
+  if (!base) {
+    try {
+      base = ((await fetchJson('/live.json')) as { relay?: string } | null)?.relay ?? null;
+    } catch {
+      base = null;
+    }
+  }
+  if (!base || !/^https?:\/\//.test(base)) return null;
+  return `${base.replace(/\/$/, '').replace(/^http/, 'ws')}/voice`;
+}
+
 // SEAM(A->B): B's main.ts calls this once with LaneBContext (crowd bus, Ask, replay clock).
 export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
   const commentary = new CommentaryTrackPlayer({
@@ -57,10 +74,27 @@ export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
   if (typeof window !== 'undefined') {
     loadRadioCues().then((cues) => commentary.load(cues))
       .catch((err: unknown) => console.warn('[commentary] no commentary track; the match plays without it', err));
-    unlockOnGesture((voice) => commentary.attach(voice));
-    if (new URLSearchParams(location.search).get('debug') === '1') {
+    unlockOnGesture((c) => commentary.attach(c));
+    // The live Ask gets its own context: CommentaryTrack.pause() suspends the commentary's, and B pauses the
+    // commentary before every answer. Created in the same Start tap, so it may play (file 37).
+    let liveVoice: AudioContext | null = null;
+    unlockOnGesture((c) => { liveVoice = c; });
+    const debug = new URLSearchParams(location.search).get('debug') === '1';
+    if (debug) {
       (window as unknown as { audioStandsCommentary?: CommentaryTrackPlayer }).audioStandsCommentary = commentary;
     }
+    // Stage 7: "Ask out loud". B's Ask shows the button once this registers (b-exports.ts Ask.registerLiveMode).
+    liveRelayUrl(location.search, async (u) => { const r = await fetch(u); return r.ok ? r.json() : null; })
+      .then((url) => {
+        if (!url) return;
+        // WHY: the relay scales to zero (D6, no money), so wake it while the fan is still listening, not on the press.
+        fetch(url.replace(/^ws/, 'http').replace(/\/voice$/, '/health'), { mode: 'no-cors' }).catch(() => {});
+        const live = new LiveAsk(url, browserIO({ audio: () => liveVoice, base: BUNDLE_BASE }));
+        ctx.ask.registerLiveMode(live);   // SEAM(A->B): b-exports.ts Ask.registerLiveMode(handler)
+        document.addEventListener('visibilitychange', () => { if (document.hidden) live.cancel(); });
+        if (debug) (window as unknown as { audioStandsLive?: LiveAsk }).audioStandsLive = live;
+      })
+      .catch(() => {});
   }
   return { commentary };
 };

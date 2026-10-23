@@ -1,6 +1,6 @@
 """python -m audiostands.eval --cut judge [--realtime] [--foundry-eval]  ->  eval/report.json. OWNER: A (potencialbg).
 
-Sections that need Azure (realtime, foundry_eval) are kept from the previous report.json when not re-run, with
+Sections that need Azure (realtime, foundry_eval, qa_latency) are kept from the previous report.json when not re-run, with
 the date they were measured, so a quick offline re-run never erases a measurement.
 """
 
@@ -44,6 +44,7 @@ def main(argv: list[str] | None = None) -> int:
         items = numeric_truth.dataset(m, metrics.load_cues(args.cut))
         rep["foundry_eval"] = {"measured": today, **numeric_truth.run_foundry(items, dir_env(env))}
 
+    rep["qa_latency"] = old.get("qa_latency")   # Stage 7, written by eval/qa_latency.py (needs a live relay)
     rep["realtime"] = old.get("realtime") or []
     if args.realtime:
         from audiostands.agents import tracing

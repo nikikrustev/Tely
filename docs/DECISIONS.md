@@ -256,3 +256,58 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   stays a template, and the report says "LLM lines: 0".
 - **A/B listen still to do (potencialbg):** rules vs Director differ only in the two build-ups' wording ("this could open up!" →
   "here's a chance!"; "Reds coming... Orlani... space opening up!" → "Reds... Orlani... danger!") and the hold. Record the pick here.
+
+## D17. Stage 7: live spoken questions through Voice Live, the relay and its numbers (23 Oct 2026)
+
+- **WebSocket through the relay, not browser WebRTC.** BUILD_PLAN made WebRTC primary and the GA WebSocket the fallback.
+  We built only the WebSocket path. WebRTC is preview (`2026-01-01-preview`), and file 40 §2 found its event routing
+  ambiguous. Through the relay, every event (VAD, both transcripts, tool calls, audio) passes one place, so tool calls,
+  golden turns and latency are complete. The cost is one extra hop for the audio (PCM16 24 kHz, ~48 kB/s, only while
+  asking or answering).
+- **What runs:** Voice Live API `2026-04-10` (GA) and `gpt-realtime-2.1-mini` (Standard, D8), answering in the commentary
+  voice `en-US-Brian:DragonHDLatestNeural` (D13), with `azure_semantic_vad` (500 ms) and `gpt-4o-mini-transcribe` for
+  the question text. Auth is keyless: the user-assigned identity holds Cognitive Services User + Foundry User on
+  `as-foundry-stoynev`, and locally it is `az login`.
+- **B's brain is imported, not copied.** `TOOL_SCHEMAS`, `PERSONA` and `call_tool` come from `audiostands.qa`. The
+  playhead is the one in the browser's `ask` message (the moment the fan pressed), clamped to the cut. It is never
+  extrapolated, so it can't run ahead of what the fan heard. Tool outputs go back only after the `response.done` of the
+  response that called them. Sending them earlier raced the model's own preamble response (smoke test, 23 Oct).
+- **B's MCP server is mounted at `/mcp`** in the same app. Its session manager runs in the relay's lifespan (a mounted
+  Starlette app's lifespan doesn't). DNS-rebinding protection stays on, with our host name in `MCP_ALLOWED_HOSTS`.
+  `.vscode/mcp.json` lists it next to Azure MCP, with the playhead as an input (default 860 = 59:20).
+- **Caps (ours):**
+  - 30 questions per session, 4 tool calls per answer, 300 output tokens;
+  - close after 90 s idle, a fresh Voice Live connection after 55 min;
+  - 200 questions a day;
+  - per IP: 6 sessions per 10 min and 2 open at once; 60 MCP calls per minute;
+  - `DEMO_MODE` live/off.
+
+  Every refusal is spoken, from 5 clips rendered in the commentary voice (`relay/clips.py` → `web/public/replay/v1/judge/live/`).
+  The per-IP cap fired during our own testing: 4 headless sessions plus browser runs from one machine.
+- **Scale to zero, not `minReplicas 1`** (D6 overrides BUILD_PLAN). The page calls `/health` on load to wake the relay.
+  The first request after idle took over 30 s, so a fan who presses Ask before the relay is awake hears "Live questions
+  aren't available right now" and gets the presets.
+- **The live Ask has its own AudioContext.** `CommentaryTrack.pause()` suspends the commentary's context, and B pauses the
+  commentary before every answer, so the mic worklet and the answer audio would never run on it. Found with Chromium's
+  fake mic. The clip and playback waits now also time out, so a suspended context can't hang the Ask.
+- **Latency is measured in the relay.** The VAD's `audio_end_ms` counts from the last `input_audio_buffer.clear`, not
+  from session start (measured: the second question of a session read 7.2 s until the relay reset its audio clock per
+  question). `facts_latency_ms` runs to the first audio after the tool results went back, so a "Let me check" preamble
+  doesn't flatter it.
+- **Persona fixes on our side.** The first 31-question run said "I'm an AI voice" 26 times, often twice per answer: the
+  pre-tool and post-tool responses each took themselves for B's "first answer". The relay now adds one system note after
+  the disclosure, and a hosting note that the tools are instant. Second run: 5 mentions (about one per session), median
+  answer 39 words (was 44). The "Let me check" preamble mostly stayed. The model now says "Ball first:" out loud; that
+  wording is B's (HANDOFF).
+- **Image build without Docker or ACR Tasks.** The free subscription refuses ACR Tasks (`TasksOperationsNotAllowed`), and
+  A's machine has no Docker, so azd can't build the relay. `relay/push_image.py` takes `python:3.12-slim`, adds one layer
+  (the same files as `relay/Dockerfile`, plus Linux wheels resolved by `uv`), and pushes it with the user's own
+  `az acr login --expose-token`. The azd `predeploy` hook (`relay/deploy.py`) points the app at it and saves
+  `RELAY_IMAGE`, so `azd up` still deploys everything. `relay/Dockerfile` stays the reference build.
+- **Results (deployed, 23 Oct):** B's 31 eval questions, spoken by a TTS "fan" voice and streamed in real time by
+  `eval/qa_latency.py run`: **31/31 answered, 0 spoiler hits** on B's spoiler words. "Who scores next?", "Who wins?" and
+  "What's the final score going to be?" all got "that's for the match to decide"; odds and betting got the redirect.
+  Latency: first audio **p50 1.14 s, p95 1.82 s**; to the facts p50 2.66 s, p95 3.35 s. A rival's median is 4.66 s
+  (file 42), for comparison only. From the deployed page (Chromium with the question as its fake mic): 5 answered.
+  With `DEMO_MODE=off` and with an unreachable relay, the refusal came within 0.2 s of `live.ask()`, and the presets
+  opened 4.8 s later, after the spoken reason.

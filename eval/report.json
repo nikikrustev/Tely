@@ -575,5 +575,41 @@
     }
    ]
   }
- ]
+ ],
+ "qa_latency": {
+  "measured": "2026-10-23 16:40",
+  "files": [
+   "contracts/golden/a/live_2026-10-23.jsonl"
+  ],
+  "questions": 31,
+  "answered": 31,
+  "outcomes": {
+   "answered": 31
+  },
+  "n_latency": 31,
+  "p50_ms": 1137,
+  "p95_ms": 1817,
+  "max_ms": 2853,
+  "facts_p50_ms": 2657,
+  "facts_p95_ms": 3353,
+  "client_p50_ms": 953,
+  "client_p95_ms": 1688,
+  "basis": [
+   "audio_end_ms"
+  ],
+  "tool_calls": 43,
+  "spoiler_hits": 0,
+  "spoiler_hit_list": [],
+  "model": [
+   "gpt-realtime-2.1-mini"
+  ],
+  "voice": [
+   "en-US-Brian:DragonHDLatestNeural"
+  ],
+  "rival_median_s": 4.66,
+  "definition": "relay: fan's last word reached the relay -> first answer audio from Voice Live (includes the 500 ms VAD silence; often a short preamble); facts: the same, to the first audio after the tool results went back; client: relay speech_stopped message -> first answer bytes",
+  "runs": [
+   "20261023T162736"
+  ]
+ }
 }
