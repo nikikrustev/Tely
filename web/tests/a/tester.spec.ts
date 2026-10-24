@@ -1,10 +1,12 @@
 // OWNER: A (potencialbg). Tester mode (?test=1, D19), Playwright + axe at the 3 viewports (playwright.config.ts),
 // light and dark. Also proves the judges' page is untouched without ?test=1: no tester markup, no tester code
 // loaded, Start still focused. The preview build has no /live.json, so no relay: every answer stays "unsent" and
-// the thank-you screen must offer "Copy my answers" (never lose an answer).
+// the thank-you screen must offer "Copy my answers" (never lose an answer). With A11Y_BASE_URL (the deployed site)
+// the relay answers instead, and those two checks flip; note those runs send real events to App Insights.
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
+const LIVE = !!process.env.A11Y_BASE_URL;
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 async function expectNoViolations(page: Page, label: string): Promise<void> {
@@ -133,7 +135,7 @@ test('tester mode: report a problem (button and F key)', async ({ page }) => {
   await expect(page.locator('#sr-polite')).toHaveText(/Your report is saved/);
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('audiostands.tester.v1') ?? '{}'));
   const ev = saved.events.find((e: { ev: { kind: string } }) => e.ev.kind === 'problem').ev;
-  expect(ev).toMatchObject({ problem_kind: 'stuck', problem_text: 'It stopped after the goal', ctx_task: 0, ctx_relay: false,
+  expect(ev).toMatchObject({ problem_kind: 'stuck', problem_text: 'It stopped after the goal', ctx_task: 0, ctx_relay: LIVE,
     ctx_club: 'H', ctx_browser: 'chrome' });
   expect(ev.ctx_viewport).toMatch(/^\d+x\d+$/);
   expect(JSON.stringify(ev)).not.toMatch(/Mozilla|HeadlessChrome/);  // the user agent family only
@@ -151,7 +153,7 @@ test('tester mode: overall feedback and the thank-you screen keep every answer',
   await page.getByRole('button', { name: 'Send my answers' }).click();
   await page.getByRole('button', { name: "I'm finished" }).click();
   await expect(page.locator('#t-thanks-h')).toBeFocused();
-  await expect(page.locator('#t-sent')).toHaveText(/not reached us yet|Still sending/);   // no relay in the preview build
+  await expect(page.locator('#t-sent')).toHaveText(LIVE ? /have reached us|Still sending/ : /not reached us yet|Still sending/);
   await expect(page.locator('#t-mail')).toBeHidden();                // no address configured yet
   await expectNoViolations(page, 'thank-you');
   await expectTargetsAndReflow(page);

@@ -36,8 +36,9 @@ RAW = ROOT / "out" / "feedback" / "feedback.csv"
 # (seen 24 Oct; az.cmd runs Python with -I, so PYTHONUTF8 can't fix it). Base64 is ASCII, so nothing is lost.
 KQL = ("customEvents | where name == 'tester_feedback' "
        "| project timestamp, d = base64_encode_tostring(tostring(customDimensions)) | order by timestamp asc")
-# Tester codes from the team's own runs (not volunteers): never in the listening CSV. Add yours with --exclude.
-TEAM_TESTERS = {"t-4c1d2ebf"}   # Claude's end-to-end check of the deployed site, 24 Oct
+# The team's own runs are not volunteers. Everything before this moment was Claude's deploy check and Playwright
+# against the live site (24 Oct, about 28 tester codes). Later team runs: pass their codes with --exclude.
+TEAM_TESTS_BEFORE = "2026-10-24T18:30:00Z"
 SCREEN_READERS = {"none": "none", "nvda": "NVDA", "jaws": "JAWS", "narrator": "Narrator", "voiceover": "VoiceOver",
                   "talkback": "TalkBack", "other": "other"}
 DEVICES = {"android_phone": "Android phone", "iphone": "iPhone", "windows": "Windows computer", "mac": "Mac",
@@ -179,8 +180,9 @@ def main(argv: list[str] | None = None) -> int:
         events += query(app, rg, args.days)
     for p in args.paste:
         events += from_paste(p.read_text(encoding="utf-8"))
-    skip = TEAM_TESTERS | set(args.exclude)
-    events = dedupe([e for e in events if e.get("tester") and e["tester"] not in skip])
+    skip = set(args.exclude)
+    events = dedupe([e for e in events if e.get("tester") and e["tester"] not in skip
+                     and (e.get("timestamp") is None or e["timestamp"] >= TEAM_TESTS_BEFORE)])
     write_raw(events)
     testers = per_tester(events)
     added = [] if args.dry_run else append_listening(testers)
