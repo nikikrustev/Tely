@@ -32,8 +32,10 @@ sys.path.insert(0, str(ROOT / "eval"))
 import score_listening as sl  # noqa: E402
 
 RAW = ROOT / "out" / "feedback" / "feedback.csv"
+# customDimensions come back base64-encoded: piped on Windows, az writes in the ANSI code page and drops Cyrillic
+# (seen 24 Oct; az.cmd runs Python with -I, so PYTHONUTF8 can't fix it). Base64 is ASCII, so nothing is lost.
 KQL = ("customEvents | where name == 'tester_feedback' "
-       "| project timestamp, customDimensions | order by timestamp asc")
+       "| project timestamp, d = base64_encode_tostring(tostring(customDimensions)) | order by timestamp asc")
 SCREEN_READERS = {"none": "none", "nvda": "NVDA", "jaws": "JAWS", "narrator": "Narrator", "voiceover": "VoiceOver",
                   "talkback": "TalkBack", "other": "other"}
 DEVICES = {"android_phone": "Android phone", "iphone": "iPhone", "windows": "Windows computer", "mac": "Mac",
@@ -45,7 +47,7 @@ def _run(args: list[str]) -> str:
     exe = shutil.which(args[0])
     if exe is None:
         raise SystemExit(f"{args[0]} not found on PATH")
-    out = subprocess.run([exe, *args[1:]], capture_output=True, text=True, encoding="utf-8", check=False)
+    out = subprocess.run([exe, *args[1:]], capture_output=True, text=True, encoding="utf-8", errors="replace", check=False)
     if out.returncode != 0:
         raise SystemExit(f"{args[0]} {args[1]} failed: {out.stderr.strip()[:400]}")
     return out.stdout
@@ -64,9 +66,7 @@ def query(app: str, rg: str, days: int) -> list[dict]:
     events = []
     for row in table["rows"]:
         r = dict(zip(cols, row))
-        dims = r.get("customDimensions") or {}
-        if isinstance(dims, str):
-            dims = json.loads(dims)
+        dims = json.loads(base64.b64decode(r.get("d") or "e30=").decode("utf-8"))
         events.append({"timestamp": r.get("timestamp"), **{k: v for k, v in dims.items() if k in SCHEMA}})
     return events
 

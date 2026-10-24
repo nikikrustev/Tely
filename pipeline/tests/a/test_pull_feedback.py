@@ -114,3 +114,13 @@ def test_report_says_self_run_volunteers_are_not_blind_fans(pf, tmp_path):
     assert "Moderated sessions: not run yet" in md
     assert "### Self-run, sighted volunteers" in md and "not evidence for blind fans" in md
     assert "**2 participants** (2 sighted, eyes closed;" in md
+
+
+def test_query_decodes_base64_dimensions_so_cyrillic_survives_windows_pipes(pf, monkeypatch):
+    dims = {"kind": "overall", "tester": "t-0000000b", "eid": "00000006", "liked": "Хареса ми тълпата", "logger_name": "x"}
+    d = base64.b64encode(json.dumps(dims, ensure_ascii=False).encode("utf-8")).decode()
+    fake = {"tables": [{"columns": [{"name": "timestamp"}, {"name": "d"}], "rows": [["2026-10-25T10:00:00Z", d]]}]}
+    monkeypatch.setattr(pf, "_run", lambda args: json.dumps(fake))
+    assert "base64_encode_tostring" in pf.KQL
+    [e] = pf.query("appi", "rg", 1)
+    assert e["liked"] == "Хареса ми тълпата" and "logger_name" not in e   # only schema keys are kept
