@@ -2,6 +2,7 @@
 import type { LaneAHandle } from './contracts/a-exports';
 import type { CrowdBus, LaneBContext, ReplayClock } from './contracts/b-exports';
 import { mountLaneA } from './lane-a';
+import { clipOver, listenClip } from './replay/listen';
 
 /** Placeholder services (tests, and before Start). */
 export function createStubContext(): LaneBContext {
@@ -60,6 +61,7 @@ async function startApp(): Promise<void> {
     import('./replay/debug'), import('./haptics/haptics'), import('./settings'), import('./replay/chapters'),
     import('./ask/ask'), import('./ask/local-tools')]);
   const { loadSettings, saveSettings, crowdGainFor, prefsPatch } = settingsMod;
+  const clip = listenClip(location.search);              // listening-test clip (eval/listening_test.md), if any
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
   const start = $<HTMLButtonElement>('start'), next = $<HTMLButtonElement>('next'), toggle = $<HTMLButtonElement>('settings-toggle');
   const status = $('status'), polite = $('sr-polite'), panel = $('settings'), hstatus = $('hstatus');
@@ -81,7 +83,7 @@ async function startApp(): Promise<void> {
   let settings = loadSettings();
   const haptics = new hap.Haptics(hap.browserEnv());
   const applyHaptics = () => {
-    haptics.s = { mode: settings.haptics, strength: settings.hapticStrength, myTeam: settings.club === 'H' ? 'home' : 'away' };
+    haptics.s = { mode: clip.commentaryOnly ? 'off' : settings.haptics, strength: settings.hapticStrength, myTeam: settings.club === 'H' ? 'home' : 'away' };
   };
   applyHaptics();
   let crowd: InstanceType<typeof CrowdEngine> | null = null;
@@ -318,6 +320,17 @@ async function startApp(): Promise<void> {
   };
   radarToggle.addEventListener('change', () => { update({ radar: radarToggle.checked }); void syncRadar(); });
 
+  const pause = async (said: string) => {
+    if (!src || !ctx) return;
+    src.pause();
+    lane.commentary.pause(); // SEAM(B->A): CommentaryTrack.pause() (contracts/a-exports.ts)
+    dropQueued();
+    src.seek(src.now(), 0); // re-queue from the exact pause point on resume
+    await ctx.suspend();
+    start.textContent = 'Play';
+    say(said);
+  };
+
   start.addEventListener('click', async () => {
     if (!ctx) {
       start.disabled = true;
@@ -332,6 +345,8 @@ async function startApp(): Promise<void> {
       const s = new ReplaySource(ctx, doc);
       src = s;
       clock.attach(s);
+      if (clip.commentaryOnly) st.master.gain.value = 0;   // crowd, ball and earcons off; A's voice has its own context
+      if (clip.from !== null) s.seek(clip.from);
       const wired = wire(s, st, c, settings.club, undefined, {
         club: () => settings.club,
         haptics,
@@ -346,7 +361,14 @@ async function startApp(): Promise<void> {
       hap.keepAwake();
       s.play();
       wired.pump();
-      setInterval(() => wired.pump(), 250);
+      let clipEnded = false;
+      setInterval(() => {
+        wired.pump();
+        if (!clipEnded && clipOver(clip, s.now())) {   // once: pressing Play again carries on past the clip
+          clipEnded = true;
+          void pause('End of the clip.');
+        }
+      }, 250);
       void setupAsk(ctx, st, c, s);
       void syncRadar();
       if (new URLSearchParams(location.search).get('debug') === '1') {
@@ -360,13 +382,7 @@ async function startApp(): Promise<void> {
     }
     if (!src) return;
     if (src.isPlaying()) {
-      src.pause();
-      lane.commentary.pause(); // SEAM(B->A): CommentaryTrack.pause() (contracts/a-exports.ts)
-      dropQueued();
-      src.seek(src.now(), 0); // re-queue from the exact pause point on resume
-      await ctx.suspend();
-      start.textContent = 'Play';
-      say('Paused.');
+      await pause('Paused.');
     } else {
       await ctx.resume();
       src.play(0.1);

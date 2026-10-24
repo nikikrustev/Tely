@@ -311,3 +311,28 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   (file 42), for comparison only. From the deployed page (Chromium with the question as its fake mic): 5 answered.
   With `DEMO_MODE=off` and with an unreachable relay, the refusal came within 0.2 s of `live.ask()`, and the presets
   opened 4.8 s later, after the spoken reason.
+
+## D18. Radio only: the Describer and Calm detail levels are dropped (24 Oct 2026)
+
+- **What ships:** one detail level, **Radio** (file 36 rule 3: the ball and key moments, with short pauses). The bundle
+  has one cue track (`manifest.json` `tracks.en.radio`), and the page has no detail-level setting.
+  **Describer** (continuous, with off-ball shape) and **Calm** (goals, chances, cards and the score every 5 min, with
+  vibration carrying the rest) are not built.
+- **Why:**
+  - BUILD_PLAN puts this first on the cut line ("Describer and Calm detail levels: ship Radio only"), and Stage 8
+    item 7 says to build them only if time remains. It doesn't: the listening test runs on the morning of Mon 26 and
+    Stage 9 (video and submission) is pinned to 13:00 that day.
+  - Each level is a whole new commentary track, not a switch. It needs a planner variant, new templates, TTS for
+    every new line, and the truth check, spoiler firewall and eval run again on it. Shipping that untested two days
+    before the deadline would risk the one track that is already verified (D16: 0 spoiler leaks, 70/70 truth check).
+  - The listening test (`eval/listening_test.md`) compares commentary alone against full Audio Stands. Adding a
+    detail-level comparison would split 3 participants across too many conditions to say anything.
+- **What covers part of the need today:** asking "where is the ball?" at any moment (offline presets and live
+  questions), the crowd slider, and vibration set to key moments only. None of these is a detail level, and the
+  write-up must not claim one.
+- **Known loose end:** the Q&A tool `set_preferences` (`pipeline/audiostands/qa/__init__.py`, `tools.py`, and the MCP
+  server) still offers `verbosity: describer | radio | calm`. The page drops it (`web/src/settings.ts` `prefsPatch`),
+  so a fan who asks for less talk can hear "done" when nothing changed. Follow-up: take `verbosity` out of the tool
+  so the commentator says it can't do that yet. The relay has to be redeployed after that change.
+- **If time does turn up before the deadline,** TEAM_SPLIT.md's stretch order still applies: LLM colour, then the
+  Foundry cloud evaluator, then Describer/Calm audio.

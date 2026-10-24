@@ -5,9 +5,12 @@
 Reads (TEAM_SPLIT.md "The seams" point 5):
     eval/report.json      A: spoiler firewall, numbers, Director, real-time latency (python -m audiostands.eval)
     eval/qa.json          B: Q&A eval questions through answer_text(), if present
-    eval/listening.json   B: the eyes-closed listening test, if present
-B's two files have no fixed shape, so they are rendered generically: scalars in a table, nested objects one level
-deep, lists of rows as a table. A missing file is reported as missing, never invented.
+    eval/listening.json   the eyes-closed listening test (python eval/score_listening.py), if present
+qa.json has no fixed shape, so it is rendered generically: scalars in a table, nested objects one level deep, lists of
+rows as a table. listening.json has its own section; with 0 participants it says "not run yet" and shows no numbers.
+A missing file is reported as missing, never invented.
+
+Writes eval/report.md, and eval/report.json with qa.json and listening.json merged in as "qa" and "listening".
 """
 
 from __future__ import annotations
@@ -149,6 +152,67 @@ def qa_latency_section(q: dict | None) -> list[str]:
     return out
 
 
+LISTEN_NOT_RUN = ("Not run yet: 0 participants in `eval/listening_test.csv`. The protocol is `eval/listening_test.md`; "
+                  "enter each session in the CSV, then run `python eval/score_listening.py` and this script. No "
+                  "numbers are shown until then.")
+
+
+def listening_section(lt) -> list[str]:
+    """The listening test (eval/score_listening.py). No participants: "not run yet" and no numbers at all."""
+    out = ["## Eyes-closed listening test (eval/listening.json)", ""]
+    if lt is None:
+        return out + [LISTEN_NOT_RUN.replace("0 participants in", "no `eval/listening.json` from"), ""]
+    if not isinstance(lt, dict) or "participants" not in lt:   # a free-form file from before score_listening.py
+        return generic(lt, "Listening test (Person B, eval/listening.json)")
+    if not lt["participants"]:
+        return out + [LISTEN_NOT_RUN, ""]
+    c, pr, pa, vip, ref = lt["conditions"], lt["preferred"], lt["paired"], lt["blind_or_partially_sighted"], lt["rnib_reference"]
+    said = lambda d: ", ".join(f"{n} {k.replace('_', ' ')}" for k, n in d.items() if n)   # noqa: E731
+    n = lt["participants"]
+    out += [f"**{n} participant{'' if n == 1 else 's'}** ({said(lt['sight'])}; listened via {said(lt['listened_via'])}), "
+            f"sessions {lt['sessions'] or '–'}, group A {lt['groups']['A']} / group B {lt['groups']['B']}. "
+            f"{lt['scale_note']}", ""]
+    out += table(["Condition", "Rated", "Scale mean (min–max), of 15", "Enjoyment / access / following, of 5",
+                  "Probes right"],
+                 [[name, x["n"],
+                   "–" if x["scale_mean"] is None else f"{x['scale_mean']:g} ({x['scale_min']}–{x['scale_max']})",
+                   " / ".join(cell(x[f"{k}_mean"]) for k in ("enjoy", "access", "follow")),
+                   f"{x['probes_right']}/{x['probes_asked']}"
+                   + ("" if x["probes_pct"] is None else f" ({x['probes_pct']:g}%)")]
+                  for name, x in (("Commentary only", c["commentary"]), ("Full Audio Stands", c["full"]))]) + [""]
+    out += table(["Probe", "Commentary only", "Full Audio Stands"],
+                 [[k, x["commentary"], x["full"]] for k, x in lt["probes"].items()]) + [""]
+    out += [f"Same person, both clips (n = {pa['n']}): full minus commentary only, mean "
+            f"{cell(pa['mean_full_minus_commentary'])} points; full higher for {pa['full_higher']}, the same for "
+            f"{pa['same']}, commentary only higher for {pa['commentary_higher']}. Would rather follow a match with: "
+            f"full {pr['full']}, commentary only {pr['commentary']}, no preference {pr['none']}"
+            + (f", not asked {pr['not asked']}" if pr["not asked"] else "")
+            + f". Asked the commentator: {lt['ask']['tried']} tried ({lt['ask']['yes']} worked, "
+            f"{lt['ask']['partly']} partly, {lt['ask']['no']} not).", ""]
+    if vip["participants"]:
+        out += [f"Blind or partially sighted participants only (n = {vip['participants']}): scale mean "
+                f"{cell(vip['commentary']['scale_mean'])} commentary only, {cell(vip['full']['scale_mean'])} full.", ""]
+    else:
+        out += ["No blind or partially sighted participants: these are sighted people listening with their eyes "
+                "closed, which is not evidence for blind fans (file 36).", ""]
+    out += [f"For reference only: {ref['what']} scored {ref['score']:g}/{ref['out_of']} in {ref['source']}; "
+            f"{ref['note']}. With this few people "
+            "there is no significance test. Clip 1 has a goal and Clip 2 doesn't; the groups balance that only with "
+            "an even number of people.", ""]
+    out += ["**Per participant**", ""] + table(
+        ["Participant", "Group", "Sight", "Listened via", "Scale: commentary / full", "Probes: commentary / full",
+         "Would rather", "Ask worked"],
+        [[r["participant"], r["group"], r["sight"], r["listened_via"],
+          f"{cell(r['commentary_scale'])} / {cell(r['full_scale'])}",
+          f"{cell(r['commentary_probes'])} / {cell(r['full_probes'])}", r["preferred"], r["ask_worked"]]
+         for r in lt["rows"]]) + [""]
+    if lt["quotes"]:
+        out += ["**Quotes** (with consent, no names)", ""]
+        out += [f"> \"{cell(q['quote'])}\" ({q['participant']}, {cell(q['sight'] or 'sight not said').replace('_', ' ')})"
+                for q in lt["quotes"]] + [""]
+    return out
+
+
 def _plan(p: dict | None) -> str:
     return "–" if not p else f"{p['build_up_level']:g} / {p['lead_s']:g} s / {p['hold_ms']} ms / {p['hint_type']}"
 
@@ -162,15 +226,27 @@ def build(here: Path = HERE) -> str:
                                    "Missing: `eval/report.json`. Run `python -m audiostands.eval --cut judge`.", ""]
     out += generic(qa, "Q&A eval (Person B, eval/qa.json)") if qa is not None else [
         "## Q&A eval (Person B)", "", "Not yet: `eval/qa.json` is not in the repo.", ""]
-    out += generic(listening, "Listening test (Person B, eval/listening.json)") if listening is not None else [
-        "## Listening test (Person B)", "", "Not yet: `eval/listening.json` is not in the repo.", ""]
+    out += listening_section(listening)
     return "\n".join(out).rstrip() + "\n"
+
+
+def merged(here: Path = HERE) -> dict | None:
+    """report.json with B's two files merged in as "qa" and "listening" (None without a report.json)."""
+    a = load(here / "report.json")
+    if a is None:
+        return None
+    return {**a, "qa": load(here / "qa.json"), "listening": load(here / "listening.json")}
 
 
 def main() -> int:
     text = build()
     (HERE / "report.md").write_text(text, encoding="utf-8", newline="\n")
     print(f"wrote {HERE / 'report.md'} ({len(text.splitlines())} lines)")
+    rep = merged()
+    if rep is not None:
+        (HERE / "report.json").write_text(json.dumps(rep, indent=1, ensure_ascii=False) + "\n", encoding="utf-8",
+                                          newline="\n")
+        print(f"merged qa.json and listening.json into {HERE / 'report.json'}")
     return 0
 
 
