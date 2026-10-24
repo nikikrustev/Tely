@@ -47,6 +47,9 @@ def make_tracker(env: dict[str, str] | None = None) -> tuple[Tracker, str]:
         enable_live_metrics=False, enable_performance_counters=False,
         instrumentation_options={lib: off for lib in ("azure_sdk", "django", "fastapi", "flask", "psycopg2",
                                                       "requests", "urllib", "urllib3")})
+    # azure-core logs every exporter request and response at INFO ("Request URL ... Transmission succeeded"), which
+    # flooded the console logs on the first deploy (24 Oct). Warnings and errors still show.
+    logging.getLogger("azure").setLevel(logging.WARNING)
     log = logging.getLogger(LOGGER)
     log.setLevel(logging.INFO)
     log.propagate = False
