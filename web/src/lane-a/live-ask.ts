@@ -4,7 +4,7 @@
 // WHY a relay WebSocket and not browser WebRTC: docs/DECISIONS.md D17 (file 40 §2 routing is preview and ambiguous).
 // On any error, or no answer within 8 s, the fan hears why (a pre-rendered line in the commentary voice) and B's
 // preset menu opens.
-import type { LiveAskHandler } from '../contracts/b-exports';
+import type { LaneBContext, LiveAskHandler } from '../contracts/b-exports';
 
 export const ANSWER_TIMEOUT_MS = 8000;  // BUILD_PLAN Stage 7: presets take over within 8 s
 export const MIC_DELAY_MS = 250;        // file 40 §1: the screen reader's "pressed" stays out of the mic
@@ -298,6 +298,8 @@ export interface BrowserIOOptions {
   audio: () => AudioContext | null;
   /** Base URL of the bundle, for live/index.json and the clips. */
   base: string;
+  /** B's services from mountLaneA(ctx): the preset menu, the ball ping and the settings (b-exports.ts). */
+  lane: Pick<LaneBContext, 'ask' | 'pingBall' | 'applyPrefs'>;
 }
 
 export function browserIO(o: BrowserIOOptions): LiveIO {
@@ -414,24 +416,12 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
         await browserVoice(text);
       }
     },
-    showPresets() {
-      // SEAM(A->B): B's preset menu has no API in b-exports.ts yet (HANDOFF to B: Ask.showPresets()). Until then, press
-      // B's Ask button once B's own askLive() has finished and re-enabled it, which opens the menu and focuses the first
-      // preset. Times out quietly after 20 s.
-      const t0 = Date.now();
-      const tick = () => {
-        const btn = document.getElementById('ask') as HTMLButtonElement | null;
-        const menu = document.getElementById('ask-menu');
-        if (btn && !btn.disabled && menu?.hidden) btn.click();
-        else if (Date.now() - t0 < 20_000) setTimeout(tick, 100);
-      };
-      setTimeout(tick, 100);
-    },
+    // SEAM(A->B): b-exports.ts Ask.showPresets(). B opens the menu once its own Ask has finished, and focuses it.
+    showPresets: () => o.lane.ask.showPresets?.(),
     now: () => performance.now(),
     wait: (ms) => new Promise((r) => setTimeout(r, ms)),
-    // SEAM(A->B): B's ball ping and settings have no API in LaneBContext yet (HANDOFF to B). Until then these are DOM
-    // events B can listen for: 'audiostands:ping-ball' and 'audiostands:prefs' (detail = set_preferences result).
-    ping: () => window.dispatchEvent(new CustomEvent('audiostands:ping-ball')),
-    prefs: (p) => window.dispatchEvent(new CustomEvent('audiostands:prefs', { detail: p })),
+    // SEAM(A->B): b-exports.ts LaneBContext.pingBall() and applyPrefs() (a no-op before Start).
+    ping: () => o.lane.pingBall?.(),
+    prefs: (p) => o.lane.applyPrefs?.(p),
   };
 }

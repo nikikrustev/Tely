@@ -106,7 +106,7 @@ Nikolay proposed: "I take the Q&A agent and its tools; you take the commentator 
 | Python, match and signals | `pipeline/pyproject.toml`, `pipeline/audiostands/{generator,movement,clock,interpret,crowd,haptics,judge_cut,build_match,build_segments}.py`, `pipeline/judge_cut.json`, `pipeline/tests/b/**` |
 | Python, Q&A brain | `pipeline/audiostands/qa/**` (`__init__.py` API, `tools.py`, `router.py`, `persona.py`, `fragments.py`, `mcp_server.py`) |
 | Crowd assets | `scripts/prepare_crowd.py`, `assets/**`, `web/public/crowd/**` |
-| Browser | `web/package.json` + lockfile, `web/vite.config.*`, `web/tsconfig.json`, `web/index.html`, `web/src/main.ts`, `web/src/wire.ts`, `web/src/audio/**`, `web/src/replay/**`, `web/src/haptics/**`, `web/src/ask/**`, `web/src/settings.ts`, `web/src/radar/**`, `web/src/learn/**`, `web/src/contracts/b-exports.ts`, `web/tests/b/**` |
+| Browser | `web/package.json` + lockfile, `web/vite.config.*`, `web/playwright.config.ts` (added 24 Oct, Stage 8 a11y tests), `web/tsconfig.json`, `web/index.html`, `web/src/main.ts`, `web/src/wire.ts`, `web/src/audio/**`, `web/src/replay/**`, `web/src/haptics/**`, `web/src/ask/**`, `web/src/settings.ts`, `web/src/radar/**`, `web/src/learn/**`, `web/src/contracts/b-exports.ts`, `web/tests/b/**` |
 | Generated bundle files | In `web/public/replay/v1/judge/`: `meta.json`, `events.jsonl`, `ticks.json.gz`, `signals.json`, `segments.json`, `.gitattributes` (added 21 Oct, PR #5) |
 | Contracts | `contracts/README.md`, `contracts/b/**` (match format + sample), `contracts/golden/b/**` (`qa_cases.jsonl`) |
 | Eval | `eval/qa_cases.jsonl`, `eval/qa.json`, `eval/listening_test.*`, `eval/listening.json`, `eval/score_listening.py` |
