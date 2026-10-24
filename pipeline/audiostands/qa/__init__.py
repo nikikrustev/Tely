@@ -101,11 +101,11 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     {
         "type": "function",
         "name": "set_preferences",
-        "description": "Change verbosity, crowd mix or vibration.",
+        "description": "Change the crowd level or the vibration. The commentary has one level of detail: it can't be "
+                       "made more or less detailed yet.",
         "parameters": {
             "type": "object",
             "properties": {
-                "verbosity": {"type": "string", "enum": ["describer", "radio", "calm"]},
                 "crowd_mix": {"type": "number", "minimum": 0, "maximum": 1},
                 "haptics": {"type": "string", "enum": ["off", "events", "full"]},
             },
