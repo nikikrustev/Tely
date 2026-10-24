@@ -178,12 +178,6 @@ async function startApp(): Promise<void> {
   for (const b of askMenu.querySelectorAll<HTMLButtonElement>('button[data-preset]')) {
     b.addEventListener('click', () => { if (askCtl) void runAsk(() => askCtl!.ask(b.dataset.preset as 'ball')); });
   }
-  // SEAM(B->A): until live-ask.ts calls LaneBContext.pingBall / applyPrefs directly, it fires these window events.
-  window.addEventListener('audiostands:ping-ball', () => laneB.pingBall());
-  window.addEventListener('audiostands:prefs', (e) => {
-    const d = (e as CustomEvent<unknown>).detail;
-    if (d && typeof d === 'object') laneB.applyPrefs(d as Record<string, unknown>);
-  });
   askLive.addEventListener('click', () => { if (askCtl) void runAsk(() => askCtl!.askLive()); });
   document.addEventListener('keydown', (e) => {
     const typing = (e.target as HTMLElement | null)?.closest('input, select, textarea');

@@ -1,7 +1,7 @@
 // OWNER: A (potencialbg). The live Ask controller against a fake relay and fake browser IO (no mic, no network).
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { liveRelayUrl } from '../../src/lane-a';
-import { ANSWER_TIMEOUT_MS, DOWN_FOR_MS, LiveAsk, type LiveIO, type RelaySocket } from '../../src/lane-a/live-ask';
+import { ANSWER_TIMEOUT_MS, browserIO, DOWN_FOR_MS, LiveAsk, type LiveIO, type RelaySocket } from '../../src/lane-a/live-ask';
 
 class FakeSocket implements RelaySocket {
   binaryType = 'blob';
@@ -192,6 +192,25 @@ describe('LiveAsk', () => {
     await flush();
     s.server({ type: 'tool', name: 'set_preferences', say: 'Done.', prefs: { verbosity: 'calm' } });
     expect(log).toContain('prefs:{"verbosity":"calm"}');
+  });
+});
+
+describe("browserIO: B's services, not DOM clicks or window events", () => {
+  it('opens the presets, pings the ball and applies prefs through LaneBContext (b-exports.ts)', () => {
+    const calls: string[] = [];
+    const io = browserIO({ audio: () => null, base: '/b', lane: {
+      ask: { registerLiveMode() {}, showPresets: () => calls.push('presets') },
+      pingBall: () => calls.push('ping'),
+      applyPrefs: (p) => calls.push(`prefs:${JSON.stringify(p)}`),
+    } });
+    io.showPresets();
+    io.ping?.();
+    io.prefs?.({ haptics: 'events' });
+    expect(calls).toEqual(['presets', 'ping', 'prefs:{"haptics":"events"}']);
+  });
+  it('is safe with an older context that lacks the optional members', () => {
+    const io = browserIO({ audio: () => null, base: '/b', lane: { ask: { registerLiveMode() {} } } });
+    expect(() => { io.showPresets(); io.ping?.(); io.prefs?.({}); }).not.toThrow();
   });
 });
 

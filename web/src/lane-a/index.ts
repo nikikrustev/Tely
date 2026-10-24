@@ -89,7 +89,7 @@ export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
         if (!url) return;
         // WHY: the relay scales to zero (D6, no money), so wake it while the fan is still listening, not on the press.
         fetch(url.replace(/^ws/, 'http').replace(/\/voice$/, '/health'), { mode: 'no-cors' }).catch(() => {});
-        const live = new LiveAsk(url, browserIO({ audio: () => liveVoice, base: BUNDLE_BASE }));
+        const live = new LiveAsk(url, browserIO({ audio: () => liveVoice, base: BUNDLE_BASE, lane: ctx }));
         ctx.ask.registerLiveMode(live);   // SEAM(A->B): b-exports.ts Ask.registerLiveMode(handler)
         document.addEventListener('visibilitychange', () => { if (document.hidden) live.cancel(); });
         if (debug) (window as unknown as { audioStandsLive?: LiveAsk }).audioStandsLive = live;

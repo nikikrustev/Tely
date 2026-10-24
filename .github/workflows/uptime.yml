@@ -1,0 +1,36 @@
+# OWNER: A (potencialbg). BUILD_PLAN Stage 8 item 5: the demo must stay up and free until judging ends (10 Nov).
+# Every 6 h, fetch the deployed page and the replay manifest the player loads first; the README badge shows the result.
+# WHY a GitHub cron and not only an App Insights test: it is free and gives a public badge (file 21 §3). Needs no
+# credentials: it reads the public site only. Caveats (file 21): scheduled runs use the default branch, may start late
+# under load, and GitHub disables them after 60 days without repository activity.
+name: Uptime
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"     # every 6 h, off the hour (top-of-hour cron runs are the most delayed)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      # A repository variable DEMO_URL overrides this if the site moves.
+      DEMO_URL: ${{ vars.DEMO_URL || 'https://lively-ocean-0efe4ae0f.2.azurestaticapps.net' }}
+    steps:
+      - name: Page loads and is the player
+        run: |
+          curl -fsS --retry 3 --retry-all-errors --max-time 30 "${DEMO_URL%/}/" -o page.html
+          grep -q '<title>Audio Stands</title>' page.html || { echo "::error::$DEMO_URL is up but is not the Audio Stands page"; exit 1; }
+          grep -q 'id="start"' page.html || { echo "::error::the Start button is missing"; exit 1; }
+      - name: Replay manifest is valid and names the commentary track
+        run: |
+          curl -fsS --retry 3 --retry-all-errors --max-time 30 "${DEMO_URL%/}/replay/v1/judge/manifest.json" -o manifest.json
+          jq -e '.bundle == "v1" and (.tracks.en.radio | type == "string")' manifest.json > /dev/null \
+            || { echo "::error::manifest.json is not the v1 judge bundle"; exit 1; }
+          cue="$(jq -r '.tracks.en.radio' manifest.json)"
+          curl -fsS --retry 3 --retry-all-errors --max-time 30 -o /dev/null "${DEMO_URL%/}/replay/v1/judge/$cue"
+          echo "OK: $DEMO_URL, bundle v1, $cue"
