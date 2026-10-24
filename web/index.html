@@ -41,6 +41,32 @@
       .radar-caption { min-height: 3em; font-size: 1.25rem; font-weight: 600; margin: 0.5rem 0 0; }
       #settings > label { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; }
       input[type="checkbox"] { width: 1.4rem; height: 1.4rem; }
+      /* Tester mode (?test=1, D19). Nothing on the judges' page matches these: #tester-tpl below stays inert. */
+      html.t-mode { scroll-padding-top: 5rem; }   /* the sticky bar never covers the focused control (WCAG 2.4.11) */
+      #t-bar { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center;
+               justify-content: space-between; background: var(--bg); border-bottom: 2px solid var(--fg); padding: 0.5rem 0; margin: -0.5rem 0 1rem; }
+      #t-bar p { margin: 0; font-weight: 700; }
+      main.t-hide-app > :not(#tester):not(#t-bar):not(h1) { display: none !important; }
+      #tester { background: var(--panel); border-radius: 0.75rem; padding: 1rem; margin: 0.5rem 0 1rem; }
+      #tester h3 { font-size: 1.2rem; margin: 0 0 0.25rem; }
+      #tester :is(h2, h3) { overflow-wrap: anywhere; }
+      #t-list { list-style: none; padding: 0; margin: 0 0 1rem; display: grid; gap: 0.75rem; }
+      .t-item { border: 1px solid var(--muted); border-radius: 0.5rem; padding: 0.75rem; background: var(--bg); }
+      .t-item p { margin: 0.25rem 0 0.5rem; }
+      .t-status-line { font-weight: 700; }
+      .t-hint { color: var(--muted); }
+      .t-err { color: var(--accent); font-weight: 700; }
+      .t-play { display: block; width: 100%; min-height: 4rem; margin: 0.75rem 0 1rem; font-size: 1.4rem; font-weight: 700; }
+      .t-field { margin: 0 0 1rem; }
+      .t-field label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+      #tester textarea, #t-report textarea { display: block; width: 100%; box-sizing: border-box; min-height: 44px; font: inherit;
+               border: 2px solid var(--fg); border-radius: 0.5rem; background: var(--bg); color: var(--fg); padding: 0.5rem; }
+      #tester fieldset legend { font-weight: 600; }
+      .t-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--fg); font-weight: 600; }
+      :is(textarea, a):focus-visible { outline: 4px solid var(--fg); outline-offset: 3px; }
+      #t-report { width: min(36rem, calc(100vw - 2rem)); box-sizing: border-box; max-height: calc(100dvh - 2rem); overflow: auto;
+                  border: 3px solid var(--fg); border-radius: 0.75rem; background: var(--bg); color: var(--fg); padding: 1rem; }
+      #t-report::backdrop { background: rgb(0 0 0 / 0.6); }
     </style>
   </head>
   <body>
@@ -102,6 +128,91 @@
       <div id="radar" hidden aria-hidden="true"></div>
       <div id="debug" hidden aria-hidden="true"></div>
     </main>
+    <!-- Tester mode only (?test=1, D19): web/src/tester/ clones this into the page. A <template> is inert, so without
+         ?test=1 none of it is in the DOM, the accessibility tree or the tab order. -->
+    <template id="tester-tpl">
+      <div id="t-bar">
+        <p>Tester mode</p>
+        <button id="t-report-open" type="button" aria-haspopup="dialog" aria-keyshortcuts="F">Report a problem (F)</button>
+      </div>
+      <section id="tester" aria-label="Tester mode">
+        <div id="t-welcome">
+          <h2 id="t-welcome-h" tabindex="-1">Welcome, and thank you for testing</h2>
+          <p>This is Audio Stands, a student hackathon project: a football match you follow by sound alone, made for
+            blind and partially sighted fans.</p>
+          <p>The match is made up by a computer, and the teams and players aren't real. The commentator is an AI voice.</p>
+          <h3>What we'd like from you</h3>
+          <ul>
+            <li>About 15 minutes, somewhere quiet.</li>
+            <li>Headphones, if you have them.</li>
+            <li>Your eyes closed while the two short clips play.</li>
+          </ul>
+          <p>There are no right or wrong answers. If you can't follow something, that's exactly what we need to know.
+            You can stop at any time.</p>
+          <h3>Your privacy</h3>
+          <p>We never ask for your name, email or age. Your answers are saved with a random code, not with who you are.
+            Please don't type your name or other personal details in the text boxes.</p>
+          <form id="t-consent">
+            <fieldset>
+              <legend>Before we start</legend>
+              <label><input id="t-take-part" type="checkbox" /> I'm happy to take part</label>
+              <label><input id="t-quote" type="checkbox" /> You may quote what I write, word for word and without my name,
+                in our write-up and on GitHub (optional)</label>
+            </fieldset>
+            <p id="t-consent-err" class="t-err" hidden>To take part, tick "I'm happy to take part". If you'd rather not,
+              that's fine: you can close this page.</p>
+            <button id="t-begin" type="submit">Begin</button>
+          </form>
+        </div>
+        <div id="t-tasks" hidden>
+          <h2 id="t-tasks-h" tabindex="-1">Your tasks</h2>
+          <p id="t-progress"></p>
+          <ol id="t-list"></ol>
+          <div class="row">
+            <button id="t-finish" type="button">I'm finished</button>
+            <button id="t-welcome-again" type="button">Read the welcome again</button>
+          </div>
+        </div>
+        <div id="t-task" hidden>
+          <h2 id="t-task-h" tabindex="-1"></h2>
+          <div id="t-task-body"></div>
+          <div class="row">
+            <button id="t-done" type="button">Done</button>
+            <button id="t-skip" type="button">Skip this task</button>
+          </div>
+        </div>
+        <div id="t-thanks" hidden>
+          <h2 id="t-thanks-h" tabindex="-1">Thank you!</h2>
+          <p id="t-sent"></p>
+          <p id="t-code"></p>
+          <div class="row">
+            <button id="t-copy" type="button">Copy my answers</button>
+            <button id="t-back" type="button">Back to the task list</button>
+          </div>
+          <p><a id="t-mail" class="t-link" hidden>Email my answers</a></p>
+          <div id="t-copy-wrap" class="t-field" hidden>
+            <label for="t-copy-text">Your answers</label>
+            <textarea id="t-copy-text" rows="8" readonly></textarea>
+          </div>
+        </div>
+      </section>
+      <dialog id="t-report" aria-labelledby="t-report-h">
+        <form id="t-report-form">
+          <h2 id="t-report-h">Report a problem</h2>
+          <div id="t-report-kinds"></div>
+          <div class="t-field">
+            <label for="t-report-text">Tell us more (optional)</label>
+            <textarea id="t-report-text" rows="4" maxlength="500"></textarea>
+          </div>
+          <p class="t-hint">We also send where you were in the match, the task, your settings, your browser and system
+            type, your screen size, and whether our server answered. Nothing that says who you are.</p>
+          <div class="row">
+            <button type="submit">Send</button>
+            <button id="t-report-cancel" type="button">Cancel</button>
+          </div>
+        </form>
+      </dialog>
+    </template>
     <!-- Live regions exist from page load, so screen readers announce later changes (file 32, WCAG 4.1.3).
          They carry state changes only (playing, paused, score, a jump), never every sound. -->
     <div id="sr-polite" class="sr-only" role="status" aria-live="polite"></div>

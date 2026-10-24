@@ -339,3 +339,46 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   the commentator the same. Live only after the relay is redeployed.
 - **If time does turn up before the deadline,** TEAM_SPLIT.md's stretch order still applies: LLM colour, then the
   Foundry cloud evaluator, then Describer/Calm audio.
+
+## D19. Tester mode (`?test=1`) and its feedback in Application Insights (24 Oct 2026)
+
+- **What:** a guided test for friends who don't know the project, only at `/?test=1` (`web/src/tester/`). A plain
+  welcome with the two consent questions from `eval/listening_test.md` section 3 (take part; anonymous quotes), eight
+  tasks (sound tour, two eyes-closed clips with the section 5 probes as multiple choice and the section 6 scale,
+  Ask, Settings, overall feedback), "Report a problem" (button and F), and a thank-you screen with "Copy my
+  answers". No name, email or age is ever asked for. The mailto fallback is off until we pick an address
+  (`FEEDBACK_EMAIL` in `web/src/tester/index.ts`).
+- **The judges' path doesn't change.** `main.ts` imports the tester module only with `?test=1`. The markup is a
+  `<template>`, which is inert, so without the flag none of it is in the DOM, the accessibility tree or the tab order.
+  `web/tests/a/tester.spec.ts` checks that: no `t-*` element, no tester request, Start focused, and F does nothing.
+- **Listening test, self-run group.** The tester ID is `t-` plus 8 random hex digits, made on the first visit. Its last
+  digit picks the section 1 group (even A, odd B). Each clip task sets from/to/sound inside the page, never in the
+  URL or on screen. The probes are scored in the browser against section 5's key, and the score is sent but never
+  shown. `eval/pull_feedback.py` appends testers who answered both clips to `eval/listening_test.csv` with
+  `mode=self` and sight "sighted, eyes closed" unless they told us otherwise. `score_listening.py` and
+  `build_report.py` report them apart from the moderated sessions and say they are not blind fans (file 36). The
+  task order is fixed (the tour is always first), unlike the moderated protocol, which plays the tour before the
+  full-sound clip only.
+- **Why Application Insights:** it's already provisioned (D16, `appi-as-judge`, 1 GB/day workspace cap), it's free
+  at this volume (about 15 events per tester, each under 4 KB), and it's on the Microsoft stack we name in the pitch.
+  We need no new database, storage account or third-party form, and nothing to pay (D6). The relay's
+  `POST /feedback` checks a flat schema (no free-form keys, 4 KB body, text trimmed and capped at 500 characters),
+  then logs one custom event, `tester_feedback`, through the Azure Monitor OpenTelemetry distro (`relay/telemetry.py`).
+  Only that one logger is exported. Tracing, metrics, live metrics and auto-instrumentation are off, so the relay
+  sends nothing else.
+- **Privacy:** the client IP is used only for the in-memory rate limit and is never put in the event. The browser
+  sends the user-agent family (for example "chrome", "android"), never the string. Free text can hold personal
+  details, so `pull_feedback.py` writes it only to git-ignored `out/feedback/feedback.csv`, and the public listening
+  CSV gets no free text at all. App Insights keeps it for the workspace's 30 days. One exception the tester is told
+  about: a question asked out loud goes to Voice Live, and its transcript is in the relay's console log (D17's golden
+  turns).
+- **Caps (ours, D17 style):** per IP 60 events per 10 minutes, and 3000 a day (`DAILY_FEEDBACK_CAP`). Only the Static
+  Web App origin may post (`FEEDBACK_ORIGINS`, set by `infra/relay.bicep`). Other routes still allow only GET in CORS.
+- **Never lose an answer:** each event is saved in localStorage first (wrapped in try/catch: blocked storage keeps it in
+  memory), then sent with `fetch` + `keepalive` as `text/plain`, a CORS simple request, so there's no preflight. It's
+  retried once after 30 s, because a cold relay takes over 30 s (D17). Events still unsent are retried on the next
+  visit and are in "Copy my answers" (an `AS1.` code line that `pull_feedback.py --paste` reads). Each event has an
+  ID, so a retried event counts once.
+- **Infra:** the App Insights connection string reaches the relay as a Container Apps secret (`@secure()` param),
+  never a plain env value or a file. `relay/requirements.txt` adds `azure-monitor-opentelemetry`. CI still installs
+  only `requirements-test.txt`, and the tests mock telemetry.
