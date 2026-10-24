@@ -88,6 +88,7 @@ module relay 'relay.bicep' = {
     voiceLiveModel: voiceLiveModel
     demoMode: demoMode
     dailyQuestionCap: dailyQuestionCap
+    appInsightsConnectionString: monitor.outputs.connectionString   // D19: tester feedback events
   }
 }
 

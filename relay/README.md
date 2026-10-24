@@ -8,6 +8,7 @@ B's Q&A brain (`audiostands.qa`) is **imported, never copied**, so the playhead 
 | `GET /health` | `{"ok", "mode"}`. The page calls it on load to wake the scaled-to-zero replica (D6). |
 | `WS /voice` | One fan's live Ask. Text frames are JSON, binary frames are PCM16 mono 24 kHz (mic up, answer down). |
 | `POST /mcp` | B's `audiostands.qa.mcp_server`, streamable HTTP, stateless. Playhead from the `X-AudioStands-Playhead` header. |
+| `POST /feedback` | Tester mode (`?test=1`, D19). One flat JSON event (`feedback.py` schema, 4 KB max), logged as the App Insights custom event `tester_feedback` (`telemetry.py`). Only `FEEDBACK_ORIGINS` may post; 60 per IP per 10 min, `DAILY_FEEDBACK_CAP` a day. No IP in the event. |
 
 **`/voice` messages.**
 - Browser → relay: `{"type":"ask","playhead_s"}`, binary mic audio, `{"type":"commit"}`, `{"type":"cancel"}`, `{"type":"metrics","client_latency_ms"}`.

@@ -11,6 +11,11 @@ participant; c1_* is Clip 1 and c2_* is Clip 2, and `group` says which clip had 
 Nothing is ever filled in: with no participants the JSON says "not run yet" and holds no numbers. A bad value stops
 the script with its row number instead of being guessed. Quotes are kept only where consent_quote is yes, and a row
 without consent_take_part = yes is left out of every number.
+
+`mode` says how a row was collected: "moderated" (blank means the same: one-to-one, section 4) or "self" (tester mode,
+?test=1, appended by eval/pull_feedback.py, D19). Self-run rows are summarised apart under "self_run" and never mixed
+into the moderated numbers: they are mostly sighted friends with their eyes closed, answering multiple-choice probes,
+and that is not evidence for blind fans (file 36).
 """
 
 from __future__ import annotations
@@ -31,15 +36,22 @@ CLIP_COLS = PROBES + SCALE
 COLUMNS = (["participant", "session_date", "group", "sight", "screen_reader", "device", "headphones", "listened_via"]
            + [f"c{i}_{k}" for i in (1, 2) for k in CLIP_COLS]
            + ["preferred", "ask_tried", "ask_worked", "consent_take_part", "consent_quote", "consent_film", "quote",
-              "notes"])
+              "notes", "mode"])
 # Which condition each clip had, by group (eval/listening_test.md section 1).
 GROUPS = {"A": {1: "commentary", 2: "full"}, "B": {1: "full", 2: "commentary"}}
 CONDITIONS = ("commentary", "full")
-SIGHT = ("blind", "partially_sighted", "sighted")
+SIGHT = ("blind", "partially_sighted", "sighted", "sighted, eyes closed")   # the last: self-run default (D19)
+MODES = ("moderated", "self")
 VIA = ("own_device", "shared_audio", "in_person")
 RNIB_REFERENCE = {"score": 6.1, "out_of": 15, "what": "TV football broadcasts in general",
                   "source": "RNIB, Accessibility of Football Broadcasts on TV (Nov 2022), 10 interviews (file 36)",
                   "note": "a different study and a different scale wording: a reference point, not a baseline"}
+SELF_NOTE = ("Self-run, sighted volunteers: friends of the team who followed tester mode (?test=1) on their own "
+             "device with nobody watching, eyes closed by request, answering multiple-choice versions of the four "
+             "probes (each with \"Don't know\"). They are not blind or partially sighted fans, a multiple-choice probe "
+             "is easier to get right than the moderated open question, and nobody checked that their eyes stayed "
+             "closed. These results are reported apart from the moderated sessions and are not evidence for blind "
+             "fans (file 36).")
 SCALE_NOTE = ("Our version of RNIB's 15-point scale: enjoyment, access and following, each 1-5, added up to 3-15 "
               "(eval/listening_test.md section 6; RNIB's per-item wording is unverified).")
 
@@ -94,6 +106,7 @@ def parse(row: dict, line: int) -> dict:
         "ask_worked": _choice(row, "ask_worked", ("yes", "partly", "no"), line),
         "consent": {k: _choice(row, f"consent_{k}", ("yes", "no"), line) for k in ("take_part", "quote", "film")},
         "quote": (row.get("quote") or "").strip() or None,
+        "mode": _choice(row, "mode", MODES, line) or "moderated",
     }
 
 
@@ -190,9 +203,14 @@ def _probes(clip: dict) -> str | None:
 
 
 def score(path: Path = CSV) -> dict:
+    """The moderated sessions at the top level (as before), the self-run testers apart under "self_run"."""
     everyone = read(path)
-    people = [p for p in everyone if p["consent"]["take_part"] == "yes"]
-    return summarise(people, excluded=len(everyone) - len(people))
+    out = {}
+    for mode in MODES:
+        rows = [p for p in everyone if p["mode"] == mode]
+        people = [p for p in rows if p["consent"]["take_part"] == "yes"]
+        out[mode] = summarise(people, excluded=len(rows) - len(people))
+    return {**out["moderated"], "self_run": {**out["self"], "note": SELF_NOTE}}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -206,7 +224,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {e}", file=sys.stderr)
         return 1
     args.out.write_text(json.dumps(res, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
-    print(f"{res['participants']} participants ({res['status']}) -> {args.out}")
+    print(f"{res['participants']} moderated participants ({res['status']}), "
+          f"{res['self_run']['participants']} self-run -> {args.out}")
     return 0
 
 

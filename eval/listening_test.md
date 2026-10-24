@@ -194,9 +194,29 @@ repo is public.
 | `consent_take_part`, `consent_quote`, `consent_film` | yes or no (section 3) |
 | `quote` | their words, only if `consent_quote` is yes (the script drops it otherwise) |
 | `notes` | anything else, without names |
+| `mode` | `moderated` (or blank) for a session you ran; `self` for a tester-mode row that `eval/pull_feedback.py` appended (section 8) |
 
 Shared audio over a call loses most of the left/right ball panning, so the script reports `listened_via` alongside the
 scores.
+
+---
+
+## 8. Self-run group: tester mode (`?test=1`, D19)
+
+Friends who don't know the project can take a guided version of this test on their own:
+https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/?test=1. The page asks consent questions 1 and 2 from section 3
+(never 3 or 4; it asks about sight later, as an optional question), plays both clips with the condition set inside
+the page (group from a random tester code, section 1), and asks section 5's probes **as multiple choice with "Don't
+know"** and section 6's scale. The browser scores the probes against the key and never shows the score.
+
+- `python eval/pull_feedback.py` pulls the answers from Application Insights. Raw rows, including free text, go to
+  git-ignored `out/feedback/feedback.csv`. Every tester who answered both clips is appended here with `mode=self`,
+  `listened_via=own_device`, `consent_film=no`, no quote and no notes, and sight `sighted, eyes closed` unless they told
+  us otherwise.
+- `score_listening.py` and `build_report.py` report these rows **apart** from the moderated sessions ("self_run").
+  They are mostly sighted volunteers, nobody watched them, and multiple choice is easier than an open answer. Never
+  add them to the moderated numbers, and never call them blind fans (file 36).
+- One difference from section 4: the sound tour is always task 1, before both clips, for both groups.
 
 ---
 

@@ -158,14 +158,28 @@ LISTEN_NOT_RUN = ("Not run yet: 0 participants in `eval/listening_test.csv`. The
 
 
 def listening_section(lt) -> list[str]:
-    """The listening test (eval/score_listening.py). No participants: "not run yet" and no numbers at all."""
+    """The listening test (eval/score_listening.py). No participants: "not run yet" and no numbers at all.
+    Moderated sessions first; self-run tester-mode volunteers (D19) in their own subsection, never mixed in."""
     out = ["## Eyes-closed listening test (eval/listening.json)", ""]
     if lt is None:
         return out + [LISTEN_NOT_RUN.replace("0 participants in", "no `eval/listening.json` from"), ""]
     if not isinstance(lt, dict) or "participants" not in lt:   # a free-form file from before score_listening.py
         return generic(lt, "Listening test (Person B, eval/listening.json)")
+    sr = lt.get("self_run") or {}
     if not lt["participants"]:
-        return out + [LISTEN_NOT_RUN, ""]
+        out += [LISTEN_NOT_RUN if not sr.get("participants") else
+                "Moderated sessions: not run yet (0 moderated participants in `eval/listening_test.csv`, "
+                "protocol `eval/listening_test.md`). The self-run results below are not a substitute.", ""]
+    else:
+        out += listening_body(lt)
+    if sr.get("participants"):
+        out += ["### Self-run, sighted volunteers (tester mode, `?test=1`)", "", f"**{sr['note']}**", ""]
+        out += listening_body(sr)
+    return out
+
+
+def listening_body(lt: dict) -> list[str]:
+    out: list[str] = []
     c, pr, pa, vip, ref = lt["conditions"], lt["preferred"], lt["paired"], lt["blind_or_partially_sighted"], lt["rnib_reference"]
     said = lambda d: ", ".join(f"{n} {k.replace('_', ' ')}" for k, n in d.items() if n)   # noqa: E731
     n = lt["participants"]
