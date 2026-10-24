@@ -73,3 +73,16 @@ export function crowdGainFor(mix: number): number {
   const db = m <= 0.5 ? -18 + 18 * (m / 0.5) : 4 * ((m - 0.5) / 0.5);
   return 0.8 * Math.pow(10, db / 20);
 }
+
+/**
+ * The live commentator's set_preferences result (A7: relay -> live-ask.ts) as a settings patch. Only what the fan
+ * asked for out loud and the tool allowed (haptics, crowd_mix); anything else, including verbosity (no setting yet),
+ * is dropped. Empty when nothing applies.
+ */
+export function prefsPatch(p: unknown): Partial<Settings> {
+  const o = (p && typeof p === 'object' ? p : {}) as Record<string, unknown>;
+  const patch: Partial<Settings> = {};
+  if (o.haptics === 'off' || o.haptics === 'events' || o.haptics === 'full') patch.haptics = o.haptics;
+  if (typeof o.crowd_mix === 'number' && Number.isFinite(o.crowd_mix)) patch.crowdMix = Math.min(1, Math.max(0, o.crowd_mix));
+  return patch;
+}
