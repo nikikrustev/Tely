@@ -382,3 +382,12 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
 - **Infra:** the App Insights connection string reaches the relay as a Container Apps secret (`@secure()` param),
   never a plain env value or a file. `relay/requirements.txt` adds `azure-monitor-opentelemetry`. CI still installs
   only `requirements-test.txt`, and the tests mock telemetry.
+- **Deployed and checked (24 Oct):** `azd provision` (the secret and `FEEDBACK_ORIGINS`) then `azd deploy` (relay
+  revision 9, web). A full run in the built-in browser on the live `?test=1` (tour, both clips to their automatic
+  end, both question sets, Ask with 2 presets, Settings, overall feedback in Bulgarian, one problem report, thank-you
+  screen) sent 15/15 events. All 15 arrived in `customEvents` as `tester_feedback` from `audiostands-relay`, with
+  `client_IP` 0.0.0.0, and `pull_feedback.py --dry-run` read them back (Cyrillic intact). Two fixes came out of the
+  run: azure-core's HTTP logging flooded the console (now WARNING), and `az` on Windows dropped Cyrillic from piped
+  output (KQL now returns the dimensions base64-encoded). The tester and a11y specs passed against the live site,
+  apart from the two checks that assume no relay (now switched by `A11Y_BASE_URL`). Those runs, and Claude's, are
+  skipped by `pull_feedback.py` (`TEAM_TESTS_BEFORE`).
