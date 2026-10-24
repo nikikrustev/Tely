@@ -19,11 +19,13 @@ export interface Step {
   play(s: LearnStage, at: number): number;
 }
 
-/** The ball sweeps across: from Reds' goal (left) to Navy's goal (right) and back. */
+/** The ball moves across, from `from` to `to`, with a soft pass every second. The ball itself is silent (no grass
+ *  hiss, 24 Oct); you hear where it is from the kicks and from the crowd end nearest it. */
 function sweep(s: LearnStage, at: number, from: number, to: number, secs: number): number {
   for (let k = 0; k <= secs * 10; k++) {
-    const u = k / (secs * 10);
-    s.ball(from + (to - from) * u, 0, 14, at + k / 10);
+    const u = k / (secs * 10), x = from + (to - from) * u;
+    s.ball(x, 0, 14, at + k / 10);
+    if (k % 10 === 0) s.earcon('pass', x, 0, at + k / 10);
   }
   return secs;
 }
@@ -31,7 +33,7 @@ function sweep(s: LearnStage, at: number, from: number, to: number, secs: number
 export const STEPS: Step[] = [
   { id: 'intro', say: 'Welcome to Audio Stands. Here are the sounds, one by one. Use headphones if you can. Press Escape to skip.',
     play: () => 0 },
-  { id: 'ball', say: 'This is the ball. It rattles, and moves from your left to your right as it travels up the pitch.',
+  { id: 'ball', say: 'Like in a real stadium, you cannot hear the ball itself. Follow the kicks, and the crowd: the end nearest the ball gets louder. Here it travels from your left to your right.',
     play: (s, at) => { const d = sweep(s, at, -45, 45, 5); s.ballOff(at + d); return d + 0.5; } },
   { id: 'sides', say: 'Reds attack to your right. Navy attack to your left. Here is the ball near Navy\'s goal, on your right.',
     play: (s, at) => { const d = sweep(s, at, 30, 45, 2); s.ballOff(at + d + 1); return d + 1.5; } },

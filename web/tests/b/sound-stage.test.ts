@@ -1,16 +1,20 @@
-// OWNER: B (Nikolay). Stage 2 tests (BUILD_PLAN): ball -> panner mapping, excitement -> bus gain is monotonic,
+// OWNER: B (Nikolay; A since the 24 Oct handover). Stage 2 tests (BUILD_PLAN): no ball loop, kicks panned by ball x,
+// the mix levels, the crowd following the ball, the press-box commentator, excitement -> bus gain is monotonic,
 // the refractory limit, the CrowdBus duck contract, and the scheduler over the real judge cut.
 import { readFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
-import { describe, expect, it } from 'vitest';
-import { AudioStands, ballLevel, EARCON_GAP_S, SEATS, stereoPan, toWorld } from '../../src/audio/audio-stands';
-import { CrowdEngine, levelFor, REFRACTORY_S, type CrowdBuffers } from '../../src/audio/crowd-engine';
+import { afterEach, describe, expect, it } from 'vitest';
+import { AudioStands, EARCON_GAP_S, FIELD_LOWPASS_HZ, SEATS, stereoPan, toWorld } from '../../src/audio/audio-stands';
+import { CrowdEngine, FOLLOW_PAN, levelFor, REFRACTORY_S, type CrowdBuffers } from '../../src/audio/crowd-engine';
+import { DEFAULT_MIX, parseMix, setMix, VoiceStage } from '../../src/audio/mix';
 import { ReplaySource, type SegmentsDoc } from '../../src/replay/replay-source';
 import { wire } from '../../src/wire';
 import { asCtx, FakeAudioContext, paramOf } from './fake-audio';
 
 const JUDGE = new URL('../../public/replay/v1/judge/', import.meta.url);
 const read = (f: string) => readFileSync(new URL(f, JUDGE), 'utf8');
+
+afterEach(() => { setMix(DEFAULT_MIX); });   // the mix is one shared store
 
 function engine(fake = new FakeAudioContext(), shots: Record<string, number> = { roar: 2, ooh_groan: 2 }) {
   const ctx = asCtx(fake);
@@ -22,34 +26,42 @@ function engine(fake = new FakeAudioContext(), shots: Record<string, number> = {
   return { fake, ctx, crowd: new CrowdEngine(ctx, ctx.destination, buffers) };
 }
 
-describe('ball -> panner position', () => {
+/** Records every node of one kind the fake context makes, in order. */
+function spy<T>(fake: FakeAudioContext, method: 'createStereoPanner' | 'createPanner' | 'createBiquadFilter'): T[] {
+  const made: T[] = [];
+  const f = (fake[method] as () => T).bind(fake);
+  (fake as unknown as Record<string, () => T>)[method] = () => { const n = f(); made.push(n); return n; };
+  return made;
+}
+
+describe('the pitch: no ball sound, kicks panned by ball x', () => {
   it('maps pitch x/y/z to Web Audio X/Y/Z (X = x, Y = z, Z = -y)', () => {
     expect(toWorld(30, -20, 1.5)).toEqual([30, 1.5, 20]);
     expect(toWorld(-52.5, 34)).toEqual([-52.5, 0, -34]);
   });
 
-  it('puts the ball on the panner, so the home goal is to the left and the near touchline closest', () => {
+  it('plays no continuous ball sound: nothing starts on its own, and ball samples are silent', () => {
     const fake = new FakeAudioContext();
     const stands = new AudioStands(asCtx(fake));
-    stands.ballAt({ x: -40, y: -30, z: 0.11, speed: 10, alive: true }, 0, 0.01);
-    fake.currentTime = 1;
-    const p = stands.ballPanner;
-    expect(paramOf(p.positionX).value).toBeCloseTo(-40, 3);
-    expect(paramOf(p.positionZ).value).toBeCloseTo(30, 3);
-    const seat = SEATS.halfway.pos;                         // listener faces -Z: smaller world X = further left
-    expect(paramOf(p.positionX).value).toBeLessThan(seat[0]);
+    expect(fake.started).toBe(0);                                          // no looped noise, no rattle oscillator
+    for (let k = 0; k < 50; k++) stands.ballAt({ x: k, y: 0, z: 0.11, speed: 15, alive: true }, k / 25);
+    expect(fake.started).toBe(0);
+    expect(stands).not.toHaveProperty('ballPanner');
+    expect(stands).not.toHaveProperty('ballStereo');
   });
 
-  it('the ball is near-silent when still and loud only while it travels (no constant "train" chug)', () => {
-    expect(ballLevel(0)).toBeLessThan(0.08);
-    expect(ballLevel(15)).toBeGreaterThan(5 * ballLevel(0));
-    for (let s = 0; s < 30; s += 0.5) expect(ballLevel(s + 0.5)).toBeGreaterThanOrEqual(ballLevel(s));
+  it('the ping plays where the ball is as heard now, not where it is queued to be', () => {
     const fake = new FakeAudioContext();
     const stands = new AudioStands(asCtx(fake));
-    stands.ballAt({ x: 0, y: 0, z: 0.11, speed: 0, alive: false }, 0);
-    fake.currentTime = 2;
-    const gain = (stands as unknown as { ballGain: GainNode }).ballGain.gain;
-    expect(paramOf(gain).value).toBeLessThan(0.01);                         // dead ball: silent
+    stands.ballAt({ x: -30, y: 0, z: 0.11, speed: 5, alive: true }, 0);
+    stands.ballAt({ x: 40, y: 0, z: 0.11, speed: 5, alive: true }, 3);    // queued 3 s ahead
+    fake.currentTime = 1;
+    expect(stands.last.x).toBe(-30);
+    fake.currentTime = 3.5;
+    expect(stands.last.x).toBe(40);
+    stands.cancelFrom(3.5);
+    stands.ballAt({ x: 10, y: 0, z: 0.11, speed: 5, alive: true }, 3.5);
+    expect(stands.last.x).toBe(10);
   });
 
   it('the whistle is soft: peak at most -18 dBFS, and not a pure tone', () => {
@@ -63,16 +75,37 @@ describe('ball -> panner position', () => {
     expect(peak).toBeGreaterThan(0.02);
   });
 
-  it("swings the ball clearly left/right: Reds' goal (Navy attack it) hard left, halfway centre, Navy's goal hard right", () => {
+  it("pans kicks clearly left/right: Reds' goal (Navy attack it) hard left, halfway centre, Navy's goal hard right", () => {
     expect(stereoPan(-52.5)).toBeLessThanOrEqual(-0.85);
     expect(stereoPan(0)).toBe(0);
     expect(stereoPan(52.5)).toBeGreaterThanOrEqual(0.85);
     for (let x = -52; x < 52; x += 4) expect(stereoPan(x + 4)).toBeGreaterThanOrEqual(stereoPan(x));
     const fake = new FakeAudioContext();
     const stands = new AudioStands(asCtx(fake));
-    stands.ballAt({ x: -45, y: 0, z: 0.11, speed: 12, alive: true }, 0, 0.01);
+    const pans = spy<StereoPannerNode>(fake, 'createStereoPanner'), hrtf = spy<PannerNode>(fake, 'createPanner');
+    stands.earcon('pass', -45, 10, 0);
+    stands.earcon('shot', 45, 10, 1);
+    expect(paramOf(pans[0]!.pan).value).toBeLessThan(-0.8);
+    expect(paramOf(pans[1]!.pan).value).toBeGreaterThan(0.8);
+    expect(paramOf(hrtf[0]!.positionX).value).toBe(-45);
+  });
+
+  it('passes and shots sit under the crowd: well below 0 dB, low-passed, and set live from the mix', () => {
+    expect(DEFAULT_MIX.pass).toBeLessThanOrEqual(-12);
+    expect(DEFAULT_MIX.shot).toBeLessThanOrEqual(-6);
+    expect(DEFAULT_MIX.pass).toBeLessThan(DEFAULT_MIX.shot);
+    const fake = new FakeAudioContext();
+    const filters = spy<BiquadFilterNode>(fake, 'createBiquadFilter');
+    const stands = new AudioStands(asCtx(fake));
     fake.currentTime = 1;
-    expect(paramOf(stands.ballStereo.pan).value).toBeLessThan(-0.8);
+    const gainOf = (k: 'pass' | 'shot' | 'whistle') => paramOf(stands.kindGain.get(k)!.gain).value;
+    expect(gainOf('pass')).toBeCloseTo(Math.pow(10, DEFAULT_MIX.pass / 20), 3);
+    expect(gainOf('shot')).toBeCloseTo(Math.pow(10, DEFAULT_MIX.shot / 20), 3);
+    expect(gainOf('pass')).toBeLessThan(gainOf('shot'));                    // a pass is the softest kick
+    expect(filters.some((f) => f.type === 'lowpass' && paramOf(f.frequency).value === FIELD_LOWPASS_HZ)).toBe(true);
+    setMix({ pass: -40 });                                                 // the mixer: heard at once; -40 dB = off
+    fake.currentTime = 2;
+    expect(gainOf('pass')).toBeLessThan(0.001);
   });
 
   it('keeps earcons at least 300 ms apart', () => {
@@ -81,6 +114,76 @@ describe('ball -> panner position', () => {
     const a = stands.earcon('shot', 0, 0, 1), b = stands.earcon('whistle', 0, 0, 1.05);
     expect(a).toBe(1);
     expect((b ?? 0) - (a ?? 0)).toBeGreaterThanOrEqual(EARCON_GAP_S - 1e-9);
+  });
+});
+
+describe('crowd follows the ball (left/right without a ball sound)', () => {
+  const endsOf = (c: CrowdEngine) => (c as unknown as { ends: { gain: GainNode; side: number }[] }).ends;
+
+  it('the end nearest the ball lifts and the far end drops; swell and tense pan toward the ball', () => {
+    const { fake, crowd } = engine();
+    expect(crowd.homePan).toBeLessThan(0);                                 // home end on the left, as before
+    crowd.followBall(45, 0);                                               // ball at Navy's goal, on the right
+    fake.currentTime = 5;
+    const right = endsOf(crowd).filter((e) => e.side > 0), left = endsOf(crowd).filter((e) => e.side < 0);
+    expect(right.length).toBeGreaterThan(0);
+    expect(left.length).toBeGreaterThan(0);
+    for (const e of right) expect(paramOf(e.gain.gain).value).toBeGreaterThan(1.3);   // about +3.5 dB at nearEnd 0.5
+    for (const e of left) expect(paramOf(e.gain.gain).value).toBeLessThan(0.75);
+    const beds = (crowd as unknown as { beds: Map<string, { pan: StereoPannerNode }> }).beds;
+    expect(paramOf(beds.get('swell')!.pan.pan).value).toBeCloseTo(FOLLOW_PAN, 2);
+    expect(paramOf(beds.get('murmur')!.pan.pan).value).toBe(crowd.homePan);  // the ends themselves stay put
+    crowd.followBall(-45, 5);
+    fake.currentTime = 10;
+    for (const e of left) expect(paramOf(e.gain.gain).value).toBeGreaterThan(1.3);
+  });
+
+  it('nearEnd 0 turns the follow off', () => {
+    setMix({ nearEnd: 0 });
+    const { fake, crowd } = engine();
+    crowd.followBall(45, 0);
+    fake.currentTime = 5;
+    for (const e of endsOf(crowd)) expect(paramOf(e.gain.gain).value).toBeCloseTo(1, 3);
+  });
+});
+
+describe('the commentator: press box, behind and above, never left or right', () => {
+  it('sits on the centre line behind and above the listener, and moves live', () => {
+    const fake = new FakeAudioContext();
+    const stands = new AudioStands(asCtx(fake));                            // listener on the halfway seat
+    const seat = SEATS.halfway.pos, p = stands.voice.panner;
+    const pos = () => { fake.currentTime += 1; return [p.positionX, p.positionY, p.positionZ].map((q) => paramOf(q).value); };
+    expect(p.panningModel).toBe('HRTF');
+    expect(p.rolloffFactor).toBe(0);                                       // close: no distance loss
+    const behind = pos();
+    expect(behind[0]).toBeCloseTo(seat[0], 3);                             // no left/right
+    expect(behind[2]).toBeGreaterThan(seat[2] + 1);                        // behind (the seat faces -Z)
+    expect(behind[1]).toBeGreaterThan(seat[1]);                            // and a little above
+    setMix({ commentatorPos: 'overhead' });
+    const over = pos();
+    expect(over[0]).toBeCloseTo(seat[0], 3);
+    expect(over[1]).toBeGreaterThan(seat[1] + 1.5);
+    expect(over[2]).toBeCloseTo(seat[2], 3);
+  });
+
+  it('the voice chain is dry (no reverb) and has a booth-mic high-pass', () => {
+    const fake = new FakeAudioContext();
+    const filters = spy<BiquadFilterNode>(fake, 'createBiquadFilter');
+    const convolvers: unknown[] = [];
+    (fake as unknown as { createConvolver: () => unknown }).createConvolver = () => { const c = {}; convolvers.push(c); return c; };
+    new VoiceStage(asCtx(fake), fake.destination as unknown as AudioNode);
+    expect(convolvers).toHaveLength(0);
+    expect(filters.some((f) => f.type === 'highpass')).toBe(true);
+  });
+
+  it('parseMix keeps known keys, clamps them, and accepts the mixer file ({version, mix})', () => {
+    const m = parseMix({ version: 1, mix: { pass: -99, shot: 50, nearEnd: 3, commentatorPos: 'overhead', junk: 1 } });
+    expect(m.pass).toBe(-40);
+    expect(m.shot).toBe(12);
+    expect(m.nearEnd).toBe(1);
+    expect(m.commentatorPos).toBe('overhead');
+    expect(m).not.toHaveProperty('junk');
+    expect(parseMix({ commentatorPos: 'pitch' }).commentatorPos).toBe(DEFAULT_MIX.commentatorPos);
   });
 });
 

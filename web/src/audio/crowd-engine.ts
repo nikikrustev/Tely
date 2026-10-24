@@ -1,11 +1,16 @@
-// OWNER: B (Nikolay). The reactive crowd (file 38 CrowdEngine), adapted:
+// OWNER: B (Nikolay; A since the 24 Oct handover). The reactive crowd (file 38 CrowdEngine), adapted:
 // - implements CrowdBus.duck(db, rampMs) / unduck(rampMs) from contracts/b-exports.ts (A's commentary ducks us);
 // - state changes are scheduled at an exact audio time, so the replay can queue them ahead;
 // - an explicit `level` gain follows excitement (the crowd "bus gain" the Stage 2 test checks);
 // - our end and the other end: one-shots from the other end play distant (low-passed, opposite side);
 // - "hush" / "stunned_hush" are dips of the whole crowd, not samples;
-// - the chant vowel is generated (no sample), sung on our own seeded motif (no real songs, file 38 §5).
+// - the chant vowel is generated (no sample), sung on our own seeded motif (no real songs, file 38 §5);
+// - the crowd follows the ball (followBall, 24 Oct): the end nearest it lifts and the far end drops, and the
+//   anticipation layers (swell, tense) come from the part of the stand nearest the ball. With no ball sound, this is
+//   the main left/right cue between kicks;
+// - beds, chants and one-shots each have a level from the shared mix (mix.ts), heard live.
 import type { CrowdBus } from '../contracts/b-exports';
+import { dbToGain, getMix, onMix, type AudioMix } from './mix';
 import { prng } from './stadium-ir';
 
 export interface CrowdState { excitement: number; valence: number; danger: number } // 0..1, -1..1, -1..1 (+ = we attack)
@@ -23,6 +28,14 @@ export const REFRACTORY_S: Record<string, number> = {
 };
 
 interface Bed { gain: GainNode; lp: BiquadFilterNode; pan: StereoPannerNode }
+type Group = 'crowdBeds' | 'chants' | 'roars';
+
+/** Ball x (m) -> -1 (Reds' goal, left) .. 1 (Navy's goal, right). */
+const ballSide = (x: number) => clamp(x / 45, -1, 1);
+/** Near-end lift at full strength (mix nearEnd = 1) with the ball on the goal line: +-7 dB. */
+export const NEAR_END_DB = 7;
+/** How far toward the ball the swell and tense layers pan. */
+export const FOLLOW_PAN = 0.7;
 
 export class CrowdEngine implements CrowdBus {
   readonly ctx: BaseAudioContext;
@@ -33,6 +46,10 @@ export class CrowdEngine implements CrowdBus {
   private hushGain: GainNode;
   private chantGain: GainNode;
   private beds = new Map<BedName, Bed>();
+  private groups = {} as Record<Group, GainNode>;
+  /** Gains for one end of the ground; `side` is where it sits (-1 left, 1 right). followBall moves them. */
+  private ends: { gain: GainNode; side: number }[] = [];
+  private followed = { x: NaN, at: -Infinity };
   private lastShot = new Map<string, number>();
   private targets = new Map<AudioParam, number>();
   private queued: { src: AudioScheduledSourceNode; when: number }[] = [];
@@ -46,6 +63,7 @@ export class CrowdEngine implements CrowdBus {
   private vowel: AudioBuffer;
   private clapNoise: AudioBuffer;
   readonly homePan: number;
+  private roarEnds: [GainNode, GainNode];
   started = 0; // one-shots actually started (tests read it)
 
   constructor(ctx: BaseAudioContext, destination: AudioNode, private buf: CrowdBuffers,
@@ -65,14 +83,38 @@ export class CrowdEngine implements CrowdBus {
     this.speechDip.Q.value = 0.8;
     this.speechDip.gain.value = 0;
     this.level.connect(this.hushGain).connect(this.duckGain).connect(this.speechDip).connect(this.output).connect(destination);
+    for (const g of ['crowdBeds', 'chants', 'roars'] as const) {
+      this.groups[g] = ctx.createGain();
+      this.groups[g].connect(this.level);
+    }
     this.chantGain = ctx.createGain();
     this.chantGain.gain.value = 0;
-    this.chantGain.connect(this.level);
+    this.chantGain.connect(this.end('chants', true));
     const pans: Record<BedName, number> = { murmur: this.homePan, swell: this.homePan, tense: this.homePan, away: -this.homePan * 0.8 };
-    for (const n of Object.keys(pans) as BedName[]) this.beds.set(n, this.makeBed(pans[n]));
+    // murmur and away are the two ends; swell and tense follow the ball themselves (followBall pans them).
+    const into: Record<BedName, AudioNode> = { murmur: this.end('crowdBeds', true), away: this.end('crowdBeds', false),
+      swell: this.groups.crowdBeds, tense: this.groups.crowdBeds };
+    for (const n of Object.keys(pans) as BedName[]) this.beds.set(n, this.makeBed(pans[n], into[n]));
+    this.roarEnds = [this.end('roars', true), this.end('roars', false)];
     this.motif = CrowdEngine.makeMotif(opts.clubSeed ?? 7);
     this.vowel = this.makeVowel();
     this.clapNoise = this.makeNoise(0.2);
+    onMix((m) => this.applyMix(m));
+  }
+
+  applyMix(m: AudioMix): void {
+    const t = this.ctx.currentTime;
+    for (const g of ['crowdBeds', 'chants', 'roars'] as const) this.groups[g].gain.setTargetAtTime(dbToGain(m[g]), t, 0.05);
+    this.followed.at = -Infinity; // a new nearEnd strength applies on the next ball sample
+  }
+
+  /** The ball is at pitch x at audio time `at` (wire calls it with every ball sample; most are skipped). */
+  followBall(x: number, at = this.ctx.currentTime): void {
+    if (Math.abs(x - this.followed.x) < 3 && at - this.followed.at < 1) return;
+    this.followed = { x, at };
+    const b = ballSide(x), k = getMix().nearEnd;
+    for (const e of this.ends) e.gain.gain.setTargetAtTime(Math.pow(10, (NEAR_END_DB * k * b * e.side) / 20), at, 0.7);
+    for (const n of ['swell', 'tense'] as const) (this.beds.get(n) as Bed).pan.pan.setTargetAtTime(FOLLOW_PAN * b, at, 0.7);
   }
 
   /** Our own 8-step pentatonic motif, seeded per synthetic club (no real songs). -1 = rest. */
@@ -165,12 +207,12 @@ export class CrowdEngine implements CrowdBus {
     const p = this.ctx.createStereoPanner();
     p.pan.value = ours ? this.homePan : -this.homePan * 0.8;
     if (ours) {
-      src.connect(g).connect(p).connect(this.level);
+      src.connect(g).connect(p).connect(this.roarEnds[0]);
     } else {
       const lp = this.ctx.createBiquadFilter();
       lp.type = 'lowpass';
       lp.frequency.value = 900;
-      src.connect(lp).connect(g).connect(p).connect(this.level);
+      src.connect(lp).connect(g).connect(p).connect(this.roarEnds[1]);
     }
     src.start(when);
     this.started++;
@@ -182,8 +224,9 @@ export class CrowdEngine implements CrowdBus {
 
   /** Drop everything scheduled from audio time `t` on (after a seek): state moves and one-shots not yet started. */
   cancelFrom(t: number): void {
-    const params = [this.level.gain, this.hushGain.gain, this.chantGain.gain];
-    for (const b of this.beds.values()) params.push(b.gain.gain, b.lp.frequency);
+    const params = [this.level.gain, this.hushGain.gain, this.chantGain.gain, ...this.ends.map((e) => e.gain.gain)];
+    for (const b of this.beds.values()) params.push(b.gain.gain, b.lp.frequency, b.pan.pan);
+    this.followed = { x: NaN, at: -Infinity };
     for (const p of params) p.cancelScheduledValues(t);
     this.hushGain.gain.setTargetAtTime(1, t, 0.2);
     for (const q of this.queued) if (q.when >= t) try { q.src.stop(); } catch { /* already stopped */ }
@@ -232,7 +275,15 @@ export class CrowdEngine implements CrowdBus {
     }
   }
 
-  private makeBed(panValue: number): Bed {
+  /** A gain for our end (`ours`, at homePan) or the other end, inside one mix group. */
+  private end(group: Group, ours: boolean): GainNode {
+    const gain = this.ctx.createGain();
+    gain.connect(this.groups[group]);
+    this.ends.push({ gain, side: Math.sign(ours ? this.homePan : -this.homePan) || 1 });
+    return gain;
+  }
+
+  private makeBed(panValue: number, out: AudioNode): Bed {
     const gain = this.ctx.createGain();
     gain.gain.value = 0;
     const lp = this.ctx.createBiquadFilter();
@@ -240,7 +291,7 @@ export class CrowdEngine implements CrowdBus {
     lp.frequency.value = 2000;
     const pan = this.ctx.createStereoPanner();
     pan.pan.value = panValue;
-    lp.connect(gain).connect(pan).connect(this.level);
+    lp.connect(gain).connect(pan).connect(out);
     return { gain, lp, pan };
   }
 

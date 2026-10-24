@@ -4,6 +4,7 @@
 // WHY a relay WebSocket and not browser WebRTC: docs/DECISIONS.md D17 (file 40 §2 routing is preview and ambiguous).
 // On any error, or no answer within 8 s, the fan hears why (a pre-rendered line in the commentary voice) and B's
 // preset menu opens.
+import { VoiceStage } from '../audio/mix';
 import type { LaneBContext, LiveAskHandler } from '../contracts/b-exports';
 
 export const ANSWER_TIMEOUT_MS = 8000;  // BUILD_PLAN Stage 7: presets take over within 8 s
@@ -305,6 +306,7 @@ export interface BrowserIOOptions {
 export function browserIO(o: BrowserIOOptions): LiveIO {
   let workletReady: Promise<void> | null = null;
   let out: GainNode | null = null;
+  let voice: VoiceStage | null = null;
   let nextT = 0;
   const playing = new Set<AudioBufferSourceNode>();
   let clips: Promise<Record<string, { file: string }>> | null = null;
@@ -313,8 +315,9 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
     if (!c) throw new Error('no audio context yet');
     if (c.state !== 'running') void c.resume().catch(() => {});
     if (!out || out.context !== c) {
-      out = c.createGain();
-      out.connect(c.destination);
+      voice?.dispose();
+      voice = new VoiceStage(c, c.destination);   // the same press-box voice as the commentary track (mix.ts)
+      out = voice.input;
     }
     return c;
   };

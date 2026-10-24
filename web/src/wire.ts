@@ -51,11 +51,13 @@ export function wire(src: ReplaySource, stands: AudioStands | null, crowd: Crowd
       crowd.setOtherEnd(sec.crowd[other], at(sec.t));
       if (opts.haptics || opts.onSecond) later(sec.t, () => { opts.haptics?.setTension(sec.tension); opts.onSecond?.(sec); });
     }
+    s.ball.forEach(([x, y, z, speed, alive], k) => {
+      const t = s.t0 + k / src.doc.ball_hz;
+      if (t < from) return;
+      stands?.ballAt({ x, y, z, speed, alive: alive === 1 }, at(t));   // silent: where the ball is, for the ping
+      crowd.followBall(x, at(t));                                       // the end nearest the ball reacts more
+    });
     if (stands) {
-      s.ball.forEach(([x, y, z, speed, alive], k) => {
-        const t = s.t0 + k / src.doc.ball_hz;
-        if (t >= from) stands.ballAt({ x, y, z, speed, alive: alive === 1 }, at(t));
-      });
       for (const e of s.earcons) if (e.t >= from) stands.earcon(e.kind, e.x, e.y, at(e.t));
     }
     for (const o of s.one_shots) if (o.t >= from) crowd.trigger(o.kind, at(o.t), o.end === c);

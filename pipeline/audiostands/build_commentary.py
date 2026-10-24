@@ -1,6 +1,11 @@
 """Build the Radio commentary track for one cut: cues, HD-voice MP3s, captions. OWNER: A (potencialbg).
 
     python -m audiostands.build_commentary --cut judge
+    python -m audiostands.build_commentary --style lively --names pipeline/names/liverpool-arsenal.local.json
+
+--style lively uses commentary/lively.py instead of templates.py (radio_v1). --names renames teams, players and venue
+for a local listening test only; it then writes to web/.local/<names file stem>/ (git-ignored, never deployed, served
+by the dev server at /replay/v1/local/<stem>/), never into the shipped bundle.
 
 Writes into web/public/replay/v1/<cut>/:
     cues.en.radio.jsonl           one cue per line (file 43 §3 contract; SSML stripped, as by the release gate)
@@ -21,11 +26,12 @@ from typing import Callable
 
 from audiostands import spoiler
 from audiostands.commentary import captions, planner, verifier
-from audiostands.commentary.source import BUNDLE, Match, load_match
+from audiostands.commentary.source import BUNDLE, ROOT, Match, load_match, rename
 from audiostands.commentary.ssml import DEFAULT_VOICE, build_ssml, ssml_sha256
 from audiostands.commentary.tts import AzureSynthesiser, Synthesiser, TtsCache, TtsError, load_env
 
 LANG, LEVEL = "en", "radio"
+LOCAL = ROOT / "web" / ".local"  # git-ignored local test bundles (never deployed)
 MAX_ROUNDS = 8
 
 
@@ -62,6 +68,7 @@ def render_lines(m: Match, cache: TtsCache, voice: str, plans: dict | None = Non
 
 
 def to_cue(m: Match, seq: int, ln: planner.Line, voice: str, cache: TtsCache, director: str | None = None) -> dict:
+    templates_name = getattr(planner.lines_for(m), "NAME", "radio_v1")
     d = ln.draft
     ssml = build_ssml(ln.text, d.style, voice, pause_after_ms=d.pause_ms)
     sha = ssml_sha256(ssml)
@@ -88,7 +95,7 @@ def to_cue(m: Match, seq: int, ln: planner.Line, voice: str, cache: TtsCache, di
         "truth_check": "pass" if not truth else "fail", "spoiler_check": "pass" if not spoil else "fail",
         "errors": truth + spoil,
         "source": {"cut": m.meta["judge_cut"].get("source"), "generator_seed": m.meta["judge_cut"].get("seed"),
-                   "planner": "lookahead_v1", "templates": "radio_v1",
+                   "planner": "lookahead_v1", "templates": templates_name,
                    # Stage 5: who planned this build-up's tension (file 43 §3 "source.director")
                    "director": director if d.kind == "build" else None},
     }
@@ -100,9 +107,16 @@ def _write(path: Path, text: str) -> None:
 
 
 def build(cut: str, out_dir: Path, synth_factory: Callable[[], Synthesiser], voice: str = DEFAULT_VOICE,
-          plans: dict | None = None, directors: dict[str, str] | None = None) -> dict:
-    """plans / directors: shot id -> the Director's verified plan / its name (Stage 5). None: Stage 3 rules."""
+          plans: dict | None = None, directors: dict[str, str] | None = None, style: str = "radio_v1",
+          names: dict | None = None) -> dict:
+    """plans / directors: shot id -> the Director's verified plan / its name (Stage 5). None: Stage 3 rules.
+    style: "radio_v1" (templates.py) or "lively" (lively.py). names: a local test rename (source.rename)."""
+    if style not in planner.STYLES:
+        raise ValueError(f"unknown style {style!r}")
     m = load_match(cut)
+    m.style = style  # type: ignore[attr-defined]
+    if names:
+        m = rename(m, names)
     cache = TtsCache(out_dir / "audio" / LANG / LEVEL, synth_factory)
     lines = render_lines(m, cache, voice, plans)
     directors = directors or {}
@@ -134,11 +148,18 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--cut", default="judge")
     ap.add_argument("--out", type=Path, help="default: web/public/replay/v1/<cut>")
     ap.add_argument("--voice", help="default: TTS_VOICE from .env")
+    ap.add_argument("--style", default="radio_v1", choices=sorted(planner.STYLES))
+    ap.add_argument("--names", type=Path, help="local test rename (JSON); output goes to web/.local/<stem>/")
     args = ap.parse_args(argv)
     env = load_env()
     voice = args.voice or env.get("TTS_VOICE") or DEFAULT_VOICE
+    names = json.loads(args.names.read_text(encoding="utf-8")) if args.names else None
+    out = args.out or (LOCAL / args.names.name.split(".")[0] if args.names else BUNDLE / args.cut)
+    if names and BUNDLE in out.resolve().parents:
+        print("FAIL: --names output must stay out of web/public (it would be deployed)")
+        return 1
     try:
-        rep = build(args.cut, args.out or BUNDLE / args.cut, lambda: AzureSynthesiser(env), voice)
+        rep = build(args.cut, out, lambda: AzureSynthesiser(env), voice, style=args.style, names=names)
     except TtsError as exc:
         print(f"FAIL: {exc}")
         return 1
