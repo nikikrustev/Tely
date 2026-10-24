@@ -81,6 +81,10 @@ Nikolay proposed: "I take the Q&A agent and its tools; you take the commentator 
 3. Tests are split by folder: `pipeline/tests/a/`, `pipeline/tests/b/`, `web/tests/a/` and `web/tests/b/`.
 4. A's Azure Python packages go in `pipeline/requirements-azure.txt`, not in `pyproject.toml`.
 
+> **Handover, 24 Oct 2026:** Nikolay has handed over his lane. **A (potencialbg) now owns every path under "B owns (Nikolay)"
+> as well**, so A's Claude may edit them. The no-Microsoft rule still applies to those files: B's Python and TS must still
+> run with no keys and no Azure packages, because CI and the offline Ask depend on that.
+
 ### A owns (potencialbg)
 
 | Area | Paths |
