@@ -101,7 +101,7 @@ describe('the pitch: no ball sound, kicks panned by ball x', () => {
     const gainOf = (k: 'pass' | 'shot' | 'whistle') => paramOf(stands.kindGain.get(k)!.gain).value;
     expect(gainOf('pass')).toBeCloseTo(Math.pow(10, DEFAULT_MIX.pass / 20), 3);
     expect(gainOf('shot')).toBeCloseTo(Math.pow(10, DEFAULT_MIX.shot / 20), 3);
-    expect(gainOf('whistle')).toBeGreaterThan(gainOf('shot'));              // the referee stays clear
+    expect(gainOf('pass')).toBeLessThan(gainOf('shot'));                    // a pass is the softest kick
     expect(filters.some((f) => f.type === 'lowpass' && paramOf(f.frequency).value === FIELD_LOWPASS_HZ)).toBe(true);
     setMix({ pass: -40 });                                                 // the mixer: heard at once; -40 dB = off
     fake.currentTime = 2;

@@ -33,12 +33,13 @@ export const MIX_GROUPS: readonly (keyof MixLevels)[] = [
 export const MIN_DB = -40;
 export const MAX_DB = 12;
 
-// Ours, set by ear (24 Oct). Kicks and saves sit well under the crowd bed, like thuds heard from the main stand.
+// Set by ear in the ?mix=1 mixer (potencialbg, audio-mix.json saved 24 Oct 2026 20:10 UTC). Kicks and saves sit well
+// under the crowd bed, like thuds heard from the main stand; the net and whistle are nearly off.
 export const DEFAULT_MIX: AudioMix = {
-  crowdBeds: 0, chants: 0, roars: 0,
-  pass: -14, shot: -9, tackle: -12, save: -10, net: -6, whistle: -2, ping: 0,
-  commentator: 0,
-  nearEnd: 0.5,
+  crowdBeds: -9.5, chants: -9.5, roars: -9.5,
+  pass: -29.5, shot: -20, tackle: -20, save: -20, net: -39, whistle: -28, ping: -0.5,
+  commentator: -23.5,
+  nearEnd: 0.55,
   commentatorPos: 'behind',
 };
 
