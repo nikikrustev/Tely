@@ -6,6 +6,10 @@
 // context inside Start, after mountLaneA() has run. So the voice has its own AudioContext (unlocked in the same tap,
 // see index.ts) and maps match time onto it by sampling clock.now() against ctx.currentTime. Both contexts run off
 // the same output device, so the offset is constant while playing; we re-measure it after every play/pause/seek.
+//
+// The voice sits in the press box, behind and above the seat (mix.ts VoiceStage): HRTF straight behind/above (never
+// left or right), a booth-mic high-pass and no stadium reverb, so it is clearly apart from the pitch.
+import { VoiceStage } from '../audio/mix';
 import type { CommentaryTrack } from '../contracts/a-exports';
 import type { CrowdBus, ReplayClock } from '../contracts/b-exports';
 
@@ -21,7 +25,7 @@ export interface Cue {
 
 /** The subset of AudioContext the track uses, so tests can pass a fake. */
 export type VoiceContext = Pick<AudioContext, 'currentTime' | 'state' | 'resume' | 'suspend' | 'decodeAudioData' |
-  'createBufferSource' | 'createGain' | 'destination'>;
+  'createBufferSource' | 'createGain' | 'createBiquadFilter' | 'createPanner' | 'destination'>;
 
 // Mix and timing constants. Duck depth: file 38 (a +12 dB dialogue-to-background ratio rated best) and BUILD_PLAN
 // Stage 4 ("at least 12 dB under speech"); B's duck() adds a -6 dB speech-band dip on top.
@@ -87,6 +91,7 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
   private silence = new WeakMap<AudioBuffer, number>(); // seconds of leading silence we may skip when late
   private ctx: VoiceContext | null = null;
   private out: GainNode | null = null;
+  voice: VoiceStage | null = null;
   private paused = false; // pause() from B, independent of the clock
   private playing = false; // what the replay clock last said
   private interrupted = -1; // the line that was speaking when the clock stopped: it resumes mid-line
@@ -112,8 +117,9 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
   /** The voice AudioContext, created and resumed in a user gesture (index.ts). Decoding starts now. */
   attach(ctx: VoiceContext): void {
     this.ctx = ctx;
-    this.out = ctx.createGain();
-    this.out.connect(ctx.destination);
+    // SEAM(A->B): mix.ts (B's folder) holds the shared mix, so the ?mix=1 mixer moves this voice live.
+    this.voice = new VoiceStage(ctx as unknown as BaseAudioContext, ctx.destination);
+    this.out = this.voice.input;
     this.reset(this.opts.clock.now(), this.opts.clock.isPlaying());
   }
 

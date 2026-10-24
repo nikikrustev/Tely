@@ -391,3 +391,25 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   output (KQL now returns the dimensions base64-encoded). The tester and a11y specs passed against the live site,
   apart from the two checks that assume no relay (now switched by `A11Y_BASE_URL`). Those runs, and Claude's, are
   skipped by `pull_feedback.py` (`TEAM_TESTS_BEFORE`).
+
+## D20. The match mix: no ball sound, crowd follows the ball, press-box commentator, `?mix=1` mixer (24 Oct 2026)
+
+- **Why:** from a seat on the halfway line nobody hears a ball on grass. The looped band-passed noise (the "ball") was
+  a constant hiss, passes and shots popped out of the crowd, and the commentator sounded as if he were on the pitch.
+- **No ball sound:** `AudioStands` no longer has the noise loop, rattle, ball panner or ball send. `ballAt()` only
+  records where the ball is (by audio time, so "Where is the ball?" pings where it is now, not where it is queued).
+- **Left/right without it (three cues):** (1) passes, shots, tackles and saves stay panned by ball x (HRTF + stereo);
+  (2) `CrowdEngine.followBall()`: the crowd end nearest the ball lifts and the far end drops (±3.5 dB at `nearEnd` 0.5,
+  up to ±7 dB), for the end beds, chants and crowd reactions; (3) the anticipation layers (swell, tense) pan toward
+  the ball (0.7 × side), like the part of the stand nearest the action. The home end stays left (`homePan` -0.5).
+- **Kicks under the crowd:** pass -14 dB, shot -9, tackle -12, save -10 against the old levels, through a 2.4 kHz
+  low-pass and twice the whistle's reverb send. The whistle (-2 dB) and the ping (0 dB) stay clear. The crowd
+  one-shots keep their 80 ms attack.
+- **Press-box commentator (`audio/mix.ts` `VoiceStage`):** HRTF on the centre line, 2 m behind and 0.8 m above the
+  seat (or "above" / "overhead"), no distance loss, a 110 Hz high-pass and Blauert's directional bands as EQ (HRTF
+  front/back and height are weak on most headphones). No reverb send. The same chain plays the commentary track,
+  the preset answers and the live answers.
+- **Mixer (`/?mix=1`, testing only):** one slider per group, the near-end amount and the commentator position, heard
+  live in all three audio contexts through one shared store. Reset; Submit copies and downloads `audio-mix.json`.
+  The draft is kept in localStorage and read only with `?mix=1`, so judges always hear `DEFAULT_MIX`. Submitted values
+  become `DEFAULT_MIX` in `audio/mix.ts`.

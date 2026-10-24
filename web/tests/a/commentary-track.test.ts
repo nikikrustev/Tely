@@ -2,6 +2,7 @@
 // crowd is ducked during every line. Runs the real judge-cut cue file through a simulated pair of audio clocks.
 import { readFileSync } from 'node:fs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { DEFAULT_MIX, setMix } from '../../src/audio/mix';
 import type { CrowdBus } from '../../src/contracts/b-exports';
 import { CommentaryTrackPlayer, DUCK_DB, parseCues, type Cue, type VoiceContext } from '../../src/lane-a/commentary-track';
 // SEAM(A->B): B's real ReplaySource is the replay clock lane A follows (contracts/b-exports.ts ReplayClock). Using it,
@@ -44,7 +45,20 @@ class FakeVoice {
     const duration = new Float64Array(ab)[0] as number, sampleRate = 1000, length = Math.round(duration * sampleRate);
     return { duration, sampleRate, length, getChannelData: () => new Float32Array(length).fill(0.5, 60) };
   };
-  createGain() { return { gain: { value: 1 }, connect: <T>(n: T) => n, disconnect() {} }; }
+  /** Nodes record their last setTargetAtTime value (the press-box voice chain, audio/mix.ts VoiceStage). */
+  readonly nodes: Record<string, unknown>[] = [];
+  private param(v = 0) { return { value: v, setTargetAtTime(x: number) { this.value = x; } }; }
+  private node(props: Record<string, unknown>) {
+    const n = { connect: <T>(x: T) => x, disconnect() {}, ...props };
+    this.nodes.push(n);
+    return n;
+  }
+  createGain() { return this.node({ kind: 'gain', gain: this.param(1) }); }
+  createBiquadFilter() { return this.node({ kind: 'biquad', type: 'lowpass', frequency: this.param(350), Q: this.param(1), gain: this.param() }); }
+  createPanner() {
+    return this.node({ kind: 'panner', panningModel: 'equalpower', distanceModel: 'inverse', rolloffFactor: 1,
+      positionX: this.param(), positionY: this.param(), positionZ: this.param() });
+  }
   createBufferSource() {
     const s: FakeSource & Record<string, unknown> = {
       buffer: null, onended: null, at: NaN, into: 0, started: false, stopped: false,
@@ -231,5 +245,23 @@ describe('commentary track on the judge cut', () => {
     const gap = second.t_in - w.src.now();
     expect(w.track.nextCueWithin(gap - 0.2)).toBe(false);
     expect(w.track.nextCueWithin(gap + 0.2)).toBe(true);
+  });
+
+  it('the voice comes from the press box: HRTF behind/above on the centre line, dry, no pitch panning', () => {
+    const w = world();
+    const panner = w.voice.nodes.find((n) => n.kind === 'panner') as Record<string, { value: number } | string | number>;
+    expect(panner.panningModel).toBe('HRTF');
+    expect(panner.rolloffFactor).toBe(0);
+    const v = (k: string) => (panner[k] as { value: number }).value;
+    expect(v('positionX')).toBe(0);                     // never left or right
+    expect(v('positionZ')).toBeGreaterThan(1);          // behind (the voice context's listener faces -Z)
+    expect(v('positionY')).toBeGreaterThan(0);          // and above
+    expect(w.voice.nodes.some((n) => n.kind === 'biquad' && n.type === 'highpass')).toBe(true);
+    expect(w.track.voice?.input).toBeDefined();
+    setMix({ commentatorPos: 'overhead', commentator: -6 });
+    expect(v('positionX')).toBe(0);
+    expect(v('positionY')).toBeGreaterThan(1.5);
+    expect(v('positionZ')).toBe(0);
+    setMix(DEFAULT_MIX);
   });
 });

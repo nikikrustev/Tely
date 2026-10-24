@@ -246,7 +246,7 @@ async function startApp(): Promise<void> {
     const a = await ensureAudio();
     const t = new Tour({
       stage: {
-        ball: (x, y, speed, at) => a.st.ballAt({ x, y, z: 0.11, speed, alive: true }, at),
+        ball: (x, y, speed, at) => { a.st.ballAt({ x, y, z: 0.11, speed, alive: true }, at); a.c.followBall(x, at); },
         ballOff: (at) => a.st.ballAt({ x: 0, y: 0, z: 0.11, speed: 0, alive: false }, at),
         earcon: (kind, x, y, at) => { a.st.earcon(kind, x, y, at); },
         crowd: (e, at) => a.c.setState({ excitement: e, valence: 0.2, danger: e > 0.5 ? 0.6 : 0 }, at),
@@ -417,6 +417,12 @@ async function startApp(): Promise<void> {
     }
     say(sec ? `${ch.label}. ${lastScore}` : `${ch.label}.`);
   });
+
+  // ---- sound mixer (?mix=1): a testing tool, never loaded on the judges' page ----
+  if (new URLSearchParams(location.search).get('mix') === '1') {
+    const { mountMixer } = await import('./tester/mixer');
+    mountMixer({ say });
+  }
 
   if (!testerMode) return;
   // ---- tester mode (?test=1, D19) ----

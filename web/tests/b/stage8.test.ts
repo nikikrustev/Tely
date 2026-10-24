@@ -73,7 +73,10 @@ describe('learn the sounds', () => {
     const played = await tour.run();
     expect(played).not.toContain('shot');                    // skipped right after the "A shot..." sentence
     expect(played.at(-1)).toBe('pass');
-    expect(order.indexOf('earcon:pass')).toBeGreaterThan(order.findIndex((x) => x.startsWith('say:A pass')));
+    const passSaid = order.findIndex((x) => x.startsWith('say:A pass'));
+    expect(order.indexOf('earcon:pass', passSaid)).toBeGreaterThan(passSaid);   // the ball step's kicks come earlier
+    const ballSaid = order.findIndex((x) => x.startsWith('say:Like in a'));
+    expect(order.indexOf('earcon:pass')).toBeGreaterThan(ballSaid);             // and those are after its sentence
   });
 });
 
