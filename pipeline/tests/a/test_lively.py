@@ -66,3 +66,19 @@ def test_names_build_refuses_to_write_into_the_deployed_bundle(tmp_path):
     names.write_text(json.dumps(NAMES), encoding="utf-8")
     assert build_commentary.main(["--names", str(names), "--out", str(BUNDLE / "judge")]) == 1
 
+
+
+def test_lively_narrates_the_passes_as_they_arrive(built):
+    """lively_v2: most completed passes are called, each at or after it arrives, with the receiver named."""
+    if built["cut"] != "judge":
+        pytest.skip("judge cut only")
+    m = rename(load_match("judge"), NAMES)
+    by_ev = {c["evidence"][0]: c for c in built["cues"] if c["kind"] == "describe" and c["evidence"]}
+    passes = [e for e in m.events if e["type"] == "pass" and e["outcome_type"] == "successful"
+              and m.t_start <= m.reveal_t(e) < m.t_end]
+    called = [e for e in passes if e["id"] in by_ev]
+    assert len(called) >= 0.6 * len(passes), (len(called), len(passes))
+    for e in called:
+        c = by_ev[e["id"]]
+        assert c["t_in"] >= m.reveal_t(e) - 1e-6
+        assert m.surname(e["receiver_id"]) in c["text"]["radio"]

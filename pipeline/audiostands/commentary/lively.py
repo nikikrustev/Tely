@@ -1,6 +1,7 @@
 """Lively commentary lines: the same facts as templates.py (radio_v1), said the way radio commentators say them.
 
-OWNER: A (potencialbg). Research: file 48 (commentator language). What changes from radio_v1:
+OWNER: A (potencialbg). Research: file 48 (commentator language). lively_v2 also narrates pass by pass (D21).
+What changes from radio_v1:
 - verbs and movement ("picks it up", "lets fly", "steps in") instead of bare zone labels; natural place phrases
   ("deep in their own half", "over on the far side") and the listener's side ("to your right") where it helps;
 - reactions and evaluation after the outcome is known ("What a save from...", "He'll feel he should have done
@@ -18,7 +19,17 @@ from audiostands.commentary.templates import (  # noqa: F401  (re-exported: the 
     score_words, zone,
 )
 
-NAME = "lively_v1"
+NAME = "lively_v2"
+
+# Pass-by-pass narration (potencialbg, 24 Oct: "Gakpo is with the ball, he's moving down the left flank... cuts
+# inside, passes back to Mac Allister, Mac Allister switches sides"). Every pass is called as it arrives, with its
+# direction and the receiver; between passes, the carry is described from B's 25 Hz ball track every few seconds.
+BALL_EVERY_S = 3.2   # the planner's in-play fill interval for this style (radio_v1: 9 s)
+BALL_GAP_S = 0.6     # silence either side of a fill line: just the duck (D12), so the narration flows
+CARRY_LOOK_S = 2.5   # a carry line describes what the ball does over the next 2.5 s (it is spoken over that time)
+WIDE_M = 20.0        # |y| beyond this is a flank
+_VERBLESS = ("moving", "looking", "into", "probing")
+_VERBLESS_PASS = ("short", "a simple", "forward to", "out wide", "inside to")  # carry phrases that read "Gakpo, moving down the left"
 
 _THIRD = {"defensive_third": ["deep in their own half", "back in their own third"],
           "middle_third": ["in midfield", "in the middle of the park"],
@@ -50,6 +61,72 @@ def _short(m: Match, t: float, side: str) -> str:
 def _where_at(m: Match, t: float, side: str, rng, with_dirn: bool = True) -> str:
     b = m.ball(t)
     return where(m, b["x"], b["y"], side, rng, with_dirn)
+
+
+def _sense(m: Match, side: str) -> float:
+    return 1.0 if m.meta["teams"][side]["attacks"] == "+x" else -1.0
+
+
+def _flank(m: Match, y: float, side: str) -> str:
+    """The team's own left or right, as commentators say it: facing +x, their left is +y."""
+    return "left" if y * _sense(m, side) > 0 else "right"
+
+
+def pass_phrase(m: Match, e: dict, rng) -> str:
+    """How a completed pass travelled, ending with the receiver: "plays it back to X", "switches it to the right for X"."""
+    r, k = m.surname(e["receiver_id"]), _sense(m, m.side(e))
+    fwd = (e["x_end"] - e["x"]) * k
+    across = abs(e["y_end"] - e["y"])
+    length = (fwd ** 2 + across ** 2) ** 0.5
+    wide0, wide1 = abs(e["y"]) > WIDE_M, abs(e["y_end"]) > WIDE_M
+    flank = _flank(m, e["y_end"], m.side(e))
+    if across > 25 and abs(fwd) < 20:
+        return rng.choice([f"switches it to the {flank} for {r}", f"switches the play, out to {r} on the {flank}",
+                           f"spreads it across to {r}"])
+    if fwd < -5:
+        return rng.choice([f"plays it back to {r}", f"goes back to {r}", f"lays it back for {r}"])
+    if fwd > 20 and length > 25:
+        return rng.choice([f"goes long for {r}", f"plays it forward to {r}", f"looks for {r} with a longer ball"])
+    if wide1 and not wide0:
+        return rng.choice([f"out wide to {r} on the {flank}", f"finds {r} out on the {flank}"])
+    if wide0 and not wide1:
+        return rng.choice([f"cuts it inside to {r}", f"inside to {r}"])
+    if fwd > 5:
+        return rng.choice([f"forward to {r}", f"finds {r} further up", f"threads it on to {r}"])
+    return rng.choice([f"short to {r}", f"a simple ball to {r}", f"finds {r}", f"plays it to {r}"])
+
+
+def _next_event_t(m: Match, t: float) -> float:
+    return next((m.t(e) for e in m.events if m.t(e) > t + 1e-6), m.t_end)
+
+
+def carry_phrase(m: Match, t: float, side: str, rng) -> str | None:
+    """What the holder does with the ball over the next CARRY_LOOK_S (or until the next event), from the ball track."""
+    t1 = min(t + CARRY_LOOK_S, _next_event_t(m, t) - 0.1)
+    if t1 - t < 1.0:
+        return None
+    a, b = m.ball(t), m.ball(t1)
+    k = _sense(m, side)
+    fwd, dist = (b["x"] - a["x"]) * k, ((b["x"] - a["x"]) ** 2 + (b["y"] - a["y"]) ** 2) ** 0.5
+    inward = abs(a["y"]) - abs(b["y"])
+    attacking = b["x"] * k > 17.5
+    flank = _flank(m, b["y"], side)
+    if dist < 2.0:
+        return None  # standing still: ball() says where he is instead (see HOLD)
+    if inward > 4 and abs(a["y"]) > WIDE_M - 5:
+        return rng.choice(["cuts inside", "comes inside off the flank", f"drifts in from the {flank}"])
+    if fwd > 4 and abs(b["y"]) > WIDE_M:
+        return rng.choice([f"moving down the {flank} flank", f"races down the {flank}", f"carries it down the {flank}"])
+    if fwd > 4:
+        if attacking:
+            return rng.choice(["runs at the defence", "into space now",
+                               "drives towards the box" if b["x"] * k > 36 else "drives forward"])
+        return rng.choice(["drives forward", "carries it forward", "brings it out", "strides into midfield"])
+    if fwd < -4:
+        return rng.choice(["turns back", "goes backwards, looking to recycle it", "turns away from pressure"])
+    if inward < -4:
+        return rng.choice([f"drifts out to the {flank}", f"shifts it out towards the {flank}"])
+    return rng.choice(["shifts it across", "moves it on to his other foot", "probing"])
 
 
 def _plain(m: Match, t: float, side: str) -> str:
@@ -94,24 +171,26 @@ def describe(m: Match, e: dict) -> Draft | None:
     sig_zone = m.sig(e["id"])["zone"]
     w = _where_at(m, t, side, rng)
     if e["type"] == "pass":
-        prio = 1 if m.sig(e["id"])["priority"] >= 1 else 0
-        attacking = sig_zone["third"] == "attacking_third"
-        lines = [f"{who} picks it up {w}.", f"{team} knocking it about {w}... {who} on the ball.",
-                 f"{who}, {w}, looking for a way through.", f"Now it's {who}, {w}.",
-                 f"{team} patient now. {who} has it {w}.", f"{who} takes a touch {w}, head up.",
-                 f"Into {who}, {w}."]
-        if attacking:
-            lines += [f"{team} pushing on {w}. {who}.", f"{who} on the ball {w}, {team} probing.",
-                      f"{who} {w}... what's on for him?"]
-        text = rng.choice(lines)
-        if e.get("sub_type") == "free_kick":
-            text, prio = f"Free kick to {team}, {w}. {who} stands over it.", 1
+        # Called as it arrives (reveal_t): the receiver is the pass's outcome, so never named earlier (spoiler rule).
+        if e["outcome_type"] != "successful" or not e.get("receiver_id"):
+            return None
+        rt, r = m.reveal_t(e), m.surname(e["receiver_id"])
+        phrase = pass_phrase(m, e, rng)
+        attacking = m.sig(e["id"])["zone"]["third"] == "attacking_third"
+        if e.get("sub_type") == "kick_off":
+            texts = [f"{team} get us going again, {who} {phrase}.", f"{team} kick off, {who} to {r}."]
+        elif e.get("sub_type") == "free_kick":
+            texts = [f"{who} takes the free kick... {phrase}.", f"Free kick taken, {who} to {r}."]
         elif e.get("sub_type") == "goal_kick":  # never "goal": an outcome word (spoiler eval)
-            text, prio = f"{team} start again from the back. {who} gets us going.", 1
-        plain = f"{cap(sig_zone['words'])}, {team}. {who} on the ball."
-        style = "curious" if attacking else "calm"
-        return Draft("describe", t, prio, [text, f"{who}, {_short(m, t, side)}.", plain], style, m.second(t)["tension"], (e["id"],),
-                     stale_s=1.0 if prio else 0.5, team=side, key=e["id"])
+            texts = [f"{who} restarts from the back, {phrase}.", f"{who} to {r}."]
+        else:
+            if phrase.startswith(_VERBLESS_PASS):
+                lead = rng.choice([f"{who}... {phrase}.", f"{who}, {phrase}."])
+            else:
+                lead = rng.choice([f"{who} {phrase}.", f"{who}... {phrase}.", f"And {who} {phrase}."])
+            texts = [lead, f"{who} to {r}.", f"To {r}."]
+        return Draft("describe", rt, 1, texts, "curious" if attacking else "calm", m.second(rt)["tension"], (e["id"],),
+                     stale_s=1.2, team=side, key=e["id"])
     if e["type"] == "defending" and e.get("sub_type") == "interception":
         text = rng.choice([f"Read it beautifully! {who} steps in, and {team} have it back.",
                            f"Nicked away by {who}! {team} win it back.",
@@ -267,7 +346,19 @@ def detail(m: Match, shot: dict) -> Draft | None:
                  "excited", 0.75, evidence, stale_s=8.0, reveal="outcome", team=side, key=f"detail:{shot['id']}")
 
 
+HOLD = ["takes his time", "looking for options", "holds it up", "has a look around", "shields it",
+        "waits for support", "weighs it up"]
+
+
+def _fresh(options: list[str], near: tuple[str, ...], rng) -> str:
+    """A phrase the lines either side haven't just said (the start of each is enough to tell)."""
+    said = " ".join(near).lower()
+    left = [o for o in options if o.lower().split("...")[0].split(",")[0][:18] not in said] or options
+    return rng.choice(left)
+
+
 def ball(m: Match, t: float, k: int = 0, near: tuple[str, ...] = (), score_due: bool = False) -> Draft | None:
+    """In-play fill between passes: what the holder is doing with it, from the ball track (lively_v2)."""
     if not m.ball(t)["alive"]:
         return None
     holder, holder_ev = m.holder_at(t)
@@ -279,21 +370,36 @@ def ball(m: Match, t: float, k: int = 0, near: tuple[str, ...] = (), score_due: 
     side = m.players[holder]["side"]
     team, who = m.team_name(side), m.surname(holder)
     rng = _rng(m, f"ball:{holder_ev}:{k}")
-    w = _where_at(m, t, side, rng)
+    move = carry_phrase(m, t, side, rng)
+    said = " ".join(near).lower()
+    if move and move.lower() in said:
+        move = None  # just said: describe where he is instead
+    if move is None and k >= 2:
+        return None  # a third line about him standing still is filler: let the crowd breathe
     plain = _plain(m, t, side)
-    third = f"{plain.split(',')[0]}, {team}."
-    if any(who in s for s in near):
-        bare = rng.choice([f"{team} keeping it {w}.", f"{team} on the ball {w}.", f"Patient from {team}, {w}.",
-                           f"{team} moving it around {w}."])
-        texts = [f"{team} in possession {w}. It's {score_words(m, t)}."] if score_due else []
-        texts = list(dict.fromkeys([*texts, bare, f"{team}, {_short(m, t, side)}.", f"{plain}, {team}.", third]))
-    else:
-        texts = [rng.choice([f"{who} has it {w}.", f"{team} probing {w}... {who}.", f"It's {who} now, {w}.",
-                             f"{team} keeping it {w}. {who} on the ball.",
-                             f"{team} circulating it {w}, {who} in possession."]),
-                 f"{who}, {_short(m, t, side)}.", f"{team}, {_short(m, t, side)}.", f"{plain}, {team}.", third]
-    return Draft("ball", t, 0, texts, "calm", min(m.second(t)["tension"], 0.3), (holder_ev,), stale_s=0.0, team=side,
-                 key=f"ball:{holder_ev}:{k}")
+    texts: list[str] = []
+    if score_due:
+        texts.append(f"{team} in possession {_where_at(m, t, side, rng)}. It's {score_words(m, t)}.")
+    named = any(who in s for s in near)
+    if move:
+        verbless = move.startswith(_VERBLESS)
+        if named:  # the line before said his name: carry on the sentence
+            texts.append(_fresh([f"{cap(move)}..."] if verbless else [f"{cap(move)}...", f"Now he {move}."], near, rng))
+        else:
+            texts.append(_fresh([f"{who}, {move}...", f"{who} with the ball, {move}.",
+                                 f"{who}, {move}." if verbless else f"{who} {move}."], near, rng))
+    else:  # holding it: paint where he is, then what he's doing
+        w = _where_at(m, t, side, rng)
+        hold = _fresh(HOLD, near, rng)
+        texts.append(_fresh([f"{team} keeping it {w}.", f"{cap(hold)}, {w}...", f"Patient from {team}, {w}."]
+                            if named else [f"{who} on the ball {w}.", f"{who} {w}, {hold}.",
+                                           f"{who}, {w}... {hold}."], near, rng))
+        texts.append(f"{cap(hold)}..." if named else f"{who}, {hold}.")
+    texts += [f"{who}, {_short(m, t, side)}.", f"{team}, {_short(m, t, side)}.", f"{plain}, {team}."]
+    # Never repeat a neighbouring line word for word ("Gakpo, in midfield." twice).
+    texts = [x for x in dict.fromkeys(texts) if x.lower() not in said] or [f"{plain}, {team}."]
+    return Draft("ball", t, 0, texts, "calm", min(m.second(t)["tension"], 0.35), (holder_ev,),
+                 stale_s=0.0, team=side, key=f"ball:{holder_ev}:{k}")
 
 
 def state(m: Match, t: float, n: int) -> Draft:

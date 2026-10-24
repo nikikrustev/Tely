@@ -158,12 +158,13 @@ def quiet_in_play(m: Match, starts: list[float], runs: list[tuple[float, float]]
 def _ball_fill(m: Match, placed: list[Line], duration_of: DurationFn) -> list[Line]:
     """Split every in-play stretch longer than BALL_EVERY_S with ball lines, evenly, left to right."""
     runs = in_play(m)
+    every = getattr(lines_for(m), "BALL_EVERY_S", BALL_EVERY_S)  # lively_v2 narrates every ~3 s
     lines = sorted(placed, key=lambda p: p.t_in)
     said: dict[str, int] = {}  # holder event -> ball lines about it so far (varies the wording)
     cursor = m.t_start
     while True:
         todo = next(((s0, s1) for s0, s1 in quiet_in_play(m, [p.t_in for p in lines], runs)
-                     if s0 >= cursor - EPS and s1 - s0 > BALL_EVERY_S), None)
+                     if s0 >= cursor - EPS and s1 - s0 > every), None)
         if todo is None:
             return lines
         fit = _fit_ball(m, lines, *todo, runs, said, duration_of)
@@ -181,11 +182,12 @@ def _fit_ball(m: Match, lines: list[Line], s0: float, s1: float, runs: list[tupl
               said: dict[str, int], duration_of: DurationFn) -> Line | None:
     # Even spacing: cut the stretch into the fewest equal parts no longer than BALL_EVERY_S, and aim for the first cut.
     # Try that point, then earlier, then later. The next round of _ball_fill splits whatever is left.
-    pref = _ceil2(s0 + (s1 - s0) / math.ceil((s1 - s0) / BALL_EVERY_S))
+    every = getattr(lines_for(m), "BALL_EVERY_S", BALL_EVERY_S)
+    pref = _ceil2(s0 + (s1 - s0) / math.ceil((s1 - s0) / every))
     n_back, n_fwd = int((pref - s0) / STEP_S), int((s1 - pref) / STEP_S)
     cands = [round(pref - STEP_S * k, 2) for k in range(n_back + 1)] + [round(pref + STEP_S * k, 2)
                                                                         for k in range(1, n_fwd + 1)]
-    for gap in (BALL_GAP_S, DUCK_S):  # room for the crowd to swell back first; at the least, room for the duck
+    for gap in dict.fromkeys((getattr(lines_for(m), "BALL_GAP_S", BALL_GAP_S), DUCK_S)):  # room for the crowd to swell back first; at the least, room for the duck
         for a in cands:
             _, ev = m.holder_at(a)
             i = next((j for j, p in enumerate(lines) if p.t_in > a), len(lines))

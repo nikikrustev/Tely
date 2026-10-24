@@ -431,3 +431,11 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
 - **First render (24 Oct):** Liverpool v Arsenal at Anfield, squads from line-ups around 10–25 Oct 2026 (unverified),
   72 lines, truth_check 72/72, 0 spoiler leaks, 4,251 characters synthesised.
 - **Not changed:** the score announcements on screen, preset answers and live Ask still use Reds and Navy.
+- **lively_v2, pass by pass (24 Oct, potencialbg: "Gakpo is with the ball, moving down the left flank... cuts
+  inside, passes back to Mac Allister, Mac Allister switches sides"):** every completed pass is called as it arrives
+  (never earlier: the receiver is its outcome) with how it travelled ("plays it back to", "switches it to the right
+  for", "out wide to"), from the event's start and end points. Between passes, a line every ~3.2 s says what the
+  holder does, from B's 25 Hz ball track ("moving down the left flank", "cuts inside", "drives forward"); a player
+  standing still gets where he is ("Patient from Arsenal, out on the far side in midfield"), at most twice. Flanks
+  are the team's own left and right, as commentators say them. Second render: 113 lines, truth_check 113/113, 0 leaks.
+- **Mix (second submission, 20:30 UTC):** crowd beds -14 dB, chants -20, reactions -7; the rest unchanged.
