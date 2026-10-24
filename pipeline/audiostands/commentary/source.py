@@ -133,6 +133,30 @@ class Match:
         return None, None
 
 
+def rename(m: Match, names: dict) -> Match:
+    """A copy of m with other team, player and venue names (a local listening test only; the events are unchanged).
+
+    names: {"venue": str, "teams": {"home": {"short_name", "name", "kit": {...}}, ...},
+            "players": {player_id: {"first_name", "last_name"}}}. Anything not given keeps its synthetic name.
+    """
+    meta = json.loads(json.dumps(m.meta))
+    if names.get("venue"):
+        meta["match"]["venue"]["name"] = names["venue"]
+    for side, t in (names.get("teams") or {}).items():
+        team = meta["teams"][side]
+        kit = t.get("kit") or {}
+        team.update({k: v for k, v in t.items() if k != "kit"})
+        team["kit"].update(kit)
+        for p in team["players"]:
+            new = (names.get("players") or {}).get(p["id"])
+            if new:
+                p.update(new)
+                p["name"] = f"{p.get('first_name', '')} {p['last_name']}".strip()
+    out = Match(meta=meta, events=m.events, signals=m.signals, ticks=m.ticks, src=m.src)
+    out.style = getattr(m, "style", "radio_v1")  # type: ignore[attr-defined]
+    return out
+
+
 def load_match(cut: str = "judge") -> Match:
     """The one place Stage 3 reads B's match files (stdlib only, as in contracts/b/README.md)."""
     d = MATCH_DIRS[cut]

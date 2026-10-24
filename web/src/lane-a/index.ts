@@ -23,6 +23,14 @@ export async function loadRadioCues(base = BUNDLE_BASE) {
   return parseCues(await (await getOk(`${base}/${file}`)).text());
 }
 
+/** ?names=<stem>: a local listening test's commentary (D21: real club and player names over the synthetic match).
+ *  Only the dev server serves /replay/v1/local/ (web/.local/, git-ignored), so on the deployed site this 404s and the
+ *  shipped track plays instead. */
+export function localCommentaryBase(search: string): string | null {
+  const stem = new URLSearchParams(search).get('names');
+  return stem && /^[a-z0-9-]{1,40}$/.test(stem) ? `/replay/v1/local/${stem}` : null;
+}
+
 /** Browsers start audio only from a tap or key press. Create and resume the voice context in the first one, in the
  *  capture phase, so it happens inside the same gesture as B's Start button (iOS needs that; file 37). */
 function unlockOnGesture(onContext: (ctx: AudioContext) => void): void {
@@ -66,13 +74,19 @@ export async function liveRelayUrl(search: string, fetchJson: (u: string) => Pro
 
 // SEAM(A->B): B's main.ts calls this once with LaneBContext (crowd bus, Ask, replay clock).
 export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
+  let audioBase = BUNDLE_BASE;
   const commentary = new CommentaryTrackPlayer({
     clock: ctx.clock,
     crowd: ctx.crowd,
-    fetchAudio: async (url) => (await getOk(`${BUNDLE_BASE}/${url}`)).arrayBuffer(),
+    fetchAudio: async (url) => (await getOk(`${audioBase}/${url}`)).arrayBuffer(),
   });
   if (typeof window !== 'undefined') {
-    loadRadioCues().then((cues) => commentary.load(cues))
+    const local = localCommentaryBase(location.search);
+    const cues = local
+      ? getOk(`${local}/cues.en.radio.jsonl`).then(async (r) => { const c = parseCues(await r.text()); audioBase = local; return c; })
+        .catch(() => loadRadioCues())
+      : loadRadioCues();
+    cues.then((c) => commentary.load(c))
       .catch((err: unknown) => console.warn('[commentary] no commentary track; the match plays without it', err));
     unlockOnGesture((c) => commentary.attach(c));
     // The live Ask gets its own context: CommentaryTrack.pause() suspends the commentary's, and B pauses the

@@ -1,8 +1,12 @@
-// OWNER: B (Nikolay). Seat-in-the-stands spatial audio (file 37 audio-stands.ts), adapted:
+// OWNER: B (Nikolay; A since the 24 Oct handover). Seat-in-the-stands spatial audio (file 37 audio-stands.ts), adapted:
 // - the AudioContext is passed in (tests use a fake one; nodes come from its factory methods);
 // - earcons are generated here (procedural thud / whistle / net / ping), nothing downloaded;
-// - ball moves are scheduled at an exact audio time (`at`), so the replay can queue them ahead.
-import { decayNoise, prng, stadiumIR } from './stadium-ir';
+// - ball moves are scheduled at an exact audio time (`at`), so the replay can queue them ahead;
+// - there is NO continuous ball sound (24 Oct): from the main stand nobody hears a ball roll on grass. Left/right
+//   comes from the kicks (panned by ball x), the crowd end nearest the ball (CrowdEngine.followBall) and the commentary;
+// - every sound group has its own level from the shared mix (mix.ts), so the ?mix=1 mixer is heard live.
+import { dbToGain, onMix, VoiceStage, type AudioMix } from './mix';
+import { prng, stadiumIR } from './stadium-ir';
 
 export type Seat = 'halfway' | 'homeEnd' | 'awayEnd';
 export type Earcon = 'pass' | 'shot' | 'tackle' | 'save' | 'whistle' | 'net' | 'ping';
@@ -22,11 +26,11 @@ export const EARCON_GAP_S = 0.3;
 /** A low-priority earcon that would be pushed later than this is dropped instead of piling up. */
 const MAX_PUSH_S = 0.45;
 const PRIORITY: Record<Earcon, number> = { net: 0, whistle: 0, shot: 0, save: 1, ping: 1, tackle: 2, pass: 3 };
+/** The ball on the pitch: dulled and wetter, so these sit inside the crowd instead of popping out of it. */
+export const FIELD: readonly Earcon[] = ['pass', 'shot', 'tackle', 'save'];
+export const FIELD_LOWPASS_HZ = 2400; // a thud 30-60 m away has lost its click
 
 export interface BallSample { x: number; y: number; z: number; speed: number; alive: boolean }
-
-/** Ball loudness from its speed (m/s): 0.04 when still, rising to 0.25 by 12 m/s (a firm pass). Ours, tune by ear. */
-export const ballLevel = (speed: number): number => 0.06 + 0.39 * Math.min(1, Math.max(0, (speed - 1) / 11));
 
 /** Plain left/right pan from pitch x: Reds' own goal (x -52.5, where Navy attack) hard left, halfway centre,
  *  Navy's goal (x 52.5, where Reds attack) hard right.
@@ -38,20 +42,18 @@ export class AudioStands {
   readonly ctx: BaseAudioContext;
   readonly master: GainNode;
   readonly crowdIn: GainNode; // CrowdEngine output goes here (it has its own ducking)
-  readonly ballBus: GainNode;
   readonly earconBus: GainNode;
-  readonly commentaryIn: GainNode; // A's commentary: dry, centre, top priority
-  readonly ballPanner: PannerNode;
-  readonly ballStereo: StereoPannerNode;
-  private ballGain: GainNode;
-  private ballSend: GainNode;
-  private rattle: OscillatorNode;
+  /** Preset answers: the same press-box voice as A's commentary (mix.ts VoiceStage). Dry: no reverb send. */
+  readonly commentaryIn: GainNode;
+  readonly voice: VoiceStage;
+  /** One level per earcon kind, from the mix (mix.ts), heard live. */
+  readonly kindGain = new Map<Earcon, GainNode>();
   private reverb: ConvolverNode;
   private icons = new Map<Earcon, AudioBuffer>();
   private nextEarconAt = 0;
   private queued: { src: AudioScheduledSourceNode; when: number }[] = [];
-  private seat: Seat = 'halfway';
-  last = { x: 0, y: 0 };
+  /** Ball positions queued ahead, by audio time, so "where is it now?" never reads the future. */
+  private track: { at: number; x: number; y: number }[] = [];
 
   constructor(ctx: BaseAudioContext, destination: AudioNode = ctx.destination) {
     this.ctx = ctx;
@@ -67,65 +69,56 @@ export class AudioStands {
     this.reverb.buffer = stadiumIR(ctx, 2.8);
     this.reverb.connect(this.master);
     this.crowdIn = this.bus(1.0);
-    this.ballBus = this.bus(0.8);
     this.earconBus = this.bus(0.7);
-    this.commentaryIn = this.bus(1.0);
-    // Ball = looped noise -> band-pass (broadband localises better than tones) -> rattle AM -> HRTF panner
-    const noise = ctx.createBufferSource();
-    noise.buffer = this.noiseBuffer(2);
-    noise.loop = true;
-    const bp = ctx.createBiquadFilter();
-    bp.type = 'bandpass';
-    bp.frequency.value = 3200; // above most of the crowd's energy, so the ball cuts through
-    bp.Q.value = 1.2;
-    // Gentle rattle: a smooth (sine) wobble of +-15% around 0.85. A square wave at full depth chugged like a train
-    // (team listening notes, 22 Oct).
-    const am = ctx.createGain();
-    am.gain.value = 0.85;
-    this.rattle = ctx.createOscillator();
-    this.rattle.type = 'sine';
-    this.rattle.frequency.value = 6;
-    const depth = ctx.createGain();
-    depth.gain.value = 0.15;
-    this.rattle.connect(depth).connect(am.gain);
-    this.ballGain = ctx.createGain();
-    this.ballGain.gain.value = 0;
-    this.ballPanner = this.panner();
-    noise.connect(bp).connect(am).connect(this.ballGain);
-    this.ballStereo = ctx.createStereoPanner();
-    this.mix(this.ballGain, this.ballPanner, this.ballStereo, this.ballBus);
-    this.ballSend = ctx.createGain();
-    this.ballSend.gain.value = 0.2;
-    this.ballPanner.connect(this.ballSend).connect(this.reverb); // far = wetter (distance cue)
+    this.voice = new VoiceStage(ctx, this.master);
+    this.commentaryIn = this.voice.input;
     const earconSend = ctx.createGain();
     earconSend.gain.value = 0.15;
     this.earconBus.connect(earconSend).connect(this.reverb);
-    for (const k of Object.keys(PRIORITY) as Earcon[]) this.icons.set(k, this.makeIcon(k));
-    noise.start();
-    this.rattle.start();
+    const fieldLp = ctx.createBiquadFilter();
+    fieldLp.type = 'lowpass';
+    fieldLp.frequency.value = FIELD_LOWPASS_HZ;
+    fieldLp.Q.value = 0.5;
+    fieldLp.connect(this.earconBus);
+    const fieldSend = ctx.createGain();
+    fieldSend.gain.value = 0.3; // twice the whistle's: further away, more of the bowl
+    fieldLp.connect(fieldSend).connect(this.reverb);
+    for (const k of Object.keys(PRIORITY) as Earcon[]) {
+      this.icons.set(k, this.makeIcon(k));
+      const g = ctx.createGain();
+      g.connect(FIELD.includes(k) ? fieldLp : this.earconBus);
+      this.kindGain.set(k, g);
+    }
+    onMix((m) => this.applyMix(m));
     this.setSeat('halfway');
   }
 
-  setSeat(seat: Seat): void {
-    this.seat = seat;
-    setListener(this.ctx.listener, SEATS[seat].pos, SEATS[seat].fwd);
+  applyMix(m: AudioMix): void {
+    const t = this.ctx.currentTime;
+    for (const [k, g] of this.kindGain) g.gain.setTargetAtTime(dbToGain(m[k]), t, 0.05);
   }
 
-  /** One ball sample, heard at audio time `at`. setTargetAtTime smooths the steps (no zipper noise). */
-  ballAt(b: BallSample, at = this.ctx.currentTime, tau = 0.04): void {
-    const p = this.ballPanner;
-    const w = toWorld(b.x, b.y, b.z);
-    p.positionX.setTargetAtTime(w[0], at, tau);
-    p.positionY.setTargetAtTime(w[1], at, tau);
-    p.positionZ.setTargetAtTime(w[2], at, tau);
-    this.ballStereo.pan.setTargetAtTime(stereoPan(b.x), at, tau);
-    this.rattle.frequency.setTargetAtTime(4 + Math.min(b.speed, 30) * 0.8, at, 0.1); // faster ball, faster rattle
-    // Loud only while the ball travels: a ball at someone's feet is near-silent, and a dead ball is silent.
-    this.ballGain.gain.setTargetAtTime(b.alive ? ballLevel(b.speed) : 0, at, b.alive ? 0.08 : 0.3);
-    const s = SEATS[this.seat].pos;
-    const d = Math.hypot(s[0] - w[0], s[1] - w[1], s[2] - w[2]);
-    this.ballSend.gain.setTargetAtTime(Math.min(0.6, d / 120), at, 0.2);
-    this.last = { x: b.x, y: b.y };
+  setSeat(seat: Seat): void {
+    setListener(this.ctx.listener, SEATS[seat].pos, SEATS[seat].fwd);
+    this.voice.setListener(SEATS[seat].pos, SEATS[seat].fwd);
+  }
+
+  /** One ball sample, heard at audio time `at`. Makes no sound: it only records where the ball is (for the ping). */
+  ballAt(b: BallSample, at = this.ctx.currentTime): void {
+    const now = this.ctx.currentTime;
+    while (this.track.length > 1 && (this.track[1] as { at: number }).at <= now) this.track.shift();
+    this.track.push({ at, x: b.x, y: b.y });
+  }
+
+  /** Where the ball is as heard now: the latest sample at or before the audio clock. */
+  get last(): { x: number; y: number } {
+    const now = this.ctx.currentTime;
+    let p = this.track[0] ?? { x: 0, y: 0 };
+    for (const s of this.track) {
+      if (s.at > now) break;
+      p = s;
+    }
+    return { x: p.x, y: p.y };
   }
 
   /** A spatial earcon at pitch (x, y). Returns the start time, or null if it was dropped (too crowded). */
@@ -147,7 +140,7 @@ export class AudioStands {
     const sp = this.ctx.createStereoPanner();
     sp.pan.value = stereoPan(x);
     src.connect(g);
-    this.mix(g, p, sp, this.earconBus);
+    this.mix(g, p, sp, this.kindGain.get(kind) as GainNode);
     src.onended = () => { p.disconnect(); sp.disconnect(); };
     src.start(t);
     this.queued = this.queued.filter((q) => q.when > this.ctx.currentTime - 5);
@@ -155,19 +148,18 @@ export class AudioStands {
     return t;
   }
 
-  /** Drop ball moves and earcons scheduled from audio time `t` on (after a seek). */
+  /** Drop ball positions and earcons scheduled from audio time `t` on (after a seek). */
   cancelFrom(t: number): void {
-    const p = this.ballPanner;
-    for (const a of [p.positionX, p.positionY, p.positionZ, this.ballStereo.pan, this.ballGain.gain, this.ballSend.gain,
-      this.rattle.frequency]) a.cancelScheduledValues(t);
+    this.track = this.track.filter((s) => s.at < t);
     for (const q of this.queued) if (q.when >= t) try { q.src.stop(); } catch { /* already stopped */ }
     this.queued = this.queued.filter((q) => q.when < t);
     this.nextEarconAt = 0;
   }
 
-  /** "Where is the ball?": three pings at its last position. */
+  /** "Where is the ball?": three pings where it is now. */
   pingBall(): void {
-    for (let i = 0; i < 3; i++) this.earcon('ping', this.last.x, this.last.y);
+    const { x, y } = this.last;
+    for (let i = 0; i < 3; i++) this.earcon('ping', x, y);
   }
 
   /** Seconds between scheduling and hearing (Bluetooth included where reported): haptics should lead by this. */
@@ -201,12 +193,6 @@ export class AudioStands {
     p.rolloffFactor = 0.5;
     p.maxDistance = 200;
     return p;
-  }
-
-  private noiseBuffer(sec: number): AudioBuffer {
-    const b = this.ctx.createBuffer(1, Math.floor(this.ctx.sampleRate * sec), this.ctx.sampleRate);
-    decayNoise([b.getChannelData(0)], this.ctx.sampleRate, 0, 0, 3);
-    return b;
   }
 
   /** Procedural auditory icons (no samples): short, distinct, and different in timbre. */

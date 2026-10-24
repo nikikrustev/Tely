@@ -391,3 +391,51 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   output (KQL now returns the dimensions base64-encoded). The tester and a11y specs passed against the live site,
   apart from the two checks that assume no relay (now switched by `A11Y_BASE_URL`). Those runs, and Claude's, are
   skipped by `pull_feedback.py` (`TEAM_TESTS_BEFORE`).
+
+## D20. The match mix: no ball sound, crowd follows the ball, press-box commentator, `?mix=1` mixer (24 Oct 2026)
+
+- **Why:** from a seat on the halfway line nobody hears a ball on grass. The looped band-passed noise (the "ball") was
+  a constant hiss, passes and shots popped out of the crowd, and the commentator sounded as if he were on the pitch.
+- **No ball sound:** `AudioStands` no longer has the noise loop, rattle, ball panner or ball send. `ballAt()` only
+  records where the ball is (by audio time, so "Where is the ball?" pings where it is now, not where it is queued).
+- **Left/right without it (three cues):** (1) passes, shots, tackles and saves stay panned by ball x (HRTF + stereo);
+  (2) `CrowdEngine.followBall()`: the crowd end nearest the ball lifts and the far end drops (±3.5 dB at `nearEnd` 0.5,
+  up to ±7 dB), for the end beds, chants and crowd reactions; (3) the anticipation layers (swell, tense) pan toward
+  the ball (0.7 × side), like the part of the stand nearest the action. The home end stays left (`homePan` -0.5).
+- **Kicks under the crowd:** pass -14 dB, shot -9, tackle -12, save -10 against the old levels, through a 2.4 kHz
+  low-pass and twice the whistle's reverb send. The whistle (-2 dB) and the ping (0 dB) stay clear. The crowd
+  one-shots keep their 80 ms attack.
+- **Press-box commentator (`audio/mix.ts` `VoiceStage`):** HRTF on the centre line, 2 m behind and 0.8 m above the
+  seat (or "above" / "overhead"), no distance loss, a 110 Hz high-pass and Blauert's directional bands as EQ (HRTF
+  front/back and height are weak on most headphones). No reverb send. The same chain plays the commentary track,
+  the preset answers and the live answers.
+- **Mixer (`/?mix=1`, testing only):** one slider per group, the near-end amount and the commentator position, heard
+  live in all three audio contexts through one shared store. Reset; Submit copies and downloads `audio-mix.json`.
+  The draft is kept in localStorage and read only with `?mix=1`, so judges always hear `DEFAULT_MIX`. Submitted values
+  become `DEFAULT_MIX` in `audio/mix.ts`.
+
+## D21. Livelier commentary (`--style lively`) and a local Liverpool v Arsenal listening test (24 Oct 2026)
+
+- **Why:** potencialbg found the commentator bland ("Midfield, far side, Reds."). Research file 48: radio commentary
+  is play-by-play **and** colour, with verbs, inversion at peaks, places said naturally and evaluation after the
+  outcome. radio_v1 was nearly all bare play-by-play labels.
+- **`lively` template set** (`commentary/lively.py`, chosen by `build_commentary --style lively`): the same facts,
+  drafts, timing, spoiler rules, truth verifier and seeded RNG as radio_v1, with commentator wording and the
+  listener's side ("to your left"). The shortest fallbacks stay plain, so tight gaps still fit. The shipped judge
+  track stays **radio_v1** until we decide to re-render it.
+- **Real names, local only:** `--names pipeline/names/<x>.local.json` renames teams, players and venue over the
+  synthetic events (`source.rename`) and writes to `web/.local/<x>/`. Both paths are git-ignored. The build refuses to
+  write a renamed track into `web/public`. Only the dev server serves it (`vite.config.ts`, `apply: 'serve'`), at
+  `/?names=<x>`. On the deployed site the path 404s and the shipped track plays. This keeps the CLAUDE.md rule (synthetic
+  data, fictional clubs in anything we ship) while letting us hear the style with familiar names.
+- **First render (24 Oct):** Liverpool v Arsenal at Anfield, squads from line-ups around 10–25 Oct 2026 (unverified),
+  72 lines, truth_check 72/72, 0 spoiler leaks, 4,251 characters synthesised.
+- **Not changed:** the score announcements on screen, preset answers and live Ask still use Reds and Navy.
+- **lively_v2, pass by pass (24 Oct, potencialbg: "Gakpo is with the ball, moving down the left flank... cuts
+  inside, passes back to Mac Allister, Mac Allister switches sides"):** every completed pass is called as it arrives
+  (never earlier: the receiver is its outcome) with how it travelled ("plays it back to", "switches it to the right
+  for", "out wide to"), from the event's start and end points. Between passes, a line every ~3.2 s says what the
+  holder does, from B's 25 Hz ball track ("moving down the left flank", "cuts inside", "drives forward"); a player
+  standing still gets where he is ("Patient from Arsenal, out on the far side in midfield"), at most twice. Flanks
+  are the team's own left and right, as commentators say them. Second render: 113 lines, truth_check 113/113, 0 leaks.
+- **Mix (second submission, 20:30 UTC):** crowd beds -14 dB, chants -20, reactions -7; the rest unchanged.
