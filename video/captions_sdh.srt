@@ -1,0 +1,99 @@
+1
+00:00:00,000 --> 00:00:02,500
+[stadium crowd fades in]
+
+2
+00:00:00,300 --> 00:00:04,700
+Audio Stands: a seat in the stands for fans who can't see the pitch.
+
+3
+00:00:04,900 --> 00:00:07,600
+Synthetic match, real pipeline.
+
+4
+00:00:08,200 --> 00:00:14,300
+In RNIB's research, blind fans scored ordinary TV commentary 6.1 out of 15.
+
+5
+00:00:14,500 --> 00:00:19,300
+And description often lags: you hear the roar before you know why.
+
+6
+00:00:21,400 --> 00:00:25,250
+AI COMMENTATOR: Navy coming... Olvholm... here's a chance!
+
+7
+00:00:22,000 --> 00:00:24,000
+[crowd rises]
+
+8
+00:00:24,000 --> 00:00:26,000
+[phone pulses: attack]
+
+9
+00:00:25,400 --> 00:00:27,840
+[shot, left] [phone pulses: shot] [ball hits the net]
+
+10
+00:00:25,700 --> 00:00:27,050
+Fenford, the header!
+
+11
+00:00:28,200 --> 00:00:30,550
+It's in the net... but hold on, VAR is checking it.
+
+12
+00:00:28,200 --> 00:00:30,600
+[Navy end hush] [Reds end hush]
+
+13
+00:00:30,600 --> 00:00:32,400
+(18 seconds later, after the VAR check)
+
+14
+00:00:31,560 --> 00:00:34,060
+[Navy end roars] [Reds end falls silent] [phone pulses: goal]
+
+15
+00:00:31,560 --> 00:00:35,010
+AI COMMENTATOR: The goal stands! Goal for Navy!
+
+16
+00:00:36,000 --> 00:00:39,000
+The voice lifted four seconds before the header.
+
+17
+00:00:39,200 --> 00:00:44,600
+Our Director agent hears ten seconds ahead, but it only shapes the build-up.
+
+18
+00:00:45,200 --> 00:00:49,800
+And at any moment, the fan can ask the commentator out loud.
+
+19
+00:01:01,200 --> 00:01:04,800
+Foundry Voice Live, in the commentator's own voice.
+
+20
+00:01:11,200 --> 00:01:13,800
+Here's why it can't spoil the match.
+
+21
+00:01:14,000 --> 00:01:19,900
+The Director sees the next ten seconds, but it outputs only a tension plan, never the result.
+
+22
+00:01:20,000 --> 00:01:25,300
+Code checks every line: seventy lines, zero spoiler leaks, every number verified.
+
+23
+00:01:25,400 --> 00:01:35,300
+Under the hood: a seeded match generator, Agent Framework on Foundry, Azure Speech HD voices, Static Web Apps, and a Container Apps relay.
+
+24
+00:01:35,400 --> 00:01:40,200
+We checked our Azure deployment from Copilot Agent Mode through Azure MCP.
+
+25
+00:01:46,200 --> 00:01:51,600
+Audio Stands. Put on headphones and try it: the link is below.
