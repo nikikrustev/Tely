@@ -190,8 +190,8 @@ describe('LiveAsk', () => {
     const s = sockets[0] as FakeSocket;
     s.server({ type: 'ready' });
     await flush();
-    s.server({ type: 'tool', name: 'set_preferences', say: 'Done.', prefs: { verbosity: 'calm' } });
-    expect(log).toContain('prefs:{"verbosity":"calm"}');
+    s.server({ type: 'tool', name: 'set_preferences', say: 'Done.', prefs: { crowd_mix: 0.2 } });
+    expect(log).toContain('prefs:{"crowd_mix":0.2}');
   });
 });
 

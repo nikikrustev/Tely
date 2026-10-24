@@ -334,5 +334,8 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   server) still offers `verbosity: describer | radio | calm`. The page drops it (`web/src/settings.ts` `prefsPatch`),
   so a fan who asks for less talk can hear "done" when nothing changed. Follow-up: take `verbosity` out of the tool
   so the commentator says it can't do that yet. The relay has to be redeployed after that change.
+  **Fixed the same day (`a/no-verbosity`):** the schema and the MCP tool take only `crowd_mix` and `haptics`; a
+  `verbosity` the model sends anyway gets "I can't change how much I say yet…" instead of "Done."; the persona tells
+  the commentator the same. Live only after the relay is redeployed.
 - **If time does turn up before the deadline,** TEAM_SPLIT.md's stretch order still applies: LLM colour, then the
   Foundry cloud evaluator, then Describer/Calm audio.

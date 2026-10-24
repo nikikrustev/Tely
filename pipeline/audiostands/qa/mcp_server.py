@@ -95,10 +95,9 @@ def build_server(bundle: Bundle | None = None) -> MCPServer:
               annotations=ToolAnnotations(read_only_hint=False, destructive_hint=False, idempotent_hint=True,
                                           open_world_hint=False))
     def set_preferences(ctx: Context,
-                        verbosity: Literal["describer", "radio", "calm"] | None = None,
                         crowd_mix: Annotated[float, Field(ge=0, le=1)] | None = None,
                         haptics: Literal["off", "events", "full"] | None = None) -> dict[str, Any]:
-        return run("set_preferences", {"verbosity": verbosity, "crowd_mix": crowd_mix, "haptics": haptics}, ctx)
+        return run("set_preferences", {"crowd_mix": crowd_mix, "haptics": haptics}, ctx)
 
     return mcp
 

@@ -249,8 +249,12 @@ def what_did_i_miss(b: Bundle, p: float, since: str) -> dict:
     return _ok(b, p, parts, say=" ".join(t for _, t in parts) + ".", evidence=[e["id"] for e in ev])
 
 
+NO_DETAIL_LEVEL = ("I can't change how much I say yet: there's one level of detail for now. "
+                   "I can turn the crowd up or down, or change the vibration.")
+
+
 def set_preferences(b: Bundle, p: float, **prefs: Any) -> dict:
-    allowed = {"verbosity": {"describer", "radio", "calm"}, "haptics": {"off", "events", "full"}}
+    allowed = {"haptics": {"off", "events", "full"}}
     clean: dict[str, Any] = {}
     for k, v in prefs.items():
         if k in allowed and v in allowed[k]:
@@ -258,6 +262,8 @@ def set_preferences(b: Bundle, p: float, **prefs: Any) -> dict:
         elif k == "crowd_mix" and isinstance(v, (int, float)):
             clean[k] = min(1.0, max(0.0, float(v)))
     # SEAM(B->A): the relay publishes `prefs` to the listener's page; nothing here touches the match.
+    if "verbosity" in prefs:   # Radio only (docs/DECISIONS.md D18): say so rather than "Done." for nothing
+        return _ok(b, p, None, say=f"Done. {NO_DETAIL_LEVEL}" if clean else NO_DETAIL_LEVEL, prefs=clean)
     return _ok(b, p, [_static("done")], prefs=clean)
 
 

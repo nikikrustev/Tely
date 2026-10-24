@@ -28,7 +28,7 @@ def calls_for(p: float, rng: random.Random) -> list[tuple[str, dict]]:
     return [("get_score_and_clock", {}), ("get_ball_position", {}), ("where_is", {"player": pl["last_name"]}),
             ("get_player_stats", {"player": pl["name"]}), ("get_last_events", {"n": rng.randint(1, 5)}),
             ("explain_moment", {"moment_id": rng.choice(list(SIG))}),
-            ("what_did_i_miss", {"since": B.clock_str(max(B.t0, p - 90))}), ("set_preferences", {"verbosity": "calm"})]
+            ("what_did_i_miss", {"since": B.clock_str(max(B.t0, p - 90))}), ("set_preferences", {"crowd_mix": 0.3, "haptics": "events"})]
 
 
 async def over_http(header: str | None, calls: list[tuple[str, dict]]) -> list[dict]:
