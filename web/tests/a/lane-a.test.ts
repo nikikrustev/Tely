@@ -1,7 +1,7 @@
 // OWNER: A (potencialbg).
 import { describe, expect, it } from 'vitest';
 import type { LaneBContext } from '../../src/contracts/b-exports';
-import { mountLaneA } from '../../src/lane-a';
+import { localCommentaryBase, mountLaneA } from '../../src/lane-a';
 
 // SEAM(A->B): a fake LaneBContext, so A's tests depend only on B's contract, not on B's main.ts.
 const ctx: LaneBContext = {
@@ -16,5 +16,15 @@ describe('mountLaneA', () => {
     commentary.pause();
     commentary.resume();
     expect(commentary.nextCueWithin(3)).toBe(false);
+  });
+});
+
+describe('local listening-test commentary (?names=, D21)', () => {
+  it('maps a safe stem to the dev-only path, and ignores anything else', () => {
+    expect(localCommentaryBase('?names=liverpool-arsenal')).toBe('/replay/v1/local/liverpool-arsenal');
+    expect(localCommentaryBase('?mix=1&names=liverpool-arsenal')).toBe('/replay/v1/local/liverpool-arsenal');
+    expect(localCommentaryBase('')).toBeNull();
+    expect(localCommentaryBase('?names=../judge')).toBeNull();
+    expect(localCommentaryBase('?names=https://evil.example')).toBeNull();
   });
 });

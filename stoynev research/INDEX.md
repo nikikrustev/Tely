@@ -81,6 +81,7 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 | 44 | [44-accounts-quotas-setup-checklist.md](44-accounts-quotas-setup-checklist.md) | Do-later checklist (nothing signed up): free account → upgrade to Pay-As-You-Go, avoid Students as main sub, Sweden Central region (West Europe lacks Voice Live realtime), Voice Live needs S0, model quota may start at 0 TPM, ~$45–87 budget, 2-person account ownership |
 | 46 | [46-copilot-github-azure-mcp-workflow.md](46-copilot-github-azure-mcp-workflow.md) | Copilot plans today (agent mode in Free; cloud agent needs Student/Pro), Azure MCP 3.0 flags and 128-tool limit, GitHub Models retired, datasets as attested GitHub Releases, honest AI-assistance disclosure, ready config files (instructions, mcp.json, workflows) |
 | 47 | [47-prior-art-outside-hackathon.md](47-prior-art-outside-hackathon.md) | No single product does all of Audio Stands, but each pillar exists (IBM/Opta Voice/NBC AI commentary, FOX/Samsung talk-back, OneCourt, Disney spatial-audio patent, AiCommentator). Defensible novelty: look-ahead used for tension + talk-back on a delayed playhead. 8 patents, safe novelty wording, partners |
+| 48 | [48-commentator-language.md](48-commentator-language.md) | The words commentators use: Ferguson's register (dropped copulas, inversion, routines), play-by-play vs colour, radio rules (be the eyes, update the score, don't over-locate), one-word calls rise with xG, hyperbole; the `lively` template set built from it |
 
 ## In progress
 

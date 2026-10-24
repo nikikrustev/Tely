@@ -21,3 +21,8 @@ __pycache__/
 
 # Raw CC0 downloads (licences tracked in assets/licences.json instead)
 assets/raw/
+
+# Local listening tests with real club and player names (D21): never committed, never deployed.
+# The name maps and the bundles rendered from them stay on the machine that made them.
+*.local.json
+web/.local/

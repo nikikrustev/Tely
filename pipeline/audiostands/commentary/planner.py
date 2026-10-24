@@ -20,8 +20,16 @@ import math
 from dataclasses import dataclass, replace
 from typing import Callable
 
+from audiostands.commentary import lively
 from audiostands.commentary import templates as T
 from audiostands.commentary.source import Match
+
+STYLES = {"radio_v1": T, "lively": lively}
+
+
+def lines_for(m: Match):
+    """The template set for this match: radio_v1 unless build_commentary --style set m.style."""
+    return STYLES[getattr(m, "style", "radio_v1")]
 
 WPS = 2.6            # words per second (file 39); our probe on 21 Oct measured ~2.6 for Andrew HD
 ELLIPSIS_S = 0.3     # "..." is spoken as a short pause (our estimate)
@@ -60,18 +68,19 @@ def estimate(text: str, style: str, pause_ms: int) -> float:
 def drafts(m: Match, plans: dict | None = None) -> list[T.Draft]:
     """plans: shot id -> the Director's verified tension plan (Stage 5). A shot without one uses the Stage 3 rules."""
     plans = plans or {}
-    out = [T.opener(m), T.kits(m)]
+    L = lines_for(m)
+    out = [L.opener(m), L.kits(m)]
     for e in m.events:
         if e.get("sub_type") == "kick_off" and m.t(e) <= m.t_start + 1:
             continue  # the opener says who kicks off
         if e["type"] == "shot":
-            out += [T.build(m, e, plans.get(e["id"])), T.call(m, e), T.react(m, e), T.detail(m, e)]
+            out += [L.build(m, e, plans.get(e["id"])), L.call(m, e), L.react(m, e), L.detail(m, e)]
         elif e["type"] == "referee":
-            out += T.var_check(m, e) if e.get("sub_type") == "var_check" else []
+            out += L.var_check(m, e) if e.get("sub_type") == "var_check" else []
         elif e["type"] == "misc":
-            out.append(T.foul(m, e))
+            out.append(L.foul(m, e))
         else:
-            out.append(T.describe(m, e))  # saves and blocks are spoken by the shot's react line
+            out.append(L.describe(m, e))  # saves and blocks are spoken by the shot's react line
     return [d for d in out if d is not None and m.t_start <= d.t < m.t_end]
 
 
@@ -183,7 +192,7 @@ def _fit_ball(m: Match, lines: list[Line], s0: float, s1: float, runs: list[tupl
             near = tuple(p.text for p in lines[max(i - 1, 0):i + 1])
             score = T.score_words(m, a)
             due = not any(score in p.text for p in lines if a - SCORE_EVERY_S <= p.t_in < a)
-            d = T.ball(m, a, said.get(ev or "", 0), near, due)
+            d = lines_for(m).ball(m, a, said.get(ev or "", 0), near, due)
             if d is None:
                 continue
             for text in d.texts:
@@ -205,7 +214,7 @@ def _quiet_fill(m: Match, placed: list[Line], duration_of: DurationFn) -> list[L
             pref = _ceil2(max(early, min(prev_end + FILL_AFTER_S, prev_start + MAX_QUIET_S)))
             fit = None
             for a in dict.fromkeys((pref, early)):
-                d = T.state(m, a, n)
+                d = lines_for(m).state(m, a, n)
                 for text in d.texts:
                     dur = duration_of(text, d.style, d.pause_ms)
                     if a + dur + (MIN_GAP_S if nxt else 0) <= limit and _free(m, placed, a, a + dur, "state"):

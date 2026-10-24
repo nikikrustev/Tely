@@ -413,3 +413,21 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   live in all three audio contexts through one shared store. Reset; Submit copies and downloads `audio-mix.json`.
   The draft is kept in localStorage and read only with `?mix=1`, so judges always hear `DEFAULT_MIX`. Submitted values
   become `DEFAULT_MIX` in `audio/mix.ts`.
+
+## D21. Livelier commentary (`--style lively`) and a local Liverpool v Arsenal listening test (24 Oct 2026)
+
+- **Why:** potencialbg found the commentator bland ("Midfield, far side, Reds."). Research file 48: radio commentary
+  is play-by-play **and** colour, with verbs, inversion at peaks, places said naturally and evaluation after the
+  outcome. radio_v1 was nearly all bare play-by-play labels.
+- **`lively` template set** (`commentary/lively.py`, chosen by `build_commentary --style lively`): the same facts,
+  drafts, timing, spoiler rules, truth verifier and seeded RNG as radio_v1, with commentator wording and the
+  listener's side ("to your left"). The shortest fallbacks stay plain, so tight gaps still fit. The shipped judge
+  track stays **radio_v1** until we decide to re-render it.
+- **Real names, local only:** `--names pipeline/names/<x>.local.json` renames teams, players and venue over the
+  synthetic events (`source.rename`) and writes to `web/.local/<x>/`. Both paths are git-ignored. The build refuses to
+  write a renamed track into `web/public`. Only the dev server serves it (`vite.config.ts`, `apply: 'serve'`), at
+  `/?names=<x>`. On the deployed site the path 404s and the shipped track plays. This keeps the CLAUDE.md rule (synthetic
+  data, fictional clubs in anything we ship) while letting us hear the style with familiar names.
+- **First render (24 Oct):** Liverpool v Arsenal at Anfield, squads from line-ups around 10–25 Oct 2026 (unverified),
+  72 lines, truth_check 72/72, 0 spoiler leaks, 4,251 characters synthesised.
+- **Not changed:** the score announcements on screen, preset answers and live Ask still use Reds and Navy.
