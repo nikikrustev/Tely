@@ -40,6 +40,8 @@ const TICK_MS = 100;
 const FAST_TICK_MS = 10; // while measuring the clock offset after play/seek
 const OFFSET_SAMPLES = 15;
 const DEFAULT_STALE_MS = 500;
+/** If the playhead moved more than this while the voice was paused, the pause was an Ask (the match kept going). */
+const RESUME_IN_SYNC_S = 0.25;
 
 export interface TrackOptions {
   clock: ReplayClock;
@@ -95,6 +97,7 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
   private paused = false; // pause() from B, independent of the clock
   private playing = false; // what the replay clock last said
   private interrupted = -1; // the line that was speaking when the clock stopped: it resumes mid-line
+  private pausedAt = NaN; // playhead at pause()
   private offsets: number[] = []; // samples of clock.now() - ctx.currentTime
   private lastRaw: [number, number] = [NaN, NaN];
   private timer: ReturnType<typeof setTimeout> | null = null;
@@ -127,6 +130,7 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
 
   pause(): void {
     this.paused = true;
+    this.pausedAt = this.opts.clock.now();
     this.stopAll(this.opts.clock.now());
     void this.ctx?.suspend().catch(() => {});
   }
@@ -134,7 +138,12 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
   resume(): void {
     if (!this.paused) return;
     this.paused = false;
-    this.reset(this.opts.clock.now(), this.opts.clock.isPlaying());
+    const p = this.opts.clock.now();
+    // The match moved on while the voice was paused (an Ask: the playhead keeps running). Never pick a line up
+    // mid-sentence then (file 49 §4): it goes through the late rule below, so it restarts if still fresh, else it is
+    // dropped and B's catch-up covers it. A replay pause keeps the playhead still, so that line resumes in sync.
+    if (Math.abs(p - this.pausedAt) > RESUME_IN_SYNC_S) this.interrupted = -1;
+    this.reset(p, this.opts.clock.isPlaying());
   }
 
   nextCueWithin(s: number): boolean {
@@ -238,9 +247,9 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
       into = at - when;
       this.interrupted = -1;
     } else if (lateS > 0) {
-      // Late (start-up, where the playhead holds at t0 until B's replay really starts, or after a seek). Skip into the
-      // line's leading silence by the lateness, so speech still lands on t_in; past that, say the whole line now if
-      // it is still fresh, otherwise drop it.
+      // Late (start-up, where the playhead holds at t0 until B's replay really starts, after a seek, or after an Ask).
+      // Skip into the line's leading silence by the lateness, so speech still lands on t_in; past that, say the whole
+      // line now if it is still fresh, otherwise drop it.
       if (lateS > staleS && c.kind !== 'intro') {
         this.status[i] = 'done';
         return;

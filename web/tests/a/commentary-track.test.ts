@@ -265,3 +265,49 @@ describe('commentary track on the judge cut', () => {
     setMix(DEFAULT_MIX);
   });
 });
+
+// File 49 §4: after an Ask (the commentary pauses, the playhead keeps running) a line cut off mid-sentence is never
+// picked up mid-sentence. It restarts from the top if still fresh, otherwise it is dropped (B's catch-up covers it).
+describe('resume after an Ask: restart or drop, never mid-sentence', () => {
+  const LINE = CUES.findIndex((c) => c.kind === 'describe' && c.utterance.duration_ms >= 5000);
+  const withStale = (ms: Record<number, number>) =>
+    CUES.map((c, i) => (i in ms ? { ...c, utterance: { ...c.utterance, stale_ms: ms[i] } } : c));
+  /** Play to 1.5 s into `line`, pause the voice only (as Ask does), let the match run on, then resume. */
+  async function askOver(cues: Cue[], line: Cue, pauseS: number) {
+    const w = world(cues);
+    await w.start();
+    await w.advance(line.t_in - MANIFEST.t_start + 1.5);
+    expect(w.track.starts.at(-1)?.cue_id).toBe(line.cue_id);
+    w.track.pause();                     // B's ask.ts: commentary.pause(); the replay clock keeps going
+    await w.advance(pauseS);
+    const before = w.track.starts.length;
+    w.track.resume();
+    await w.advance(1);
+    return w.track.starts.slice(before);
+  }
+
+  it('drops a stale line instead of resuming it mid-sentence', async () => {
+    const line = CUES[LINE] as Cue;
+    expect((line.utterance.stale_ms ?? 500)).toBeLessThan(3000);   // a normal describe line: fresh for ~1 s
+    const after = await askOver(CUES, line, 3);
+    expect(after.filter((s) => s.cue_id === line.cue_id)).toEqual([]);
+  });
+
+  it('restarts a still-fresh line from the top (only its leading silence skipped)', async () => {
+    const cues = withStale({ [LINE]: 20_000 });
+    const line = cues[LINE] as Cue;
+    const after = await askOver(cues, line, 3);
+    const again = after.filter((s) => s.cue_id === line.cue_id);
+    expect(again).toHaveLength(1);
+    expect(again[0]!.into).toBeLessThanOrEqual(0.07);
+  });
+
+  it('when a newer line is already due, only the newer one plays (never two voices at once)', async () => {
+    // Cues never overlap, so the older line has ended by the time the newer one is due and reset() retires it.
+    const cues = withStale({ [LINE]: 20_000, [LINE + 1]: 20_000 });
+    const line = cues[LINE] as Cue, next = cues[LINE + 1] as Cue;
+    const pause = next.t_in - (line.t_in + 1.5) + 0.5;            // resume 0.5 s after the next line was due
+    const after = await askOver(cues, line, pause);
+    expect(after.map((s) => s.cue_id)).toEqual([next.cue_id]);
+  });
+});

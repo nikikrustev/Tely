@@ -439,3 +439,25 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   standing still gets where he is ("Patient from Arsenal, out on the far side in midfield"), at most twice. Flanks
   are the team's own left and right, as commentators say them. Second render: 113 lines, truth_check 113/113, 0 leaks.
 - **Mix (second submission, 20:30 UTC):** crowd beds -14 dB, chants -20, reactions -7; the rest unchanged.
+
+## D22. Press-to-interrupt, and no mid-sentence resume after an Ask (24 Oct 2026)
+
+- **Why:** research file 49. A press is the only barge-in that can promise a stop "within a fraction of a second"
+  without an open mic (voice barge-in needs Live-Reference AEC, after the deadline). And after an answer, the commentary
+  track picked the cut line up mid-sentence at the playhead, which sounds broken.
+- **Ask stays pressable during an answer.** Its label becomes "Stop the answer" and it keeps focus, so a screen reader
+  user can double-tap it. The button or **A** stops the answer at once (preset clips, browser voice or live answer;
+  a 0.1 s fade, never a click), opens the question menu and **keeps the commentary paused** for the next question.
+  **Escape** stops it and goes straight back to the action. Closing the menu, or 10 s with no question, plays the
+  catch-up from the moment the commentary first paused, then resumes. The next question reuses that pause: no second
+  pause, and no "hold that thought" (the build-up would be paused too).
+- **Restart or drop, never mid-sentence.** If the playhead moved more than 0.25 s while the voice was paused (an Ask:
+  the replay clock keeps going), the cut line goes through the existing late rule: it restarts from the top while it is
+  inside its `stale_ms`, otherwise it is dropped and the catch-up covers it. With today's cues (`stale_ms` 0–1.5 s for
+  most lines) that means dropped. A replay pause keeps the playhead still, so that line still resumes in sync (unchanged).
+- **Checked:** 12 new unit tests (9 for the Ask controller and the stoppable players, 3 for the track; 2 of the
+  track tests fail on the old code), vitest 118/118, Playwright + axe 90/90, and in Chrome on the dev server: A during
+  an answer opened the menu 6 ms later with focus on the first question; Escape played "Back to the action." and
+  the match went on; 10 s without a question did the same.
+- **Not checked:** stopping a *live* answer on the deployed relay (only the unit test with a fake live mode), and how
+  the stop fade sounds by ear.
