@@ -13,6 +13,7 @@ export const MAX_LISTEN_MS = 12000;     // relay/caps.py max_listen_s: then the 
 export const ANSWER_MAX_MS = 30_000;   // safety: no answer runs longer (300 output tokens is ~15 s)
 export const DOWN_FOR_MS = 5 * 60_000;  // after "off" / a cap, skip the relay for 5 min and go straight to presets
 export const RATE = 24000;              // PCM16 mono both ways (relay/voicelive.py)
+export const STOP_FADE_S = 0.1;         // file 49: a stopped answer fades this fast (same as ask.ts), never clicks
 
 /** A refusal from the relay (relay/clips.py), or one we make up when the relay can't be reached. */
 export interface Refusal {
@@ -306,6 +307,7 @@ export interface BrowserIOOptions {
 export function browserIO(o: BrowserIOOptions): LiveIO {
   let workletReady: Promise<void> | null = null;
   let out: GainNode | null = null;
+  let answerBus: GainNode | null = null;
   let voice: VoiceStage | null = null;
   let nextT = 0;
   const playing = new Set<AudioBufferSourceNode>();
@@ -373,7 +375,11 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
       for (let i = 0; i < s.length; i++) ch[i] = (s[i] as number) / 0x8000;
       const src = c.createBufferSource();
       src.buffer = buf;
-      src.connect(out as GainNode);
+      if (!answerBus || answerBus.context !== c) {       // one gain per answer, so a stop can fade it (file 49)
+        answerBus = c.createGain();
+        answerBus.connect(out as GainNode);
+      }
+      src.connect(answerBus);
       const at = Math.max(c.currentTime + 0.06, nextT);
       src.start(at);
       nextT = at + buf.duration;
@@ -387,7 +393,14 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
       while (c.currentTime < nextT && performance.now() < until) await new Promise((r) => setTimeout(r, 50));
     },
     stopPlayback() {
-      playing.forEach((s) => { try { s.stop(); } catch { /* not started */ } });
+      const c = o.audio(), bus = answerBus;
+      answerBus = null;                                   // the next answer gets a fresh bus at full level
+      const at = c ? c.currentTime + STOP_FADE_S : 0;
+      if (c && bus) {
+        bus.gain.setTargetAtTime(0, c.currentTime, STOP_FADE_S / 3);   // a fast fade, not a click
+        setTimeout(() => { try { bus.disconnect(); } catch { /* already gone */ } }, (STOP_FADE_S + 0.5) * 1000);
+      }
+      playing.forEach((s) => { try { s.stop(at); } catch { /* not started */ } });
       playing.clear();
       nextT = 0;
     },

@@ -166,19 +166,43 @@ async function startApp(): Promise<void> {
     askBtn.setAttribute('aria-expanded', String(open));
     if (open) askMenu.querySelector<HTMLButtonElement>('button:not([hidden])')?.focus();
   };
-  askBtn.addEventListener('click', () => openMenu(askMenu.hidden !== false));
+  // Press-to-interrupt (file 49): during an answer the same button (or A) stops it at once and opens the menu for
+  // the next question, with the commentary still paused; Escape stops it and goes straight back to the action.
+  const ASK_LABEL = askBtn.textContent?.trim() || 'Ask the commentator', STOP_LABEL = 'Stop the answer';
+  const HOLD_IDLE_MS = 10_000;                          // no next question after a stop: back to the match anyway
   let presetsAfter = false;                             // A's live mode asked for the menu while its answer finished
+  let menuAfter = false;                                // the fan stopped an answer to ask again
+  let holdTimer: ReturnType<typeof setTimeout> | null = null;
   const runAsk = async (fn: () => Promise<unknown>) => {
     openMenu(false);
-    askBtn.disabled = true;
+    if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+    askBtn.textContent = STOP_LABEL;                     // the button stays live: pressing it is how the fan interrupts
+    askBtn.focus();
     say('Answering.');                                   // state change only; the answer itself is heard
     try { await fn(); } finally {
-      askBtn.disabled = false;
-      if (presetsAfter) { presetsAfter = false; openMenu(true); } else askBtn.focus();
+      askBtn.textContent = ASK_LABEL;
+      if (presetsAfter || menuAfter) {
+        presetsAfter = menuAfter = false;
+        openMenu(true);
+        if (askCtl?.isHolding) holdTimer = setTimeout(() => { if (askCtl?.isHolding) closeMenu(); }, HOLD_IDLE_MS);
+      } else askBtn.focus();
     }
   };
+  /** Close the menu. If the commentary is held after a stop, that means "back to the action". */
+  const closeMenu = () => {
+    openMenu(false);
+    askBtn.focus();
+    if (askCtl?.isHolding) void runAsk(() => askCtl!.release());
+  };
+  const pressAsk = () => {
+    if (askBtn.disabled) return;
+    if (askCtl?.isBusy) { menuAfter = askCtl.interrupt('listen'); return; }
+    if (askMenu.hidden) openMenu(true); else closeMenu();
+  };
+  askBtn.addEventListener('click', pressAsk);
   lazyAsk.onShowPresets = () => {
-    if (askBtn.disabled) presetsAfter = !!askCtl;        // busy: open once it finishes (never before Ask is ready)
+    if (!askCtl) return;                                 // never before Ask is ready
+    if (askCtl.isBusy) presetsAfter = true;              // busy: open once it finishes
     else openMenu(true);
   };
   for (const b of askMenu.querySelectorAll<HTMLButtonElement>('button[data-preset]')) {
@@ -188,8 +212,11 @@ async function startApp(): Promise<void> {
   document.addEventListener('keydown', (e) => {
     const typing = (e.target as HTMLElement | null)?.closest('input, select, textarea');
     if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
-    if (e.key === 'a' || e.key === 'A') { if (!askBtn.disabled) { e.preventDefault(); openMenu(askMenu.hidden !== false); } }
-    else if (e.key === 'Escape' && !askMenu.hidden) { openMenu(false); askBtn.focus(); }
+    if (e.key === 'a' || e.key === 'A') { if (!askBtn.disabled) { e.preventDefault(); pressAsk(); } }
+    else if (e.key === 'Escape') {
+      if (askCtl?.isBusy) askCtl.interrupt('back');
+      else if (!askMenu.hidden) closeMenu();
+    }
   });
   const setupAsk = async (actx: AudioContext, st: InstanceType<typeof AudioStands>, c: InstanceType<typeof CrowdEngine>,
                           s: InstanceType<typeof ReplaySource>) => {
@@ -200,6 +227,7 @@ async function startApp(): Promise<void> {
       askCtl = new askMod.AskController({
         tools, clock: s, crowd: c, commentary: lane.commentary,
         speak: (f, text) => player.speak(f, text),
+        stop: () => player.stop(),
         ping: () => st.pingBall(),
         show: (text) => { status.textContent = text; },
       });

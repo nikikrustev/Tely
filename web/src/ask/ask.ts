@@ -2,6 +2,8 @@
 // A question: hold that thought if a chance is coming (says THAT, never WHAT) -> duck the crowd and pause A's
 // commentary (the playhead keeps running) -> the answer from A's pre-rendered clips -> "back to the action" with a
 // catch-up of anything revealed meanwhile -> unduck and resume. A's live voice mode plugs in via registerLiveMode().
+// Press-to-interrupt (file 49): pressing Ask during an answer stops it at once and keeps the commentary paused while
+// the fan picks the next question; closing the menu instead goes back to the action (catch-up, then resume).
 import type { CommentaryTrack } from '../contracts/a-exports';
 import type { Ask, CrowdBus, LiveAskHandler } from '../contracts/b-exports';
 import { HOLD_LOOKAHEAD_S, STATIC, type Answer, type LocalTools } from './local-tools';
@@ -15,6 +17,7 @@ export const PRESETS: { id: Preset; label: string }[] = [
 ];
 export const DUCK_DB = -12, DUCK_MS = 240, UNDUCK_MS = 1500;   // file 38: speech +12 dB over the crowd; fast down, slow up
 export const HOLD_CUE_GAP_S = 2.5;                              // A's review: never say "hold" over a line due this soon
+export const STOP_FADE_S = 0.1;                                 // file 49: a stop is a fast fade, never a click
 
 export interface AskDeps {
   tools: LocalTools;
@@ -26,11 +29,19 @@ export interface AskDeps {
   ping?: () => void;
   show?: (text: string) => void;                 // visible text (not a live region: the fan already hears it)
   wait?: (ms: number) => Promise<void>;
+  /** Stop whatever `speak` is playing now; its promise then resolves. */
+  stop?: () => void;
 }
+
+/** After an interrupt: 'listen' keeps the commentary paused for the next question, 'back' returns to the action. */
+export type AfterStop = 'listen' | 'back';
 
 export class AskController implements Ask {
   private live: LiveAskHandler | null = null;
   private busy = false;
+  private pausedAt: number | null = null;          // the commentary is paused (and the crowd ducked) since this playhead
+  private stopped: AfterStop | null = null;        // set by interrupt() while a question runs
+  private wake: (() => void) | null = null;        // ends the current wait early
   constructor(private d: AskDeps) {}
 
   // SEAM(B->A): b-exports.ts Ask.registerLiveMode. A's lane-a/live-ask.ts registers the Voice Live handler here.
@@ -44,6 +55,11 @@ export class AskController implements Ask {
 
   get isBusy(): boolean {
     return this.busy;
+  }
+
+  /** The commentary is paused waiting for the fan's next question (after an interrupt). */
+  get isHolding(): boolean {
+    return !this.busy && this.pausedAt !== null;
   }
 
   /** Answer for a preset at playhead p (pure; the Stage 6 tests call it). */
@@ -82,34 +98,85 @@ export class AskController implements Ask {
     this.live?.cancel();
   }
 
-  private async run(body: () => Promise<string[]>): Promise<string[]> {
-    if (this.busy) return [];
+  /** The fan pressed Ask (or a key) while a question runs: stop speaking now, locally, without waiting for any
+   *  network. Returns false if nothing was running. */
+  interrupt(then: AfterStop): boolean {
+    if (!this.busy) return false;
+    this.stopped = then;
+    this.live?.cancel();
+    this.d.stop?.();
+    this.wake?.();
+    return true;
+  }
+
+  /** The fan closed the question menu after an interrupt without asking again: catch up, then resume. */
+  async release(): Promise<string[]> {
+    if (this.busy || this.pausedAt === null) return [];
     this.busy = true;
     const said: string[] = [];
     try {
-      if (this.d.tools.hold_that_thought(this.d.clock.now())) { // a chance is coming: never say what, just wait for it
+      await this.backToAction(said);
+    } finally {
+      this.finish(this.stopped === 'listen');            // stopped mid catch-up to ask again: stay paused
+    }
+    return said;
+  }
+
+  /** A wait that interrupt() can cut short. */
+  private async hold(ms: number): Promise<void> {
+    await Promise.race([(this.d.wait ?? sleep)(ms), new Promise<void>((r) => { this.wake = r; })]);
+    this.wake = null;
+  }
+
+  private async backToAction(said: string[]): Promise<void> {
+    const back = this.d.tools.catch_up(this.pausedAt as number, this.d.clock.now());
+    said.push(back.say);
+    this.d.show?.(back.say);
+    await this.d.speak(back.fragments, back.say);
+  }
+
+  /** Unduck and resume, unless the fan is about to ask again. Always clears the busy flag. */
+  private finish(keepPaused: boolean): void {
+    if (!keepPaused && this.pausedAt !== null) {
+      this.d.crowd.unduck(UNDUCK_MS);
+      this.d.commentary.resume();                         // SEAM(B->A): CommentaryTrack.resume()
+      this.pausedAt = null;
+    }
+    this.stopped = null;
+    this.busy = false;
+  }
+
+  private async run(body: () => Promise<string[]>): Promise<string[]> {
+    if (this.busy) return [];
+    this.busy = true;
+    this.stopped = null;
+    const said: string[] = [];
+    let keepPaused = false;
+    try {
+      // A chance is coming: never say what, just wait for it. Not when the commentary is already paused for this
+      // question (after an interrupt): the build-up would be paused too.
+      if (this.pausedAt === null && this.d.tools.hold_that_thought(this.d.clock.now())) {
         // Don't talk over A's build-up line: if one starts within 2.5 s, stay quiet and let it play.
         if (!this.d.commentary.nextCueWithin(HOLD_CUE_GAP_S)) {
           said.push(STATIC.hold as string);
           this.d.show?.(STATIC.hold as string);
           await this.d.speak(['hold'], STATIC.hold as string);
         }
-        await (this.d.wait ?? sleep)(HOLD_LOOKAHEAD_S * 1000);
+        if (!this.stopped) await this.hold(HOLD_LOOKAHEAD_S * 1000);
       }
-      // SEAM(B->A): CommentaryTrack.pause() first (a-exports.ts; A's pause() also unducks), THEN duck the crowd,
-      // so the answer always sits over a lowered crowd. The playhead keeps running.
-      this.d.commentary.pause();
-      this.d.crowd.duck(DUCK_DB, DUCK_MS);
-      const paused = this.d.clock.now();                   // catch-up covers what was revealed from the pause on
-      said.push(...(await body()));
-      const back = this.d.tools.catch_up(paused, this.d.clock.now());
-      said.push(back.say);
-      this.d.show?.(back.say);
-      await this.d.speak(back.fragments, back.say);
+      if (this.pausedAt === null) {
+        // SEAM(B->A): CommentaryTrack.pause() first (a-exports.ts; A's pause() also unducks), THEN duck the crowd,
+        // so the answer always sits over a lowered crowd. The playhead keeps running.
+        this.d.commentary.pause();
+        this.d.crowd.duck(DUCK_DB, DUCK_MS);
+        this.pausedAt = this.d.clock.now();               // catch-up covers what was revealed from the pause on
+      }
+      if (!this.stopped) said.push(...(await body()));
+      if (this.stopped === 'listen') keepPaused = true;   // the fan asks again: no catch-up yet, stay paused
+      else if (!this.stopped) await this.backToAction(said);
+      // 'back' (Escape): straight back to the action, with no catch-up talk after the fan asked for quiet.
     } finally {
-      this.d.crowd.unduck(UNDUCK_MS);
-      this.d.commentary.resume();                         // SEAM(B->A): CommentaryTrack.resume()
-      this.busy = false;
+      this.finish(keepPaused);
     }
     return said;
   }
@@ -148,7 +215,20 @@ export class LazyAsk implements Ask {
 export class FragmentPlayer {
   private index: Record<string, string> = {};
   private cache = new Map<string, AudioBuffer>();
+  private current: { gain: GainNode; sources: AudioBufferSourceNode[]; done: () => void } | null = null;
   constructor(private ctx: BaseAudioContext, private out: AudioNode, private base = '/replay/v1/judge/answers') {}
+
+  /** Stop the answer now: a STOP_FADE_S fade (no click), and speak() resolves at once. */
+  stop(): void {
+    stopFallback();
+    const c = this.current;
+    if (!c) return;
+    this.current = null;
+    const t = this.ctx.currentTime;
+    c.gain.gain.setTargetAtTime(0, t, STOP_FADE_S / 3);  // ~95% down after three time constants
+    for (const s of c.sources) { try { s.stop(t + STOP_FADE_S); } catch { /* not started */ } }
+    c.done();
+  }
 
   async load(): Promise<number> {
     try {
@@ -168,17 +248,30 @@ export class FragmentPlayer {
   async speak(fragments: string[] | null, text: string): Promise<void> {
     const files = (fragments ?? []).map((id) => this.index[id]);
     if (!fragments?.length || files.some((f) => !f)) return speakFallback(text);
-    let t = this.ctx.currentTime + 0.05;
+    const bufs: AudioBuffer[] = [];
     for (const f of files as string[]) {
       const buf = await this.buffer(f);
       if (!buf) return speakFallback(text);
+      bufs.push(buf);
+    }
+    const gain = this.ctx.createGain();                  // one gain per answer, so stop() can fade it out
+    gain.connect(this.out);
+    let done = () => {};
+    const stopped = new Promise<void>((r) => { done = r; });
+    const me = { gain, sources: [] as AudioBufferSourceNode[], done };
+    this.current = me;
+    let t = this.ctx.currentTime + 0.05;
+    for (const buf of bufs) {
       const src = this.ctx.createBufferSource();
       src.buffer = buf;
-      src.connect(this.out);
+      src.connect(gain);
       src.start(t);
+      me.sources.push(src);
       t += buf.duration + 0.12;                          // a breath between clips
     }
-    await sleep(Math.max(0, (t - this.ctx.currentTime) * 1000));
+    await Promise.race([sleep(Math.max(0, (t - this.ctx.currentTime) * 1000)), stopped]);
+    if (this.current === me) this.current = null;
+    setTimeout(() => { try { gain.disconnect(); } catch { /* already gone */ } }, (STOP_FADE_S + 0.5) * 1000);
   }
 
   private async buffer(f: string): Promise<AudioBuffer | null> {
@@ -195,6 +288,14 @@ export class FragmentPlayer {
 }
 
 const speaking = new Set<SpeechSynthesisUtterance>(); // keep a reference: Chrome can drop a collected utterance's events
+const finishers = new Set<() => void>();              // pending speakFallback() promises, so a stop resolves them
+
+/** Stop the browser voice now and resolve its pending speakFallback() promises. */
+export function stopFallback(): void {
+  if (!finishers.size) return;
+  if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+  [...finishers].forEach((f) => f());
+}
 
 /** Browser voice fallback. Chrome sometimes never fires onend/onerror, so a timeout (2 s + 90 ms per character)
  *  cancels the speech and resolves anyway: the Ask can never get stuck (A's review). */
@@ -210,8 +311,10 @@ export function speakFallback(text: string): Promise<void> {
       done = true;
       clearTimeout(timer);
       speaking.delete(u);
+      finishers.delete(finish);
       resolve();
     };
+    finishers.add(finish);
     const timer = setTimeout(() => { speechSynthesis.cancel(); finish(); }, 2000 + text.length * 90);
     u.onend = finish;
     u.onerror = finish;
