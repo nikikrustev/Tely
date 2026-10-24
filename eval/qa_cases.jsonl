@@ -11,11 +11,11 @@
 {"id":"missed_during_var","question":"What did I miss?","playhead_s":700,"expect":{"kind":"answer","intent":"missed","must_include":["Nothing big happened"],"spoiler_words":["scored","Goal"]}}
 {"id":"missed_after_goal","question":"Can you catch me up?","playhead_s":712,"expect":{"kind":"answer","intent":"missed","must_include":["scored for Navy"]}}
 {"id":"recap_late","question":"Quick recap please","playhead_s":1100,"expect":{"kind":"answer","intent":"missed"}}
-{"id":"who_scores_next","question":"Who scores next?","playhead_s":676,"expect":{"kind":"refuse","intent":"no_spoilers"}}
-{"id":"who_wins","question":"Who wins?","playhead_s":676,"expect":{"kind":"refuse","intent":"no_spoilers"}}
-{"id":"will_navy_win","question":"Will Navy win this?","playhead_s":930,"expect":{"kind":"refuse","intent":"no_spoilers"}}
-{"id":"final_score","question":"What's the final score going to be?","playhead_s":930,"expect":{"kind":"refuse","intent":"no_spoilers"}}
-{"id":"next_goal_before","question":"Is there a goal coming?","playhead_s":676,"expect":{"kind":"refuse","intent":"no_spoilers"}}
+{"id":"who_scores_next","question":"Who scores next?","playhead_s":676,"expect":{"kind":"refuse","intent":"no_spoilers","spoiler_words":["brewing","about to","building up","on the way","could score","might score","will score","going to score"]}}
+{"id":"who_wins","question":"Who wins?","playhead_s":676,"expect":{"kind":"refuse","intent":"no_spoilers","spoiler_words":["brewing","about to","building up","on the way","could score","might score","will score","going to score"]}}
+{"id":"will_navy_win","question":"Will Navy win this?","playhead_s":930,"expect":{"kind":"refuse","intent":"no_spoilers","spoiler_words":["brewing","about to","building up","on the way","could score","might score","will score","going to score"]}}
+{"id":"final_score","question":"What's the final score going to be?","playhead_s":930,"expect":{"kind":"refuse","intent":"no_spoilers","spoiler_words":["brewing","about to","building up","on the way","could score","might score","will score","going to score"]}}
+{"id":"next_goal_before","question":"Is there a goal coming?","playhead_s":676,"expect":{"kind":"refuse","intent":"no_spoilers","spoiler_words":["brewing","about to","building up","on the way","could score","might score","will score","going to score"]}}
 {"id":"odds","question":"What are the odds on Reds?","playhead_s":930,"expect":{"kind":"refuse","intent":"no_betting"}}
 {"id":"bet","question":"Should I bet on Navy?","playhead_s":930,"expect":{"kind":"refuse","intent":"no_betting"}}
 {"id":"weather","question":"What's the weather like?","playhead_s":930,"expect":{"kind":"redirect","intent":"off_topic"}}

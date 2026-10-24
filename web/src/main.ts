@@ -59,7 +59,7 @@ async function startApp(): Promise<void> {
     import('./audio/audio-stands'), import('./audio/crowd-engine'), import('./replay/replay-source'), import('./wire'),
     import('./replay/debug'), import('./haptics/haptics'), import('./settings'), import('./replay/chapters'),
     import('./ask/ask'), import('./ask/local-tools')]);
-  const { loadSettings, saveSettings, crowdGainFor } = settingsMod;
+  const { loadSettings, saveSettings, crowdGainFor, prefsPatch } = settingsMod;
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
   const start = $<HTMLButtonElement>('start'), next = $<HTMLButtonElement>('next'), toggle = $<HTMLButtonElement>('settings-toggle');
   const status = $('status'), polite = $('sr-polite'), panel = $('settings'), hstatus = $('hstatus');
@@ -72,7 +72,10 @@ async function startApp(): Promise<void> {
   // Lane A gets its services now; the audio ones forward once Start creates them.
   const crowdBus = new LazyCrowdBus(), clock = new LazyClock();
   const lazyAsk = new askMod.LazyAsk();                 // A may register its live voice mode right at boot
-  const lane = boot({ crowd: crowdBus, ask: lazyAsk, clock });
+  // The ball ping and settings exist only once Start / settings code below has run; until then they do nothing.
+  const laneB = { pingBall: () => {}, applyPrefs: (_p: Record<string, unknown>) => {} };
+  const lane = boot({ crowd: crowdBus, ask: lazyAsk, clock,
+    pingBall: () => laneB.pingBall(), applyPrefs: (p) => laneB.applyPrefs(p) });
 
   // ---- settings (work without storage) ----
   let settings = loadSettings();
@@ -103,6 +106,18 @@ async function startApp(): Promise<void> {
   for (const r of radios('haptics')) r.addEventListener('change', () => update({ haptics: r.value as typeof settings.haptics }));
   crowdSlider.addEventListener('input', () => update({ crowdMix: Number(crowdSlider.value) / 100 }));
   strength.addEventListener('change', () => update({ hapticStrength: Number(strength.value) }));
+  // The live commentator's set_preferences ("turn the crowd down", "only vibrate for big moments"): same path as the
+  // controls, then the controls show it and the fan hears what changed.
+  const HAPTIC_SAID = { off: 'Vibration off.', events: 'Vibration for key moments only.', full: 'Vibration for the heartbeat and key moments.' };
+  laneB.applyPrefs = (p) => {
+    const patch = prefsPatch(p);
+    if (!Object.keys(patch).length) return;
+    update(patch);
+    for (const r of radios('haptics')) r.checked = r.value === settings.haptics;
+    crowdSlider.value = String(Math.round(settings.crowdMix * 100));
+    const said = [patch.haptics ? HAPTIC_SAID[patch.haptics] : '', patch.crowdMix !== undefined ? `Crowd level ${crowdSlider.value} percent.` : ''];
+    say(said.filter(Boolean).join(' '));
+  };
   toggle.addEventListener('click', () => {
     const open = panel.hidden;
     panel.hidden = !open;
@@ -124,6 +139,7 @@ async function startApp(): Promise<void> {
   let ctx: AudioContext | null = null;
   let src: InstanceType<typeof ReplaySource> | null = null;
   let stands: InstanceType<typeof AudioStands> | null = null;
+  laneB.pingBall = () => stands?.pingBall();
   let w: ReturnType<typeof wire> | null = null;
   let chapters: Awaited<ReturnType<typeof loadChapters>> = [];
   let lastScore = '';
@@ -145,15 +161,29 @@ async function startApp(): Promise<void> {
     if (open) askMenu.querySelector<HTMLButtonElement>('button:not([hidden])')?.focus();
   };
   askBtn.addEventListener('click', () => openMenu(askMenu.hidden !== false));
+  let presetsAfter = false;                             // A's live mode asked for the menu while its answer finished
   const runAsk = async (fn: () => Promise<unknown>) => {
     openMenu(false);
     askBtn.disabled = true;
     say('Answering.');                                   // state change only; the answer itself is heard
-    try { await fn(); } finally { askBtn.disabled = false; askBtn.focus(); }
+    try { await fn(); } finally {
+      askBtn.disabled = false;
+      if (presetsAfter) { presetsAfter = false; openMenu(true); } else askBtn.focus();
+    }
+  };
+  lazyAsk.onShowPresets = () => {
+    if (askBtn.disabled) presetsAfter = !!askCtl;        // busy: open once it finishes (never before Ask is ready)
+    else openMenu(true);
   };
   for (const b of askMenu.querySelectorAll<HTMLButtonElement>('button[data-preset]')) {
     b.addEventListener('click', () => { if (askCtl) void runAsk(() => askCtl!.ask(b.dataset.preset as 'ball')); });
   }
+  // SEAM(B->A): until live-ask.ts calls LaneBContext.pingBall / applyPrefs directly, it fires these window events.
+  window.addEventListener('audiostands:ping-ball', () => laneB.pingBall());
+  window.addEventListener('audiostands:prefs', (e) => {
+    const d = (e as CustomEvent<unknown>).detail;
+    if (d && typeof d === 'object') laneB.applyPrefs(d as Record<string, unknown>);
+  });
   askLive.addEventListener('click', () => { if (askCtl) void runAsk(() => askCtl!.askLive()); });
   document.addEventListener('keydown', (e) => {
     const typing = (e.target as HTMLElement | null)?.closest('input, select, textarea');

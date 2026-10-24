@@ -20,6 +20,11 @@ export interface LiveAskHandler {
 /** B's Ask feature: offline presets by default; A registers the live mode when it is available. */
 export interface Ask {
   registerLiveMode(handler: LiveAskHandler): void;
+  /**
+   * Appended 23 Oct (A7 HANDOFF to B). Open the preset menu and focus its first question, e.g. after a live-mode refusal.
+   * If an answer is still finishing, the menu opens as soon as it has. Optional only so older stubs still type-check.
+   */
+  showPresets?(): void;
 }
 
 /** The replay clock: the one playhead everything follows (file 43 §2). Never ahead of what the listener hears. */
@@ -36,4 +41,14 @@ export interface LaneBContext {
   crowd: CrowdBus;
   ask: Ask;
   clock: ReplayClock;
+  /**
+   * Appended 23 Oct (A7 HANDOFF to B). Ping the ball's position once (the live commentator called get_ball_position).
+   * A no-op before Start. Optional only so older stubs still type-check.
+   */
+  pingBall?(): void;
+  /**
+   * Appended 23 Oct (A7 HANDOFF to B). Apply a set_preferences result (`prefs`, e.g. {"haptics": "events",
+   * "crowd_mix": 0.3}) to the fan's settings; unknown or invalid keys are ignored. Optional, as above.
+   */
+  applyPrefs?(prefs: Record<string, unknown>): void;
 }
