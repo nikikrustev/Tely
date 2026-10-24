@@ -19,7 +19,7 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 
 | Building… | Read |
 |---|---|
-| **Audio Stands** (blind-fan audio) | **43 first** (architecture + build plan), then 36–42, 27, 32, 22, 23, 09 |
+| **Audio Stands** (blind-fan audio) | **43 first** (architecture + build plan), then 36–42, 27, 32, 22, 23, 09; talk-back, barge-in and the delay: 49 |
 | Pitch, impact framing, what the sponsor wants | 28 |
 | Azure architecture, infra, deploy, Fabric, accounts | 01, 17, 21, 30, 34, 44 |
 | Synthetic events, tracking, realism, data format | 02, 19, 26 |
@@ -82,6 +82,7 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 | 46 | [46-copilot-github-azure-mcp-workflow.md](46-copilot-github-azure-mcp-workflow.md) | Copilot plans today (agent mode in Free; cloud agent needs Student/Pro), Azure MCP 3.0 flags and 128-tool limit, GitHub Models retired, datasets as attested GitHub Releases, honest AI-assistance disclosure, ready config files (instructions, mcp.json, workflows) |
 | 47 | [47-prior-art-outside-hackathon.md](47-prior-art-outside-hackathon.md) | No single product does all of Audio Stands, but each pillar exists (IBM/Opta Voice/NBC AI commentary, FOX/Samsung talk-back, OneCourt, Disney spatial-audio patent, AiCommentator). Defensible novelty: look-ahead used for tension + talk-back on a delayed playhead. 8 patents, safe novelty wording, partners |
 | 48 | [48-commentator-language.md](48-commentator-language.md) | The words commentators use: Ferguson's register (dropped copulas, inversion, routines), play-by-play vs colour, radio rules (be the eyes, update the score, don't over-locate), one-word calls rise with xG, hyperbole; the `lively` template set built from it |
+| 49 | [49-two-way-commentary-barge-in-and-delay.md](49-two-way-commentary-barge-in-and-delay.md) | Two-way commentary: press-to-interrupt now, voice barge-in later (server AEC can't hear our crowd/commentary; Live-Reference AEC needs 2026-07-15), no browser wake word or speaker check on our stack, LLM addressee check 46.7% FAR zero-shot; keep D=10 s as a floor and make it elastic instead of 60 s; Floor Manager + Heard Ledger; pause-don't-duck, restart-or-drop, answers held to stoppages ≥25 s; what fits before 27 Oct |
 
 ## In progress
 
@@ -90,6 +91,9 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 ## Next topics (queue)
 
 Priority 1 (build/tech)
+- Measure press→silence and speech_started→silence through the relay; Python SDK support for Live-Reference AEC `reference_source` (from 49)
+- Elastic delay: dead-ball trim planner and its spoiler rules (from 49)
+- Does a headset button reach Media Session `togglemicrophone`/`play`/`pause` on iOS, Android and Windows? (from 49)
 - Priority vs Flex processing on Global Standard for live vs offline calls (from 03)
 - Deterministic offline overlay render: OGraf non-real-time mode, Puppeteer virtual time, as an ACA job (from 04)
 - SCTE-35 generation in Python (`threefive`) for Safe Break; NDI-with-alpha from OBS (DistroAV) for a live key/fill demo (from 04)
