@@ -104,6 +104,6 @@ Outcomes: {"answered": 31}. Latency is measured in the relay (relay: fan's last 
 | the_keeper | Where is the keeper? | 60:30 | clarify | where_is | Which player? For example: Omar Vaston (Reds #1), Gus Galic (Navy #1). | yes | yes | no |
 | reds_keeper | Where is the Reds keeper? | 60:30 | answer | where_is | Omar Vaston of Reds is in the defensive third, centre, 64 metres from the ball. | yes | yes | no |
 
-## Listening test (Person B)
+## Eyes-closed listening test (eval/listening.json)
 
-Not yet: `eval/listening.json` is not in the repo.
+Not run yet: 0 participants in `eval/listening_test.csv`. The protocol is `eval/listening_test.md`; enter each session in the CSV, then run `python eval/score_listening.py` and this script. No numbers are shown until then.

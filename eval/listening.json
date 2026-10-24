@@ -1,0 +1,7 @@
+{
+ "status": "not run yet",
+ "participants": 0,
+ "excluded_no_consent": 0,
+ "source": "eval/listening_test.csv",
+ "protocol": "eval/listening_test.md"
+}
