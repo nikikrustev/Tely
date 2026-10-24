@@ -36,6 +36,8 @@ RAW = ROOT / "out" / "feedback" / "feedback.csv"
 # (seen 24 Oct; az.cmd runs Python with -I, so PYTHONUTF8 can't fix it). Base64 is ASCII, so nothing is lost.
 KQL = ("customEvents | where name == 'tester_feedback' "
        "| project timestamp, d = base64_encode_tostring(tostring(customDimensions)) | order by timestamp asc")
+# Tester codes from the team's own runs (not volunteers): never in the listening CSV. Add yours with --exclude.
+TEAM_TESTERS = {"t-4c1d2ebf"}   # Claude's end-to-end check of the deployed site, 24 Oct
 SCREEN_READERS = {"none": "none", "nvda": "NVDA", "jaws": "JAWS", "narrator": "Narrator", "voiceover": "VoiceOver",
                   "talkback": "TalkBack", "other": "other"}
 DEVICES = {"android_phone": "Android phone", "iphone": "iPhone", "windows": "Windows computer", "mac": "Mac",
@@ -168,6 +170,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--paste", type=Path, nargs="*", default=[], help='"Copy my answers" texts to read too')
     ap.add_argument("--no-query", action="store_true", help="only read --paste files")
     ap.add_argument("--dry-run", action="store_true", help="don't touch eval/listening_test.csv")
+    ap.add_argument("--exclude", nargs="*", default=[], help="more tester codes from team test runs to leave out")
     args = ap.parse_args(argv)
     events: list[dict] = []
     if not args.no_query:
@@ -176,7 +179,8 @@ def main(argv: list[str] | None = None) -> int:
         events += query(app, rg, args.days)
     for p in args.paste:
         events += from_paste(p.read_text(encoding="utf-8"))
-    events = dedupe([e for e in events if e.get("tester")])
+    skip = TEAM_TESTERS | set(args.exclude)
+    events = dedupe([e for e in events if e.get("tester") and e["tester"] not in skip])
     write_raw(events)
     testers = per_tester(events)
     added = [] if args.dry_run else append_listening(testers)
