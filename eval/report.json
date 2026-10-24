@@ -973,6 +973,14 @@
   "participants": 0,
   "excluded_no_consent": 0,
   "source": "eval/listening_test.csv",
-  "protocol": "eval/listening_test.md"
+  "protocol": "eval/listening_test.md",
+  "self_run": {
+   "status": "not run yet",
+   "participants": 0,
+   "excluded_no_consent": 0,
+   "source": "eval/listening_test.csv",
+   "protocol": "eval/listening_test.md",
+   "note": "Self-run, sighted volunteers: friends of the team who followed tester mode (?test=1) on their own device with nobody watching, eyes closed by request, answering multiple-choice versions of the four probes (each with \"Don't know\"). They are not blind or partially sighted fans, a multiple-choice probe is easier to get right than the moderated open question, and nobody checked that their eyes stayed closed. These results are reported apart from the moderated sessions and are not evidence for blind fans (file 36)."
+  }
  }
 }

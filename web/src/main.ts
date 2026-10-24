@@ -2,7 +2,8 @@
 import type { LaneAHandle } from './contracts/a-exports';
 import type { CrowdBus, LaneBContext, ReplayClock } from './contracts/b-exports';
 import { mountLaneA } from './lane-a';
-import { clipOver, listenClip } from './replay/listen';
+import { clipOver, listenClip, type ListenClip } from './replay/listen';
+import type { TesterHandle } from './tester';
 
 /** Placeholder services (tests, and before Start). */
 export function createStubContext(): LaneBContext {
@@ -61,7 +62,10 @@ async function startApp(): Promise<void> {
     import('./replay/debug'), import('./haptics/haptics'), import('./settings'), import('./replay/chapters'),
     import('./ask/ask'), import('./ask/local-tools')]);
   const { loadSettings, saveSettings, crowdGainFor, prefsPatch } = settingsMod;
-  const clip = listenClip(location.search);              // listening-test clip (eval/listening_test.md), if any
+  let clip = listenClip(location.search);                // listening-test clip (eval/listening_test.md), if any
+  // Tester mode (?test=1, D19) only: web/src/tester/ drives the clips. Without it, `tester` stays null throughout.
+  const testerMode = new URLSearchParams(location.search).get('test') === '1';
+  let tester: TesterHandle | null = null;
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
   const start = $<HTMLButtonElement>('start'), next = $<HTMLButtonElement>('next'), toggle = $<HTMLButtonElement>('settings-toggle');
   const status = $('status'), polite = $('sr-polite'), panel = $('settings'), hstatus = $('hstatus');
@@ -258,8 +262,11 @@ async function startApp(): Promise<void> {
     try { await t.run(); } finally {
       tour = null;
       learnBtn.textContent = 'Learn the sounds again';
-      say(t.skipped ? 'Tour skipped. Press Start to hear the match.' : 'Tour finished. Press Start to hear the match.');
-      start.focus();
+      if (tester) tester.tourEnded(t.skipped);           // the tester's task panel says what comes next
+      else {
+        say(t.skipped ? 'Tour skipped. Press Start to hear the match.' : 'Tour finished. Press Start to hear the match.');
+        start.focus();
+      }
     }
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && tour) stopTour(); });
@@ -331,6 +338,7 @@ async function startApp(): Promise<void> {
     say(said);
   };
 
+  let clipEnded = false;
   start.addEventListener('click', async () => {
     if (!ctx) {
       start.disabled = true;
@@ -361,12 +369,11 @@ async function startApp(): Promise<void> {
       hap.keepAwake();
       s.play();
       wired.pump();
-      let clipEnded = false;
       setInterval(() => {
         wired.pump();
         if (!clipEnded && clipOver(clip, s.now())) {   // once: pressing Play again carries on past the clip
           clipEnded = true;
-          void pause('End of the clip.');
+          void pause('End of the clip.').then(() => tester?.clipEnded());
         }
       }, 250);
       void setupAsk(ctx, st, c, s);
@@ -409,6 +416,41 @@ async function startApp(): Promise<void> {
       lane.commentary.resume();
     }
     say(sec ? `${ch.label}. ${lastScore}` : `${ch.label}.`);
+  });
+
+  if (!testerMode) return;
+  // ---- tester mode (?test=1, D19) ----
+  /** Play a clip from the tester's task list. Call it inside a tap: the first time it presses Start itself. */
+  const playClip = (c: ListenClip) => {
+    clip = c;
+    clipEnded = false;
+    applyHaptics();
+    if (!ctx) { start.click(); return; }                 // Start's own path seeks to clip.from and mutes if needed
+    if (!src || !audio) return;
+    const s = src, wasPlaying = s.isPlaying();
+    void audio.ctx.resume();
+    lane.commentary.pause();                             // SEAM(B->A): stop the current line, re-anchor on the seek
+    dropQueued();
+    audio.st.master.gain.value = c.commentaryOnly ? 0 : 1;
+    if (c.from !== null) s.seek(c.from);
+    const sec = s.doc.segments.flatMap((g) => g.seconds).find((x) => x.t >= Math.floor(s.now()));
+    if (sec) lastScore = scoreLine(sec.score);           // a jump is not a score change
+    if (!wasPlaying) s.play(0.1);
+    w?.pump();
+    lane.commentary.resume();
+    start.textContent = 'Pause';
+    say('Playing.');
+  };
+  const { mountTester } = await import('./tester');
+  tester = mountTester({
+    playClip,
+    clip: () => clip,
+    runTour: () => { if (src?.isPlaying()) void pause('Paused.'); if (!tour) learnBtn.click(); },
+    pause: () => { if (src?.isPlaying()) void pause('Paused.'); },
+    playhead: () => (src ? src.now() : null),
+    playing: () => !!src?.isPlaying(),
+    settings: () => settings,
+    say,
   });
 }
 

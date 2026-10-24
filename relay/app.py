@@ -8,6 +8,8 @@ Routes:
                  PCM16 24 kHz mono audio (mic up, answer down).
 - POST /mcp      B's audiostands.qa.mcp_server, streamable HTTP, stateless (file 18). The listener's playhead comes from
                  the X-AudioStands-Playhead header; without it the tools answer as of the start of the cut.
+- POST /feedback tester mode (?test=1) answers and problem reports: checked by feedback.py, logged as the App Insights
+                 custom event "tester_feedback" (telemetry.py, D19). Only FEEDBACK_ORIGINS (the Static Web App) may post.
 No keys anywhere: Voice Live uses the container's managed identity (file 30), and the browser never sees a token.
 """
 from __future__ import annotations
@@ -22,12 +24,14 @@ from typing import Any, Awaitable, Callable
 
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 
 from audiostands.qa.bundle import Bundle, load_bundle
 
 from .caps import Caps
 from .clips import refusal
+from .feedback import MAX_BYTES, FeedbackCaps, Invalid, validate
+from .telemetry import Tracker, make_tracker
 from .voicelive import Bridge, Link, connect_voice_live, log_line
 
 CONNECT_TIMEOUT_S = 8.0     # the browser falls back to presets after 8 s anyway (BUILD_PLAN Stage 7)
@@ -44,10 +48,17 @@ def client_ip(headers: Any, peer: Any) -> str:
 
 
 def create_app(*, bundle: Bundle | None = None, caps: Caps | None = None,
-               connect: Callable[[], Awaitable[Link]] = connect_voice_live, mount_mcp: bool = True) -> FastAPI:
+               connect: Callable[[], Awaitable[Link]] = connect_voice_live, mount_mcp: bool = True,
+               track: Tracker | None = None, feedback_caps: FeedbackCaps | None = None) -> FastAPI:
     b = bundle or load_bundle()
     c = caps or Caps()
     origins = _csv("ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")
+    # POST /feedback: the Static Web App only once deployed (infra/relay.bicep); the Vite dev server locally.
+    fb_origins = _csv("FEEDBACK_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")
+    fb_caps = feedback_caps or FeedbackCaps()
+    if track is None:
+        track, where = make_tracker()
+        log_line(json.dumps({"feedback_events": where}))
     mcp_srv = None
     mcp_app = None
     if mount_mcp:
@@ -81,6 +92,47 @@ def create_app(*, bundle: Bundle | None = None, caps: Caps | None = None,
                 return JSONResponse({"error": "rate_limit"}, status_code=429, headers={"Retry-After": "60"})
             q.append(now)
         return await call_next(req)
+
+    @app.middleware("http")
+    async def feedback_cors(req: Request, call_next):
+        # Outside CORSMiddleware (added later = outer), so /feedback gets its own, narrower origin list and POST.
+        # The browser sends text/plain, a CORS "simple" request, so keepalive needs no preflight; OPTIONS is answered
+        # anyway for clients that do send one.
+        if req.url.path != "/feedback":
+            return await call_next(req)
+        origin = req.headers.get("origin", "")
+        if origin not in fb_origins:
+            return JSONResponse({"error": "origin"}, status_code=403)
+        cors = {"Access-Control-Allow-Origin": origin, "Vary": "Origin"}
+        if req.method == "OPTIONS":
+            return Response(status_code=204, headers={**cors, "Access-Control-Allow-Methods": "POST",
+                                                      "Access-Control-Allow-Headers": "content-type",
+                                                      "Access-Control-Max-Age": "600"})
+        resp = await call_next(req)
+        resp.headers.update(cors)
+        return resp
+
+    @app.post("/feedback")
+    async def feedback(req: Request) -> JSONResponse:
+        body = b""
+        async for chunk in req.stream():
+            body += chunk
+            if len(body) > MAX_BYTES:
+                return JSONResponse({"error": "too_large"}, status_code=413)
+        if (why := fb_caps.allow(client_ip(req.headers, req.client))) is not None:
+            return JSONResponse({"error": why}, status_code=429, headers={"Retry-After": "600"})
+        try:
+            props = validate(json.loads(body.decode("utf-8")))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            return JSONResponse({"error": "invalid", "detail": "not JSON"}, status_code=400)
+        except Invalid as e:
+            return JSONResponse({"error": "invalid", "detail": str(e)}, status_code=400)
+        try:
+            track("tester_feedback", props)       # no IP, no headers: only the checked fields
+        except Exception as exc:                  # the browser keeps the answers and retries once
+            log_line(json.dumps({"feedback_track_failed": type(exc).__name__}))
+            return JSONResponse({"error": "unavailable"}, status_code=503)
+        return JSONResponse({"ok": True}, status_code=202)
 
     @app.get("/health")
     async def health() -> dict[str, Any]:
