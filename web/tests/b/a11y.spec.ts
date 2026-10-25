@@ -28,6 +28,32 @@ async function startMatch(page: Page): Promise<void> {
   await expect(page.locator('#start')).toHaveText('Pause', { timeout: 30_000 });
 }
 
+// The final product UI (25 Oct): the default URL is what judges see. Name, pitch, the match card, Start and Ask on one
+// screen, with none of the test tools (?test=1, ?mix=1, ?debug=1) in the page.
+test('product view', async ({ page }, info) => {
+  await ready(page);
+  await expect(page.locator('h1')).toHaveText('Audio Stands');
+  await expect(page.locator('.pitch')).toBeVisible();
+  await expect(page.locator('#match')).toBeVisible();
+  await expect(page.locator('[data-sb="clock"]')).toHaveText('56:10');
+  await expect(page.locator('[data-sb="state"]')).toHaveText('Not started');
+  await expect(page.locator('#start')).toBeFocused();
+  await expect(page.locator('#ask')).toBeVisible();
+  for (const sel of ['#tester', '#t-bar', '#t-report', '#mixer']) await expect(page.locator(sel)).toHaveCount(0);
+  for (const sel of ['#debug', '#radar', '#settings']) await expect(page.locator(sel)).toBeHidden();
+  // One screen, no scrolling, except phone landscape (390 px tall), where the page scrolls as normal.
+  const fits = () => page.evaluate(() => document.documentElement.scrollHeight <= window.innerHeight);
+  const oneScreen = !info.project.name.startsWith('landscape');
+  if (oneScreen) expect(await fits()).toBe(true);
+  await startMatch(page);
+  await expect(page.locator('[data-sb="state"]')).toHaveText('Playing');
+  await expect(page.locator('[data-sb="chapter"]')).toHaveText(/^.+ of \d+$/);
+  await expect(page.locator('[data-sb="clock"]')).not.toHaveText('56:10', { timeout: 5_000 });
+  await expect(page.locator('#ask')).toBeEnabled({ timeout: 30_000 });
+  if (oneScreen) expect(await fits()).toBe(true);
+  await expectNoViolations(page, 'product view, playing');
+});
+
 test('Start screen', async ({ page }) => {
   await ready(page);
   await expectNoViolations(page, 'Start');
