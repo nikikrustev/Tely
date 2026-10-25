@@ -3,6 +3,7 @@ import type { LaneAHandle } from './contracts/a-exports';
 import type { CrowdBus, LaneBContext, ReplayClock } from './contracts/b-exports';
 import { mountLaneA } from './lane-a';
 import { clipOver, listenClip, type ListenClip } from './replay/listen';
+import { loadClockOffset, Scoreboard } from './scoreboard';
 import type { TesterHandle } from './tester';
 
 /** Placeholder services (tests, and before Start). */
@@ -74,6 +75,9 @@ async function startApp(): Promise<void> {
     polite.textContent = ''; // clear first, so a repeated message is announced again
     setTimeout(() => { polite.textContent = text; }, 50);
   };
+  // The match card (score, clock, chapter): for sighted viewers; the listener hears the same changes through say().
+  const board = new Scoreboard($('match'));
+  void loadClockOffset().then((o) => { if (o !== null) board.offsetS = o; });
 
   // Lane A gets its services now; the audio ones forward once Start creates them.
   const crowdBus = new LazyCrowdBus(), clock = new LazyClock();
@@ -149,6 +153,8 @@ async function startApp(): Promise<void> {
   let w: ReturnType<typeof wire> | null = null;
   let chapters: Awaited<ReturnType<typeof loadChapters>> = [];
   let lastScore = '';
+  /** The second at or after playhead t (its score is the score there). */
+  const secondAt = (t: number) => src?.doc.segments.flatMap((g) => g.seconds).find((x) => x.t >= Math.floor(t));
   /** Throw away everything queued ahead (pause, jump) so nothing stale plays; the pump re-queues from the playhead. */
   const dropQueued = () => {
     if (!ctx) return;
@@ -363,6 +369,7 @@ async function startApp(): Promise<void> {
     src.seek(src.now(), 0); // re-queue from the exact pause point on resume
     await ctx.suspend();
     start.textContent = 'Play';
+    board.update({ state: 'Paused' });
     say(said);
   };
 
@@ -372,23 +379,27 @@ async function startApp(): Promise<void> {
       start.disabled = true;
       stopTour();
       learnBtn.hidden = true;
+      board.update({ state: 'Loading' });
       say('Loading the stadium…');
       const a = await ensureAudio();
       ctx = a.ctx;
       const st = a.st, c = a.c;
       const [doc, ch] = await Promise.all([loadSegments(), loadChapters()]);
       chapters = ch;
+      board.chapters = ch;
       const s = new ReplaySource(ctx, doc);
       src = s;
       clock.attach(s);
       if (clip.commentaryOnly) st.master.gain.value = 0;   // crowd, ball and earcons off; A's voice has its own context
       if (clip.from !== null) s.seek(clip.from);
+      board.update({ score: secondAt(s.now())?.score, playheadS: s.now() });
       const wired = wire(s, st, c, settings.club, undefined, {
         club: () => settings.club,
         haptics,
         outputDelayMs: () => settings.audioOffsetMs ?? st.outputDelay * 1000,   // calibrated delay wins
         onSecond: (sec) => {
           const line = scoreLine(sec.score);
+          board.update({ score: sec.score });
           if (lastScore && line !== lastScore) say(line);
           lastScore = line;
         },
@@ -399,6 +410,7 @@ async function startApp(): Promise<void> {
       wired.pump();
       setInterval(() => {
         wired.pump();
+        board.update({ playheadS: s.now() });
         if (!clipEnded && clipOver(clip, s.now())) {   // once: pressing Play again carries on past the clip
           clipEnded = true;
           void pause('End of the clip.').then(() => tester?.clipEnded());
@@ -412,6 +424,7 @@ async function startApp(): Promise<void> {
       start.disabled = false;
       next.disabled = chapters.length === 0;
       start.textContent = 'Pause';
+      board.update({ state: 'Playing' });
       say('Playing. You are in the main stand, on the halfway line. Reds attack to your right.');
       return;
     }
@@ -424,6 +437,7 @@ async function startApp(): Promise<void> {
       lane.commentary.resume(); // SEAM(B->A): CommentaryTrack.resume()
       w?.pump();
       start.textContent = 'Pause';
+      board.update({ state: 'Playing' });
       say('Playing.');
     }
   });
@@ -437,8 +451,9 @@ async function startApp(): Promise<void> {
     dropQueued();
     src.seek(ch.t);
     // One announcement for the jump, with the score there (a jump may skip a goal); not repeated a second later.
-    const sec = src.doc.segments.flatMap((g) => g.seconds).find((x) => x.t >= Math.floor(ch.t));
+    const sec = secondAt(ch.t);
     if (sec) lastScore = scoreLine(sec.score);
+    board.update({ score: sec?.score, playheadS: ch.t });
     if (playing) {
       w?.pump();
       lane.commentary.resume();
@@ -467,8 +482,9 @@ async function startApp(): Promise<void> {
     dropQueued();
     audio.st.master.gain.value = c.commentaryOnly ? 0 : 1;
     if (c.from !== null) s.seek(c.from);
-    const sec = s.doc.segments.flatMap((g) => g.seconds).find((x) => x.t >= Math.floor(s.now()));
+    const sec = secondAt(s.now());
     if (sec) lastScore = scoreLine(sec.score);           // a jump is not a score change
+    board.update({ score: sec?.score, playheadS: s.now(), state: 'Playing' });
     if (!wasPlaying) s.play(0.1);
     w?.pump();
     lane.commentary.resume();

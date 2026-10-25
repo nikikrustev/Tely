@@ -5,42 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Audio Stands</title>
     <style>
-      /* --on-accent: text on the Start button. White on dark mode's #ff6b7d is 2.7:1 (axe color-contrast); #111 is 6.9:1. */
-      :root { color-scheme: light dark; --bg: #fff; --fg: #111; --accent: #b00020; --muted: #555; --panel: #f3f3f3; --on-accent: #fff; }
-      @media (prefers-color-scheme: dark) { :root { --bg: #111; --fg: #f2f2f2; --accent: #ff6b7d; --muted: #bbb; --panel: #1d1d1d; --on-accent: #111; } }
-      body { margin: 0; background: var(--bg); color: var(--fg); font: 1.125rem/1.5 system-ui, sans-serif; }
+      /* Final product UI (25 Oct): one column, one accent (pitch green), system font, no animation.
+         --on-accent is the Start button's text: white on #0a6b4a is 6.5:1, #111 on dark mode's #5fd3a3 is 10:1. */
+      :root { color-scheme: light dark; --bg: #fff; --fg: #121413; --muted: #545b57; --panel: #f3f5f4; --line: #d5dad7;
+              --accent: #0a6b4a; --on-accent: #fff; --err: #b00020; }
+      @media (prefers-color-scheme: dark) {
+        :root { --bg: #0f1110; --fg: #eef1ef; --muted: #a8b0ab; --panel: #1a1d1b; --line: #343a37;
+                --accent: #5fd3a3; --on-accent: #111; --err: #ff8a95; }
+      }
+      body { margin: 0; background: var(--bg); color: var(--fg); font: 1.125rem/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
       [hidden] { display: none !important; }   /* a control's own display rule must never un-hide it */
-      main { max-width: 40rem; margin: 0 auto; padding: 1.5rem 1rem; }
-      h1 { font-size: 2rem; margin: 0 0 0.5rem; }
+      main { max-width: 34rem; margin: 0 auto; padding: 1.25rem 1rem 1.5rem; }
+      @media (min-width: 48rem) { main { padding-top: 3rem; } }
+      h1 { font-size: 1.75rem; line-height: 1.2; margin: 0; }
       h2 { font-size: 1.4rem; margin: 0 0 0.75rem; }
-      .notice { color: var(--muted); }
+      .pitch { color: var(--muted); margin: 0.25rem 0 1.25rem; }
+      .notice { color: var(--muted); font-size: 0.95rem; margin: 1.5rem 0 0; }
+      .hint { color: var(--muted); font-size: 0.95rem; margin: 0.5rem 0 0; }
       /* Every control is at least 44 x 44 px (WCAG 2.5.5 / file 32) and shows a strong focus ring. */
       button, select, input[type="range"] { min-height: 44px; min-width: 44px; font: inherit; }
-      button { border: 2px solid var(--fg); border-radius: 0.75rem; background: var(--bg); color: var(--fg); padding: 0.5rem 1rem; cursor: pointer; }
+      button { border: 2px solid var(--muted); border-radius: 0.75rem; background: var(--bg); color: var(--fg); padding: 0.5rem 1rem; cursor: pointer; }
       button:disabled { opacity: 0.5; cursor: not-allowed; }
       :is(button, select, input):focus-visible { outline: 4px solid var(--fg); outline-offset: 3px; }
-      #start { display: block; width: 100%; min-height: 6rem; margin: 1.5rem 0 0.75rem; font-size: 2rem; font-weight: 700;
-               background: var(--accent); color: var(--on-accent); border-width: 3px; }
-      .row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-      #ask { display: block; width: 100%; min-height: 4.5rem; margin: 0.75rem 0 0; font-size: 1.5rem; font-weight: 700; }
+      /* The match card (scoreboard.ts): score, clock, chapter, state. */
+      #match { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1rem 1.25rem; }
+      .sb-score { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; margin: 0; }
+      .sb-team { font-weight: 600; }
+      .sb-team:last-child { text-align: right; }
+      .sb-nums { font-size: 2.5rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+      .sb-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.25rem 0.75rem; margin: 0.5rem 0 0;
+                 color: var(--muted); font-size: 1rem; font-variant-numeric: tabular-nums; }
+      .sb-meta > span + span { border-left: 1px solid var(--line); padding-left: 0.75rem; }
+      [data-sb="state"] { color: var(--fg); font-weight: 600; }
+      #start { display: block; width: 100%; min-height: 4.5rem; margin: 1rem 0 0; font-size: 1.5rem; font-weight: 700;
+               background: var(--accent); color: var(--on-accent); border: 0; }
+      #ask { display: block; width: 100%; min-height: 3.75rem; margin: 0.75rem 0 0; font-size: 1.25rem; font-weight: 700;
+             border-color: var(--fg); }
       #ask-menu { display: grid; gap: 0.5rem; margin-top: 0.5rem; }
       #ask-menu[hidden] { display: none; }
       #ask-menu button { min-height: 3.25rem; text-align: left; }
+      #status { min-height: 1.5em; margin: 1rem 0; padding-left: 0.75rem; border-left: 3px solid var(--accent); }
+      .row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
       .row button { flex: 1 1 12rem; min-height: 3.5rem; font-weight: 600; }
-      #settings { background: var(--panel); border-radius: 0.75rem; padding: 1rem; margin-top: 1rem; }
+      #more { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+      #more button { min-height: 3rem; font-size: 1rem; line-height: 1.25; padding: 0.4rem 0.5rem; }
+      #more:has(#learn[hidden]) { grid-template-columns: repeat(2, 1fr); }
+      #settings { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1rem; margin-top: 1rem; }
       fieldset { border: 1px solid var(--muted); border-radius: 0.5rem; margin: 0 0 1rem; padding: 0.5rem 0.75rem 0.75rem; }
       fieldset label { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; }
-      input[type="radio"] { width: 1.4rem; height: 1.4rem; }
-      input[type="range"] { width: 100%; }
+      input[type="radio"] { width: 1.4rem; height: 1.4rem; accent-color: var(--accent); }
+      input[type="range"] { width: 100%; accent-color: var(--accent); }
       .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
       #debug { font: 0.95rem/1.4 ui-monospace, monospace; border: 1px dashed var(--muted); padding: 0.75rem; margin-top: 1rem; }
-      #learn { display: block; width: 100%; min-height: 3.25rem; margin-bottom: 0.75rem; }
       #tap { min-height: 5rem; width: 100%; font-size: 1.5rem; font-weight: 700; }
       #radar { margin-top: 1rem; }
       #radar canvas { display: block; width: 100%; border-radius: 0.5rem; background: var(--panel); }
       .radar-caption { min-height: 3em; font-size: 1.25rem; font-weight: 600; margin: 0.5rem 0 0; }
       #settings > label { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; }
-      input[type="checkbox"] { width: 1.4rem; height: 1.4rem; }
+      input[type="checkbox"] { width: 1.4rem; height: 1.4rem; accent-color: var(--accent); }
       /* Tester mode (?test=1, D19). Nothing on the judges' page matches these: #tester-tpl below stays inert. */
       html.t-mode { scroll-padding-top: 5rem; }   /* the sticky bar never covers the focused control (WCAG 2.4.11) */
       #t-bar { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center;
@@ -55,7 +77,7 @@
       .t-item p { margin: 0.25rem 0 0.5rem; }
       .t-status-line { font-weight: 700; }
       .t-hint { color: var(--muted); }
-      .t-err { color: var(--accent); font-weight: 700; }
+      .t-err { color: var(--err); font-weight: 700; }
       .t-play { display: block; width: 100%; min-height: 4rem; margin: 0.75rem 0 1rem; font-size: 1.4rem; font-weight: 700; }
       .t-field { margin: 0 0 1rem; }
       .t-field label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
@@ -72,13 +94,21 @@
   <body>
     <main id="app">
       <h1>Audio Stands</h1>
-      <p class="notice" id="notice">A synthetic match with fictional clubs. Commentary uses AI voices. Headphones recommended.</p>
+      <p class="pitch">Football you follow by sound: a crowd all around you and an AI commentator you can talk to.</p>
+      <section id="match" aria-labelledby="match-h">
+        <h2 id="match-h" class="sr-only">Match</h2>
+        <p class="sb-score">
+          <span class="sb-team">Reds</span>
+          <span class="sb-nums"><span data-sb="home">0</span> <span aria-hidden="true">–</span><span class="sr-only">to</span> <span data-sb="away">0</span></span>
+          <span class="sb-team">Navy</span>
+        </p>
+        <p class="sb-meta">
+          <span><span class="sr-only">Clock </span><span data-sb="clock">56:10</span></span>
+          <span data-sb="chapter">Second half</span>
+          <span data-sb="state">Not started</span>
+        </p>
+      </section>
       <button id="start" type="button" autofocus>Start</button>
-      <button id="learn" type="button">Learn the sounds first (2 minutes)</button>
-      <div class="row">
-        <button id="next" type="button" disabled>Next big moment</button>
-        <button id="settings-toggle" type="button" aria-expanded="false" aria-controls="settings">Settings</button>
-      </div>
       <button id="ask" type="button" aria-expanded="false" aria-controls="ask-menu" aria-keyshortcuts="A" disabled>
         Ask the commentator
       </button>
@@ -89,7 +119,13 @@
         <button type="button" data-preset="missed">What did I miss?</button>
         <button type="button" id="ask-live" hidden>Ask out loud</button>
       </div>
+      <p class="hint">Press A at any time to ask, or to stop an answer.</p>
       <p id="status">Loading…</p>
+      <div class="row" id="more">
+        <button id="next" type="button" disabled>Next big moment</button>
+        <button id="learn" type="button">Learn the sounds</button>
+        <button id="settings-toggle" type="button" aria-expanded="false" aria-controls="settings">Settings</button>
+      </div>
 
       <section id="settings" hidden aria-labelledby="settings-h">
         <h2 id="settings-h">Settings</h2>
@@ -127,6 +163,7 @@
 
       <div id="radar" hidden aria-hidden="true"></div>
       <div id="debug" hidden aria-hidden="true"></div>
+      <p class="notice" id="notice">A synthetic match with fictional clubs. Commentary uses AI voices. Headphones recommended.</p>
     </main>
     <!-- Tester mode only (?test=1, D19): web/src/tester/ clones this into the page. A <template> is inert, so without
          ?test=1 none of it is in the DOM, the accessibility tree or the tab order. -->

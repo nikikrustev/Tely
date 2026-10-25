@@ -461,3 +461,19 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   the match went on; 10 s without a question did the same.
 - **Not checked:** stopping a *live* answer on the deployed relay (only the unit test with a fake live mode), and how
   the stop fade sounds by ear.
+
+## D23. The final product UI: one screen, a match card, the test tools stay behind their flags (25 Oct 2026)
+
+- **Why:** sighted judges score UX & Presentation (20%). The page worked, but read like a test bench: no pitch line,
+  no visible match state, and the disclaimer sat where the pitch should be.
+- **What:** one column (34 rem), the name and a one-line pitch, a match card (score, match clock, current chapter,
+  state; `web/src/scoreboard.ts`), then Start, Ask with its shortcut hint, the status line and a row of three secondary
+  buttons. The synthetic/AI-voice notice moves to the foot of the page. One accent colour, pitch green (`#0a6b4a`
+  light, `#5fd3a3` dark), replacing the red that matched one team. No animation, system font, plain CSS.
+- **Accessibility:** the card is a labelled section with a hidden "Match" heading, read on demand and **not** a live
+  region (the clock ticks every second); score changes are still announced once through `say()`. Ask now follows
+  Start in the tab order, so it's one Tab away during play. Every id, label and shortcut the tests and the tester rely
+  on is unchanged. The chapter shown is the one at or before the playhead, so it never names what's coming (D11).
+- **Checked:** vitest 124/124 (6 new), Playwright + axe 96/96 (a new "product view" test, 6 projects: no tester,
+  mixer or debug elements at `/`, everything on one screen at desktop and phone portrait, clock and chapter update).
+- **Not checked:** Narrator, TalkBack and VoiceOver with the new layout (still the manual walkthrough in REMAINING.md).
