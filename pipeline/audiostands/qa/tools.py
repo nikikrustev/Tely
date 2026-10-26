@@ -267,8 +267,41 @@ def set_preferences(b: Bundle, p: float, **prefs: Any) -> dict:
     return _ok(b, p, [_static("done")], prefs=clean)
 
 
+# The fan's sound groups on one 0..100 scale (0 = off), as the page's mixer shows them (web/src/audio/mix.ts SOUNDS).
+SOUNDS = {"commentator": "The commentator", "crowd": "The crowd murmur", "chants": "The chants",
+          "reactions": "The crowd reactions", "whistle": "The whistle", "passes": "The passes", "shots": "The shots",
+          "tackles": "The tackles", "saves": "The saves", "net": "The ball in the net", "ball_ping": "The ball ping"}
+
+
+def adjust_sound(b: Bundle, p: float, sound: Any = None, change: Any = None, level: Any = None,
+                 current: Any = None) -> dict:
+    """"Turn the whistle down by 5", "set the chants to 40". `current` is the page's level for `sound`, which the
+    relay adds from the fan's last `ask` (never the model); without it the answer says the change, not the result."""
+    if sound not in SOUNDS:
+        return {"error": "unknown_sound", "candidates": list(SOUNDS)}
+    num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)   # noqa: E731
+    if num(level):
+        new = round(min(100.0, max(0.0, float(level))))
+    elif num(change) and change:
+        step = round(min(100.0, max(-100.0, float(change))))
+        if not num(current):
+            word = "up" if step > 0 else "down"
+            return _ok(b, p, None, say=f"{SOUNDS[sound]}, {word} by {abs(step)}.", prefs={"sound": sound, "change": step})
+        new = round(min(100.0, max(0.0, float(current) + step)))
+    else:
+        return {"error": "bad_arguments", "candidates": [],
+                "hint": "give change (-100..100, e.g. -5) or level (0..100)"}
+    if num(current) and new == round(float(current)):
+        edge = " That's off." if new == 0 else " That's the loudest." if new == 100 else ""
+        say = f"{SOUNDS[sound]} is already at {new} out of 100.{edge}"
+    else:
+        say = f"{SOUNDS[sound]} is now {new} out of 100." if new else f"{SOUNDS[sound]} is now off."
+    # SEAM(B->A): like set_preferences, the relay publishes `prefs` to the page; nothing here touches the match.
+    return _ok(b, p, None, say=say, prefs={"sound": sound, "level": new})
+
+
 TOOLS = {f.__name__: f for f in (get_score_and_clock, get_ball_position, where_is, get_player_stats, get_last_events,
-                                 explain_moment, what_did_i_miss, set_preferences)}
+                                 explain_moment, what_did_i_miss, set_preferences, adjust_sound)}
 
 
 def call(name: str, args: dict[str, Any], playhead_s: float, bundle: Bundle) -> dict[str, Any]:

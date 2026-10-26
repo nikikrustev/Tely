@@ -239,9 +239,9 @@ export function mountTester(hooks: TesterHooks): TesterHandle {
       form = h('form', { id: 't-form' });
       form.append(radios('settings_easy', 'Was Settings easy to use?', SETTINGS_EASY, { value: st.answers.settings?.easy }));
       parts.push(
-        h('p', { text: 'Press "Play the match", then press "Settings" (further down the page). Try these:' }),
+        h('p', { text: 'Press "Play the match", then open the "Setup" tab at the top of the page. Try these:' }),
         h('ul', {}, h('li', { text: 'Choose your end of the stadium: Reds or Navy. Listen to how the crowd around you changes.' }),
-          h('li', { text: 'Move the crowd level up or down.' }),
+          h('li', { text: 'Move the whole crowd level, or one sound on the sound desk, up or down.' }),
           h('li', { text: 'On an Android phone: choose a vibration setting, then press "Test vibration".' })),
         playButton('Play the match', playFull), form);
       doneB.textContent = 'Send my answers';

@@ -1,7 +1,7 @@
 // OWNER: B (Nikolay). Builds lane B's services, mounts lane A once, and runs the judge-cut sound stage on Start.
 import type { LaneAHandle } from './contracts/a-exports';
 import type { CrowdBus, LaneBContext, ReplayClock } from './contracts/b-exports';
-import { loadSavedMix, setMix } from './audio/mix';
+import { adjustSound, GROUP_NAMES, loadSavedMix, setMix } from './audio/mix';
 import { mountLaneA } from './lane-a';
 import { clipOver, listenClip, type ListenClip } from './replay/listen';
 import { loadClockOffset, Scoreboard } from './scoreboard';
@@ -53,12 +53,41 @@ export class LazyClock implements ReplayClock {
   }
 }
 
+/** The three views of one match (27 Oct, D25): Setup (the helper's sound desk), Laptop (keys), Phone (two pads). */
+export type View = 'setup' | 'laptop' | 'phone';
+export const VIEWS: readonly View[] = ['setup', 'laptop', 'phone'];
+
+/** The view a page opens in: ?view= if valid, ?mix=1 (the old mixer link) is Setup, else Phone on a narrow screen. */
+export function initialView(search: string, narrow: boolean): View {
+  const q = new URLSearchParams(search);
+  const v = q.get('view') as View | null;
+  if (v && VIEWS.includes(v)) return v;
+  if (q.get('mix') === '1') return 'setup';
+  return narrow ? 'phone' : 'laptop';
+}
+
+type HintKey = 'askLive' | 'askPresets' | 'askWait' | 'askStop' | 'start' | 'pause' | 'resume';
+/** The words under each pad: touch words on Phone, the keys on Laptop. */
+export const HINTS: Record<'touch' | 'keys', Record<HintKey, string>> = {
+  touch: {
+    askLive: 'Tap, wait for the beep, then speak', askPresets: 'Tap for quick questions', askWait: 'Works once the match starts',
+    askStop: 'Tap to stop the answer', start: 'Starts the match', pause: 'Pauses the match', resume: 'Carries on from where you paused',
+  },
+  keys: {
+    askLive: 'Press Enter, wait for the beep, then speak', askPresets: 'Press Enter for quick questions',
+    askWait: 'Works once the match starts', askStop: 'Press Enter to stop the answer', start: 'Press Space to start',
+    pause: 'Press Space to pause', resume: 'Press Space to carry on',
+  },
+};
+
 /** "Reds 1, Navy 0." The score announcement (a state change, file 32): spoken only when it changes. */
 export function scoreLine(score: { home: number; away: number }): string {
   return `Reds ${score.home}, Navy ${score.away}.`;
 }
 
 async function startApp(): Promise<void> {
+  // The view's layout before the code below loads, so the page doesn't jump (showView() takes over from here).
+  document.getElementById('app')?.classList.add(`v-${initialView(location.search, matchMedia('(max-width: 40rem)').matches)}`);
   const [{ AudioStands }, { CrowdEngine, loadCrowdBuffers }, { ReplaySource, loadSegments }, { wire }, { startDebugPanel },
     hap, settingsMod, { loadChapters, nextChapter }, askMod, { LocalTools, loadQaBundle }] = await Promise.all([
     import('./audio/audio-stands'), import('./audio/crowd-engine'), import('./replay/replay-source'), import('./wire'),
@@ -70,7 +99,7 @@ async function startApp(): Promise<void> {
   const testerMode = new URLSearchParams(location.search).get('test') === '1';
   let tester: TesterHandle | null = null;
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
-  const start = $<HTMLButtonElement>('start'), next = $<HTMLButtonElement>('next'), toggle = $<HTMLButtonElement>('settings-toggle');
+  const start = $<HTMLButtonElement>('start'), next = $<HTMLButtonElement>('next');
   const status = $('status'), polite = $('sr-polite'), panel = $('settings'), hstatus = $('hstatus');
   const say = (text: string) => {
     status.textContent = text;
@@ -125,6 +154,9 @@ async function startApp(): Promise<void> {
   // controls, then the controls show it and the fan hears what changed.
   const HAPTIC_SAID = { off: 'Vibration off.', events: 'Vibration for key moments only.', full: 'Vibration for the heartbeat and key moments.' };
   laneB.applyPrefs = (p) => {
+    // adjust_sound ("whistle down by 5"): the commentator already says the new level, so the status line is visual only.
+    const sound = adjustSound(p);
+    if (sound) { status.textContent = `${GROUP_NAMES[sound.key]}: ${sound.level} out of 100.`; return; }
     const patch = prefsPatch(p);
     if (!Object.keys(patch).length) return;
     update(patch);
@@ -133,12 +165,6 @@ async function startApp(): Promise<void> {
     const said = [patch.haptics ? HAPTIC_SAID[patch.haptics] : '', patch.crowdMix !== undefined ? `Crowd level ${crowdSlider.value} percent.` : ''];
     say(said.filter(Boolean).join(' '));
   };
-  toggle.addEventListener('click', () => {
-    const open = panel.hidden;
-    panel.hidden = !open;
-    toggle.setAttribute('aria-expanded', String(open));
-    if (open) panel.querySelector<HTMLInputElement>('input:checked')?.focus();
-  });
   $('htest').addEventListener('click', () => { // also the sticky-activation tap Android needs (file 41)
     if (!haptics.available) { hstatus.textContent = hap.NO_VIBRATION_MESSAGE; return; }
     const was = haptics.s;
@@ -148,7 +174,15 @@ async function startApp(): Promise<void> {
     hstatus.textContent = 'Playing the home goal pattern. Did you feel it?';
   });
   if (!haptics.available) hstatus.textContent = hap.NO_VIBRATION_MESSAGE;
-  status.textContent = 'Ready. Press Start, the lower big button, to hear the match.';
+
+  // ---- the three views (D25): layouts of one page, so switching never stops the match ----
+  let view: View = initialView(location.search, matchMedia('(max-width: 40rem)').matches);
+  /** Phone speaks in taps; Laptop in keys; Setup in whichever this device has. */
+  const hintSet = (): 'touch' | 'keys' =>
+    view === 'phone' || (view === 'setup' && matchMedia('(pointer: coarse)').matches) ? 'touch' : 'keys';
+  const readyLine = () => (hintSet() === 'touch' ? 'Ready. Press Start, the lower big button, to hear the match.'
+    : 'Ready. Press Space to start the match, then Enter to ask the commentator.');
+  status.textContent = readyLine();
 
   // ---- playback ----
   let ctx: AudioContext | null = null;
@@ -189,13 +223,14 @@ async function startApp(): Promise<void> {
     osc.start(at);
     osc.stop(at + 0.12);
   };
-  /** A pad's visible words are its accessible name; the hint under it is its description. */
-  const setPad = (b: HTMLButtonElement, label: string, state: string, hint: string) => {
+  /** A pad's visible words are its accessible name; the hint under it (in this view's words) is its description. */
+  const setPad = (b: HTMLButtonElement, label: string, state: string, hint: HintKey) => {
     const l = b.querySelector('.pad-label');
     if (l) l.textContent = label; else b.textContent = label;
     b.dataset.state = state;
+    b.dataset.hint = hint;
     const h = document.getElementById(b.getAttribute('aria-describedby') ?? '');
-    if (h) h.textContent = hint;
+    if (h) h.textContent = HINTS[hintSet()][hint];
   };
 
   // ---- Ask the commentator (Stage 6) ----
@@ -204,11 +239,11 @@ async function startApp(): Promise<void> {
   // aria-disabled, not disabled: before the match the fan can still find the pad by touch and hear why it waits.
   let askReady = false;
   const ASK_LABEL = 'Ask the commentator', STOP_LABEL = 'Stop the answer';
-  const askHint = () => (askCtl?.hasLive ? 'Tap, wait for the beep, then speak' : 'Tap for quick questions');
+  const askHint = (): HintKey => (askCtl?.hasLive ? 'askLive' : 'askPresets');
   const setAskReady = (on: boolean) => {
     askReady = on;
     askBtn.setAttribute('aria-disabled', String(!on));
-    setPad(askBtn, ASK_LABEL, 'ask', on ? askHint() : 'Works once the match starts');
+    setPad(askBtn, ASK_LABEL, 'ask', on ? askHint() : 'askWait');
     if (!askCtl?.hasLive) askBtn.setAttribute('aria-expanded', String(!askMenu.hidden));   // presets: it opens the menu
     else if (askMenu.hidden) askBtn.removeAttribute('aria-expanded');
   };
@@ -228,7 +263,7 @@ async function startApp(): Promise<void> {
   const runAsk = async (fn: () => Promise<unknown>, live = false) => {
     openMenu(false);
     if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
-    setPad(askBtn, STOP_LABEL, 'stop', 'Tap to stop the answer');   // the pad stays live: pressing it interrupts
+    setPad(askBtn, STOP_LABEL, 'stop', 'askStop');   // the pad stays live: pressing it interrupts
     askBtn.focus();
     // A live question opens the mic: a screen reader announcement now would be heard as the question, so the fan
     // gets the beep instead and the status line is visual only. Presets announce "Answering." (a state change).
@@ -252,7 +287,11 @@ async function startApp(): Promise<void> {
     askBtn.focus();
     if (askCtl?.isHolding) void runAsk(() => askCtl!.release());
   };
-  const notYet = () => { feedback('not-yet'); say('The match hasn\'t started. Start is the bottom half of the screen.'); };
+  const notYet = () => {
+    feedback('not-yet');
+    say(hintSet() === 'touch' ? 'The match hasn\'t started. Start is the bottom half of the screen.'
+      : 'The match hasn\'t started. Press Space to start it.');
+  };
   const pressAsk = () => {
     if (!askReady) { notYet(); return; }
     if (askCtl?.isBusy) {
@@ -274,7 +313,8 @@ async function startApp(): Promise<void> {
   window.addEventListener('audiostands:live-phase', (e) => {
     if (askBtn.dataset.state !== 'stop') return;
     const p = (e as CustomEvent<string>).detail;
-    status.textContent = p === 'heard' ? 'Got your question. Thinking…' : 'Answering. Tap Stop to interrupt.';
+    status.textContent = p === 'heard' ? 'Got your question. Thinking…'
+      : hintSet() === 'touch' ? 'Answering. Tap Stop to interrupt.' : 'Answering. Press Enter to interrupt.';
   });
   $('presets-open').addEventListener('click', () => { if (!askReady) notYet(); else if (!askCtl?.isBusy) openMenu(true); });
   $('ask-close').addEventListener('click', closeMenu);
@@ -296,6 +336,22 @@ async function startApp(): Promise<void> {
       else if (!askMenu.hidden || askCtl?.isHolding) closeMenu();
     }
   });
+  // D25: Space = Start / Pause / Carry on, Enter = Ask (or stop an answer), in every view. Only when focus is on a pad
+  // or on nothing, so every other button, tab and field keeps its own Space and Enter.
+  let spaceTaken = false;
+  document.addEventListener('keydown', (e) => {
+    if ((e.key !== ' ' && e.key !== 'Enter') || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+    const t = e.target as HTMLElement | null;
+    const onPad = t === start || t === askBtn;
+    if (!onPad && t?.closest('button, a, input, select, textarea, [role="tab"], [tabindex], dialog')) return;
+    if (start.hidden || start.offsetParent === null) return;   // tester welcome: the app waits behind it
+    e.preventDefault();                                         // no native click as well
+    if (e.repeat) return;
+    if (e.key === ' ') { spaceTaken = true; if (!start.disabled) start.click(); }
+    else pressAsk();
+  }, true);
+  // A button clicks on Space's keyup: swallow the one that belongs to a Space we already handled.
+  document.addEventListener('keyup', (e) => { if (e.key === ' ' && spaceTaken) { spaceTaken = false; e.preventDefault(); } }, true);
   const setupAsk = async (actx: AudioContext, st: InstanceType<typeof AudioStands>, c: InstanceType<typeof CrowdEngine>,
                           s: InstanceType<typeof ReplaySource>) => {
     try {
@@ -321,6 +377,7 @@ async function startApp(): Promise<void> {
 
   // ---- one audio setup, shared by Start, "Learn the sounds" and Bluetooth calibration (each needs a tap first) ----
   let audio: { ctx: AudioContext; st: InstanceType<typeof AudioStands>; c: InstanceType<typeof CrowdEngine> } | null = null;
+  let analyser: AnalyserNode | null = null;
   const ensureAudio = async () => {
     if (audio) { await audio.ctx.resume(); return audio; }
     const actx = new AudioContext({ latencyHint: 'balanced' });
@@ -332,6 +389,9 @@ async function startApp(): Promise<void> {
     c.setOutputGain(crowdGainFor(settings.crowdMix));
     crowdBus.target = c;
     c.start();
+    analyser = actx.createAnalyser();                  // the Setup desk's live scope; a tap, not in the signal path
+    analyser.fftSize = 2048;
+    st.master.connect(analyser);
     audio = { ctx: actx, st, c };
     stands = st;
     crowd = c;
@@ -440,7 +500,7 @@ async function startApp(): Promise<void> {
     dropQueued();
     src.seek(src.now(), 0); // re-queue from the exact pause point on resume
     await ctx.suspend();
-    setPad(start, 'Resume', 'resume', 'Carries on from where you paused');
+    setPad(start, 'Resume', 'resume', 'resume');
     board.update({ state: 'Paused' });
     say(said);
   };
@@ -497,7 +557,7 @@ async function startApp(): Promise<void> {
       start.disabled = false;
       start.focus();                                     // disabled while loading dropped focus; give it back
       next.disabled = chapters.length === 0;
-      setPad(start, 'Pause', 'pause', 'Pauses the match');
+      setPad(start, 'Pause', 'pause', 'pause');
       board.update({ state: 'Playing' });
       say('Playing. You are in the main stand, on the halfway line. Reds attack to your right.');
       return;
@@ -525,7 +585,7 @@ async function startApp(): Promise<void> {
     src.play(0.1);
     lane.commentary.resume(); // SEAM(B->A): CommentaryTrack.resume()
     w?.pump();
-    setPad(start, 'Pause', 'pause', 'Pauses the match');
+    setPad(start, 'Pause', 'pause', 'pause');
     board.update({ state: 'Playing' });
     if (announce) say('Playing.'); else status.textContent = 'Playing.';
   }
@@ -549,11 +609,46 @@ async function startApp(): Promise<void> {
     say(sec ? `${ch.label}. ${lastScore}` : `${ch.label}.`);
   });
 
-  // ---- sound mixer (?mix=1): a testing tool, never loaded on the judges' page ----
-  if (new URLSearchParams(location.search).get('mix') === '1') {
-    const { mountMixer } = await import('./tester/mixer');
-    mountMixer({ say });
-  }
+  // ---- the view tabs (D25): automatic activation, arrow keys between tabs (WAI-ARIA APG tabs pattern) ----
+  const app = $('app'), viewPanel = $('view');
+  const tabs = VIEWS.map((v) => $<HTMLButtonElement>(`tab-${v}`));
+  let desk: Promise<unknown> | null = null;
+  const showView = (v: View) => {
+    view = v;
+    for (const k of VIEWS) app.classList.toggle(`v-${k}`, k === v);
+    tabs.forEach((t, i) => {
+      const on = VIEWS[i] === v;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+    });
+    viewPanel.setAttribute('aria-labelledby', `tab-${v}`);
+    panel.hidden = v !== 'setup';                          // the settings live on Setup
+    for (const b of [start, askBtn]) if (b.dataset.hint) setPad(b, b.querySelector('.pad-label')?.textContent ?? '', b.dataset.state ?? '', b.dataset.hint as HintKey);
+    if (!ctx && !tour && status.textContent?.startsWith('Ready.')) status.textContent = readyLine();
+    // The sound desk loads the first time Setup opens, so the Laptop and Phone pages never carry it.
+    if (v === 'setup' && !desk) desk = import('./tester/mixer').then(({ mountMixer }) => mountMixer({ say, analyser: () => analyser, host: $('mixer-slot') }));
+  };
+  VIEWS.forEach((v, i) => {
+    const t = tabs[i]!;
+    t.addEventListener('click', () => {
+      showView(v);
+      const q = new URLSearchParams(location.search);       // the link opens this view again
+      q.delete('mix');
+      q.set('view', v);
+      history.replaceState(null, '', `${location.pathname}?${q}${location.hash}`);
+    });
+    t.addEventListener('keydown', (e) => {
+      const to = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? VIEWS.length - 1 : null;
+      if (to === null) return;
+      e.preventDefault();
+      const tab = tabs[(to + VIEWS.length) % VIEWS.length]!;
+      tab.focus();
+      tab.click();
+    });
+  });
+  start.dataset.hint = 'start';
+  askBtn.dataset.hint = 'askWait';
+  showView(view);
 
   if (!testerMode) return;
   // ---- tester mode (?test=1, D19) ----
@@ -576,7 +671,7 @@ async function startApp(): Promise<void> {
     if (!wasPlaying) s.play(0.1);
     w?.pump();
     lane.commentary.resume();
-    setPad(start, 'Pause', 'pause', 'Pauses the match');
+    setPad(start, 'Pause', 'pause', 'pause');
     say('Playing.');
   };
   const { mountTester } = await import('./tester');

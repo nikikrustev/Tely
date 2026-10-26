@@ -112,6 +112,20 @@ def test_set_preferences_never_touches_match_state():
     run(go())
 
 
+def test_adjust_sound_starts_from_the_pages_level_not_the_models():
+    async def go():
+        br, out, _, _ = make_bridge()
+        await br.ask((B.t0 + B.t1) / 2, {"whistle": 30, "crowd": 50.4, "bad": "x"})
+        assert br.levels == {"whistle": 30, "crowd": 50}
+        await br.handle(call("adjust_sound", sound="whistle", change=-5, current=99))   # the model's "current" is ignored
+        tool_msg = [o for o in out if o["type"] == "tool"][-1]
+        assert tool_msg["prefs"] == {"sound": "whistle", "level": 25}
+        assert tool_msg["say"] == "The whistle is now 25 out of 100."
+        await br.handle(call("adjust_sound", sound="whistle", change=-5))                # same answer: from 25
+        assert [o for o in out if o["type"] == "tool"][-1]["prefs"] == {"sound": "whistle", "level": 20}
+    run(go())
+
+
 # ---------------------------------------------------------------- caps return a spoken refusal
 def test_session_cap_is_a_spoken_refusal():
     async def go():

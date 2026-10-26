@@ -191,7 +191,7 @@ def create_app(*, bundle: Bundle | None = None, caps: Caps | None = None,
                     continue
                 kind = m.get("type")
                 if kind == "ask":
-                    await bridge.ask(m.get("playhead_s"))
+                    await bridge.ask(m.get("playhead_s"), m.get("levels"))
                 elif kind == "commit":
                     await bridge.commit()
                 elif kind == "cancel":

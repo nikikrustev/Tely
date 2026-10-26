@@ -128,7 +128,7 @@ def test_b_mcp_server_is_mounted_at_mcp(monkeypatch):
                            "clientInfo": {"name": "test", "version": "0"}}}
         assert c.post("/mcp", json=init, headers=hdr).status_code == 200
         tools = c.post("/mcp", json={"jsonrpc": "2.0", "id": 2, "method": "tools/list"}, headers=hdr).json()
-        assert len(tools["result"]["tools"]) == 8
+        assert len(tools["result"]["tools"]) == 9
         r = c.post("/mcp", json={"jsonrpc": "2.0", "id": 3, "method": "tools/call",
                                  "params": {"name": "get_score_and_clock", "arguments": {}}}, headers=hdr).json()
         assert B.clock_str(B.t0 + 45) in json.dumps(r)
