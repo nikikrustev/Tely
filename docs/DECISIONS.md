@@ -544,5 +544,9 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
     playhead): the run tests timing, sessions and memory, not answer content.
   - Seen in the full second half, not in the shipped cut: `spoiler_leaks` flags "Intercepted by Morani! Reds have it
     back." while the next pass is in flight (a checker false positive: the line is about the interception). Not fixed.
+- **Deployed (26 Oct, after #31):** web, and relay image `6a6a0cd8ba38` (revision 11). `phone-e2e.mjs` against the live
+  site at 360x640: start, spoken Ask (0.9 s), barge-in (206 ms), pause/resume and the mixer all pass. Playwright + axe
+  at phone portrait against the live site: 14/16, the 2 failures were the tests assuming no relay (fixed in the
+  follow-up PR). That run sent 6 tester-mode events to App Insights; `pull_feedback.py` now leaves out those codes.
 - **Not checked:** TalkBack, VoiceOver and Narrator with the pads (manual); a real phone's vibration and tone; a real
   voice in a noisy room.

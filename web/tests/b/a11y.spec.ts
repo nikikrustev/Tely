@@ -71,7 +71,10 @@ test('Ask menu', async ({ page }) => {
   await startMatch(page);
   const ask = page.locator('#ask');
   await expect(ask).toBeEnabled({ timeout: 30_000 });
-  await ask.click();
+  // D24: with a relay (A11Y_BASE_URL, the deployed site) the Ask pad asks out loud, so the menu opens from Quick
+  // questions there; the preview build has no relay and the pad itself opens it.
+  if (process.env.A11Y_BASE_URL) await page.locator('#presets-open').click();
+  else await ask.click();
   await expect(page.locator('#ask-menu')).toBeVisible();
   await expect(ask).toHaveAttribute('aria-expanded', 'true');
   await expect(page.locator('#ask-menu button[data-preset]').first()).toBeFocused();
