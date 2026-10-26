@@ -1,29 +1,28 @@
-// OWNER: A (potencialbg). The sound mixer (?mix=1, 24 Oct): a testing tool for setting the match mix by ear.
-// main.ts imports this only with ?mix=1, so the judges' page never loads it. One slider per sound group from
-// audio/mix.ts, heard live while the match plays; Reset; Submit copies the values as JSON and downloads
-// audio-mix.json. Hand that file to Claude and the values become DEFAULT_MIX (the shipped defaults).
-// The draft is kept in localStorage (try/catch) and read only here, so the judges always hear DEFAULT_MIX.
+// OWNER: A (potencialbg). The sound mixer (?mix=1): one slider per sound group from audio/mix.ts, heard live while
+// the match plays. main.ts imports this only with ?mix=1 (Settings links to it), so the plain page never loads it.
+// D24 (26 Oct): it is the listener's own mix, set once with a sighted helper and saved on this device (audio/mix.ts
+// saveMix), so every later visit plays it. Reset goes back to our defaults. "Save a copy" downloads audio-mix.json:
+// hand that file to Claude and the values can become DEFAULT_MIX (the shipped defaults).
 import {
-  DEFAULT_MIX, getMix, MAX_DB, MIN_DB, MIX_GROUPS, onMix, parseMix, setMix, VOICE_POSITIONS,
+  DEFAULT_MIX, getMix, loadSavedMix, MAX_DB, MIN_DB, MIX_KEY, onMix, saveMix, setMix, VOICE_POSITIONS,
   type AudioMix, type MixLevels, type VoicePos,
 } from '../audio/mix';
-import { browserStorage, type StorageLike } from '../settings';
 
-export const DRAFT_KEY = 'audiostands.mixDraft.v1';
+export const DRAFT_KEY = MIX_KEY;
 export const FILE_NAME = 'audio-mix.json';
 
 export const LABELS: Record<keyof MixLevels, string> = {
-  crowdBeds: 'Crowd beds (murmur, swell, tense, away end)',
+  commentator: 'Commentator',
+  crowdBeds: 'Crowd murmur and swell',
   chants: 'Chants and claps',
-  roars: 'Crowd reactions (roar, ooh, cheer, jeers, applause)',
-  pass: 'Pass',
-  shot: 'Shot',
-  tackle: 'Tackle',
-  save: 'Save',
+  roars: 'Crowd reactions (roars, oohs, cheers)',
+  pass: 'Passes',
+  shot: 'Shots',
+  tackle: 'Tackles',
+  save: 'Saves',
   net: 'Ball in the net',
   whistle: "Referee's whistle",
   ping: 'Ball ping ("Where is the ball?")',
-  commentator: 'Commentator (track, preset and live answers)',
 };
 const POS_LABEL: Record<VoicePos, string> = {
   behind: 'Behind me, a little above (press box)',
@@ -38,21 +37,8 @@ export function mixFile(m: AudioMix, now = new Date()): { version: 1; saved: str
 
 export const dbText = (db: number): string => (db <= MIN_DB ? 'off' : `${db > 0 ? '+' : ''}${db.toFixed(1)} dB`);
 
-export function loadDraft(storage: StorageLike | null = browserStorage()): AudioMix | null {
-  try {
-    const raw = storage?.getItem(DRAFT_KEY);
-    return raw ? parseMix(JSON.parse(raw)) : null;
-  } catch {
-    return null;
-  }
-}
-
-export function saveDraft(m: AudioMix | null, storage: StorageLike | null = browserStorage()): void {
-  try {
-    if (m) storage?.setItem(DRAFT_KEY, JSON.stringify(m));
-    else (storage as Storage | null)?.removeItem?.(DRAFT_KEY);
-  } catch { /* storage blocked: the mix still works for this visit */ }
-}
+export const loadDraft = loadSavedMix;
+export const saveDraft = saveMix;
 
 export interface MixerHooks {
   /** main.ts say(): the page's one polite status. */
@@ -68,7 +54,16 @@ const CSS = `
 #mixer textarea { display: block; width: 100%; box-sizing: border-box; min-height: 8rem; font: 0.9rem/1.4 ui-monospace, monospace;
   border: 2px solid var(--fg); border-radius: 0.5rem; background: var(--bg); color: var(--fg); padding: 0.5rem; }
 #mixer .m-hint { color: var(--muted); margin: 0 0 1rem; }
+#mixer .m-helper { margin: 0 0 1rem; padding: 0.75rem 1rem; border-left: 4px solid var(--accent); background: var(--bg); border-radius: 0.5rem; }
+#mixer .m-helper p { margin: 0 0 0.5rem; }
+#mixer .m-helper p:last-child { margin: 0; }
+#mixer h3 { font-size: 1.1rem; margin: 1rem 0 0.5rem; }
 `;
+
+/** The order a helper meets the sliders in: the voice and the crowd first, the small sounds after. */
+export const ORDER: readonly (keyof MixLevels)[] = [
+  'commentator', 'crowdBeds', 'chants', 'roars', 'whistle', 'pass', 'shot', 'tackle', 'save', 'net', 'ping',
+];
 
 export function mountMixer(hooks: MixerHooks): HTMLElement {
   const draft = loadDraft();
@@ -84,9 +79,16 @@ export function mountMixer(hooks: MixerHooks): HTMLElement {
     return e;
   };
   const section = el('section', { id: 'mixer', 'aria-labelledby': 'm-h' });
-  section.append(el('h2', { id: 'm-h' }, 'Sound mixer (testing only)'),
-    el('p', { class: 'm-hint' }, 'Press Start, then move the sliders: you hear each change at once. "Next big moment" jumps '
-      + 'to a chance. Submit copies the values and downloads audio-mix.json; send that file to make them the defaults.'));
+  // D24: the helper explanation, on screen and read in order before the first slider.
+  const helper = el('div', { class: 'm-helper', id: 'm-helper' });
+  helper.append(
+    el('p', {}, 'Set this up once with a sighted friend or carer: press Start, listen together, and move each slider '
+      + 'until it sounds right. You hear every change at once.'),
+    el('p', {}, 'Your mix is saved on this device and plays on every visit, so every fan gets their own mix. '
+      + 'Reset goes back to our default.'));
+  const saved = el('p', { class: 'm-hint', id: 'm-saved' }, loadDraft() ? 'Your own mix is saved on this device.'
+    : 'Playing our default mix. Move a slider to make it yours.');
+  section.append(el('h2', { id: 'm-h' }, 'Your sound mix'), helper, saved, el('h3', {}, 'Levels'));
 
   const sliders = new Map<keyof AudioMix, { input: HTMLInputElement; out: HTMLOutputElement }>();
   const row = (key: keyof AudioMix, label: string, min: number, max: number, step: number) => {
@@ -95,18 +97,22 @@ export function mountMixer(hooks: MixerHooks): HTMLElement {
     const input = el('input', { id, type: 'range', min: String(min), max: String(max), step: String(step) });
     const out = el('output', { for: id });
     wrap.append(el('label', { for: id }, label), out, input);
-    input.addEventListener('input', () => { setMix({ [key]: Number(input.value) } as Partial<AudioMix>); saveDraft(getMix()); });
+    input.addEventListener('input', () => {
+      setMix({ [key]: Number(input.value) } as Partial<AudioMix>);
+      saveDraft(getMix());
+      saved.textContent = 'Saved on this device.';        // visual only: a live region would talk over every drag
+    });
     sliders.set(key, { input, out });
     section.append(wrap);
   };
-  for (const k of MIX_GROUPS) row(k, LABELS[k], MIN_DB, MAX_DB, 0.5);
+  for (const k of ORDER) row(k, LABELS[k], MIN_DB, MAX_DB, 0.5);
   row('nearEnd', 'Crowd end nearest the ball reacts more', 0, 1, 0.05);
 
   const fs = el('fieldset');
   fs.append(el('legend', {}, 'Where the commentator sits'));
   const radios = VOICE_POSITIONS.map((p) => {
     const r = el('input', { type: 'radio', name: 'm-pos', value: p });
-    r.addEventListener('change', () => { if (r.checked) { setMix({ commentatorPos: p }); saveDraft(getMix()); } });
+    r.addEventListener('change', () => { if (r.checked) { setMix({ commentatorPos: p }); saveDraft(getMix()); saved.textContent = 'Saved on this device.'; } });
     const l = el('label');
     l.append(r, ` ${POS_LABEL[p]}`);
     fs.append(l);
@@ -116,7 +122,7 @@ export function mountMixer(hooks: MixerHooks): HTMLElement {
 
   const buttons = el('div', { class: 'row' });
   const reset = el('button', { type: 'button', id: 'm-reset' }, 'Reset');
-  const submit = el('button', { type: 'button', id: 'm-submit' }, 'Submit');
+  const submit = el('button', { type: 'button', id: 'm-submit' }, 'Save a copy (JSON)');
   buttons.append(reset, submit);
   const result = el('textarea', { id: 'm-json', readonly: '', 'aria-label': 'The submitted mix, as JSON', rows: '8' });
   result.hidden = true;
@@ -137,6 +143,7 @@ export function mountMixer(hooks: MixerHooks): HTMLElement {
   reset.addEventListener('click', () => {
     setMix(DEFAULT_MIX);
     saveDraft(null);
+    saved.textContent = 'Playing our default mix. Move a slider to make it yours.';
     hooks.say('Mix reset to the defaults.');
   });
   submit.addEventListener('click', async () => {

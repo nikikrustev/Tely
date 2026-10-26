@@ -3,6 +3,7 @@
 import type { ReplayClock } from '../contracts/b-exports';
 import type { CrowdState } from '../audio/crowd-engine';
 import type { Earcon } from '../audio/audio-stands';
+import { bundleBase } from './base';
 
 export interface CrowdEnds { H: CrowdState; A: CrowdState }
 export interface Segment {
@@ -107,6 +108,6 @@ export class ReplaySource implements ReplayClock {
   }
 }
 
-export async function loadSegments(base = '/replay/v1/judge'): Promise<SegmentsDoc> {
+export async function loadSegments(base = bundleBase()): Promise<SegmentsDoc> {
   return (await (await fetch(`${base}/segments.json`)).json()) as SegmentsDoc;
 }

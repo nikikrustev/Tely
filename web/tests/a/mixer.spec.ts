@@ -18,8 +18,13 @@ test('the mixer: a labelled slider per group, Reset, Submit, no axe violations, 
     await expect(page.locator(`#m-${id}`)).toBeVisible();
   }
   await expect(page.locator('input[name="m-pos"]')).toHaveCount(3);
+  // D24: the helper explanation comes before the sliders, and the mix is kept on this device across visits.
+  await expect(page.locator('#m-helper')).toContainText('sighted friend or carer');
   await page.locator('#m-pass').fill('-20');
   await expect(page.locator('output[for="m-pass"]')).toHaveText('-20.0 dB');
+  await expect(page.locator('#m-saved')).toHaveText('Saved on this device.');
+  await page.reload();
+  await expect(page.locator('output[for="m-pass"]')).toHaveText('-20.0 dB', { timeout: 30_000 });
   await page.locator('#m-reset').click();
   await expect(page.locator('output[for="m-pass"]')).not.toHaveText('-20.0 dB');
   const download = page.waitForEvent('download');

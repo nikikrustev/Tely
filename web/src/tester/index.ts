@@ -228,9 +228,9 @@ export function mountTester(hooks: TesterHooks): TesterHandle {
       form.append(radios('ask_worked', 'Did the commentator answer you?', ASK_WORKED, { value: st.answers.ask?.worked }));
       parts.push(
         h('ol', {}, h('li', { text: 'Press "Play the match".' }),
-          h('li', { text: 'Press "Ask the commentator" (further down the page, or the A key) and choose "Where\'s the ball?".' }),
+          h('li', { text: 'Press "Quick questions" (under the two big buttons) and choose "Where\'s the ball?".' }),
           h('li', { text: 'Ask one more question from the list.' }),
-          h('li', { text: 'If you see "Ask out loud", press it, allow the microphone, and ask your own question, for example "Who has the ball?". The first one can take 30 seconds to wake up: if it says it isn\'t available, wait a moment and try again.' })),
+          h('li', { text: 'Press the big "Ask the commentator" button, allow the microphone, wait for the beep and ask your own question, for example "Who has the ball?". The first one can take 30 seconds to wake up: if it says it isn\'t available, wait a moment and try again.' })),
         h('p', { class: 't-hint', text: 'If you ask out loud, your voice goes to Microsoft\'s Azure speech service so the commentator can answer. We keep the words of your question, not the recording.' }),
         playButton('Play the match', playFull), form);
       doneB.textContent = 'Send my answers';
@@ -293,6 +293,13 @@ export function mountTester(hooks: TesterHooks): TesterHandle {
     }
   };
   // Tasks 6-7 watch the real controls, so we know what was tried without asking.
+  // D24: with live Ask on, the big Ask pad asks out loud straight away (main.ts sets data-state "stop" in the press).
+  document.getElementById('ask')?.addEventListener('click', (e) => {
+    const live = document.getElementById('ask-live');
+    if (active?.kind !== 'ask' || !live || live.hidden || (e.currentTarget as HTMLElement).dataset.state !== 'stop') return;
+    liveTried = true;
+    keepDraft(); save();
+  });
   document.getElementById('ask-menu')?.addEventListener('click', (e) => {
     const b = (e.target as HTMLElement).closest('button');
     if (!b || active?.kind !== 'ask') return;

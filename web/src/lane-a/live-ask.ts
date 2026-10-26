@@ -62,6 +62,8 @@ export interface LiveIO {
   wait(ms: number): Promise<void>;
   ping?(): void;
   prefs?(prefs: Record<string, unknown>): void;
+  /** Where the question is (D24): the page shows it on screen. Never announced: the mic may still be open. */
+  phase?(p: 'heard' | 'answering'): void;
 }
 
 type Msg = { type: string; [k: string]: unknown };
@@ -156,6 +158,7 @@ export class LiveAsk implements LiveAskHandler {
         if (m instanceof ArrayBuffer) {
           if (!answering) {
             answering = true;
+            this.io.phase?.('answering');
             arm(ANSWER_MAX_MS, null);          // an answer that never says "done" can't hold the Ask forever
             if (stoppedAt !== null) this.send({ type: 'metrics', client_latency_ms: this.io.now() - stoppedAt });
           }
@@ -180,6 +183,7 @@ export class LiveAsk implements LiveAskHandler {
             if (!heard) heard = true;
             stoppedAt = this.io.now();
             this.io.earcon('sent');
+            this.io.phase?.('heard');
             arm(ANSWER_TIMEOUT_MS, UNAVAILABLE);
             break;
           case 'tool':
@@ -312,6 +316,22 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
   let nextT = 0;
   const playing = new Set<AudioBufferSourceNode>();
   let clips: Promise<Record<string, { file: string }>> | null = null;
+  const clipIndex = () => (clips ??= fetch(`${o.base}/live/index.json`).then((r) => r.json())
+    .then((j: { clips: Record<string, { file: string }> }) => j.clips));
+  // D24: the refusal clips are fetched while the page is online, so "Live questions aren't available" is still said in
+  // the commentator's voice when the network has just dropped, which is exactly when it is needed.
+  const bytes = new Map<string, Promise<ArrayBuffer | null>>();
+  const clipBytes = (id: string): Promise<ArrayBuffer | null> => {
+    let b = bytes.get(id);
+    if (!b) {
+      b = clipIndex().then((c) => (c[id]?.file ? fetch(`${o.base}/live/${c[id]!.file}`) : null))
+        .then((r) => (r?.ok ? r.arrayBuffer() : null)).catch(() => null);
+      bytes.set(id, b);
+      void b.then((x) => { if (!x) { bytes.delete(id); clips = null; } });   // failed: try again next time
+    }
+    return b;
+  };
+  if (typeof fetch !== 'undefined') for (const id of [UNAVAILABLE.clip, NOT_HEARD.clip]) void clipBytes(id);
   const ctx = (): AudioContext => {
     const c = o.audio();
     if (!c) throw new Error('no audio context yet');
@@ -414,11 +434,10 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
     },
     async clip(id, text) {
       try {
-        clips ??= fetch(`${o.base}/live/index.json`).then((r) => r.json()).then((j: { clips: Record<string, { file: string }> }) => j.clips);
-        const f = (await clips)[id]?.file;
-        if (!f) throw new Error('no clip');
+        const raw = await clipBytes(id);
+        if (!raw) throw new Error('no clip');
         const c = ctx();
-        const buf = await c.decodeAudioData(await (await fetch(`${o.base}/live/${f}`)).arrayBuffer());
+        const buf = await c.decodeAudioData(raw.slice(0));   // decodeAudioData detaches its buffer: keep ours
         const src = c.createBufferSource();
         src.buffer = buf;
         src.connect(out as GainNode);
@@ -428,7 +447,6 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
           src.start();
         });
       } catch {
-        clips = null;
         await browserVoice(text);
       }
     },
@@ -439,5 +457,7 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
     // SEAM(A->B): b-exports.ts LaneBContext.pingBall() and applyPrefs() (a no-op before Start).
     ping: () => o.lane.pingBall?.(),
     prefs: (p) => o.lane.applyPrefs?.(p),
+    // SEAM(A->B): a window event, so B's main.ts can show the phase without a contract change.
+    phase: (p) => window.dispatchEvent(new CustomEvent('audiostands:live-phase', { detail: p })),
   };
 }

@@ -2,6 +2,7 @@
 // Visual for sighted judges; a screen-reader user can read it on demand, but it is NOT a live region: the clock ticks
 // every second and would drown the match (file 32). Score changes are announced once by main.ts's say().
 import type { Chapter } from './replay/chapters';
+import { bundleBase } from './replay/base';
 
 /** "56:10" -> 3370. Null for anything that isn't mm:ss. */
 export function parseClock(s: string | undefined): number | null {
@@ -54,7 +55,7 @@ export class Scoreboard {
 }
 
 /** Clock at playhead 0 from manifest.json (clock_start is the clock at t_start). Null if it can't be read. */
-export async function loadClockOffset(base = '/replay/v1/judge'): Promise<number | null> {
+export async function loadClockOffset(base = bundleBase()): Promise<number | null> {
   try {
     const m = (await (await fetch(`${base}/manifest.json`)).json()) as { clock_start?: string; t_start?: number };
     const c = parseClock(m.clock_start);

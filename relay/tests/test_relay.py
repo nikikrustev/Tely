@@ -221,6 +221,40 @@ def test_latency_restarts_with_each_question():
     run(go())
 
 
+def test_an_empty_incomplete_response_is_retried_once():
+    """26 Oct phone run: Voice Live returned an "incomplete" response with no audio after a clear question."""
+    async def go():
+        link = FakeLink()
+        br, out, _, logs = make_bridge(link=link)
+        await br.ask(B.t0 + 30)
+        await br.handle({"type": "input_audio_buffer.speech_stopped", "audio_end_ms": 900})
+        await br.handle({"type": "response.done", "response": {"status": "incomplete"}})
+        assert link.types()[-1] == "response.create"         # one retry, no answer_done yet
+        assert not [o for o in out if o["type"] == "answer_done"]
+        assert "retry_empty_response" in logs[-1]
+        await br.handle({"type": "response.done", "response": {"status": "incomplete"}})
+        done = [o for o in out if o["type"] == "answer_done"]
+        assert len(done) == 1 and done[0]["turn"]["outcome"] == "incomplete"   # never a second retry
+        await br.ask(B.t0 + 40)                              # the next question may retry again
+        await br.handle({"type": "response.done", "response": {"status": "incomplete"}})
+        assert link.types()[-1] == "response.create"
+    run(go())
+
+
+def test_token_usage_is_summed_into_the_turn():
+    async def go():
+        br, out, _, _ = make_bridge()
+        await br.ask(B.t0 + 30)
+        await br.handle({"type": "response.audio.delta", "delta": "AAA="})
+        use = {"total_tokens": 100, "input_tokens": 80, "output_tokens": 20,
+               "output_token_details": {"audio_tokens": 15, "text_tokens": 5}, "note": "x"}
+        await br.handle({"type": "response.done", "response": {"status": "completed", "usage": use}})
+        rec = [o for o in out if o["type"] == "answer_done"][0]["turn"]
+        assert rec["usage"] == {"total_tokens": 100, "input_tokens": 80, "output_tokens": 20,
+                                "output_token_details.audio_tokens": 15, "output_token_details.text_tokens": 5}
+    run(go())
+
+
 def test_ai_voice_disclosure_is_said_once():
     async def go():
         link = FakeLink()

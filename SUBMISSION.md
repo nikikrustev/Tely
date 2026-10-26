@@ -45,12 +45,14 @@ zero-backend replay on **Azure Static Web Apps**, the voice is **Azure Speech** 
 ## Testing instructions for judges
 
 1. Open https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/?radar=1 in Chrome or Edge, ideally with headphones.
-2. Press **Start** (or Enter). About five seconds in, the voice builds ("Navy coming... Olvholm... here's a chance!")
+2. Press **Start**, the lower big button (or Enter). About five seconds in, the voice builds ("Navy coming... Olvholm... here's a chance!")
    four seconds before the header, and the crowd rises with it.
-3. Press **A**, then **Where's the ball?** (works offline). Or **Ask out loud** and ask anything about the match:
-   "What's the score?", "Where is Fenford?", "Who wins?" (it won't tell you). Allow the microphone when asked.
+3. Press **Ask the commentator**, the upper big button (or A), wait for the beep and ask anything about the match:
+   "What's the score?", "Where is Fenford?", "Who wins?" (it won't tell you). Allow the microphone when asked. Press it
+   again during an answer to stop it at once. **Quick questions** gives **Where's the ball?** and three more (works offline).
    The live relay sleeps when idle: if the first live question says live questions aren't available, wait 30 seconds and ask again.
-4. **Next big moment** jumps to the next chance. **Settings**: your end (Reds or Navy), crowd level, vibration.
+4. **Next big moment** jumps to the next chance. **Settings**: your end (Reds or Navy), crowd level, vibration, and
+   **Fine-tune every sound**, the per-sound mixer a helper sets up once with the fan (saved on that device).
 5. On an Android phone in Chrome you also feel it: a heartbeat with the tension, and a pattern for each shot and goal.
    iPhone browsers can't vibrate, so iPhone gets the audio only.
 
@@ -62,10 +64,13 @@ why. Every service they have today is one-way and the same for everyone.
 
 ## What it does
 
-A whole match experience for the ears: the crowd at each end reacts to what happens, the ball's sound moves across the
-stereo field, the phone vibrates with the tension, and a commentator describes the ball first, then builds up before
-the chances. The fan picks their end, the crowd level and the vibration, and can ask the commentator questions at any
-time, by button or out loud.
+A whole match experience for the ears: the crowd at each end reacts to what happens, the crowd end nearest the ball
+lifts as play moves, the phone vibrates with the tension, and a commentator describes the ball first, then builds up
+before the chances. On a phone the screen is two big halves, found by touch: Ask on top (press, speak, the commentator
+answers; press again to stop it) and Pause/Resume below, each press confirmed by a vibration and a short tone. The fan
+picks their end, the crowd level and the vibration. A sighted friend or carer can set every sound once with them in the
+mixer (commentator, crowd, chants, reactions, kicks, whistle), and that mix is saved on their phone, so every fan gets
+their own.
 
 ## How we built it
 

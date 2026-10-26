@@ -16,7 +16,7 @@
       body { margin: 0; background: var(--bg); color: var(--fg); font: 1.125rem/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
       [hidden] { display: none !important; }   /* a control's own display rule must never un-hide it */
       main { max-width: 34rem; margin: 0 auto; padding: 1.25rem 1rem 1.5rem; }
-      @media (min-width: 48rem) { main { padding-top: 3rem; } }
+      @media (min-width: 48rem) { main { padding-top: 2rem; } }
       h1 { font-size: 1.75rem; line-height: 1.2; margin: 0; }
       h2 { font-size: 1.4rem; margin: 0 0 0.75rem; }
       .pitch { color: var(--muted); margin: 0.25rem 0 1.25rem; }
@@ -37,19 +37,59 @@
                  color: var(--muted); font-size: 1rem; font-variant-numeric: tabular-nums; }
       .sb-meta > span + span { border-left: 1px solid var(--line); padding-left: 0.75rem; }
       [data-sb="state"] { color: var(--fg); font-weight: 600; }
-      #start { display: block; width: 100%; min-height: 4.5rem; margin: 1rem 0 0; font-size: 1.5rem; font-weight: 700;
-               background: var(--accent); color: var(--on-accent); border: 0; }
-      #ask { display: block; width: 100%; min-height: 3.75rem; margin: 0.75rem 0 0; font-size: 1.25rem; font-weight: 700;
-             border-color: var(--fg); }
+      /* The two pads (D24): Ask, then Start / Pause / Resume. Stacked here; the two halves of the screen on a phone. */
+      #pads { display: grid; gap: 0.75rem; margin: 1rem 0 0; }
+      .half { position: relative; }
+      .pad { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem;
+             width: 100%; min-height: 5.5rem; padding: 0.75rem 1rem 2.25rem; font-size: 1.5rem; font-weight: 700; line-height: 1.2;
+             border-radius: 1.25rem; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+      .pad .ico { width: 2.25rem; height: 2.25rem; fill: currentColor; flex: none; }
+      .pad-hint { position: absolute; left: 0; right: 0; bottom: 0.6rem; margin: 0; text-align: center; pointer-events: none;
+                  font-size: 1rem; font-weight: 600; }
+      #ask { background: var(--accent); color: var(--on-accent); border: 0; }
+      #ask-hint { color: var(--on-accent); }
+      #start { background: var(--panel); color: var(--fg); border: 3px solid var(--fg); }
+      #start-hint { color: var(--muted); }
+      #start[data-state="start"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+      #start[data-state="start"] + #start-hint { color: var(--on-accent); }
+      #ask[aria-disabled="true"] { background: var(--panel); color: var(--muted); border: 3px dashed var(--muted); cursor: not-allowed; }
+      #ask[aria-disabled="true"] + #ask-hint { color: var(--muted); }
+      #ask[data-state="stop"] { background: var(--fg); color: var(--bg); }
+      #ask[data-state="stop"] + #ask-hint { color: var(--bg); }
+      .pad:active:not([aria-disabled="true"]) { filter: brightness(0.92); }
+      #ask:not([data-state="stop"]) .i-stop, #ask[data-state="stop"] .i-ask { display: none; }
+      #start[data-state="pause"] .i-play, #start:not([data-state="pause"]) .i-pause { display: none; }
       #ask-menu { display: grid; gap: 0.5rem; margin-top: 0.5rem; }
       #ask-menu[hidden] { display: none; }
       #ask-menu button { min-height: 3.25rem; text-align: left; }
-      #status { min-height: 1.5em; margin: 1rem 0; padding-left: 0.75rem; border-left: 3px solid var(--accent); }
+      #status { min-height: 1.5em; margin: 1rem 0 0; padding-left: 0.75rem; border-left: 3px solid var(--accent); }
+      .keys { margin-top: 1rem; }
+      /* Phone held upright: the stage fills the screen and the pads are its two halves. The rest scrolls below. */
+      @media (max-width: 40rem) and (min-height: 32rem) {
+        main { padding-top: 0.5rem; }
+        h1 { font-size: 1.25rem; height: 2rem; line-height: 2rem; }
+        .pitch { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+        #stage { display: flex; flex-direction: column; height: calc(100dvh - 2.5rem); padding-bottom: 0.75rem; box-sizing: border-box; }
+        #match { padding: 0.4rem 0.9rem 0.5rem; }
+        .sb-nums { font-size: 1.75rem; }
+        .sb-meta { margin-top: 0.15rem; font-size: 0.95rem; }
+        #status { margin-top: 0.5rem; font-size: 1rem; line-height: 1.35; min-height: 2.7em; display: -webkit-box;
+                  -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        #pads { flex: 1; min-height: 0; grid-template-rows: 1fr 1fr; margin-top: 0.5rem; }
+        .pad { height: 100%; font-size: 1.9rem; }
+        .pad .ico { width: 3.25rem; height: 3.25rem; }
+        #ask-menu { position: absolute; inset: 0; z-index: 1; margin: 0; padding: 0.5rem; overflow: auto; align-content: start;
+                    grid-template-columns: 1fr 1fr; background: var(--panel); border: 3px solid var(--fg); border-radius: 1.25rem; }
+        #ask-menu button { min-height: 3.5rem; font-size: 1.05rem; line-height: 1.2; text-align: center; padding: 0.4rem; }
+        #ask-menu #ask-live, #ask-menu #ask-close { grid-column: 1 / -1; }
+      }
+      /* Wider screens (desktop, phone landscape): the pads side by side, Ask on the left (reading order). */
+      @media (min-width: 40.0625rem) { #pads { grid-template-columns: 1fr 1fr; } .pad { min-height: 9rem; } }
+      @media (pointer: coarse) { .keys { display: none; } }
       .row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
       .row button { flex: 1 1 12rem; min-height: 3.5rem; font-weight: 600; }
-      #more { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+      #more { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: 0.5rem; margin-top: 1rem; }
       #more button { min-height: 3rem; font-size: 1rem; line-height: 1.25; padding: 0.4rem 0.5rem; }
-      #more:has(#learn[hidden]) { grid-template-columns: repeat(2, 1fr); }
       #settings { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1rem; margin-top: 1rem; }
       fieldset { border: 1px solid var(--muted); border-radius: 0.5rem; margin: 0 0 1rem; padding: 0.5rem 0.75rem 0.75rem; }
       fieldset label { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; }
@@ -94,6 +134,7 @@
   <body>
     <main id="app">
       <h1>Audio Stands</h1>
+      <div id="stage">
       <p class="pitch">Football you follow by sound: a crowd all around you and an AI commentator you can talk to.</p>
       <section id="match" aria-labelledby="match-h">
         <h2 id="match-h" class="sr-only">Match</h2>
@@ -108,20 +149,40 @@
           <span data-sb="state">Not started</span>
         </p>
       </section>
-      <button id="start" type="button" autofocus>Start</button>
-      <button id="ask" type="button" aria-expanded="false" aria-controls="ask-menu" aria-keyshortcuts="A" disabled>
-        Ask the commentator
-      </button>
-      <div id="ask-menu" role="group" aria-label="Questions for the commentator" hidden>
-        <button type="button" data-preset="ball">Where's the ball?</button>
-        <button type="button" data-preset="score">What's the score?</button>
-        <button type="button" data-preset="last">What just happened?</button>
-        <button type="button" data-preset="missed">What did I miss?</button>
-        <button type="button" id="ask-live" hidden>Ask out loud</button>
-      </div>
-      <p class="hint">Press A at any time to ask, or to stop an answer.</p>
       <p id="status">Loading…</p>
+      <!-- The two big pads (26 Oct, D24): Ask on top, Start / Pause / Resume below. On a phone held upright they are
+           the two halves of the screen, so a blind fan can find either by touch. The label is .pad-label, so the
+           accessible name is the visible words; the icons are decorative and the hints are descriptions. -->
+      <div id="pads">
+        <div class="half" id="ask-half">
+          <button id="ask" class="pad" type="button" data-state="ask" aria-keyshortcuts="A" aria-describedby="ask-hint" aria-controls="ask-menu" aria-disabled="true">
+            <svg class="ico i-ask" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-3.1A7 7 0 0 0 19 11z"/></svg>
+            <svg class="ico i-stop" aria-hidden="true" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
+            <span class="pad-label">Ask the commentator</span>
+          </button>
+          <p class="pad-hint" id="ask-hint" aria-hidden="true">Works once the match starts</p>
+          <div id="ask-menu" role="group" aria-label="Questions for the commentator" hidden>
+            <button type="button" data-preset="ball">Where's the ball?</button>
+            <button type="button" data-preset="score">What's the score?</button>
+            <button type="button" data-preset="last">What just happened?</button>
+            <button type="button" data-preset="missed">What did I miss?</button>
+            <button type="button" id="ask-live" hidden>Ask out loud</button>
+            <button type="button" id="ask-close">Back to the match</button>
+          </div>
+        </div>
+        <div class="half" id="play-half">
+          <button id="start" class="pad" type="button" data-state="start" aria-describedby="start-hint" autofocus>
+            <svg class="ico i-play" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+            <svg class="ico i-pause" aria-hidden="true" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+            <span class="pad-label">Start</span>
+          </button>
+          <p class="pad-hint" id="start-hint" aria-hidden="true">Starts the match</p>
+        </div>
+      </div>
+      </div>
+      <p class="hint keys">Keyboard: A asks, or stops an answer. Escape goes back to the match.</p>
       <div class="row" id="more">
+        <button id="presets-open" type="button">Quick questions</button>
         <button id="next" type="button" disabled>Next big moment</button>
         <button id="learn" type="button">Learn the sounds</button>
         <button id="settings-toggle" type="button" aria-expanded="false" aria-controls="settings">Settings</button>
@@ -159,6 +220,7 @@
           <p id="cstatus"></p>
         </fieldset>
         <label><input id="radar-toggle" type="checkbox" /> Show the sound radar (a visual pitch for sighted viewers)</label>
+        <p><a id="mix-link" class="t-link" href="?mix=1">Fine-tune every sound, with a helper</a></p>
       </section>
 
       <div id="radar" hidden aria-hidden="true"></div>
