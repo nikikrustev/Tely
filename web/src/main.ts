@@ -261,12 +261,20 @@ async function startApp(): Promise<void> {
       return;
     }
     if (!askMenu.hidden) { closeMenu(); return; }
+    // Paused: the stage's audio is suspended, so the answer and catch-up could not play. Carry on first (D24).
+    if (src && !src.isPlaying()) { void resumeMatch(false).then(pressAsk); return; }   // quietly: the mic opens next
     feedback('ask');
     // D24: one press, then speak. Without live Ask (no relay, or ?live=0) the pad opens the quick questions.
     if (askCtl?.hasLive) void runAsk(() => askCtl!.askLive(), true);
     else openMenu(true);
   };
   askBtn.addEventListener('click', pressAsk);
+  // SEAM(B->A): live-ask.ts browserIO phase(). Visual only: a screen reader would talk into the open mic.
+  window.addEventListener('audiostands:live-phase', (e) => {
+    if (askBtn.dataset.state !== 'stop') return;
+    const p = (e as CustomEvent<string>).detail;
+    status.textContent = p === 'heard' ? 'Got your question. Thinking…' : 'Answering. Tap Stop to interrupt.';
+  });
   $('presets-open').addEventListener('click', () => { if (!askReady) notYet(); else if (!askCtl?.isBusy) openMenu(true); });
   $('ask-close').addEventListener('click', closeMenu);
   lazyAsk.onShowPresets = () => {
@@ -507,17 +515,19 @@ async function startApp(): Promise<void> {
       openMenu(false);
       await new Promise((r) => setTimeout(r, 120));      // let the press tone finish before the context stops
       await pause('Paused.');
-    } else {
-      await ctx.resume();
-      feedback('resume');
-      src.play(0.1);
-      lane.commentary.resume(); // SEAM(B->A): CommentaryTrack.resume()
-      w?.pump();
-      setPad(start, 'Pause', 'pause', 'Pauses the match');
-      board.update({ state: 'Playing' });
-      say('Playing.');
-    }
+    } else await resumeMatch();
   });
+  async function resumeMatch(announce = true): Promise<void> {
+    if (!src || !ctx || src.isPlaying()) return;
+    await ctx.resume();
+    feedback('resume');
+    src.play(0.1);
+    lane.commentary.resume(); // SEAM(B->A): CommentaryTrack.resume()
+    w?.pump();
+    setPad(start, 'Pause', 'pause', 'Pauses the match');
+    board.update({ state: 'Playing' });
+    if (announce) say('Playing.'); else status.textContent = 'Playing.';
+  }
 
   next.addEventListener('click', () => {
     if (!src || !ctx) return;

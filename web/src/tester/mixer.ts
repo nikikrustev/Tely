@@ -12,17 +12,17 @@ export const DRAFT_KEY = MIX_KEY;
 export const FILE_NAME = 'audio-mix.json';
 
 export const LABELS: Record<keyof MixLevels, string> = {
-  crowdBeds: 'Crowd beds (murmur, swell, tense, away end)',
+  commentator: 'Commentator',
+  crowdBeds: 'Crowd murmur and swell',
   chants: 'Chants and claps',
-  roars: 'Crowd reactions (roar, ooh, cheer, jeers, applause)',
-  pass: 'Pass',
-  shot: 'Shot',
-  tackle: 'Tackle',
-  save: 'Save',
+  roars: 'Crowd reactions (roars, oohs, cheers)',
+  pass: 'Passes',
+  shot: 'Shots',
+  tackle: 'Tackles',
+  save: 'Saves',
   net: 'Ball in the net',
   whistle: "Referee's whistle",
   ping: 'Ball ping ("Where is the ball?")',
-  commentator: 'Commentator (track, preset and live answers)',
 };
 const POS_LABEL: Record<VoicePos, string> = {
   behind: 'Behind me, a little above (press box)',
@@ -82,10 +82,10 @@ export function mountMixer(hooks: MixerHooks): HTMLElement {
   // D24: the helper explanation, on screen and read in order before the first slider.
   const helper = el('div', { class: 'm-helper', id: 'm-helper' });
   helper.append(
-    el('p', {}, 'Set this up once, with a sighted friend or carer. Press Start, then listen together and move each '
-      + 'slider until the commentator, the crowd and the match sounds feel right to you. You hear every change at once.'),
-    el('p', {}, 'Your mix is saved on this phone or computer, and plays every time you come back here. So every fan gets '
-      + 'their own mix. Reset goes back to our default mix.'));
+    el('p', {}, 'Set this up once with a sighted friend or carer: press Start, listen together, and move each slider '
+      + 'until it sounds right. You hear every change at once.'),
+    el('p', {}, 'Your mix is saved on this device and plays on every visit, so every fan gets their own mix. '
+      + 'Reset goes back to our default.'));
   const saved = el('p', { class: 'm-hint', id: 'm-saved' }, loadDraft() ? 'Your own mix is saved on this device.'
     : 'Playing our default mix. Move a slider to make it yours.');
   section.append(el('h2', { id: 'm-h' }, 'Your sound mix'), helper, saved, el('h3', {}, 'Levels'));

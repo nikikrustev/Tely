@@ -167,6 +167,7 @@ if (ONLY.has('barge')) {
   else {
     await wait(1200);                                   // let the answer run a little
     const labelDuring = await text(ASK);
+    await shot('03b-answer-playing');
     const tPress = await now();
     await page.tap(ASK);
     await wait(1500);
@@ -209,6 +210,18 @@ if (ONLY.has('pause')) {
     && resumedPeaks.some((p) => p > 0.005), {
     clockAtPause: c0, clockAfter5sPaused: c1, clockAfter8sResumed: c2, ctxStateWhilePaused: ctxPaused,
     peakRmsWhilePaused: pausedPeaks, peakRmsAfterResume: resumedPeaks, status: await text('#status') });
+}
+
+// ---- 5. The mixer (?mix=1) with the helper explanation, for the screenshots
+if (ONLY.has('mixer')) {
+  await page.goto(`${URL_BASE}/?mix=1`);
+  await page.waitForFunction(() => document.getElementById('status')?.textContent?.startsWith('Ready'));
+  await page.tap('#start');
+  await page.waitForFunction(() => document.querySelector('[data-sb="state"]')?.textContent === 'Playing', null, { timeout: 30_000 });
+  await page.locator('#m-h').evaluate((e) => e.scrollIntoView({ block: 'start' }));
+  await wait(500);
+  await shot('06-mixer-helper');
+  step('mixer: helper text and sliders shown', await page.locator('#m-helper').isVisible(), { saved: await text('#m-saved') });
 }
 
 report.consoleErrors = logs.filter((l) => /error|warn/i.test(l)).slice(0, 30);
