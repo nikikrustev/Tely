@@ -39,6 +39,8 @@ KQL = ("customEvents | where name == 'tester_feedback' "
 # The team's own runs are not volunteers. Everything before this moment was Claude's deploy check and Playwright
 # against the live site (24 Oct, about 28 tester codes). Later team runs: pass their codes with --exclude.
 TEAM_TESTS_BEFORE = "2026-10-24T18:30:00Z"
+# Claude's Playwright runs against the live site after the D24 deploy (26 Oct, 15:20-15:21 UTC).
+TEAM_TEST_CODES = {"t-60c2d74f", "t-06ef4bb7", "t-0a33d074", "t-25f83548", "t-2174c901", "t-f2990923"}
 SCREEN_READERS = {"none": "none", "nvda": "NVDA", "jaws": "JAWS", "narrator": "Narrator", "voiceover": "VoiceOver",
                   "talkback": "TalkBack", "other": "other"}
 DEVICES = {"android_phone": "Android phone", "iphone": "iPhone", "windows": "Windows computer", "mac": "Mac",
@@ -180,7 +182,7 @@ def main(argv: list[str] | None = None) -> int:
         events += query(app, rg, args.days)
     for p in args.paste:
         events += from_paste(p.read_text(encoding="utf-8"))
-    skip = set(args.exclude)
+    skip = set(args.exclude) | TEAM_TEST_CODES
     events = dedupe([e for e in events if e.get("tester") and e["tester"] not in skip
                      and (e.get("timestamp") is None or e["timestamp"] >= TEAM_TESTS_BEFORE)])
     write_raw(events)

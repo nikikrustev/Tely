@@ -114,7 +114,7 @@ test('tester mode: clip task and questions, by keyboard only', async ({ page }) 
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('audiostands.tester.v1') ?? '{}'));
   const clipEv = saved.events.find((e: { ev: { kind: string } }) => e.ev.kind === 'clip');
   expect(clipEv.ev).toMatchObject({ clip: 1, where: 'right_close', where_ok: 0, enjoy: 1 });
-  expect(clipEv.status).not.toBe('sent');
+  if (!LIVE) expect(clipEv.status).not.toBe('sent');   // with the relay (deployed site) it is sent
   await expect(page.locator('body')).not.toContainText(/where_ok|out of 4|correct/i);
 });
 
