@@ -112,6 +112,23 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
             "additionalProperties": False,
         },
     },
+    {
+        "type": "function",
+        "name": "adjust_sound",
+        "description": "Make one sound louder or quieter on the fan's 0 to 100 scale (0 is off). Use change for "
+                       "\"down by 5\" or \"up by 10\", level for \"set it to 40\".",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "sound": {"type": "string", "enum": ["commentator", "crowd", "chants", "reactions", "whistle", "passes",
+                                                     "shots", "tackles", "saves", "net", "ball_ping"]},
+                "change": {"type": "integer", "minimum": -100, "maximum": 100},
+                "level": {"type": "integer", "minimum": 0, "maximum": 100},
+            },
+            "required": ["sound"],
+            "additionalProperties": False,
+        },
+    },
 ]
 
 from .bundle import Bundle, load_bundle  # noqa: E402

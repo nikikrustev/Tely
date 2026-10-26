@@ -81,12 +81,13 @@ test('Ask menu', async ({ page }) => {
   await expectNoViolations(page, 'Ask menu');
 });
 
-test('Settings', async ({ page }) => {
+test('Setup tab: the sound desk and the settings (D25)', async ({ page }) => {
   await ready(page);
-  await page.locator('#settings-toggle').click();
+  await page.locator('#tab-setup').click();
+  await expect(page.locator('#tab-setup')).toHaveAttribute('aria-selected', 'true');
   await expect(page.locator('#settings')).toBeVisible();
-  await expect(page.locator('#settings-toggle')).toHaveAttribute('aria-expanded', 'true');
-  await expectNoViolations(page, 'Settings');
+  await expect(page.locator('#mixer')).toBeVisible({ timeout: 30_000 });
+  await expectNoViolations(page, 'Setup');
 });
 
 test('sound radar (?radar=1)', async ({ page }) => {
@@ -116,8 +117,9 @@ test('what axe cannot see: live regions, target size, motion', async ({ page }, 
   await expect(page.locator('#sr-polite')).toHaveAttribute('role', 'status');
   await expect(page.locator('[aria-live="assertive"]')).toHaveCount(1);
   await expect(page.locator('#sr-assertive')).toHaveText('');
-  // WCAG 2.5.8 floor is 24 px; index.html aims for 44 px on every control, including those Settings reveals.
-  await page.locator('#settings-toggle').click();
+  // WCAG 2.5.8 floor is 24 px; index.html aims for 44 px on every control, including those the Setup tab shows.
+  await page.locator('#tab-setup').click();
+  await expect(page.locator('#mixer')).toBeVisible({ timeout: 30_000 });
   for (const el of await page.locator('button:visible, select:visible, input[type="range"]:visible').all()) {
     const box = await el.boundingBox();
     expect(box, await el.evaluate((e) => e.outerHTML.slice(0, 80))).not.toBeNull();

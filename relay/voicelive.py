@@ -173,13 +173,18 @@ class Bridge:
         self._first_audio: float | None = None
         self._after_tools = False
         self.disclosed = False
+        self.levels: dict[str, int] = {}          # the fan's sound levels (0..100) from the last `ask`, for adjust_sound
 
     async def start(self) -> None:
         await self.link.send(session_update(self.bundle))
 
     # ---------------------------------------------------------------- from the browser
-    async def ask(self, playhead_s: Any) -> None:
-        """Start one question at the fan's playhead, or send the spoken refusal."""
+    async def ask(self, playhead_s: Any, levels: Any = None) -> None:
+        """Start one question at the fan's playhead, or send the spoken refusal. `levels` is the page's sound mix on
+        the 0..100 scale ({"whistle": 30, ...}); only adjust_sound reads it, so the fan hears the new level."""
+        if isinstance(levels, dict):
+            self.levels = {k: round(min(100.0, max(0.0, float(v)))) for k, v in levels.items()
+                           if isinstance(k, str) and isinstance(v, (int, float)) and not isinstance(v, bool)}
         try:
             p = self.bundle.clamp(float(playhead_s))
         except (TypeError, ValueError):
@@ -323,8 +328,15 @@ class Bridge:
         else:
             # SEAM(A->B): call_tool(name, args, playhead_s=..., bundle=...). The playhead is the session's, never the
             # model's: B's tools.call also drops any playhead_s/session_id key the model might invent.
-            result = call_tool(name, args if isinstance(args, dict) else {}, playhead_s=self.playhead,
-                               bundle=self.bundle)
+            args = dict(args) if isinstance(args, dict) else {}
+            if name == "adjust_sound":           # the page's level, never the model's
+                args.pop("current", None)
+                if (cur := self.levels.get(str(args.get("sound")))) is not None:
+                    args["current"] = cur
+            result = call_tool(name, args, playhead_s=self.playhead, bundle=self.bundle)
+            prefs = result.get("prefs") or {}
+            if name == "adjust_sound" and isinstance(prefs.get("level"), int):
+                self.levels[prefs["sound"]] = prefs["level"]   # a second "down by 5" in this answer starts from here
         turn["tool_calls"].append({"name": name, "args": args, "result": result})
         self._pending.append({"type": "conversation.item.create", "item": {
             "type": "function_call_output", "call_id": ev.get("call_id"), "output": json.dumps(result)}})

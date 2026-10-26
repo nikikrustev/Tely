@@ -55,7 +55,7 @@ def test_tools_match_the_relay_schemas_and_take_no_clock():
     for t in tools:
         props = set((t.input_schema or {}).get("properties", {}))
         assert not props & {"playhead", "playhead_s", "time", "t", "clock", "ctx"}, (t.name, props)
-        assert t.annotations.read_only_hint == (t.name != "set_preferences"), t.name
+        assert t.annotations.read_only_hint == (t.name not in {"set_preferences", "adjust_sound"}), t.name
 
 
 @pytest.mark.parametrize("seed", range(5))

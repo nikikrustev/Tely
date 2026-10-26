@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { liveRelayUrl } from '../../src/lane-a';
 import { ANSWER_TIMEOUT_MS, browserIO, DOWN_FOR_MS, LiveAsk, type LiveIO, type RelaySocket } from '../../src/lane-a/live-ask';
+import { DEFAULT_MIX, levelFromDb, soundLevels } from '../../src/audio/mix';
 
 class FakeSocket implements RelaySocket {
   binaryType = 'blob';
@@ -54,7 +55,8 @@ describe('LiveAsk', () => {
     expect(s.binaryType).toBe('arraybuffer');
     s.server({ type: 'ready' });
     await flush();
-    expect(s.json()[0]).toEqual({ type: 'ask', playhead_s: 742 });
+    expect(s.json()[0]).toEqual({ type: 'ask', playhead_s: 742, levels: soundLevels() });
+    expect((s.json()[0] as { levels: Record<string, number> }).levels.whistle).toBe(levelFromDb(DEFAULT_MIX.whistle));
     s.server({ type: 'listening', as_of_clock: '57:22' });
     await flush();
     expect(log).toContain('earcon:listen');

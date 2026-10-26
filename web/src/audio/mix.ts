@@ -95,6 +95,42 @@ export function setMix(patch: Partial<AudioMix>): AudioMix {
   return current;
 }
 
+// ---- the fan's 0..100 scale (27 Oct): what the Setup tab shows and what the fan says out loud ("whistle down by 5").
+// Linear in dB over MIN_DB..MAX_DB, so 0 = off, 100 = +12 dB and one step is about half a dB. The mix stays in dB.
+export const levelFromDb = (db: number): number => Math.round(((Math.min(MAX_DB, Math.max(MIN_DB, db)) - MIN_DB) / (MAX_DB - MIN_DB)) * 100);
+export const dbFromLevel = (level: number): number => MIN_DB + (Math.min(100, Math.max(0, level)) / 100) * (MAX_DB - MIN_DB);
+
+/** The names the commentator's adjust_sound tool uses (pipeline/audiostands/qa/tools.py SOUNDS), to our groups. */
+export const SOUNDS: Record<string, keyof MixLevels> = {
+  commentator: 'commentator', crowd: 'crowdBeds', chants: 'chants', reactions: 'roars', whistle: 'whistle',
+  passes: 'pass', shots: 'shot', tackles: 'tackle', saves: 'save', net: 'net', ball_ping: 'ping',
+};
+
+/** Short names for the page's status line when the commentator changes a sound. */
+export const GROUP_NAMES: Record<keyof MixLevels, string> = {
+  commentator: 'Commentator', crowdBeds: 'Crowd murmur', chants: 'Chants', roars: 'Crowd reactions', whistle: 'Whistle',
+  pass: 'Passes', shot: 'Shots', tackle: 'Tackles', save: 'Saves', net: 'Ball in the net', ping: 'Ball ping',
+};
+
+/** Every sound's level now, by the tool's names. Sent with each live question so the answer can say the new level. */
+export function soundLevels(m: AudioMix = current): Record<string, number> {
+  return Object.fromEntries(Object.entries(SOUNDS).map(([name, key]) => [name, levelFromDb(m[key])]));
+}
+
+/** Apply an adjust_sound result ({sound, level} or {sound, change}) and keep it on this device. Null if not one. */
+export function adjustSound(p: unknown, storage: StorageLike | null = browserStorage()): { key: keyof MixLevels; level: number } | null {
+  const o = (p && typeof p === 'object' ? p : {}) as Record<string, unknown>;
+  const key = typeof o.sound === 'string' ? SOUNDS[o.sound] : undefined;
+  if (!key) return null;
+  const num = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
+  const level = num(o.level) ? o.level : num(o.change) ? levelFromDb(current[key]) + o.change : null;
+  if (level === null) return null;
+  const l = Math.round(Math.min(100, Math.max(0, level)));
+  setMix({ [key]: dbFromLevel(l) } as Partial<AudioMix>);
+  saveMix(current, storage);
+  return { key, level: l };
+}
+
 /** Call `f` now and on every change. Returns an unsubscribe function. */
 export function onMix(f: (m: AudioMix) => void): () => void {
   listeners.add(f);

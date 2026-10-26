@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Audio Stands</title>
     <style>
-      /* Final product UI (25 Oct): one column, one accent (pitch green), system font, no animation.
+      /* Product UI (25 Oct, D23), in three views since 27 Oct (D25): Setup (the helper's sound desk), Laptop (keys for
+         judges) and Phone (the two pads). One match plays under all three. One accent (pitch green), system font.
          --on-accent is the Start button's text: white on #0a6b4a is 6.5:1, #111 on dark mode's #5fd3a3 is 10:1. */
       :root { color-scheme: light dark; --bg: #fff; --fg: #121413; --muted: #545b57; --panel: #f3f5f4; --line: #d5dad7;
               --accent: #0a6b4a; --on-accent: #fff; --err: #b00020; }
@@ -15,18 +16,32 @@
       }
       body { margin: 0; background: var(--bg); color: var(--fg); font: 1.125rem/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
       [hidden] { display: none !important; }   /* a control's own display rule must never un-hide it */
-      main { max-width: 34rem; margin: 0 auto; padding: 1.25rem 1rem 1.5rem; }
-      @media (min-width: 48rem) { main { padding-top: 2rem; } }
+      /* The title and the view tabs share the top row; everything else is full width below them. */
+      main { max-width: 34rem; margin: 0 auto; padding: 1rem 1rem 1.5rem; display: grid; grid-template-columns: auto minmax(0, 1fr);
+             align-items: center; column-gap: 0.75rem; }
+      main > :not(h1):not(#views) { grid-column: 1 / -1; }
+      main > h1 { grid-row: 1; grid-column: 1; }
+      main > #views { grid-row: 1; grid-column: 2; }
+      main:has(> #t-bar) > :is(h1, #views) { grid-row: 2; }   /* tester mode: its sticky bar stays on top */
+      main.v-laptop { max-width: 44rem; }
+      main.v-setup { max-width: 52rem; }
+      main.v-phone { max-width: 28rem; }
       h1 { font-size: 1.75rem; line-height: 1.2; margin: 0; }
       h2 { font-size: 1.4rem; margin: 0 0 0.75rem; }
-      .pitch { color: var(--muted); margin: 0.25rem 0 1.25rem; }
-      .notice { color: var(--muted); font-size: 0.95rem; margin: 1.5rem 0 0; }
+      .pitch { color: var(--muted); margin: 0.5rem 0 1rem; }
+      .notice { color: var(--muted); font-size: 0.95rem; margin: 1.25rem 0 0; }
       .hint { color: var(--muted); font-size: 0.95rem; margin: 0.5rem 0 0; }
       /* Every control is at least 44 x 44 px (WCAG 2.5.5 / file 32) and shows a strong focus ring. */
       button, select, input[type="range"] { min-height: 44px; min-width: 44px; font: inherit; }
       button { border: 2px solid var(--muted); border-radius: 0.75rem; background: var(--bg); color: var(--fg); padding: 0.5rem 1rem; cursor: pointer; }
       button:disabled { opacity: 0.5; cursor: not-allowed; }
       :is(button, select, input):focus-visible { outline: 4px solid var(--fg); outline-offset: 3px; }
+      /* The view tabs: a segmented control, the open view filled. */
+      #views { justify-self: end; display: flex; gap: 2px; padding: 3px; border: 2px solid var(--line); border-radius: 999px; }
+      #views [role="tab"] { min-height: 44px; padding: 0.3rem 0.85rem; border: 0; border-radius: 999px; background: transparent;
+                            font-size: 1rem; font-weight: 600; line-height: 1.2; color: var(--muted); }
+      #views [role="tab"][aria-selected="true"] { background: var(--fg); color: var(--bg); }
+      #views [role="tab"]:focus-visible { outline-offset: 2px; }
       /* The match card (scoreboard.ts): score, clock, chapter, state. */
       #match { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1rem 1.25rem; }
       .sb-score { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; margin: 0; }
@@ -37,15 +52,15 @@
                  color: var(--muted); font-size: 1rem; font-variant-numeric: tabular-nums; }
       .sb-meta > span + span { border-left: 1px solid var(--line); padding-left: 0.75rem; }
       [data-sb="state"] { color: var(--fg); font-weight: 600; }
-      /* The two pads (D24): Ask, then Start / Pause / Resume. Stacked here; the two halves of the screen on a phone. */
+      /* The two pads (D24): Ask, then Start / Pause / Resume. Side by side on Laptop and Setup; the halves of the screen on Phone. */
       #pads { display: grid; gap: 0.75rem; margin: 1rem 0 0; }
       .half { position: relative; }
       .pad { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem;
              width: 100%; min-height: 5.5rem; padding: 0.75rem 1rem 2.25rem; font-size: 1.5rem; font-weight: 700; line-height: 1.2;
              border-radius: 1.25rem; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
       .pad .ico { width: 2.25rem; height: 2.25rem; fill: currentColor; flex: none; }
-      .pad-hint { position: absolute; left: 0; right: 0; bottom: 0.6rem; margin: 0; text-align: center; pointer-events: none;
-                  font-size: 1rem; font-weight: 600; }
+      .pad-hint { position: absolute; left: 0; right: 0; bottom: 0.6rem; margin: 0; padding: 0 0.5rem; text-align: center; pointer-events: none;
+                  font-size: 1rem; font-weight: 600; line-height: 1.25; }
       #ask { background: var(--accent); color: var(--on-accent); border: 0; }
       #ask-hint { color: var(--on-accent); }
       #start { background: var(--panel); color: var(--fg); border: 3px solid var(--fg); }
@@ -63,33 +78,63 @@
       #ask-menu[hidden] { display: none; }
       #ask-menu button { min-height: 3.25rem; text-align: left; }
       #status { min-height: 1.5em; margin: 1rem 0 0; padding-left: 0.75rem; border-left: 3px solid var(--accent); }
-      .keys { margin-top: 1rem; }
-      /* Phone held upright: the stage fills the screen and the pads are its two halves. The rest scrolls below. */
-      @media (max-width: 40rem) and (min-height: 32rem) {
-        main { padding-top: 0.5rem; }
-        h1 { font-size: 1.25rem; height: 2rem; line-height: 2rem; }
-        .pitch { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-        #stage { display: flex; flex-direction: column; height: calc(100dvh - 2.5rem); padding-bottom: 0.75rem; box-sizing: border-box; }
-        #match { padding: 0.4rem 0.9rem 0.5rem; }
-        .sb-nums { font-size: 1.75rem; }
-        .sb-meta { margin-top: 0.15rem; font-size: 0.95rem; }
-        #status { margin-top: 0.5rem; font-size: 1rem; line-height: 1.35; min-height: 2.7em; display: -webkit-box;
-                  -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        #pads { flex: 1; min-height: 0; grid-template-rows: 1fr 1fr; margin-top: 0.5rem; }
-        .pad { height: 100%; font-size: 1.9rem; }
-        .pad .ico { width: 3.25rem; height: 3.25rem; }
-        #ask-menu { position: absolute; inset: 0; z-index: 1; margin: 0; padding: 0.5rem; overflow: auto; align-content: start;
-                    grid-template-columns: 1fr 1fr; background: var(--panel); border: 3px solid var(--fg); border-radius: 1.25rem; }
-        #ask-menu button { min-height: 3.5rem; font-size: 1.05rem; line-height: 1.2; text-align: center; padding: 0.4rem; }
-        #ask-menu #ask-live, #ask-menu #ask-close { grid-column: 1 / -1; }
-      }
-      /* Wider screens (desktop, phone landscape): the pads side by side, Ask on the left (reading order). */
-      @media (min-width: 40.0625rem) { #pads { grid-template-columns: 1fr 1fr; } .pad { min-height: 9rem; } }
-      @media (pointer: coarse) { .keys { display: none; } }
       .row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
       .row button { flex: 1 1 12rem; min-height: 3.5rem; font-weight: 600; }
       #more { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: 0.5rem; margin-top: 1rem; }
       #more button { min-height: 3rem; font-size: 1rem; line-height: 1.25; padding: 0.4rem 0.5rem; }
+
+      /* ---- Laptop: the pads side by side and the three keys, big enough for a judge to read in the video. ---- */
+      .v-laptop #pads, .v-setup #pads { grid-template-columns: 1fr 1fr; }
+      .v-laptop .pad { min-height: 8.5rem; }
+      #keys { display: none; }
+      .v-laptop #keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; list-style: none; padding: 0; margin: 0.75rem 0 0; }
+      #keys li { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.75rem; border: 1px solid var(--line);
+                 border-radius: 0.75rem; background: var(--panel); font-size: 1rem; line-height: 1.25; font-weight: 600; }
+      #keys kbd { flex: none; min-width: 3.5rem; padding: 0.25rem 0.5rem; text-align: center; font: 700 1rem/1.3 ui-monospace, "Cascadia Mono", monospace;
+                  border: 2px solid var(--fg); border-bottom-width: 4px; border-radius: 0.5rem; background: var(--bg); color: var(--fg); }
+      @media (max-width: 34rem) { .v-laptop #keys { grid-template-columns: 1fr; } }
+
+      /* ---- Phone held upright (D24): the stage fills the screen and the pads are its two halves. The rest scrolls below. ---- */
+      .v-phone { --top: 4.5rem; }   /* 0.5rem padding + the 54 px tabs row + the stage's 0.5rem margin */
+      .v-phone h1 { font-size: 1.15rem; }
+      @media (min-height: 32rem) {
+        main.v-phone { padding-top: 0.5rem; }
+        .v-phone .pitch { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+        .v-phone #stage { display: flex; flex-direction: column; height: calc(100dvh - var(--top)); padding-bottom: 0.75rem;
+                          box-sizing: border-box; margin-top: 0.5rem; }
+        .v-phone #match { padding: 0.4rem 0.9rem 0.5rem; }
+        .v-phone .sb-nums { font-size: 1.75rem; }
+        .v-phone .sb-meta { margin-top: 0.15rem; font-size: 0.95rem; }
+        .v-phone #status { margin-top: 0.5rem; font-size: 1rem; line-height: 1.35; min-height: 2.7em; display: -webkit-box;
+                           -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .v-phone #pads { flex: 1; min-height: 0; grid-template-rows: 1fr 1fr; margin-top: 0.5rem; }
+        .v-phone .pad { height: 100%; font-size: 1.9rem; }
+        .v-phone .pad .ico { width: 3.25rem; height: 3.25rem; }
+        .v-phone #ask-menu { position: absolute; inset: 0; z-index: 1; margin: 0; padding: 0.5rem; overflow: auto; align-content: start;
+                             grid-template-columns: 1fr 1fr; background: var(--panel); border: 3px solid var(--fg); border-radius: 1.25rem; }
+        .v-phone #ask-menu button { min-height: 3.5rem; font-size: 1.05rem; line-height: 1.2; text-align: center; padding: 0.4rem; }
+        .v-phone #ask-menu #ask-live, .v-phone #ask-menu #ask-close { grid-column: 1 / -1; }
+      }
+      @media (max-height: 31.99rem) { .v-phone #pads { grid-template-columns: 1fr 1fr; } }   /* a phone on its side */
+      /* Too narrow for the title and the tabs on one row: stack them. */
+      @media (max-width: 22.5rem) {
+        main > h1, main > #views { grid-column: 1 / -1; justify-self: start; }
+        main > #views { grid-row: 2; margin-top: 0.4rem; }
+        main:has(> #t-bar) > #views { grid-row: 3; }
+        .v-phone { --top: 7rem; }
+      }
+
+      /* ---- Setup: the sound desk (tester/mixer.ts) and the other settings, with the pads small above them. ---- */
+      .v-setup .pitch { display: none; }
+      .v-setup #stage { margin-top: 0.75rem; }
+      .v-setup .pad { min-height: 4.5rem; padding-bottom: 2rem; font-size: 1.25rem; }
+      .v-setup .pad .ico { width: 1.75rem; height: 1.75rem; }
+      .v-setup #more { display: none; }
+      main:not(.v-setup) :is(#setup-intro, #mixer-slot) { display: none; }
+      #setup-intro { margin: 1.25rem 0 0; padding: 0.75rem 1rem; border-left: 4px solid var(--accent); background: var(--panel); border-radius: 0.5rem; }
+      #setup-intro h2 { margin: 0 0 0.25rem; }
+      #setup-intro p { margin: 0; }
+
       #settings { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1rem; margin-top: 1rem; }
       fieldset { border: 1px solid var(--muted); border-radius: 0.5rem; margin: 0 0 1rem; padding: 0.5rem 0.75rem 0.75rem; }
       fieldset label { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; }
@@ -134,6 +179,14 @@
   <body>
     <main id="app">
       <h1>Audio Stands</h1>
+      <!-- Three views of one match (27 Oct, D25). main.ts picks Phone on a narrow screen and Laptop otherwise; ?view=
+           opens one. Switching views never stops the match: they are layouts of the same page. -->
+      <div id="views" role="tablist" aria-label="View">
+        <button id="tab-setup" role="tab" type="button" aria-selected="false" aria-controls="view" tabindex="-1">Setup</button>
+        <button id="tab-laptop" role="tab" type="button" aria-selected="true" aria-controls="view">Laptop</button>
+        <button id="tab-phone" role="tab" type="button" aria-selected="false" aria-controls="view" tabindex="-1">Phone</button>
+      </div>
+      <div id="view" role="tabpanel" aria-labelledby="tab-laptop">
       <div id="stage">
       <p class="pitch">Football you follow by sound: a crowd all around you and an AI commentator you can talk to.</p>
       <section id="match" aria-labelledby="match-h">
@@ -150,12 +203,12 @@
         </p>
       </section>
       <p id="status">Loading…</p>
-      <!-- The two big pads (26 Oct, D24): Ask on top, Start / Pause / Resume below. On a phone held upright they are
-           the two halves of the screen, so a blind fan can find either by touch. The label is .pad-label, so the
-           accessible name is the visible words; the icons are decorative and the hints are descriptions. -->
+      <!-- The two big pads (26 Oct, D24): Ask first, then Start / Pause / Resume. On Phone they are the two halves of
+           the screen, so a blind fan can find either by touch. The label is .pad-label, so the accessible name is the
+           visible words; the icons are decorative and the hints are descriptions. -->
       <div id="pads">
         <div class="half" id="ask-half">
-          <button id="ask" class="pad" type="button" data-state="ask" aria-keyshortcuts="A" aria-describedby="ask-hint" aria-controls="ask-menu" aria-disabled="true">
+          <button id="ask" class="pad" type="button" data-state="ask" aria-keyshortcuts="Enter A" aria-describedby="ask-hint" aria-controls="ask-menu" aria-disabled="true">
             <svg class="ico i-ask" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-3.1A7 7 0 0 0 19 11z"/></svg>
             <svg class="ico i-stop" aria-hidden="true" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
             <span class="pad-label">Ask the commentator</span>
@@ -171,7 +224,7 @@
           </div>
         </div>
         <div class="half" id="play-half">
-          <button id="start" class="pad" type="button" data-state="start" aria-describedby="start-hint" autofocus>
+          <button id="start" class="pad" type="button" data-state="start" aria-keyshortcuts="Space" aria-describedby="start-hint" autofocus>
             <svg class="ico i-play" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
             <svg class="ico i-pause" aria-hidden="true" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
             <span class="pad-label">Start</span>
@@ -180,13 +233,24 @@
         </div>
       </div>
       </div>
-      <p class="hint keys">Keyboard: A asks, or stops an answer. Escape goes back to the match.</p>
+      <!-- Laptop view only: the keys, for judges watching or trying it. Space and Enter work in every view. -->
+      <ul id="keys" aria-label="Keyboard">
+        <li><kbd>Space</kbd> Start or pause</li>
+        <li><kbd>Enter</kbd> Ask a question</li>
+        <li><kbd>Esc</kbd> Back to the match</li>
+      </ul>
       <div class="row" id="more">
         <button id="presets-open" type="button">Quick questions</button>
         <button id="next" type="button" disabled>Next big moment</button>
         <button id="learn" type="button">Learn the sounds</button>
-        <button id="settings-toggle" type="button" aria-expanded="false" aria-controls="settings">Settings</button>
       </div>
+
+      <div id="setup-intro">
+        <h2 id="setup-h">Set up the sound, with a helper</h2>
+        <p>Do this once with a sighted friend or carer. Press Start, listen together and move each sound until it feels
+          right. Everything is saved on this device. Later, the fan can change any sound just by asking the commentator.</p>
+      </div>
+      <div id="mixer-slot"></div>
 
       <section id="settings" hidden aria-labelledby="settings-h">
         <h2 id="settings-h">Settings</h2>
@@ -195,7 +259,7 @@
           <label><input type="radio" name="club" value="H" /> Reds (home end)</label>
           <label><input type="radio" name="club" value="A" /> Navy (away end)</label>
         </fieldset>
-        <label for="crowd">Crowd level</label>
+        <label for="crowd">Whole crowd level</label>
         <input id="crowd" type="range" min="0" max="100" step="5" />
         <fieldset>
           <legend>Vibration (Android phones)</legend>
@@ -220,12 +284,12 @@
           <p id="cstatus"></p>
         </fieldset>
         <label><input id="radar-toggle" type="checkbox" /> Show the sound radar (a visual pitch for sighted viewers)</label>
-        <p><a id="mix-link" class="t-link" href="?mix=1">Fine-tune every sound, with a helper</a></p>
       </section>
 
       <div id="radar" hidden aria-hidden="true"></div>
       <div id="debug" hidden aria-hidden="true"></div>
       <p class="notice" id="notice">A synthetic match with fictional clubs. Commentary uses AI voices. Headphones recommended.</p>
+      </div>
     </main>
     <!-- Tester mode only (?test=1, D19): web/src/tester/ clones this into the page. A <template> is inert, so without
          ?test=1 none of it is in the DOM, the accessibility tree or the tab order. -->

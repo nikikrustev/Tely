@@ -99,6 +99,16 @@ def build_server(bundle: Bundle | None = None) -> MCPServer:
                         haptics: Literal["off", "events", "full"] | None = None) -> dict[str, Any]:
         return run("set_preferences", {"crowd_mix": crowd_mix, "haptics": haptics}, ctx)
 
+    @mcp.tool(name="adjust_sound", description=DESCRIPTIONS["adjust_sound"],
+              annotations=ToolAnnotations(read_only_hint=False, destructive_hint=False, idempotent_hint=False,
+                                          open_world_hint=False))
+    def adjust_sound(sound: Literal["commentator", "crowd", "chants", "reactions", "whistle", "passes", "shots",
+                                    "tackles", "saves", "net", "ball_ping"],
+                     ctx: Context,
+                     change: Annotated[int, Field(ge=-100, le=100)] | None = None,
+                     level: Annotated[int, Field(ge=0, le=100)] | None = None) -> dict[str, Any]:
+        return run("adjust_sound", {"sound": sound, "change": change, "level": level}, ctx)
+
     return mcp
 
 
