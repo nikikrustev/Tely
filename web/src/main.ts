@@ -143,7 +143,7 @@ async function startApp(): Promise<void> {
     hstatus.textContent = 'Playing the home goal pattern. Did you feel it?';
   });
   if (!haptics.available) hstatus.textContent = hap.NO_VIBRATION_MESSAGE;
-  status.textContent = 'Ready. Press Start, or Enter, to hear the match.';
+  status.textContent = 'Ready. Press Start, the lower big button, to hear the match.';
 
   // ---- playback ----
   let ctx: AudioContext | null = null;
@@ -164,34 +164,81 @@ async function startApp(): Promise<void> {
     haptics.stopAll();
   };
 
+  // ---- press feedback (D24): every pad press is felt (Android) and heard, so nothing depends on seeing the screen ----
+  const vibrate = hap.browserEnv().vibrate;
+  type Press = 'ask' | 'stop' | 'pause' | 'resume' | 'start' | 'not-yet';
+  const BUZZ: Record<Press, number[]> = { ask: [25], stop: [15, 40, 15], pause: [40], resume: [20, 30, 20], start: [40], 'not-yet': [60, 50, 60] };
+  // [from Hz, to Hz]: rising for "go", falling for "stop"; a low double for "not yet". Quiet, under the match.
+  const TONE: Partial<Record<Press, [number, number]>> = { ask: [520, 620], stop: [620, 440], pause: [560, 380], resume: [380, 560] };
+  const feedback = (kind: Press) => {
+    if (settings.haptics !== 'off') { try { vibrate?.(BUZZ[kind]); } catch { /* not allowed yet */ } }
+    const c = audio?.ctx, tone = TONE[kind];
+    if (!c || c.state !== 'running' || !tone) return;
+    const osc = c.createOscillator(), g = c.createGain(), at = c.currentTime + 0.005;
+    osc.frequency.setValueAtTime(tone[0], at);
+    osc.frequency.linearRampToValueAtTime(tone[1], at + 0.09);
+    g.gain.setValueAtTime(0, at);
+    g.gain.linearRampToValueAtTime(0.08, at + 0.01);
+    g.gain.linearRampToValueAtTime(0, at + 0.11);
+    osc.connect(g).connect(c.destination);
+    osc.start(at);
+    osc.stop(at + 0.12);
+  };
+  /** A pad's visible words are its accessible name; the hint under it is its description. */
+  const setPad = (b: HTMLButtonElement, label: string, state: string, hint: string) => {
+    const l = b.querySelector('.pad-label');
+    if (l) l.textContent = label; else b.textContent = label;
+    b.dataset.state = state;
+    const h = document.getElementById(b.getAttribute('aria-describedby') ?? '');
+    if (h) h.textContent = hint;
+  };
+
   // ---- Ask the commentator (Stage 6) ----
   const askBtn = $<HTMLButtonElement>('ask'), askMenu = $('ask-menu'), askLive = $<HTMLButtonElement>('ask-live');
   let askCtl: InstanceType<typeof askMod.AskController> | null = null;
+  // aria-disabled, not disabled: before the match the fan can still find the pad by touch and hear why it waits.
+  let askReady = false;
+  const ASK_LABEL = 'Ask the commentator', STOP_LABEL = 'Stop the answer';
+  const askHint = () => (askCtl?.hasLive ? 'Tap, wait for the beep, then speak' : 'Tap for quick questions');
+  const setAskReady = (on: boolean) => {
+    askReady = on;
+    askBtn.setAttribute('aria-disabled', String(!on));
+    setPad(askBtn, ASK_LABEL, 'ask', on ? askHint() : 'Works once the match starts');
+    if (!askCtl?.hasLive) askBtn.setAttribute('aria-expanded', String(!askMenu.hidden));   // presets: it opens the menu
+    else if (askMenu.hidden) askBtn.removeAttribute('aria-expanded');
+  };
   const openMenu = (open: boolean) => {
     askMenu.hidden = !open;
-    askBtn.setAttribute('aria-expanded', String(open));
+    // With live Ask the pad asks straight away, so it only "expands" while the menu is actually open.
+    if (open || !askCtl?.hasLive) askBtn.setAttribute('aria-expanded', String(open));
+    else askBtn.removeAttribute('aria-expanded');
     if (open) askMenu.querySelector<HTMLButtonElement>('button:not([hidden])')?.focus();
   };
-  // Press-to-interrupt (file 49): during an answer the same button (or A) stops it at once and opens the menu for
-  // the next question, with the commentary still paused; Escape stops it and goes straight back to the action.
-  const ASK_LABEL = askBtn.textContent?.trim() || 'Ask the commentator', STOP_LABEL = 'Stop the answer';
+  // Press-to-interrupt (file 49): during an answer the same pad (or A) stops it at once, with the commentary still
+  // paused for the next question; Escape stops it and goes straight back to the action.
   const HOLD_IDLE_MS = 10_000;                          // no next question after a stop: back to the match anyway
   let presetsAfter = false;                             // A's live mode asked for the menu while its answer finished
-  let menuAfter = false;                                // the fan stopped an answer to ask again
+  let menuAfter = false;                                // the fan stopped an answer to pick another preset
   let holdTimer: ReturnType<typeof setTimeout> | null = null;
-  const runAsk = async (fn: () => Promise<unknown>) => {
+  const runAsk = async (fn: () => Promise<unknown>, live = false) => {
     openMenu(false);
     if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
-    askBtn.textContent = STOP_LABEL;                     // the button stays live: pressing it is how the fan interrupts
+    setPad(askBtn, STOP_LABEL, 'stop', 'Tap to stop the answer');   // the pad stays live: pressing it interrupts
     askBtn.focus();
-    say('Answering.');                                   // state change only; the answer itself is heard
+    // A live question opens the mic: a screen reader announcement now would be heard as the question, so the fan
+    // gets the beep instead and the status line is visual only. Presets announce "Answering." (a state change).
+    if (live) status.textContent = 'Listening. Speak after the beep.';
+    else say('Answering.');
     try { await fn(); } finally {
-      askBtn.textContent = ASK_LABEL;
+      setPad(askBtn, ASK_LABEL, 'ask', askHint());
       if (presetsAfter || menuAfter) {
         presetsAfter = menuAfter = false;
         openMenu(true);
-        if (askCtl?.isHolding) holdTimer = setTimeout(() => { if (askCtl?.isHolding) closeMenu(); }, HOLD_IDLE_MS);
       } else askBtn.focus();
+      if (askCtl?.isHolding) {
+        if (askMenu.hidden) say('Stopped. Tap Ask to ask again, or wait to go back to the match.');
+        holdTimer = setTimeout(() => { if (askCtl?.isHolding) closeMenu(); }, HOLD_IDLE_MS);
+      }
     }
   };
   /** Close the menu. If the commentary is held after a stop, that means "back to the action". */
@@ -200,12 +247,24 @@ async function startApp(): Promise<void> {
     askBtn.focus();
     if (askCtl?.isHolding) void runAsk(() => askCtl!.release());
   };
+  const notYet = () => { feedback('not-yet'); say('The match hasn\'t started. Start is the bottom half of the screen.'); };
   const pressAsk = () => {
-    if (askBtn.disabled) return;
-    if (askCtl?.isBusy) { menuAfter = askCtl.interrupt('listen'); return; }
-    if (askMenu.hidden) openMenu(true); else closeMenu();
+    if (!askReady) { notYet(); return; }
+    if (askCtl?.isBusy) {
+      feedback('stop');
+      const stopped = askCtl.interrupt('listen');
+      menuAfter = stopped && !askCtl.hasLive;            // presets only: show them again for the next pick
+      return;
+    }
+    if (!askMenu.hidden) { closeMenu(); return; }
+    feedback('ask');
+    // D24: one press, then speak. Without live Ask (no relay, or ?live=0) the pad opens the quick questions.
+    if (askCtl?.hasLive) void runAsk(() => askCtl!.askLive(), true);
+    else openMenu(true);
   };
   askBtn.addEventListener('click', pressAsk);
+  $('presets-open').addEventListener('click', () => { if (!askReady) notYet(); else if (!askCtl?.isBusy) openMenu(true); });
+  $('ask-close').addEventListener('click', closeMenu);
   lazyAsk.onShowPresets = () => {
     if (!askCtl) return;                                 // never before Ask is ready
     if (askCtl.isBusy) presetsAfter = true;              // busy: open once it finishes
@@ -214,14 +273,14 @@ async function startApp(): Promise<void> {
   for (const b of askMenu.querySelectorAll<HTMLButtonElement>('button[data-preset]')) {
     b.addEventListener('click', () => { if (askCtl) void runAsk(() => askCtl!.ask(b.dataset.preset as 'ball')); });
   }
-  askLive.addEventListener('click', () => { if (askCtl) void runAsk(() => askCtl!.askLive()); });
+  askLive.addEventListener('click', () => { if (askCtl) void runAsk(() => askCtl!.askLive(), true); });
   document.addEventListener('keydown', (e) => {
     const typing = (e.target as HTMLElement | null)?.closest('input, select, textarea');
     if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
-    if (e.key === 'a' || e.key === 'A') { if (!askBtn.disabled) { e.preventDefault(); pressAsk(); } }
+    if (e.key === 'a' || e.key === 'A') { if (askReady) { e.preventDefault(); pressAsk(); } }
     else if (e.key === 'Escape') {
       if (askCtl?.isBusy) askCtl.interrupt('back');
-      else if (!askMenu.hidden) closeMenu();
+      else if (!askMenu.hidden || askCtl?.isHolding) closeMenu();
     }
   });
   const setupAsk = async (actx: AudioContext, st: InstanceType<typeof AudioStands>, c: InstanceType<typeof CrowdEngine>,
@@ -239,11 +298,11 @@ async function startApp(): Promise<void> {
       });
       lazyAsk.attach(askCtl);
       const ctl = askCtl;
-      lazyAsk.onRegister = () => { askLive.hidden = !ctl.hasLive; };   // A's live mode may register later
+      lazyAsk.onRegister = () => { askLive.hidden = !ctl.hasLive; setAskReady(askReady); };   // live may register later
       askLive.hidden = !ctl.hasLive;
-      askBtn.disabled = false;
+      setAskReady(true);
     } catch {
-      askBtn.disabled = true;                            // no data: the button stays off rather than failing mid-match
+      setAskReady(false);                                // no data: the pad stays off rather than failing mid-match
     }
   };
 
@@ -368,7 +427,7 @@ async function startApp(): Promise<void> {
     dropQueued();
     src.seek(src.now(), 0); // re-queue from the exact pause point on resume
     await ctx.suspend();
-    start.textContent = 'Play';
+    setPad(start, 'Resume', 'resume', 'Carries on from where you paused');
     board.update({ state: 'Paused' });
     say(said);
   };
@@ -376,6 +435,7 @@ async function startApp(): Promise<void> {
   let clipEnded = false;
   start.addEventListener('click', async () => {
     if (!ctx) {
+      feedback('start');
       start.disabled = true;
       stopTour();
       learnBtn.hidden = true;
@@ -422,21 +482,34 @@ async function startApp(): Promise<void> {
         startDebugPanel($('debug'), { playhead: () => s.now(), crowdGain: () => c.level.gain.value, ballX: () => st.last.x });
       }
       start.disabled = false;
+      start.focus();                                     // disabled while loading dropped focus; give it back
       next.disabled = chapters.length === 0;
-      start.textContent = 'Pause';
+      setPad(start, 'Pause', 'pause', 'Pauses the match');
       board.update({ state: 'Playing' });
       say('Playing. You are in the main stand, on the halfway line. Reds attack to your right.');
       return;
     }
     if (!src) return;
     if (src.isPlaying()) {
+      feedback('pause');
+      // An answer running, or the commentary held for a next question: stop it quietly first, so nothing resumes
+      // the commentary behind the pause.
+      if (askCtl?.isBusy) {
+        askCtl.interrupt('back');
+        for (let i = 0; i < 50 && askCtl.isBusy; i++) await new Promise((r) => setTimeout(r, 20));
+      }
+      if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+      askCtl?.dropHold();
+      openMenu(false);
+      await new Promise((r) => setTimeout(r, 120));      // let the press tone finish before the context stops
       await pause('Paused.');
     } else {
       await ctx.resume();
+      feedback('resume');
       src.play(0.1);
       lane.commentary.resume(); // SEAM(B->A): CommentaryTrack.resume()
       w?.pump();
-      start.textContent = 'Pause';
+      setPad(start, 'Pause', 'pause', 'Pauses the match');
       board.update({ state: 'Playing' });
       say('Playing.');
     }
@@ -488,7 +561,7 @@ async function startApp(): Promise<void> {
     if (!wasPlaying) s.play(0.1);
     w?.pump();
     lane.commentary.resume();
-    start.textContent = 'Pause';
+    setPad(start, 'Pause', 'pause', 'Pauses the match');
     say('Playing.');
   };
   const { mountTester } = await import('./tester');

@@ -122,6 +122,12 @@ export class AskController implements Ask {
     return said;
   }
 
+  /** The fan paused the match while the commentary was held for a next question (D24): forget the hold, with no
+   *  catch-up talk. The commentary resumes here and the pause that follows stops it again. */
+  dropHold(): void {
+    if (!this.busy && this.pausedAt !== null) this.finish(false);
+  }
+
   /** A wait that interrupt() can cut short. */
   private async hold(ms: number): Promise<void> {
     await Promise.race([(this.d.wait ?? sleep)(ms), new Promise<void>((r) => { this.wake = r; })]);
