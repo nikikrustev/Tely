@@ -54,6 +54,22 @@ The tools answer instantly. Don't say you are going to check or look something u
 DISCLOSED_NOTE = "[NOTE] You have already told the fan you are an AI voice. Don't say it again."
 
 
+def add_usage(turn: dict[str, Any], usage: Any) -> None:
+    """Sum Voice Live's per-response token counts into the turn (D24: cost per question from real counts). Flat keys:
+    total/input/output tokens and their text/audio/cached details, so a golden turn shows what each answer cost."""
+    if not isinstance(usage, dict):
+        return
+    acc = turn.setdefault("usage", {})
+    for k, v in usage.items():
+        if isinstance(v, (int, float)) and not isinstance(v, bool):
+            acc[k] = acc.get(k, 0) + v
+        elif isinstance(v, dict):
+            for k2, v2 in v.items():
+                if isinstance(v2, (int, float)) and not isinstance(v2, bool):
+                    key = f"{k}.{k2}"
+                    acc[key] = acc.get(key, 0) + v2
+
+
 def transcription_prompt(b: Bundle) -> str:
     """Player and team names help the transcript of the question (the golden file needs it)."""
     names = sorted({p["last_name"] for p in b.players.values()})
@@ -269,6 +285,8 @@ class Bridge:
         elif t == "response.function_call_arguments.done":
             await self._tool(ev)
         elif t == "response.done":
+            if turn is not None:
+                add_usage(turn, (ev.get("response") or {}).get("usage"))
             if self._pending:                    # tool results go back only after the response that asked is done
                 for item in self._pending:
                     await self.link.send(item)

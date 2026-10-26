@@ -6,6 +6,7 @@ import { mountLaneA } from './lane-a';
 import { clipOver, listenClip, type ListenClip } from './replay/listen';
 import { loadClockOffset, Scoreboard } from './scoreboard';
 import type { TesterHandle } from './tester';
+import { bundleBase } from './replay/base';
 
 /** Placeholder services (tests, and before Start). */
 export function createStubContext(): LaneBContext {
@@ -424,7 +425,7 @@ async function startApp(): Promise<void> {
     if (radar) return;
     const { startRadar, parseVtt } = await import('./radar/radar');
     let cues: ReturnType<typeof parseVtt> = [];
-    try { cues = parseVtt(await (await fetch('/replay/v1/judge/captions_sdh.vtt')).text()); } catch { cues = []; }
+    try { cues = parseVtt(await (await fetch(`${bundleBase()}/captions_sdh.vtt`)).text()); } catch { cues = []; }
     const s = src;
     // SEAM(B->A): reads A's captions_sdh.vtt (same seconds as the playhead) for the radar's caption line
     radar = startRadar($('radar'), { now: () => s.now(), doc: s.doc, pulses: () => haptics.played.length, cues,

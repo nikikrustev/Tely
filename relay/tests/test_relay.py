@@ -241,6 +241,20 @@ def test_an_empty_incomplete_response_is_retried_once():
     run(go())
 
 
+def test_token_usage_is_summed_into_the_turn():
+    async def go():
+        br, out, _, _ = make_bridge()
+        await br.ask(B.t0 + 30)
+        await br.handle({"type": "response.audio.delta", "delta": "AAA="})
+        use = {"total_tokens": 100, "input_tokens": 80, "output_tokens": 20,
+               "output_token_details": {"audio_tokens": 15, "text_tokens": 5}, "note": "x"}
+        await br.handle({"type": "response.done", "response": {"status": "completed", "usage": use}})
+        rec = [o for o in out if o["type"] == "answer_done"][0]["turn"]
+        assert rec["usage"] == {"total_tokens": 100, "input_tokens": 80, "output_tokens": 20,
+                                "output_token_details.audio_tokens": 15, "output_token_details.text_tokens": 5}
+    run(go())
+
+
 def test_ai_voice_disclosure_is_said_once():
     async def go():
         link = FakeLink()

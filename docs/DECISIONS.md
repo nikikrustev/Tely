@@ -477,3 +477,45 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
 - **Checked:** vitest 124/124 (6 new), Playwright + axe 96/96 (a new "product view" test, 6 projects: no tester,
   mixer or debug elements at `/`, everything on one screen at desktop and phone portrait, clock and chapter update).
 - **Not checked:** Narrator, TalkBack and VoiceOver with the new layout (still the manual walkthrough in REMAINING.md).
+
+## D24. Phone pads, the listener's own mix, and the 90-minute readiness run (26 Oct 2026)
+
+- **Why:** potencialbg, 26 Oct: the demo is for a blind fan on a phone, so the screen must work by touch and screen
+  reader alone. Ask and press-to-interrupt (D22) had never been run end to end with a real voice question.
+- **Two pads.** On a phone held upright (`max-width: 40rem` and `min-height: 32rem`) the page under the match card is
+  two halves: **Ask the commentator** on top, **Start / Pause / Resume** below. Side by side on wider screens; Ask comes
+  first in DOM, tab and reading order. Each pad's accessible name is its visible words (`.pad-label`); the icons are
+  `aria-hidden`; the hint under each pad ("Tap, wait for the beep, then speak", "Pauses the match") is its
+  `aria-describedby`. Before the match the Ask pad is `aria-disabled` (not `disabled`), so it can be found by touch and
+  says "The match hasn't started. Start is the bottom half of the screen."
+- **One press, then speak.** With live Ask on, the Ask pad asks out loud straight away (no menu); without it (no relay,
+  `?live=0`) it opens the quick questions. The presets also have their own **Quick questions** button below the pads,
+  and the menu gains **Back to the match** for touch users. Pressing Ask during an answer stops it (D22); with live Ask
+  the commentary stays held for a next question and "Tap Ask to ask again" is announced, then 10 s later it goes back
+  to the action. Ask while paused resumes the match first (the paused stage context could not play the catch-up).
+  Pause during an answer or a hold stops it quietly first (`AskController.dropHold()`), so nothing resumes behind it.
+- **No announcement into the open mic.** A live question shows "Listening. Speak after the beep." on screen only;
+  the rising earcon is the cue. A screen reader reading a live region then would be transcribed as the question.
+  `live-ask.ts` reports the phases (`heard`, `answering`) as a window event; `main.ts` shows them, visually only.
+- **Press feedback.** Every pad press vibrates (Android; off when Vibration is off) and plays a 0.1 s tone straight to the
+  stage context's output (rising: ask / resume; falling: stop / pause; Pause waits 120 ms so its tone is heard).
+- **The listener's own mix.** The `?mix=1` mix is now saved on the device (`audio/mix.ts` `saveMix`, the same
+  localStorage key as D20's draft) and played on every visit, main page included. A device with nothing saved plays
+  `DEFAULT_MIX`, so a judge on a fresh browser still hears what we tuned. The mixer opens with the helper explanation
+  ("Set this up once with a sighted friend or carer...") and lists the voice and crowd first. Settings links to it
+  ("Fine-tune every sound, with a helper"). Submit is now "Save a copy (JSON)".
+- **Relay:** an empty `incomplete` Voice Live response is retried once (seen in 1 of 4 phone runs: the question was
+  transcribed, no audio came, the fan heard "Live questions aren't available"). Each golden turn now carries Voice
+  Live's token `usage`, so cost per question comes from real counts.
+- **Tools:** `web/tests/a/phone-e2e.mjs` (phone-sized Chromium, a fake microphone speaking a WAV, an analyser on every
+  AudioContext; it measures, not guesses, whether each sound played and when it stopped) and `web/tests/a/soak.mjs`
+  (one full half in real time). `pipeline/audiostands/eval/soak_bundle.py` builds both full halves of seed 24 into
+  git-ignored `web/.local/`, with a tone in place of TTS (no Speech calls); `?bundle=soak1|soak2` plays them on the dev
+  server only (`replay/base.ts`).
+- **Checked (26 Oct, phone-e2e against the deployed relay, 360x640 @3x):** match start (crowd and commentary audible),
+  spoken "What is the score?" answered ("Reds nil, Navy nil, 56 minutes played.", 0.8 to 1.4 s from end of speech),
+  barge-in stops the answer in 65 to 155 ms, pause/resume (clock and all three contexts silent while paused, then
+  carry on). 5 full runs; 1 spoken Ask failed upstream (fixed above, not yet deployed). Screens in `video/screens/`.
+  vitest 124/124, Playwright + axe 96/96, relay 46/46.
+- **Not checked:** TalkBack, VoiceOver and Narrator with the pads (manual); a real phone's vibration and tone; a real
+  voice in a noisy room.

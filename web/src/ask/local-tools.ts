@@ -2,6 +2,7 @@
 // with no backend (BUILD_PLAN Stage 6). Every tool reads the match only up to the local playhead: an event counts once
 // its outcome is revealed (reveal_t), and the ball is read at the playhead. contracts/golden/b/qa_cases.jsonl holds
 // the Python answers; vitest checks these give exactly the same `say`, fragments and evidence.
+import { bundleBase } from '../replay/base';
 
 export interface QaEvent {
   id: string;
@@ -185,7 +186,7 @@ export class LocalTools {
 }
 
 /** Load the judge-cut bundle in the browser (static files only; ticks are gzip, decompressed natively). */
-export async function loadQaBundle(base = '/replay/v1/judge'): Promise<QaBundle> {
+export async function loadQaBundle(base = bundleBase()): Promise<QaBundle> {
   const get = async (f: string) => {
     const r = await fetch(`${base}/${f}`);
     if (!r.ok) throw new Error(`${f}: HTTP ${r.status}`);

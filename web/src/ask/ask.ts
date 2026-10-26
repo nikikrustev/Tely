@@ -7,6 +7,7 @@
 import type { CommentaryTrack } from '../contracts/a-exports';
 import type { Ask, CrowdBus, LiveAskHandler } from '../contracts/b-exports';
 import { HOLD_LOOKAHEAD_S, STATIC, type Answer, type LocalTools } from './local-tools';
+import { bundleBase } from '../replay/base';
 
 export type Preset = 'score' | 'ball' | 'last' | 'missed';
 export const PRESETS: { id: Preset; label: string }[] = [
@@ -222,7 +223,7 @@ export class FragmentPlayer {
   private index: Record<string, string> = {};
   private cache = new Map<string, AudioBuffer>();
   private current: { gain: GainNode; sources: AudioBufferSourceNode[]; done: () => void } | null = null;
-  constructor(private ctx: BaseAudioContext, private out: AudioNode, private base = '/replay/v1/judge/answers') {}
+  constructor(private ctx: BaseAudioContext, private out: AudioNode, private base = `${bundleBase()}/answers`) {}
 
   /** Stop the answer now: a STOP_FADE_S fade (no click), and speak() resolves at once. */
   stop(): void {
