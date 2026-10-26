@@ -222,7 +222,9 @@ const gaps = [];
 let gapStart = null;
 for (const [t, v] of data.rms[STAGE] ?? []) {
   if (t < playStartPerf + 15_000 || quiet.some(([a, b]) => t > a && t < b)) { gapStart = null; continue; }
-  if (v >= 0 && v < 0.0003) { gapStart ??= t; }
+  // A dropout is real silence (under -94 dBFS). The quiet murmur at low tension sits around -68 dBFS (26 Oct soak),
+  // which is the D20 mix, not a glitch.
+  if (v >= 0 && v < 0.00002) { gapStart ??= t; }
   else { if (gapStart !== null && t - gapStart > 1000) gaps.push({ atPerfMs: Math.round(gapStart), ms: Math.round(t - gapStart) }); gapStart = null; }
 }
 const report = {
@@ -233,7 +235,7 @@ const report = {
     medianLagMs: med(lags), firstThirdMedianMs: med(lags.slice(0, third)), lastThirdMedianMs: med(lags.slice(-third)),
     p90AbsLagMs: (() => { const a = lags.map(Math.abs).sort((x, y) => x - y); return a.length ? a[Math.floor(a.length * 0.9)] : null; })(),
     maxLagMs: lags.length ? Math.max(...lags) : null, minLagMs: lags.length ? Math.min(...lags) : null },
-  crowdSilentGapsOver1s: gaps, playoutStats: data.playout,
+  crowdDropoutsOver1s: gaps, playoutStats: data.playout,
   memory: { first: mem[0], last: mem.at(-1), maxHeapMB: Math.max(...mem.map((m) => m.heapMB)) },
   asks, marks: marks.map(([k, t]) => [k, Math.round(t)]), consoleErrors: errors.slice(0, 40), consoleErrorCount: errors.length,
 };

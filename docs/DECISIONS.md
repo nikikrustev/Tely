@@ -517,5 +517,32 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   barge-in stops the answer in 65 to 155 ms, pause/resume (clock and all three contexts silent while paused, then
   carry on). 5 full runs; 1 spoken Ask failed upstream (fixed above, not yet deployed). Screens in `video/screens/`.
   vitest 124/124, Playwright + axe 96/96, relay 46/46.
+- **90-minute readiness run (26 Oct, `soak.mjs`, local dev server + local relay on Voice Live, both halves at once,
+  real time, 2 x 48 min of match; reports in `eval/soak/`):**
+  - Both halves played to the end (playhead 0 to 2879 s). **Clock drift:** playhead against wall time -37 ms over
+    35 min (half 1) and -337 ms over 38 min (half 2; the stage audio clock itself -48 ms). No fix needed.
+  - **Commentary sync** (each line's first audible output against when its t_in was due): median 84 / 82 ms, 90th
+    percentile 123 ms, first third 82 / 74 ms against last third 83 / 85 ms, so it does not drift. 22 of 747 lines were
+    not heard: lines due during an Ask, dropped by design (D22). One line started 4.0 s late after an Ask (restart rule).
+  - **Audio glitches:** no dropout over 300 ms in either half (no stage output under -94 dBFS outside the pause, the Asks
+    and the offline minute). Chrome's `playoutStats` was not available, so underruns are not measured directly
+    (unverified). The quietest murmur sits near -68 dBFS, about 30 dB under the commentator: that is the D20 mix.
+  - **Memory:** JS heap 8 to 25 MB (max 25.1) over 49 min; DOM nodes 498 to 892 / 1315. No leak that matters for a match.
+  - **Live Ask, every 10-11 min (so each one found the relay's 90 s idle close and reconnected):** 10/10 answered,
+    0.88 to 3.5 s from end of speech (median 1.4 s). The 55-minute Voice Live reconnect was not reached (unverified live).
+  - **Dropped connection (45 s offline):** the Ask during it got the "not available" refusal, and Ask worked again 15 s
+    after the network came back. Fixed from this run: the refusal clip is now fetched while online. Before, nothing
+    played in the commentator's voice offline (the browser's own voice was the fallback); after, the clip plays.
+  - **Cost per question** from the 10 real token counts (about 2,600 to 4,200 tokens; 2,300 to 3,600 text in, mostly
+    cached; 70 to 180 audio out) at file 27's Voice Live rates (Standard audio $0.015 / $0.026 per 1K; Standard text
+    rates are not in our files, so Pro text $0.004 / $0.016 as an upper bound, and no cache discount): **$0.013 to
+    $0.025, mean $0.017**. A fan who asks 10 questions costs about $0.17; the 30-question cap about $0.51.
+    Commentary is rendered once per match, not per fan: a full 90-minute track is about 42,000 characters, about
+    $0.92 at file 27's HD rate of $22 per 1M (text characters; how Azure counts our SSML is unverified). Static Web App
+    Free and a relay that scales to zero add nothing per match.
+  - The soak bundles use a tone instead of TTS, and the relay answers from the judge cut (so "56 minutes played" at any
+    playhead): the run tests timing, sessions and memory, not answer content.
+  - Seen in the full second half, not in the shipped cut: `spoiler_leaks` flags "Intercepted by Morani! Reds have it
+    back." while the next pass is in flight (a checker false positive: the line is about the interception). Not fixed.
 - **Not checked:** TalkBack, VoiceOver and Narrator with the pads (manual); a real phone's vibration and tone; a real
   voice in a noisy room.

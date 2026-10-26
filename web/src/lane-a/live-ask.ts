@@ -316,6 +316,22 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
   let nextT = 0;
   const playing = new Set<AudioBufferSourceNode>();
   let clips: Promise<Record<string, { file: string }>> | null = null;
+  const clipIndex = () => (clips ??= fetch(`${o.base}/live/index.json`).then((r) => r.json())
+    .then((j: { clips: Record<string, { file: string }> }) => j.clips));
+  // D24: the refusal clips are fetched while the page is online, so "Live questions aren't available" is still said in
+  // the commentator's voice when the network has just dropped, which is exactly when it is needed.
+  const bytes = new Map<string, Promise<ArrayBuffer | null>>();
+  const clipBytes = (id: string): Promise<ArrayBuffer | null> => {
+    let b = bytes.get(id);
+    if (!b) {
+      b = clipIndex().then((c) => (c[id]?.file ? fetch(`${o.base}/live/${c[id]!.file}`) : null))
+        .then((r) => (r?.ok ? r.arrayBuffer() : null)).catch(() => null);
+      bytes.set(id, b);
+      void b.then((x) => { if (!x) { bytes.delete(id); clips = null; } });   // failed: try again next time
+    }
+    return b;
+  };
+  if (typeof fetch !== 'undefined') for (const id of [UNAVAILABLE.clip, NOT_HEARD.clip]) void clipBytes(id);
   const ctx = (): AudioContext => {
     const c = o.audio();
     if (!c) throw new Error('no audio context yet');
@@ -418,11 +434,10 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
     },
     async clip(id, text) {
       try {
-        clips ??= fetch(`${o.base}/live/index.json`).then((r) => r.json()).then((j: { clips: Record<string, { file: string }> }) => j.clips);
-        const f = (await clips)[id]?.file;
-        if (!f) throw new Error('no clip');
+        const raw = await clipBytes(id);
+        if (!raw) throw new Error('no clip');
         const c = ctx();
-        const buf = await c.decodeAudioData(await (await fetch(`${o.base}/live/${f}`)).arrayBuffer());
+        const buf = await c.decodeAudioData(raw.slice(0));   // decodeAudioData detaches its buffer: keep ours
         const src = c.createBufferSource();
         src.buffer = buf;
         src.connect(out as GainNode);
@@ -432,7 +447,6 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
           src.start();
         });
       } catch {
-        clips = null;
         await browserVoice(text);
       }
     },
