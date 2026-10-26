@@ -2,8 +2,9 @@
 import type { LaneAHandle, MountLaneA } from '../contracts/a-exports';
 import { CommentaryTrackPlayer, parseCues } from './commentary-track';
 import { browserIO, LiveAsk } from './live-ask';
+import { bundleBase } from '../replay/base';
 
-export const BUNDLE_BASE = '/replay/v1/judge';
+export const BUNDLE_BASE = bundleBase();   // the judge cut, or a dev-only soak bundle (replay/base.ts)
 
 interface Manifest {
   tracks: Record<string, Record<string, string>>;

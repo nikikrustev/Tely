@@ -2,7 +2,7 @@
 // and dB labels. The page itself is covered by tests/a/mixer.spec.ts (Playwright + axe).
 import { afterEach, describe, expect, it } from 'vitest';
 import { DEFAULT_MIX, getMix, MIX_GROUPS, parseMix, setMix } from '../../src/audio/mix';
-import { dbText, DRAFT_KEY, LABELS, loadDraft, mixFile, saveDraft } from '../../src/tester/mixer';
+import { dbText, DRAFT_KEY, LABELS, loadDraft, mixFile, ORDER, saveDraft } from '../../src/tester/mixer';
 import type { StorageLike } from '../../src/settings';
 
 afterEach(() => { setMix(DEFAULT_MIX); });
@@ -18,8 +18,9 @@ function memory() {
 }
 
 describe('sound mixer', () => {
-  it('has a label for every sound group', () => {
+  it('has a label for every sound group, and shows every group once', () => {
     for (const k of MIX_GROUPS) expect(LABELS[k]).toBeTruthy();
+    expect([...ORDER].sort()).toEqual([...MIX_GROUPS].sort());
   });
 
   it('Submit writes every value, and the file reads back as the same mix', () => {

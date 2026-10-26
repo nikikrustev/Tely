@@ -41,16 +41,23 @@ test('product view', async ({ page }, info) => {
   await expect(page.locator('#ask')).toBeVisible();
   for (const sel of ['#tester', '#t-bar', '#t-report', '#mixer']) await expect(page.locator(sel)).toHaveCount(0);
   for (const sel of ['#debug', '#radar', '#settings']) await expect(page.locator(sel)).toBeHidden();
-  // One screen, no scrolling, except phone landscape (390 px tall), where the page scrolls as normal.
+  // Desktop: one screen, no scrolling. Phone portrait (D24): the two pads are the two halves of the screen (each at
+  // least a third of it, both fully on screen) and the secondary buttons scroll below. Landscape scrolls as normal.
   const fits = () => page.evaluate(() => document.documentElement.scrollHeight <= window.innerHeight);
-  const oneScreen = !info.project.name.startsWith('landscape');
+  const halves = () => page.evaluate(() => ['ask', 'start'].map((id) => {
+    const r = document.getElementById(id)!.getBoundingClientRect();
+    return r.height >= window.innerHeight / 3 && r.bottom <= window.innerHeight && r.width >= window.innerWidth * 0.85;
+  }));
+  const oneScreen = info.project.name.startsWith('desktop'), portrait = info.project.name.startsWith('portrait');
   if (oneScreen) expect(await fits()).toBe(true);
+  if (portrait) expect(await halves()).toEqual([true, true]);
   await startMatch(page);
   await expect(page.locator('[data-sb="state"]')).toHaveText('Playing');
   await expect(page.locator('[data-sb="chapter"]')).toHaveText(/^.+ of \d+$/);
   await expect(page.locator('[data-sb="clock"]')).not.toHaveText('56:10', { timeout: 5_000 });
   await expect(page.locator('#ask')).toBeEnabled({ timeout: 30_000 });
   if (oneScreen) expect(await fits()).toBe(true);
+  if (portrait) expect(await halves()).toEqual([true, true]);
   await expectNoViolations(page, 'product view, playing');
 });
 

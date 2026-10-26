@@ -1,0 +1,130 @@
+{
+  "url": "http://localhost:5173",
+  "when": "2026-10-26T13:18:05.170Z",
+  "steps": [
+    {
+      "name": "start: match plays, crowd and commentary audible",
+      "pass": true,
+      "contexts": 3,
+      "peakRmsPerContext": [
+        0.0192,
+        0,
+        0.0067
+      ],
+      "clockBefore": "56:10",
+      "clockAfter25s": "56:34",
+      "status": "Playing. You are in the main stand, on the halfway line. Reds attack to your right.",
+      "ctxState": [
+        "running",
+        "running",
+        "running"
+      ]
+    },
+    {
+      "name": "ask: spoken question answered out loud",
+      "pass": true,
+      "events": [
+        [
+          26439.09999999404,
+          "ask"
+        ]
+      ],
+      "question": "What is the score?",
+      "answer": "Let me check the live match details for you and then I’ll share the score. Score is Reds nil, Navy nil, minute 56.",
+      "latency": 880,
+      "peakRmsPerContextDuringAsk": [
+        0.0014,
+        0.0362,
+        0.0445
+      ],
+      "statusAfter": "Back to the action. While we talked, Fenford scored for Navy and VAR let the Navy goal stand.",
+      "askLabelAfter": "Ask the commentator"
+    },
+    {
+      "name": "barge-in: Ask stops the answer",
+      "pass": true,
+      "answerContext": 1,
+      "labelDuringAnswer": "Stop the answer",
+      "stopLatencyMs": 155,
+      "menuOpenAfter": false,
+      "focusAfter": "Ask the commentator",
+      "events": [
+        [
+          26439.09999999404,
+          "ask"
+        ],
+        [
+          54934.90000000596,
+          "ask"
+        ]
+      ]
+    },
+    {
+      "name": "pause/resume: clock and sound stop, then carry on",
+      "pass": true,
+      "clockAtPause": "57:18",
+      "clockAfter5sPaused": "57:18",
+      "clockAfter8sResumed": "57:26",
+      "ctxStateWhilePaused": [
+        "suspended",
+        "running",
+        "suspended"
+      ],
+      "peakRmsWhilePaused": [
+        0,
+        0,
+        0
+      ],
+      "peakRmsAfterResume": [
+        0.018,
+        0,
+        0.0226
+      ],
+      "status": "Playing."
+    },
+    {
+      "name": "mixer: helper text and sliders shown",
+      "pass": true,
+      "saved": "Playing our default mix. Move a slider to make it yours."
+    }
+  ],
+  "contexts": {
+    "peaks": [
+      0.019207459180860822,
+      0,
+      0.006721867731504568
+    ],
+    "liveVoiceGuess": 1
+  },
+  "lastTurn": {
+    "v": 1,
+    "at": "2026-10-26T13:18:32+00:00",
+    "model": "gpt-realtime-2.1-mini",
+    "voice": "en-US-Brian:DragonHDLatestNeural",
+    "api_version": "2026-04-10",
+    "playhead_s": 694.86,
+    "as_of_clock": "56:34",
+    "question": "What is the score?",
+    "tool_calls": [
+      {
+        "name": "get_score_and_clock",
+        "args": {},
+        "result": {
+          "say": "Reds nil, Navy nil, 56 minutes played.",
+          "evidence_ids": [],
+          "as_of_clock": "56:34",
+          "fragments": [
+            "score_m56_0_0"
+          ]
+        }
+      }
+    ],
+    "answer": "Let me check the live match details for you and then I’ll share the score. Score is Reds nil, Navy nil, minute 56.",
+    "latency_ms": 880,
+    "facts_latency_ms": 2064,
+    "latency_basis": "audio_end_ms",
+    "client_latency_ms": 700,
+    "outcome": "answered"
+  },
+  "consoleErrors": []
+}

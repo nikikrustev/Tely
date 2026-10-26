@@ -18,11 +18,15 @@ knows it's coming. And you can ask that commentator, out loud, "where's the ball
 
 1. Open the [demo](https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/?radar=1) with **headphones** (laptop speakers work too).
    `?radar=1` adds a sound radar so you can see what you hear.
-2. Press **Start** (or Enter). The first line is "AI commentary, synthetic match." **Five seconds later the voice builds:
+2. Press **Start**, the lower big button (or Enter). The first line is "AI commentary, synthetic match." **Five seconds later the voice builds:
    "Navy coming... Olvholm... here's a chance!"**, four seconds before the header, while the crowd rises with it.
-3. Press **A** and pick **Where's the ball?**: an answer in the same voice, then the match carries on. **Ask out loud**
-   (microphone) asks the commentator anything through Foundry Voice Live. Try "Who wins?": it won't tell you.
-4. Press **Next big moment** to jump to the next chance, and open **Settings** for your end of the ground, crowd level and vibration.
+3. Press **Ask the commentator**, the upper big button (or A), wait for the beep and ask out loud: the commentator answers
+   through Foundry Voice Live, then the match carries on. Try "Who wins?": it won't tell you. Press it again during an
+   answer and the answer stops at once. **Quick questions** (under the pads) gives **Where's the ball?** and three more
+   without a microphone, offline.
+4. Press **Next big moment** to jump to the next chance, and open **Settings** for your end of the ground, crowd level and
+   vibration. **Fine-tune every sound** in Settings opens the mixer: a sighted friend or carer sets each sound once with
+   the fan, and that mix stays on the device.
 
 On an Android phone in Chrome you also feel the match: a heartbeat that follows the tension, and a pattern for each shot and goal.
 

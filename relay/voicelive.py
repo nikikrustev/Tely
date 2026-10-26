@@ -54,6 +54,22 @@ The tools answer instantly. Don't say you are going to check or look something u
 DISCLOSED_NOTE = "[NOTE] You have already told the fan you are an AI voice. Don't say it again."
 
 
+def add_usage(turn: dict[str, Any], usage: Any) -> None:
+    """Sum Voice Live's per-response token counts into the turn (D24: cost per question from real counts). Flat keys:
+    total/input/output tokens and their text/audio/cached details, so a golden turn shows what each answer cost."""
+    if not isinstance(usage, dict):
+        return
+    acc = turn.setdefault("usage", {})
+    for k, v in usage.items():
+        if isinstance(v, (int, float)) and not isinstance(v, bool):
+            acc[k] = acc.get(k, 0) + v
+        elif isinstance(v, dict):
+            for k2, v2 in v.items():
+                if isinstance(v2, (int, float)) and not isinstance(v2, bool):
+                    key = f"{k}.{k2}"
+                    acc[key] = acc.get(key, 0) + v2
+
+
 def transcription_prompt(b: Bundle) -> str:
     """Player and team names help the transcript of the question (the golden file needs it)."""
     names = sorted({p["last_name"] for p in b.players.values()})
@@ -181,6 +197,7 @@ class Bridge:
                      "latency_ms": None, "facts_latency_ms": None, "latency_basis": None, "client_latency_ms": None,
                      "outcome": None}
         self._pending, self._eos, self._first_audio, self._after_tools = [], None, None, False
+        self._retried = False
         # Measured 23 Oct: the VAD's audio_end_ms counts from the last buffer clear, so our audio clock restarts here.
         self._sent_ms, self._marks = 0.0, []
         await self.link.send({"type": "input_audio_buffer.clear"})
@@ -268,13 +285,25 @@ class Bridge:
         elif t == "response.function_call_arguments.done":
             await self._tool(ev)
         elif t == "response.done":
+            if turn is not None:
+                add_usage(turn, (ev.get("response") or {}).get("usage"))
             if self._pending:                    # tool results go back only after the response that asked is done
                 for item in self._pending:
                     await self.link.send(item)
                 self._pending, self._after_tools = [], True
                 await self.link.send({"type": "response.create"})
             elif turn is not None:
-                status = (ev.get("response") or {}).get("status")
+                resp = ev.get("response") or {}
+                status = resp.get("status")
+                if self._first_audio is None and status in ("incomplete", "failed") and not self._retried:
+                    # Seen live 26 Oct (1 of 4 phone runs): the question was transcribed, then an "incomplete" response
+                    # with no audio and no tool call. One fresh response.create answered it; the browser's 8 s timer
+                    # still bounds the wait, so a second empty one goes to the presets as before.
+                    self._retried = True
+                    self.log(json.dumps({"retry_empty_response": {"status": status,
+                                                                  "details": resp.get("status_details")}}))
+                    await self.link.send({"type": "response.create"})
+                    return
                 turn["outcome"] = "answered" if self._first_audio is not None else (status or "no_audio")
                 await self._finish()
         elif t == "error":

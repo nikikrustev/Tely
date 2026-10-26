@@ -1,0 +1,1333 @@
+{
+  "bundle": "soak1",
+  "when": "2026-10-26T13:32:54.898Z",
+  "minutes": 49.1,
+  "playheadRange": [
+    0.3,
+    2879.189
+  ],
+  "drift": [
+    {
+      "fromPlayhead": 0.3,
+      "toPlayhead": 2099.26,
+      "wallS": 2099,
+      "playheadMinusWallMs": -37,
+      "stageCtxMinusWallMs": -37
+    },
+    {
+      "fromPlayhead": 2100.189,
+      "toPlayhead": 2879.189,
+      "wallS": 779,
+      "playheadMinusWallMs": -2,
+      "stageCtxMinusWallMs": -2
+    }
+  ],
+  "commentarySync": {
+    "cuesChecked": 376,
+    "cuesNotHeard": 12,
+    "medianLagMs": 84,
+    "firstThirdMedianMs": 82,
+    "lastThirdMedianMs": 83,
+    "p90AbsLagMs": 123,
+    "maxLagMs": 138,
+    "minLagMs": -1486
+  },
+  "crowdSilentGapsOver1s": [
+    {
+      "atPerfMs": 18571,
+      "ms": 2800
+    },
+    {
+      "atPerfMs": 22571,
+      "ms": 2301
+    },
+    {
+      "atPerfMs": 63471,
+      "ms": 2600
+    },
+    {
+      "atPerfMs": 66171,
+      "ms": 1701
+    },
+    {
+      "atPerfMs": 69671,
+      "ms": 3800
+    },
+    {
+      "atPerfMs": 75671,
+      "ms": 2200
+    },
+    {
+      "atPerfMs": 105271,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 107171,
+      "ms": 1600
+    },
+    {
+      "atPerfMs": 111172,
+      "ms": 1399
+    },
+    {
+      "atPerfMs": 113571,
+      "ms": 1001
+    },
+    {
+      "atPerfMs": 117671,
+      "ms": 2601
+    },
+    {
+      "atPerfMs": 170371,
+      "ms": 1900
+    },
+    {
+      "atPerfMs": 175972,
+      "ms": 1999
+    },
+    {
+      "atPerfMs": 182171,
+      "ms": 3000
+    },
+    {
+      "atPerfMs": 188171,
+      "ms": 1601
+    },
+    {
+      "atPerfMs": 193971,
+      "ms": 2600
+    },
+    {
+      "atPerfMs": 203771,
+      "ms": 2100
+    },
+    {
+      "atPerfMs": 205971,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 208372,
+      "ms": 4299
+    },
+    {
+      "atPerfMs": 214672,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 216171,
+      "ms": 3700
+    },
+    {
+      "atPerfMs": 222671,
+      "ms": 1500
+    },
+    {
+      "atPerfMs": 241772,
+      "ms": 1800
+    },
+    {
+      "atPerfMs": 280871,
+      "ms": 4200
+    },
+    {
+      "atPerfMs": 289571,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 290771,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 293772,
+      "ms": 3500
+    },
+    {
+      "atPerfMs": 297373,
+      "ms": 4798
+    },
+    {
+      "atPerfMs": 304871,
+      "ms": 2100
+    },
+    {
+      "atPerfMs": 315371,
+      "ms": 1301
+    },
+    {
+      "atPerfMs": 323271,
+      "ms": 2900
+    },
+    {
+      "atPerfMs": 327771,
+      "ms": 4100
+    },
+    {
+      "atPerfMs": 334371,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 335871,
+      "ms": 1701
+    },
+    {
+      "atPerfMs": 339572,
+      "ms": 3700
+    },
+    {
+      "atPerfMs": 345871,
+      "ms": 3101
+    },
+    {
+      "atPerfMs": 349572,
+      "ms": 1600
+    },
+    {
+      "atPerfMs": 359671,
+      "ms": 1501
+    },
+    {
+      "atPerfMs": 361272,
+      "ms": 2099
+    },
+    {
+      "atPerfMs": 368971,
+      "ms": 1200
+    },
+    {
+      "atPerfMs": 381772,
+      "ms": 3499
+    },
+    {
+      "atPerfMs": 386971,
+      "ms": 1701
+    },
+    {
+      "atPerfMs": 392571,
+      "ms": 1401
+    },
+    {
+      "atPerfMs": 394271,
+      "ms": 1500
+    },
+    {
+      "atPerfMs": 395872,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 397071,
+      "ms": 1402
+    },
+    {
+      "atPerfMs": 410572,
+      "ms": 1299
+    },
+    {
+      "atPerfMs": 430571,
+      "ms": 4101
+    },
+    {
+      "atPerfMs": 439273,
+      "ms": 2799
+    },
+    {
+      "atPerfMs": 451972,
+      "ms": 3599
+    },
+    {
+      "atPerfMs": 457571,
+      "ms": 2200
+    },
+    {
+      "atPerfMs": 479771,
+      "ms": 1901
+    },
+    {
+      "atPerfMs": 484072,
+      "ms": 3199
+    },
+    {
+      "atPerfMs": 490271,
+      "ms": 2400
+    },
+    {
+      "atPerfMs": 495671,
+      "ms": 1701
+    },
+    {
+      "atPerfMs": 525071,
+      "ms": 2800
+    },
+    {
+      "atPerfMs": 530372,
+      "ms": 1500
+    },
+    {
+      "atPerfMs": 531971,
+      "ms": 2700
+    },
+    {
+      "atPerfMs": 537571,
+      "ms": 3000
+    },
+    {
+      "atPerfMs": 541571,
+      "ms": 2500
+    },
+    {
+      "atPerfMs": 544173,
+      "ms": 2198
+    },
+    {
+      "atPerfMs": 549871,
+      "ms": 3300
+    },
+    {
+      "atPerfMs": 556171,
+      "ms": 5201
+    },
+    {
+      "atPerfMs": 563071,
+      "ms": 2001
+    },
+    {
+      "atPerfMs": 565173,
+      "ms": 2799
+    },
+    {
+      "atPerfMs": 591171,
+      "ms": 1102
+    },
+    {
+      "atPerfMs": 599171,
+      "ms": 1801
+    },
+    {
+      "atPerfMs": 631271,
+      "ms": 4101
+    },
+    {
+      "atPerfMs": 635571,
+      "ms": 2300
+    },
+    {
+      "atPerfMs": 638171,
+      "ms": 1101
+    },
+    {
+      "atPerfMs": 639572,
+      "ms": 1299
+    },
+    {
+      "atPerfMs": 642371,
+      "ms": 1101
+    },
+    {
+      "atPerfMs": 657171,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 658972,
+      "ms": 2700
+    },
+    {
+      "atPerfMs": 664771,
+      "ms": 1301
+    },
+    {
+      "atPerfMs": 683671,
+      "ms": 1200
+    },
+    {
+      "atPerfMs": 686571,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 692371,
+      "ms": 1900
+    },
+    {
+      "atPerfMs": 699271,
+      "ms": 1701
+    },
+    {
+      "atPerfMs": 708672,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 761471,
+      "ms": 1900
+    },
+    {
+      "atPerfMs": 766171,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 767572,
+      "ms": 1199
+    },
+    {
+      "atPerfMs": 779772,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 808071,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 810071,
+      "ms": 3200
+    },
+    {
+      "atPerfMs": 813372,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 817471,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 820671,
+      "ms": 1800
+    },
+    {
+      "atPerfMs": 844572,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 845971,
+      "ms": 2401
+    },
+    {
+      "atPerfMs": 850471,
+      "ms": 1001
+    },
+    {
+      "atPerfMs": 852271,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 856571,
+      "ms": 1401
+    },
+    {
+      "atPerfMs": 879972,
+      "ms": 3299
+    },
+    {
+      "atPerfMs": 886072,
+      "ms": 4599
+    },
+    {
+      "atPerfMs": 891971,
+      "ms": 2900
+    },
+    {
+      "atPerfMs": 899671,
+      "ms": 1702
+    },
+    {
+      "atPerfMs": 940871,
+      "ms": 3201
+    },
+    {
+      "atPerfMs": 945271,
+      "ms": 1800
+    },
+    {
+      "atPerfMs": 947171,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 949871,
+      "ms": 2100
+    },
+    {
+      "atPerfMs": 952071,
+      "ms": 2601
+    },
+    {
+      "atPerfMs": 955971,
+      "ms": 2400
+    },
+    {
+      "atPerfMs": 961271,
+      "ms": 1301
+    },
+    {
+      "atPerfMs": 969271,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 970472,
+      "ms": 2099
+    },
+    {
+      "atPerfMs": 973572,
+      "ms": 1599
+    },
+    {
+      "atPerfMs": 979972,
+      "ms": 3499
+    },
+    {
+      "atPerfMs": 987571,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 989271,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 992171,
+      "ms": 2100
+    },
+    {
+      "atPerfMs": 1010571,
+      "ms": 1900
+    },
+    {
+      "atPerfMs": 1017872,
+      "ms": 3199
+    },
+    {
+      "atPerfMs": 1035272,
+      "ms": 4499
+    },
+    {
+      "atPerfMs": 1042671,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 1043871,
+      "ms": 2900
+    },
+    {
+      "atPerfMs": 1048271,
+      "ms": 3700
+    },
+    {
+      "atPerfMs": 1053272,
+      "ms": 1399
+    },
+    {
+      "atPerfMs": 1054771,
+      "ms": 1900
+    },
+    {
+      "atPerfMs": 1058571,
+      "ms": 3600
+    },
+    {
+      "atPerfMs": 1064771,
+      "ms": 4100
+    },
+    {
+      "atPerfMs": 1071571,
+      "ms": 4600
+    },
+    {
+      "atPerfMs": 1085071,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 1156872,
+      "ms": 1099
+    },
+    {
+      "atPerfMs": 1162571,
+      "ms": 2501
+    },
+    {
+      "atPerfMs": 1169871,
+      "ms": 1102
+    },
+    {
+      "atPerfMs": 1176572,
+      "ms": 3100
+    },
+    {
+      "atPerfMs": 1315071,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 1316671,
+      "ms": 2300
+    },
+    {
+      "atPerfMs": 1322171,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 1327871,
+      "ms": 3601
+    },
+    {
+      "atPerfMs": 1334872,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 1337071,
+      "ms": 1900
+    },
+    {
+      "atPerfMs": 1340872,
+      "ms": 2399
+    },
+    {
+      "atPerfMs": 1347271,
+      "ms": 1201
+    },
+    {
+      "atPerfMs": 1348571,
+      "ms": 3600
+    },
+    {
+      "atPerfMs": 1353172,
+      "ms": 1201
+    },
+    {
+      "atPerfMs": 1471471,
+      "ms": 2501
+    },
+    {
+      "atPerfMs": 1475771,
+      "ms": 2400
+    },
+    {
+      "atPerfMs": 1481271,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 1482772,
+      "ms": 1799
+    },
+    {
+      "atPerfMs": 1485971,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 1487973,
+      "ms": 2998
+    },
+    {
+      "atPerfMs": 1492671,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 1497371,
+      "ms": 3400
+    },
+    {
+      "atPerfMs": 1506672,
+      "ms": 4199
+    },
+    {
+      "atPerfMs": 1515371,
+      "ms": 2900
+    },
+    {
+      "atPerfMs": 1520271,
+      "ms": 2800
+    },
+    {
+      "atPerfMs": 1526971,
+      "ms": 1200
+    },
+    {
+      "atPerfMs": 1528672,
+      "ms": 2499
+    },
+    {
+      "atPerfMs": 1531271,
+      "ms": 4800
+    },
+    {
+      "atPerfMs": 1537471,
+      "ms": 4001
+    },
+    {
+      "atPerfMs": 1544071,
+      "ms": 3500
+    },
+    {
+      "atPerfMs": 1549872,
+      "ms": 1299
+    },
+    {
+      "atPerfMs": 1554771,
+      "ms": 3101
+    },
+    {
+      "atPerfMs": 1563972,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 1567071,
+      "ms": 1001
+    },
+    {
+      "atPerfMs": 1573472,
+      "ms": 1600
+    },
+    {
+      "atPerfMs": 1579871,
+      "ms": 1901
+    },
+    {
+      "atPerfMs": 1581872,
+      "ms": 1799
+    },
+    {
+      "atPerfMs": 1588371,
+      "ms": 2701
+    },
+    {
+      "atPerfMs": 1593171,
+      "ms": 1301
+    },
+    {
+      "atPerfMs": 1597971,
+      "ms": 1501
+    },
+    {
+      "atPerfMs": 1606071,
+      "ms": 1201
+    },
+    {
+      "atPerfMs": 1609172,
+      "ms": 1399
+    },
+    {
+      "atPerfMs": 1615471,
+      "ms": 1200
+    },
+    {
+      "atPerfMs": 1616771,
+      "ms": 1101
+    },
+    {
+      "atPerfMs": 1620771,
+      "ms": 3500
+    },
+    {
+      "atPerfMs": 1624372,
+      "ms": 1599
+    },
+    {
+      "atPerfMs": 1628071,
+      "ms": 3400
+    },
+    {
+      "atPerfMs": 1631572,
+      "ms": 5099
+    },
+    {
+      "atPerfMs": 1636772,
+      "ms": 1199
+    },
+    {
+      "atPerfMs": 1638671,
+      "ms": 1900
+    },
+    {
+      "atPerfMs": 1640671,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 1643071,
+      "ms": 2701
+    },
+    {
+      "atPerfMs": 1668372,
+      "ms": 2299
+    },
+    {
+      "atPerfMs": 1677171,
+      "ms": 1801
+    },
+    {
+      "atPerfMs": 1679072,
+      "ms": 1799
+    },
+    {
+      "atPerfMs": 1682271,
+      "ms": 1900
+    },
+    {
+      "atPerfMs": 1684372,
+      "ms": 1199
+    },
+    {
+      "atPerfMs": 1687971,
+      "ms": 1001
+    },
+    {
+      "atPerfMs": 1697672,
+      "ms": 1099
+    },
+    {
+      "atPerfMs": 1700771,
+      "ms": 2000
+    },
+    {
+      "atPerfMs": 1702873,
+      "ms": 3098
+    },
+    {
+      "atPerfMs": 1707671,
+      "ms": 3501
+    },
+    {
+      "atPerfMs": 1714571,
+      "ms": 2700
+    },
+    {
+      "atPerfMs": 1720071,
+      "ms": 1001
+    },
+    {
+      "atPerfMs": 1721671,
+      "ms": 3301
+    },
+    {
+      "atPerfMs": 1725971,
+      "ms": 2101
+    },
+    {
+      "atPerfMs": 1732071,
+      "ms": 2600
+    },
+    {
+      "atPerfMs": 1734771,
+      "ms": 2100
+    },
+    {
+      "atPerfMs": 1738471,
+      "ms": 1501
+    },
+    {
+      "atPerfMs": 1740071,
+      "ms": 2200
+    },
+    {
+      "atPerfMs": 1745072,
+      "ms": 2699
+    },
+    {
+      "atPerfMs": 1748871,
+      "ms": 2102
+    },
+    {
+      "atPerfMs": 1751071,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 1854072,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 1862371,
+      "ms": 2001
+    },
+    {
+      "atPerfMs": 1867072,
+      "ms": 2501
+    },
+    {
+      "atPerfMs": 1872171,
+      "ms": 2601
+    },
+    {
+      "atPerfMs": 1874871,
+      "ms": 1801
+    },
+    {
+      "atPerfMs": 1877671,
+      "ms": 2900
+    },
+    {
+      "atPerfMs": 1906771,
+      "ms": 3600
+    },
+    {
+      "atPerfMs": 1911271,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 1912671,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 1917871,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 1921071,
+      "ms": 1101
+    },
+    {
+      "atPerfMs": 1944471,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 1949371,
+      "ms": 4100
+    },
+    {
+      "atPerfMs": 1957371,
+      "ms": 2301
+    },
+    {
+      "atPerfMs": 1960071,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 1965371,
+      "ms": 1301
+    },
+    {
+      "atPerfMs": 1972371,
+      "ms": 1200
+    },
+    {
+      "atPerfMs": 1978471,
+      "ms": 1500
+    },
+    {
+      "atPerfMs": 2050272,
+      "ms": 2099
+    },
+    {
+      "atPerfMs": 2052472,
+      "ms": 1699
+    },
+    {
+      "atPerfMs": 2058272,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 2092371,
+      "ms": 1101
+    },
+    {
+      "atPerfMs": 2169571,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 2253771,
+      "ms": 1500
+    },
+    {
+      "atPerfMs": 2255371,
+      "ms": 1001
+    },
+    {
+      "atPerfMs": 2258771,
+      "ms": 3001
+    },
+    {
+      "atPerfMs": 2265271,
+      "ms": 4400
+    },
+    {
+      "atPerfMs": 2273171,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 2323472,
+      "ms": 2100
+    },
+    {
+      "atPerfMs": 2328271,
+      "ms": 2700
+    },
+    {
+      "atPerfMs": 2335071,
+      "ms": 4701
+    },
+    {
+      "atPerfMs": 2341372,
+      "ms": 1599
+    },
+    {
+      "atPerfMs": 2343071,
+      "ms": 2100
+    },
+    {
+      "atPerfMs": 2365771,
+      "ms": 1500
+    },
+    {
+      "atPerfMs": 2367571,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 2373271,
+      "ms": 1001
+    },
+    {
+      "atPerfMs": 2377971,
+      "ms": 5600
+    },
+    {
+      "atPerfMs": 2449872,
+      "ms": 1499
+    },
+    {
+      "atPerfMs": 2455071,
+      "ms": 3000
+    },
+    {
+      "atPerfMs": 2464672,
+      "ms": 1999
+    },
+    {
+      "atPerfMs": 2466771,
+      "ms": 1301
+    },
+    {
+      "atPerfMs": 2478772,
+      "ms": 1099
+    },
+    {
+      "atPerfMs": 2518872,
+      "ms": 1299
+    },
+    {
+      "atPerfMs": 2590771,
+      "ms": 3400
+    },
+    {
+      "atPerfMs": 2596872,
+      "ms": 1499
+    },
+    {
+      "atPerfMs": 2598471,
+      "ms": 3002
+    },
+    {
+      "atPerfMs": 2603171,
+      "ms": 3300
+    },
+    {
+      "atPerfMs": 2606571,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 2613571,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 2662372,
+      "ms": 1900
+    },
+    {
+      "atPerfMs": 2667171,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 2674172,
+      "ms": 1899
+    },
+    {
+      "atPerfMs": 2676171,
+      "ms": 2000
+    },
+    {
+      "atPerfMs": 2721872,
+      "ms": 1900
+    },
+    {
+      "atPerfMs": 2725972,
+      "ms": 1399
+    },
+    {
+      "atPerfMs": 2727471,
+      "ms": 1500
+    },
+    {
+      "atPerfMs": 2729971,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 2740071,
+      "ms": 1101
+    },
+    {
+      "atPerfMs": 2822171,
+      "ms": 3000
+    },
+    {
+      "atPerfMs": 2835971,
+      "ms": 3500
+    },
+    {
+      "atPerfMs": 2841171,
+      "ms": 1802
+    },
+    {
+      "atPerfMs": 2843371,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 2848671,
+      "ms": 1001
+    },
+    {
+      "atPerfMs": 2853171,
+      "ms": 2702
+    },
+    {
+      "atPerfMs": 2855972,
+      "ms": 1600
+    },
+    {
+      "atPerfMs": 2859472,
+      "ms": 1600
+    },
+    {
+      "atPerfMs": 2865671,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 2867473,
+      "ms": 1598
+    },
+    {
+      "atPerfMs": 2892771,
+      "ms": 1200
+    }
+  ],
+  "playoutStats": [
+    null,
+    null,
+    null
+  ],
+  "memory": {
+    "first": {
+      "t": 1757,
+      "heapMB": 8.9,
+      "nodes": 499,
+      "listeners": 74,
+      "clock": "0:00",
+      "state": "Playing"
+    },
+    "last": {
+      "t": 2944087,
+      "heapMB": 24.7,
+      "nodes": 892,
+      "listeners": 58,
+      "clock": "48:00",
+      "state": "Playing"
+    },
+    "maxHeapMB": 25.1
+  },
+  "asks": [
+    {
+      "why": "every 10 min",
+      "atMin": 10.3,
+      "answered": true,
+      "refusal": null,
+      "question": "What is the score?",
+      "answer": "Reds nil, Navy nil, at 56 minutes played.",
+      "latency_ms": 1513,
+      "usage": {
+        "total_tokens": 2582,
+        "input_tokens": 2453,
+        "output_tokens": 129,
+        "input_token_details.cached_tokens": 2304,
+        "input_token_details.cache_write_tokens": 0,
+        "input_token_details.text_tokens": 2419,
+        "input_token_details.audio_tokens": 34,
+        "input_token_details.image_tokens": 0,
+        "output_token_details.text_tokens": 33,
+        "output_token_details.audio_tokens": 96,
+        "output_token_details.reasoning_tokens": 0
+      },
+      "waitedMs": 12249,
+      "settled": true
+    },
+    {
+      "why": "every 10 min",
+      "atMin": 20.2,
+      "answered": true,
+      "refusal": null,
+      "question": "What is the score?",
+      "answer": "Let me check the current score for you. Reds nil, Navy one, 64 minutes played.",
+      "latency_ms": 1067,
+      "usage": {
+        "total_tokens": 2668,
+        "input_tokens": 2475,
+        "output_tokens": 193,
+        "input_token_details.cached_tokens": 1152,
+        "input_token_details.cache_write_tokens": 0,
+        "input_token_details.text_tokens": 2439,
+        "input_token_details.audio_tokens": 36,
+        "input_token_details.image_tokens": 0,
+        "output_token_details.text_tokens": 73,
+        "output_token_details.audio_tokens": 120,
+        "output_token_details.reasoning_tokens": 0
+      },
+      "waitedMs": 13119,
+      "settled": true
+    },
+    {
+      "why": "while offline",
+      "atMin": 20.7,
+      "answered": false,
+      "refusal": "refusal:unavailable",
+      "question": null,
+      "answer": null,
+      "latency_ms": null,
+      "usage": null,
+      "waitedMs": 14437,
+      "settled": true
+    },
+    {
+      "why": "after the network came back",
+      "atMin": 21.7,
+      "answered": true,
+      "refusal": null,
+      "question": "What is the score?",
+      "answer": "Let me check the current score and time you’re hearing. Reds nil, Navy one, 64 minutes played.",
+      "latency_ms": 961,
+      "usage": {
+        "total_tokens": 3014,
+        "input_tokens": 2812,
+        "output_tokens": 202,
+        "input_token_details.cached_tokens": 2624,
+        "input_token_details.cache_write_tokens": 0,
+        "input_token_details.text_tokens": 2740,
+        "input_token_details.audio_tokens": 72,
+        "input_token_details.image_tokens": 0,
+        "output_token_details.text_tokens": 66,
+        "output_token_details.audio_tokens": 136,
+        "output_token_details.reasoning_tokens": 0
+      },
+      "waitedMs": 11942,
+      "settled": true
+    },
+    {
+      "why": "every 10 min",
+      "atMin": 30.3,
+      "answered": true,
+      "refusal": null,
+      "question": "What is the score?",
+      "answer": "I’m checking the current score and time for you now. Reds nil, Navy one, 64 minutes played.",
+      "latency_ms": 879,
+      "usage": {
+        "total_tokens": 2679,
+        "input_tokens": 2476,
+        "output_tokens": 203,
+        "input_token_details.cached_tokens": 1152,
+        "input_token_details.cache_write_tokens": 0,
+        "input_token_details.text_tokens": 2442,
+        "input_token_details.audio_tokens": 34,
+        "input_token_details.image_tokens": 0,
+        "output_token_details.text_tokens": 51,
+        "output_token_details.audio_tokens": 152,
+        "output_token_details.reasoning_tokens": 0
+      },
+      "waitedMs": 13732,
+      "settled": true
+    },
+    {
+      "why": "every 10 min",
+      "atMin": 40.3,
+      "answered": true,
+      "refusal": null,
+      "question": "What is the score?",
+      "answer": "Quick check of the match clock and score, then I’ll share it cleanly. Reds nil, Navy one, 64 minutes played.",
+      "latency_ms": 2618,
+      "usage": {
+        "total_tokens": 4175,
+        "input_tokens": 3675,
+        "output_tokens": 500,
+        "input_token_details.cached_tokens": 3520,
+        "input_token_details.cache_write_tokens": 0,
+        "input_token_details.text_tokens": 3621,
+        "input_token_details.audio_tokens": 54,
+        "input_token_details.image_tokens": 0,
+        "output_token_details.text_tokens": 356,
+        "output_token_details.audio_tokens": 144,
+        "output_token_details.reasoning_tokens": 0
+      },
+      "waitedMs": 15412,
+      "settled": true
+    }
+  ],
+  "marks": [
+    [
+      "ask",
+      602863
+    ],
+    [
+      "ask-end",
+      627113
+    ],
+    [
+      "ask",
+      1201520
+    ],
+    [
+      "ask-end",
+      1226640
+    ],
+    [
+      "offline",
+      1214641
+    ],
+    [
+      "ask",
+      1224650
+    ],
+    [
+      "ask-end",
+      1251088
+    ],
+    [
+      "online",
+      1274105
+    ],
+    [
+      "ask",
+      1289110
+    ],
+    [
+      "ask-end",
+      1313052
+    ],
+    [
+      "ask",
+      1802150
+    ],
+    [
+      "ask-end",
+      1827883
+    ],
+    [
+      "pause",
+      2101651
+    ],
+    [
+      "resume",
+      2161716
+    ],
+    [
+      "ask",
+      2402228
+    ],
+    [
+      "ask-end",
+      2429642
+    ]
+  ],
+  "consoleErrors": [
+    [
+      1233022,
+      "error",
+      "Failed to load resource: net::ERR_INTERNET_DISCONNECTED"
+    ]
+  ],
+  "consoleErrorCount": 1
+}

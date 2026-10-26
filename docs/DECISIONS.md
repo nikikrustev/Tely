@@ -477,3 +477,72 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
 - **Checked:** vitest 124/124 (6 new), Playwright + axe 96/96 (a new "product view" test, 6 projects: no tester,
   mixer or debug elements at `/`, everything on one screen at desktop and phone portrait, clock and chapter update).
 - **Not checked:** Narrator, TalkBack and VoiceOver with the new layout (still the manual walkthrough in REMAINING.md).
+
+## D24. Phone pads, the listener's own mix, and the 90-minute readiness run (26 Oct 2026)
+
+- **Why:** potencialbg, 26 Oct: the demo is for a blind fan on a phone, so the screen must work by touch and screen
+  reader alone. Ask and press-to-interrupt (D22) had never been run end to end with a real voice question.
+- **Two pads.** On a phone held upright (`max-width: 40rem` and `min-height: 32rem`) the page under the match card is
+  two halves: **Ask the commentator** on top, **Start / Pause / Resume** below. Side by side on wider screens; Ask comes
+  first in DOM, tab and reading order. Each pad's accessible name is its visible words (`.pad-label`); the icons are
+  `aria-hidden`; the hint under each pad ("Tap, wait for the beep, then speak", "Pauses the match") is its
+  `aria-describedby`. Before the match the Ask pad is `aria-disabled` (not `disabled`), so it can be found by touch and
+  says "The match hasn't started. Start is the bottom half of the screen."
+- **One press, then speak.** With live Ask on, the Ask pad asks out loud straight away (no menu); without it (no relay,
+  `?live=0`) it opens the quick questions. The presets also have their own **Quick questions** button below the pads,
+  and the menu gains **Back to the match** for touch users. Pressing Ask during an answer stops it (D22); with live Ask
+  the commentary stays held for a next question and "Tap Ask to ask again" is announced, then 10 s later it goes back
+  to the action. Ask while paused resumes the match first (the paused stage context could not play the catch-up).
+  Pause during an answer or a hold stops it quietly first (`AskController.dropHold()`), so nothing resumes behind it.
+- **No announcement into the open mic.** A live question shows "Listening. Speak after the beep." on screen only;
+  the rising earcon is the cue. A screen reader reading a live region then would be transcribed as the question.
+  `live-ask.ts` reports the phases (`heard`, `answering`) as a window event; `main.ts` shows them, visually only.
+- **Press feedback.** Every pad press vibrates (Android; off when Vibration is off) and plays a 0.1 s tone straight to the
+  stage context's output (rising: ask / resume; falling: stop / pause; Pause waits 120 ms so its tone is heard).
+- **The listener's own mix.** The `?mix=1` mix is now saved on the device (`audio/mix.ts` `saveMix`, the same
+  localStorage key as D20's draft) and played on every visit, main page included. A device with nothing saved plays
+  `DEFAULT_MIX`, so a judge on a fresh browser still hears what we tuned. The mixer opens with the helper explanation
+  ("Set this up once with a sighted friend or carer...") and lists the voice and crowd first. Settings links to it
+  ("Fine-tune every sound, with a helper"). Submit is now "Save a copy (JSON)".
+- **Relay:** an empty `incomplete` Voice Live response is retried once (seen in 1 of 4 phone runs: the question was
+  transcribed, no audio came, the fan heard "Live questions aren't available"). Each golden turn now carries Voice
+  Live's token `usage`, so cost per question comes from real counts.
+- **Tools:** `web/tests/a/phone-e2e.mjs` (phone-sized Chromium, a fake microphone speaking a WAV, an analyser on every
+  AudioContext; it measures, not guesses, whether each sound played and when it stopped) and `web/tests/a/soak.mjs`
+  (one full half in real time). `pipeline/audiostands/eval/soak_bundle.py` builds both full halves of seed 24 into
+  git-ignored `web/.local/`, with a tone in place of TTS (no Speech calls); `?bundle=soak1|soak2` plays them on the dev
+  server only (`replay/base.ts`).
+- **Checked (26 Oct, phone-e2e against the deployed relay, 360x640 @3x):** match start (crowd and commentary audible),
+  spoken "What is the score?" answered ("Reds nil, Navy nil, 56 minutes played.", 0.8 to 1.4 s from end of speech),
+  barge-in stops the answer in 65 to 155 ms, pause/resume (clock and all three contexts silent while paused, then
+  carry on). 5 full runs; 1 spoken Ask failed upstream (fixed above, not yet deployed). Screens in `video/screens/`.
+  vitest 124/124, Playwright + axe 96/96, relay 46/46.
+- **90-minute readiness run (26 Oct, `soak.mjs`, local dev server + local relay on Voice Live, both halves at once,
+  real time, 2 x 48 min of match; reports in `eval/soak/`):**
+  - Both halves played to the end (playhead 0 to 2879 s). **Clock drift:** playhead against wall time -37 ms over
+    35 min (half 1) and -337 ms over 38 min (half 2; the stage audio clock itself -48 ms). No fix needed.
+  - **Commentary sync** (each line's first audible output against when its t_in was due): median 84 / 82 ms, 90th
+    percentile 123 ms, first third 82 / 74 ms against last third 83 / 85 ms, so it does not drift. 22 of 747 lines were
+    not heard: lines due during an Ask, dropped by design (D22). One line started 4.0 s late after an Ask (restart rule).
+  - **Audio glitches:** no dropout over 300 ms in either half (no stage output under -94 dBFS outside the pause, the Asks
+    and the offline minute). Chrome's `playoutStats` was not available, so underruns are not measured directly
+    (unverified). The quietest murmur sits near -68 dBFS, about 30 dB under the commentator: that is the D20 mix.
+  - **Memory:** JS heap 8 to 25 MB (max 25.1) over 49 min; DOM nodes 498 to 892 / 1315. No leak that matters for a match.
+  - **Live Ask, every 10-11 min (so each one found the relay's 90 s idle close and reconnected):** 10/10 answered,
+    0.88 to 3.5 s from end of speech (median 1.4 s). The 55-minute Voice Live reconnect was not reached (unverified live).
+  - **Dropped connection (45 s offline):** the Ask during it got the "not available" refusal, and Ask worked again 15 s
+    after the network came back. Fixed from this run: the refusal clip is now fetched while online. Before, nothing
+    played in the commentator's voice offline (the browser's own voice was the fallback); after, the clip plays.
+  - **Cost per question** from the 10 real token counts (about 2,600 to 4,200 tokens; 2,300 to 3,600 text in, mostly
+    cached; 70 to 180 audio out) at file 27's Voice Live rates (Standard audio $0.015 / $0.026 per 1K; Standard text
+    rates are not in our files, so Pro text $0.004 / $0.016 as an upper bound, and no cache discount): **$0.013 to
+    $0.025, mean $0.017**. A fan who asks 10 questions costs about $0.17; the 30-question cap about $0.51.
+    Commentary is rendered once per match, not per fan: a full 90-minute track is about 42,000 characters, about
+    $0.92 at file 27's HD rate of $22 per 1M (text characters; how Azure counts our SSML is unverified). Static Web App
+    Free and a relay that scales to zero add nothing per match.
+  - The soak bundles use a tone instead of TTS, and the relay answers from the judge cut (so "56 minutes played" at any
+    playhead): the run tests timing, sessions and memory, not answer content.
+  - Seen in the full second half, not in the shipped cut: `spoiler_leaks` flags "Intercepted by Morani! Reds have it
+    back." while the next pass is in flight (a checker false positive: the line is about the interception). Not fixed.
+- **Not checked:** TalkBack, VoiceOver and Narrator with the pads (manual); a real phone's vibration and tone; a real
+  voice in a noisy room.

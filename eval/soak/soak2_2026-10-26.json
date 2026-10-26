@@ -1,0 +1,1350 @@
+{
+  "bundle": "soak2",
+  "when": "2026-10-26T13:33:14.246Z",
+  "minutes": 49.1,
+  "playheadRange": [
+    0,
+    2879.531
+  ],
+  "drift": [
+    {
+      "fromPlayhead": 0,
+      "toPlayhead": 2278.66,
+      "wallS": 2279,
+      "playheadMinusWallMs": -337,
+      "stageCtxMinusWallMs": -48
+    },
+    {
+      "fromPlayhead": 2279.549,
+      "toPlayhead": 2879.531,
+      "wallS": 600,
+      "playheadMinusWallMs": -19,
+      "stageCtxMinusWallMs": -20
+    }
+  ],
+  "commentarySync": {
+    "cuesChecked": 371,
+    "cuesNotHeard": 10,
+    "medianLagMs": 82,
+    "firstThirdMedianMs": 74,
+    "lastThirdMedianMs": 85,
+    "p90AbsLagMs": 123,
+    "maxLagMs": 3993,
+    "minLagMs": -1499
+  },
+  "crowdSilentGapsOver1s": [
+    {
+      "atPerfMs": 167814,
+      "ms": 2801
+    },
+    {
+      "atPerfMs": 172815,
+      "ms": 3099
+    },
+    {
+      "atPerfMs": 180114,
+      "ms": 2202
+    },
+    {
+      "atPerfMs": 182414,
+      "ms": 1298
+    },
+    {
+      "atPerfMs": 214913,
+      "ms": 4200
+    },
+    {
+      "atPerfMs": 220512,
+      "ms": 3901
+    },
+    {
+      "atPerfMs": 227413,
+      "ms": 2699
+    },
+    {
+      "atPerfMs": 231613,
+      "ms": 4399
+    },
+    {
+      "atPerfMs": 245911,
+      "ms": 1600
+    },
+    {
+      "atPerfMs": 251712,
+      "ms": 4299
+    },
+    {
+      "atPerfMs": 260411,
+      "ms": 3400
+    },
+    {
+      "atPerfMs": 265510,
+      "ms": 3301
+    },
+    {
+      "atPerfMs": 271410,
+      "ms": 1101
+    },
+    {
+      "atPerfMs": 321109,
+      "ms": 1013
+    },
+    {
+      "atPerfMs": 322215,
+      "ms": 1599
+    },
+    {
+      "atPerfMs": 326219,
+      "ms": 2304
+    },
+    {
+      "atPerfMs": 329818,
+      "ms": 1191
+    },
+    {
+      "atPerfMs": 358010,
+      "ms": 1512
+    },
+    {
+      "atPerfMs": 363511,
+      "ms": 2006
+    },
+    {
+      "atPerfMs": 383220,
+      "ms": 2099
+    },
+    {
+      "atPerfMs": 387023,
+      "ms": 2290
+    },
+    {
+      "atPerfMs": 392611,
+      "ms": 1711
+    },
+    {
+      "atPerfMs": 394416,
+      "ms": 2602
+    },
+    {
+      "atPerfMs": 403822,
+      "ms": 1599
+    },
+    {
+      "atPerfMs": 407917,
+      "ms": 2801
+    },
+    {
+      "atPerfMs": 410811,
+      "ms": 1607
+    },
+    {
+      "atPerfMs": 414011,
+      "ms": 1001
+    },
+    {
+      "atPerfMs": 415118,
+      "ms": 1295
+    },
+    {
+      "atPerfMs": 507817,
+      "ms": 1502
+    },
+    {
+      "atPerfMs": 512318,
+      "ms": 1093
+    },
+    {
+      "atPerfMs": 515109,
+      "ms": 1002
+    },
+    {
+      "atPerfMs": 516218,
+      "ms": 1997
+    },
+    {
+      "atPerfMs": 520011,
+      "ms": 5006
+    },
+    {
+      "atPerfMs": 527017,
+      "ms": 1897
+    },
+    {
+      "atPerfMs": 532710,
+      "ms": 1201
+    },
+    {
+      "atPerfMs": 562015,
+      "ms": 1201
+    },
+    {
+      "atPerfMs": 589814,
+      "ms": 1401
+    },
+    {
+      "atPerfMs": 631612,
+      "ms": 2301
+    },
+    {
+      "atPerfMs": 635413,
+      "ms": 2500
+    },
+    {
+      "atPerfMs": 644013,
+      "ms": 1197
+    },
+    {
+      "atPerfMs": 660012,
+      "ms": 1499
+    },
+    {
+      "atPerfMs": 759509,
+      "ms": 1701
+    },
+    {
+      "atPerfMs": 766917,
+      "ms": 1502
+    },
+    {
+      "atPerfMs": 776314,
+      "ms": 2010
+    },
+    {
+      "atPerfMs": 778418,
+      "ms": 1199
+    },
+    {
+      "atPerfMs": 780620,
+      "ms": 2899
+    },
+    {
+      "atPerfMs": 786016,
+      "ms": 1800
+    },
+    {
+      "atPerfMs": 788020,
+      "ms": 1797
+    },
+    {
+      "atPerfMs": 790817,
+      "ms": 2604
+    },
+    {
+      "atPerfMs": 795116,
+      "ms": 1803
+    },
+    {
+      "atPerfMs": 797411,
+      "ms": 2307
+    },
+    {
+      "atPerfMs": 801017,
+      "ms": 1201
+    },
+    {
+      "atPerfMs": 802921,
+      "ms": 1795
+    },
+    {
+      "atPerfMs": 809122,
+      "ms": 1495
+    },
+    {
+      "atPerfMs": 815421,
+      "ms": 2290
+    },
+    {
+      "atPerfMs": 821409,
+      "ms": 1411
+    },
+    {
+      "atPerfMs": 822912,
+      "ms": 2305
+    },
+    {
+      "atPerfMs": 827217,
+      "ms": 2101
+    },
+    {
+      "atPerfMs": 829917,
+      "ms": 1198
+    },
+    {
+      "atPerfMs": 843914,
+      "ms": 1204
+    },
+    {
+      "atPerfMs": 851813,
+      "ms": 1501
+    },
+    {
+      "atPerfMs": 855911,
+      "ms": 2205
+    },
+    {
+      "atPerfMs": 863716,
+      "ms": 1297
+    },
+    {
+      "atPerfMs": 868109,
+      "ms": 1502
+    },
+    {
+      "atPerfMs": 869720,
+      "ms": 1200
+    },
+    {
+      "atPerfMs": 874318,
+      "ms": 1294
+    },
+    {
+      "atPerfMs": 875720,
+      "ms": 1299
+    },
+    {
+      "atPerfMs": 903913,
+      "ms": 1698
+    },
+    {
+      "atPerfMs": 908119,
+      "ms": 1800
+    },
+    {
+      "atPerfMs": 910017,
+      "ms": 1297
+    },
+    {
+      "atPerfMs": 914218,
+      "ms": 4994
+    },
+    {
+      "atPerfMs": 920312,
+      "ms": 2900
+    },
+    {
+      "atPerfMs": 925814,
+      "ms": 2904
+    },
+    {
+      "atPerfMs": 933014,
+      "ms": 3101
+    },
+    {
+      "atPerfMs": 953814,
+      "ms": 1202
+    },
+    {
+      "atPerfMs": 970116,
+      "ms": 3195
+    },
+    {
+      "atPerfMs": 1030313,
+      "ms": 1497
+    },
+    {
+      "atPerfMs": 1031914,
+      "ms": 1099
+    },
+    {
+      "atPerfMs": 1033113,
+      "ms": 1101
+    },
+    {
+      "atPerfMs": 1034309,
+      "ms": 1304
+    },
+    {
+      "atPerfMs": 1038114,
+      "ms": 1899
+    },
+    {
+      "atPerfMs": 1040113,
+      "ms": 1500
+    },
+    {
+      "atPerfMs": 1042511,
+      "ms": 2902
+    },
+    {
+      "atPerfMs": 1046909,
+      "ms": 2704
+    },
+    {
+      "atPerfMs": 1050212,
+      "ms": 1001
+    },
+    {
+      "atPerfMs": 1082612,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 1084411,
+      "ms": 1901
+    },
+    {
+      "atPerfMs": 1088812,
+      "ms": 4399
+    },
+    {
+      "atPerfMs": 1093812,
+      "ms": 3699
+    },
+    {
+      "atPerfMs": 1098310,
+      "ms": 2101
+    },
+    {
+      "atPerfMs": 1100511,
+      "ms": 1900
+    },
+    {
+      "atPerfMs": 1106911,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 1109111,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 1115510,
+      "ms": 1500
+    },
+    {
+      "atPerfMs": 1121910,
+      "ms": 2300
+    },
+    {
+      "atPerfMs": 1129210,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 1158509,
+      "ms": 1200
+    },
+    {
+      "atPerfMs": 1165609,
+      "ms": 1203
+    },
+    {
+      "atPerfMs": 1171610,
+      "ms": 1903
+    },
+    {
+      "atPerfMs": 1175620,
+      "ms": 1094
+    },
+    {
+      "atPerfMs": 1181210,
+      "ms": 1016
+    },
+    {
+      "atPerfMs": 1192524,
+      "ms": 2285
+    },
+    {
+      "atPerfMs": 1195919,
+      "ms": 1091
+    },
+    {
+      "atPerfMs": 1199821,
+      "ms": 2491
+    },
+    {
+      "atPerfMs": 1207915,
+      "ms": 1301
+    },
+    {
+      "atPerfMs": 1210014,
+      "ms": 1297
+    },
+    {
+      "atPerfMs": 1225609,
+      "ms": 1813
+    },
+    {
+      "atPerfMs": 1229412,
+      "ms": 1010
+    },
+    {
+      "atPerfMs": 1235617,
+      "ms": 2095
+    },
+    {
+      "atPerfMs": 1237820,
+      "ms": 1997
+    },
+    {
+      "atPerfMs": 1243919,
+      "ms": 4100
+    },
+    {
+      "atPerfMs": 1285220,
+      "ms": 1094
+    },
+    {
+      "atPerfMs": 1286420,
+      "ms": 2901
+    },
+    {
+      "atPerfMs": 1295516,
+      "ms": 1902
+    },
+    {
+      "atPerfMs": 1300919,
+      "ms": 2592
+    },
+    {
+      "atPerfMs": 1303619,
+      "ms": 1101
+    },
+    {
+      "atPerfMs": 1309815,
+      "ms": 3200
+    },
+    {
+      "atPerfMs": 1314019,
+      "ms": 3793
+    },
+    {
+      "atPerfMs": 1319719,
+      "ms": 1990
+    },
+    {
+      "atPerfMs": 1353917,
+      "ms": 1196
+    },
+    {
+      "atPerfMs": 1356017,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 1359410,
+      "ms": 3607
+    },
+    {
+      "atPerfMs": 1365616,
+      "ms": 2901
+    },
+    {
+      "atPerfMs": 1368611,
+      "ms": 2901
+    },
+    {
+      "atPerfMs": 1372612,
+      "ms": 2005
+    },
+    {
+      "atPerfMs": 1411913,
+      "ms": 2402
+    },
+    {
+      "atPerfMs": 1415515,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 1418214,
+      "ms": 2001
+    },
+    {
+      "atPerfMs": 1422714,
+      "ms": 2798
+    },
+    {
+      "atPerfMs": 1429314,
+      "ms": 1002
+    },
+    {
+      "atPerfMs": 1465513,
+      "ms": 2000
+    },
+    {
+      "atPerfMs": 1469413,
+      "ms": 1297
+    },
+    {
+      "atPerfMs": 1470813,
+      "ms": 2600
+    },
+    {
+      "atPerfMs": 1476813,
+      "ms": 2399
+    },
+    {
+      "atPerfMs": 1483512,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 1485610,
+      "ms": 2603
+    },
+    {
+      "atPerfMs": 1491612,
+      "ms": 3800
+    },
+    {
+      "atPerfMs": 1497109,
+      "ms": 4502
+    },
+    {
+      "atPerfMs": 1556909,
+      "ms": 2111
+    },
+    {
+      "atPerfMs": 1559909,
+      "ms": 2500
+    },
+    {
+      "atPerfMs": 1565309,
+      "ms": 2308
+    },
+    {
+      "atPerfMs": 1567709,
+      "ms": 1400
+    },
+    {
+      "atPerfMs": 1710717,
+      "ms": 1093
+    },
+    {
+      "atPerfMs": 1716118,
+      "ms": 1201
+    },
+    {
+      "atPerfMs": 1719520,
+      "ms": 2591
+    },
+    {
+      "atPerfMs": 1724919,
+      "ms": 1092
+    },
+    {
+      "atPerfMs": 1727115,
+      "ms": 1802
+    },
+    {
+      "atPerfMs": 1730915,
+      "ms": 1205
+    },
+    {
+      "atPerfMs": 1734519,
+      "ms": 1692
+    },
+    {
+      "atPerfMs": 1736309,
+      "ms": 3210
+    },
+    {
+      "atPerfMs": 1739618,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 1742816,
+      "ms": 1895
+    },
+    {
+      "atPerfMs": 1747512,
+      "ms": 2901
+    },
+    {
+      "atPerfMs": 1756019,
+      "ms": 3098
+    },
+    {
+      "atPerfMs": 1761412,
+      "ms": 3805
+    },
+    {
+      "atPerfMs": 1767817,
+      "ms": 1700
+    },
+    {
+      "atPerfMs": 1769615,
+      "ms": 1199
+    },
+    {
+      "atPerfMs": 1773109,
+      "ms": 2301
+    },
+    {
+      "atPerfMs": 1775518,
+      "ms": 1096
+    },
+    {
+      "atPerfMs": 1825614,
+      "ms": 1202
+    },
+    {
+      "atPerfMs": 1826911,
+      "ms": 3400
+    },
+    {
+      "atPerfMs": 1833110,
+      "ms": 3402
+    },
+    {
+      "atPerfMs": 1841414,
+      "ms": 2900
+    },
+    {
+      "atPerfMs": 1847614,
+      "ms": 2099
+    },
+    {
+      "atPerfMs": 1849814,
+      "ms": 1501
+    },
+    {
+      "atPerfMs": 1855414,
+      "ms": 5395
+    },
+    {
+      "atPerfMs": 1862913,
+      "ms": 3700
+    },
+    {
+      "atPerfMs": 1871214,
+      "ms": 2900
+    },
+    {
+      "atPerfMs": 1877909,
+      "ms": 3202
+    },
+    {
+      "atPerfMs": 1895412,
+      "ms": 1100
+    },
+    {
+      "atPerfMs": 1898512,
+      "ms": 1599
+    },
+    {
+      "atPerfMs": 1900512,
+      "ms": 1398
+    },
+    {
+      "atPerfMs": 1904912,
+      "ms": 3599
+    },
+    {
+      "atPerfMs": 1912912,
+      "ms": 2999
+    },
+    {
+      "atPerfMs": 1919412,
+      "ms": 1797
+    },
+    {
+      "atPerfMs": 1921312,
+      "ms": 1499
+    },
+    {
+      "atPerfMs": 1928111,
+      "ms": 1300
+    },
+    {
+      "atPerfMs": 2016719,
+      "ms": 1890
+    },
+    {
+      "atPerfMs": 2020213,
+      "ms": 2496
+    },
+    {
+      "atPerfMs": 2022819,
+      "ms": 2795
+    },
+    {
+      "atPerfMs": 2028219,
+      "ms": 2099
+    },
+    {
+      "atPerfMs": 2030409,
+      "ms": 2500
+    },
+    {
+      "atPerfMs": 2034015,
+      "ms": 3708
+    },
+    {
+      "atPerfMs": 2040214,
+      "ms": 1902
+    },
+    {
+      "atPerfMs": 2042224,
+      "ms": 2695
+    },
+    {
+      "atPerfMs": 2046513,
+      "ms": 3807
+    },
+    {
+      "atPerfMs": 2064609,
+      "ms": 3111
+    },
+    {
+      "atPerfMs": 2072419,
+      "ms": 2400
+    },
+    {
+      "atPerfMs": 2095809,
+      "ms": 1801
+    },
+    {
+      "atPerfMs": 2097719,
+      "ms": 2200
+    },
+    {
+      "atPerfMs": 2100812,
+      "ms": 2907
+    },
+    {
+      "atPerfMs": 2106012,
+      "ms": 2206
+    },
+    {
+      "atPerfMs": 2108311,
+      "ms": 1210
+    },
+    {
+      "atPerfMs": 2110915,
+      "ms": 2805
+    },
+    {
+      "atPerfMs": 2116320,
+      "ms": 1190
+    },
+    {
+      "atPerfMs": 2117619,
+      "ms": 4092
+    },
+    {
+      "atPerfMs": 2123715,
+      "ms": 4696
+    },
+    {
+      "atPerfMs": 2162918,
+      "ms": 1900
+    },
+    {
+      "atPerfMs": 2164912,
+      "ms": 2803
+    },
+    {
+      "atPerfMs": 2168719,
+      "ms": 3999
+    },
+    {
+      "atPerfMs": 2176018,
+      "ms": 2691
+    },
+    {
+      "atPerfMs": 2349011,
+      "ms": 1901
+    },
+    {
+      "atPerfMs": 2351011,
+      "ms": 1599
+    },
+    {
+      "atPerfMs": 2355712,
+      "ms": 3299
+    },
+    {
+      "atPerfMs": 2363410,
+      "ms": 4101
+    },
+    {
+      "atPerfMs": 2369311,
+      "ms": 4599
+    },
+    {
+      "atPerfMs": 2374011,
+      "ms": 4098
+    },
+    {
+      "atPerfMs": 2381909,
+      "ms": 2802
+    },
+    {
+      "atPerfMs": 2384810,
+      "ms": 2299
+    },
+    {
+      "atPerfMs": 2387710,
+      "ms": 2499
+    },
+    {
+      "atPerfMs": 2390310,
+      "ms": 1499
+    },
+    {
+      "atPerfMs": 2395110,
+      "ms": 4013
+    },
+    {
+      "atPerfMs": 2399210,
+      "ms": 4800
+    },
+    {
+      "atPerfMs": 2406010,
+      "ms": 1200
+    },
+    {
+      "atPerfMs": 2407320,
+      "ms": 1789
+    },
+    {
+      "atPerfMs": 2410314,
+      "ms": 1107
+    },
+    {
+      "atPerfMs": 2414910,
+      "ms": 4506
+    },
+    {
+      "atPerfMs": 2422010,
+      "ms": 3099
+    },
+    {
+      "atPerfMs": 2444209,
+      "ms": 3806
+    },
+    {
+      "atPerfMs": 2452610,
+      "ms": 3199
+    },
+    {
+      "atPerfMs": 2461220,
+      "ms": 3392
+    },
+    {
+      "atPerfMs": 2467821,
+      "ms": 1797
+    },
+    {
+      "atPerfMs": 2469711,
+      "ms": 2007
+    },
+    {
+      "atPerfMs": 2473209,
+      "ms": 1704
+    },
+    {
+      "atPerfMs": 2477516,
+      "ms": 1601
+    },
+    {
+      "atPerfMs": 2497714,
+      "ms": 1006
+    },
+    {
+      "atPerfMs": 2500710,
+      "ms": 3412
+    },
+    {
+      "atPerfMs": 2505916,
+      "ms": 4098
+    },
+    {
+      "atPerfMs": 2532721,
+      "ms": 3700
+    },
+    {
+      "atPerfMs": 2538012,
+      "ms": 2606
+    },
+    {
+      "atPerfMs": 2540709,
+      "ms": 1303
+    },
+    {
+      "atPerfMs": 2545319,
+      "ms": 2894
+    },
+    {
+      "atPerfMs": 2548310,
+      "ms": 1108
+    },
+    {
+      "atPerfMs": 2551609,
+      "ms": 2002
+    },
+    {
+      "atPerfMs": 2560120,
+      "ms": 1199
+    },
+    {
+      "atPerfMs": 2583118,
+      "ms": 1200
+    },
+    {
+      "atPerfMs": 2591113,
+      "ms": 1299
+    },
+    {
+      "atPerfMs": 2617617,
+      "ms": 1492
+    },
+    {
+      "atPerfMs": 2620910,
+      "ms": 1301
+    },
+    {
+      "atPerfMs": 2622316,
+      "ms": 2301
+    },
+    {
+      "atPerfMs": 2624917,
+      "ms": 1293
+    },
+    {
+      "atPerfMs": 2626914,
+      "ms": 3203
+    },
+    {
+      "atPerfMs": 2632109,
+      "ms": 2408
+    },
+    {
+      "atPerfMs": 2725309,
+      "ms": 1903
+    },
+    {
+      "atPerfMs": 2727310,
+      "ms": 1201
+    },
+    {
+      "atPerfMs": 2730109,
+      "ms": 1502
+    },
+    {
+      "atPerfMs": 2751812,
+      "ms": 1099
+    },
+    {
+      "atPerfMs": 2753412,
+      "ms": 1599
+    },
+    {
+      "atPerfMs": 2759412,
+      "ms": 3198
+    },
+    {
+      "atPerfMs": 2763711,
+      "ms": 1101
+    },
+    {
+      "atPerfMs": 2827024,
+      "ms": 1399
+    },
+    {
+      "atPerfMs": 2831923,
+      "ms": 2998
+    },
+    {
+      "atPerfMs": 2837218,
+      "ms": 1201
+    },
+    {
+      "atPerfMs": 2838513,
+      "ms": 2402
+    },
+    {
+      "atPerfMs": 2846919,
+      "ms": 1205
+    },
+    {
+      "atPerfMs": 2850223,
+      "ms": 2196
+    },
+    {
+      "atPerfMs": 2852515,
+      "ms": 1398
+    },
+    {
+      "atPerfMs": 2855810,
+      "ms": 5012
+    },
+    {
+      "atPerfMs": 2863223,
+      "ms": 4093
+    },
+    {
+      "atPerfMs": 2869720,
+      "ms": 1190
+    },
+    {
+      "atPerfMs": 2871010,
+      "ms": 3613
+    },
+    {
+      "atPerfMs": 2876809,
+      "ms": 1002
+    },
+    {
+      "atPerfMs": 2878014,
+      "ms": 1107
+    },
+    {
+      "atPerfMs": 2882614,
+      "ms": 1895
+    },
+    {
+      "atPerfMs": 2887723,
+      "ms": 4493
+    },
+    {
+      "atPerfMs": 2894611,
+      "ms": 1912
+    },
+    {
+      "atPerfMs": 2896610,
+      "ms": 1102
+    },
+    {
+      "atPerfMs": 2897822,
+      "ms": 1697
+    },
+    {
+      "atPerfMs": 2900618,
+      "ms": 1092
+    }
+  ],
+  "playoutStats": [
+    null,
+    null,
+    null
+  ],
+  "memory": {
+    "first": {
+      "t": 1232,
+      "heapMB": 7.9,
+      "nodes": 498,
+      "listeners": 74,
+      "clock": "45:00",
+      "state": "Playing"
+    },
+    "last": {
+      "t": 2944564,
+      "heapMB": 24.8,
+      "nodes": 1315,
+      "listeners": 61,
+      "clock": "93:00",
+      "state": "Playing"
+    },
+    "maxHeapMB": 25
+  },
+  "asks": [
+    {
+      "why": "every 11 min",
+      "atMin": 11.2,
+      "answered": true,
+      "refusal": null,
+      "question": "What is the score?",
+      "answer": "Reds nil, Navy nil, 56 minutes played.",
+      "latency_ms": 1273,
+      "usage": {
+        "total_tokens": 2583,
+        "input_tokens": 2453,
+        "output_tokens": 130,
+        "input_token_details.cached_tokens": 2304,
+        "input_token_details.cache_write_tokens": 0,
+        "input_token_details.text_tokens": 2419,
+        "input_token_details.audio_tokens": 34,
+        "input_token_details.image_tokens": 0,
+        "output_token_details.text_tokens": 52,
+        "output_token_details.audio_tokens": 78,
+        "output_token_details.reasoning_tokens": 0
+      },
+      "waitedMs": 10358,
+      "settled": true
+    },
+    {
+      "why": "every 11 min",
+      "atMin": 22.3,
+      "answered": true,
+      "refusal": null,
+      "question": "What is the score?",
+      "answer": "Reds nil, Navy one, 64 minutes played.",
+      "latency_ms": 3453,
+      "usage": {
+        "total_tokens": 4128,
+        "input_tokens": 3648,
+        "output_tokens": 480,
+        "input_token_details.cached_tokens": 3456,
+        "input_token_details.cache_write_tokens": 0,
+        "input_token_details.text_tokens": 3597,
+        "input_token_details.audio_tokens": 51,
+        "input_token_details.image_tokens": 0,
+        "output_token_details.text_tokens": 382,
+        "output_token_details.audio_tokens": 98,
+        "output_token_details.reasoning_tokens": 0
+      },
+      "waitedMs": 14002,
+      "settled": true
+    },
+    {
+      "why": "while offline",
+      "atMin": 25.3,
+      "answered": false,
+      "refusal": "refusal:unavailable",
+      "question": null,
+      "answer": null,
+      "latency_ms": null,
+      "usage": null,
+      "waitedMs": 6318,
+      "settled": true
+    },
+    {
+      "why": "after the network came back",
+      "atMin": 26.4,
+      "answered": true,
+      "refusal": null,
+      "question": "What is the score?",
+      "answer": "I’m the AI voice, and I’ll check the current score for you right now",
+      "latency_ms": 3487,
+      "usage": {
+        "total_tokens": 3053,
+        "input_tokens": 2382,
+        "output_tokens": 671,
+        "input_token_details.cached_tokens": 2304,
+        "input_token_details.cache_write_tokens": 0,
+        "input_token_details.text_tokens": 2348,
+        "input_token_details.audio_tokens": 34,
+        "input_token_details.image_tokens": 0,
+        "output_token_details.text_tokens": 600,
+        "output_token_details.audio_tokens": 71,
+        "output_token_details.reasoning_tokens": 0
+      },
+      "waitedMs": 12621,
+      "settled": true
+    },
+    {
+      "why": "every 11 min",
+      "atMin": 33.2,
+      "answered": true,
+      "refusal": null,
+      "question": "What is the score?",
+      "answer": "Reds nil, Navy one, 64 minutes played.",
+      "latency_ms": 1510,
+      "usage": {
+        "total_tokens": 2639,
+        "input_tokens": 2457,
+        "output_tokens": 182,
+        "input_token_details.cached_tokens": 1152,
+        "input_token_details.cache_write_tokens": 0,
+        "input_token_details.text_tokens": 2423,
+        "input_token_details.audio_tokens": 34,
+        "input_token_details.image_tokens": 0,
+        "output_token_details.text_tokens": 107,
+        "output_token_details.audio_tokens": 75,
+        "output_token_details.reasoning_tokens": 0
+      },
+      "waitedMs": 10624,
+      "settled": true
+    },
+    {
+      "why": "every 11 min",
+      "atMin": 44.2,
+      "answered": true,
+      "refusal": null,
+      "question": "What is the score?",
+      "answer": "Let me check the current score for you. Reds nil, Navy one, 64 minutes played.",
+      "latency_ms": 1022,
+      "usage": {
+        "total_tokens": 2638,
+        "input_tokens": 2473,
+        "output_tokens": 165,
+        "input_token_details.cached_tokens": 2304,
+        "input_token_details.cache_write_tokens": 0,
+        "input_token_details.text_tokens": 2439,
+        "input_token_details.audio_tokens": 34,
+        "input_token_details.image_tokens": 0,
+        "output_token_details.text_tokens": 48,
+        "output_token_details.audio_tokens": 117,
+        "output_token_details.reasoning_tokens": 0
+      },
+      "waitedMs": 12616,
+      "settled": true
+    }
+  ],
+  "marks": [
+    [
+      "ask",
+      662574
+    ],
+    [
+      "ask-end",
+      684933
+    ],
+    [
+      "ask",
+      1324521
+    ],
+    [
+      "ask-end",
+      1350524
+    ],
+    [
+      "offline",
+      1503966
+    ],
+    [
+      "ask",
+      1513980
+    ],
+    [
+      "ask-end",
+      1532299
+    ],
+    [
+      "online",
+      1555320
+    ],
+    [
+      "ask",
+      1570327
+    ],
+    [
+      "ask-end",
+      1594948
+    ],
+    [
+      "ask",
+      1983873
+    ],
+    [
+      "ask-end",
+      2006497
+    ],
+    [
+      "pause",
+      2280252
+    ],
+    [
+      "resume",
+      2340332
+    ],
+    [
+      "ask",
+      2641073
+    ],
+    [
+      "ask-end",
+      2665690
+    ]
+  ],
+  "consoleErrors": [
+    [
+      1514263,
+      "error",
+      "WebSocket connection to 'ws://localhost:8080/voice' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED"
+    ],
+    [
+      1514264,
+      "error",
+      "Failed to load resource: net::ERR_INTERNET_DISCONNECTED"
+    ]
+  ],
+  "consoleErrorCount": 2
+}

@@ -2,6 +2,10 @@
 // top of each engine's built-in level, plus where the commentator sits. One shared store, so the ?mix=1 mixer
 // (web/src/tester/mixer.ts) is heard live in all three audio contexts (B's stage, A's commentary, A's live Ask).
 // No Microsoft here: plain Web Audio.
+// D24 (26 Oct): the mix is the listener's own, saved on this device. A sighted friend or carer sets it once in the
+// ?mix=1 mixer (Settings links to it) and every visit on this device plays it. A device with nothing saved plays
+// DEFAULT_MIX, so a judge on a fresh browser hears what we tuned.
+import { browserStorage, type StorageLike } from '../settings';
 
 export type VoicePos = 'behind' | 'above' | 'overhead';
 export const VOICE_POSITIONS: readonly VoicePos[] = ['behind', 'above', 'overhead'];
@@ -57,6 +61,27 @@ export function parseMix(x: unknown, base: AudioMix = DEFAULT_MIX): AudioMix {
   if (typeof o.nearEnd === 'number' && Number.isFinite(o.nearEnd)) out.nearEnd = Math.min(1, Math.max(0, o.nearEnd));
   if (VOICE_POSITIONS.includes(o.commentatorPos as VoicePos)) out.commentatorPos = o.commentatorPos as VoicePos;
   return out;
+}
+
+/** Where this device keeps its mix (the key the 24 Oct mixer used for its draft, so a mix set then carries over). */
+export const MIX_KEY = 'audiostands.mixDraft.v1';
+
+/** This device's saved mix, or null if there is none (or storage is blocked or holds junk). */
+export function loadSavedMix(storage: StorageLike | null = browserStorage()): AudioMix | null {
+  try {
+    const raw = storage?.getItem(MIX_KEY);
+    return raw ? parseMix(JSON.parse(raw)) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Save the mix on this device; null forgets it (back to DEFAULT_MIX). Never throws. */
+export function saveMix(m: AudioMix | null, storage: StorageLike | null = browserStorage()): void {
+  try {
+    if (m) storage?.setItem(MIX_KEY, JSON.stringify(m));
+    else (storage as Storage | null)?.removeItem?.(MIX_KEY);
+  } catch { /* storage blocked: the mix still works for this visit */ }
 }
 
 let current: AudioMix = { ...DEFAULT_MIX };
