@@ -550,3 +550,29 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   follow-up PR). That run sent 6 tester-mode events to App Insights; `pull_feedback.py` now leaves out those codes.
 - **Not checked:** TalkBack, VoiceOver and Narrator with the pads (manual); a real phone's vibration and tone; a real
   voice in a noisy room.
+
+## D25. Three tabs (Setup, Laptop, Phone) and sound levels by voice (26 Oct 2026)
+
+- **Why:** potencialbg, 26 Oct: one page for three audiences. A helper tunes the sound with the fan once, judges on a
+  laptop need to see the keys, and the blind fan on a phone keeps the two pads. The fan should also be able to change
+  any sound out loud ("reduce the whistle by 5") on a 0 to 100 scale.
+- **Tabs:** a `role="tablist"` (Setup, Laptop, Phone) next to the title, with arrow keys between tabs (APG automatic
+  activation). They switch the layout of one page (`main.v-setup|v-laptop|v-phone`), so the match never stops.
+  Narrow screens open on Phone, others on Laptop, and `?view=` opens a given tab (a tab click writes it to the URL;
+  the old `?mix=1` link opens Setup). Phone is the D24 layout unchanged. Laptop shows the pads side by side, a key
+  card (Space: start or pause, Enter: ask, Esc: back to the match) and key hints under the pads. **Space and Enter
+  work in every view** while focus is on a pad or on nothing; every other control keeps its own Space and Enter.
+- **Setup** holds the sound desk (`tester/mixer.ts`, loaded only when the tab first opens) and the settings, which
+  moved there from the Settings button. The desk has a 0 to 100 channel per sound group, with -5 and +5 buttons and
+  the dB shown small. It also has four starting points, a live spectrum of the stadium output (aria-hidden, 2 fps
+  under reduced motion), and the words to say for each channel. Its dark console look is the same in both themes.
+- **The 0 to 100 scale** is linear in dB over -40..+12 (`audio/mix.ts levelFromDb`), so 0 is off and one step is
+  about 0.5 dB. The mix is still saved in dB, so mixes saved before still load.
+- **By voice:** a new Q&A tool `adjust_sound(sound, change | level)` (`qa/tools.py`, schema and MCP mirror, persona
+  rule). The page sends its levels with every `ask`, and the relay passes the fan's level for that sound to the tool,
+  never the model's. The commentator can then say "The whistle is now 25 out of 100." Without a level it says the
+  change. The page applies the `{sound, level}` prefs to the mix, saves it, and the desk moves with it.
+- **Checked:** pipeline pytest, relay pytest (new adjust_sound tests), vitest 132/132, Playwright + axe 108/108 at all
+  6 projects (new: tabs, Space and Enter, the desk).
+- **Not checked:** a real spoken "turn the whistle down by 5" through Voice Live (the new tool needs the relay
+  redeployed first), and screen readers with the tabs.

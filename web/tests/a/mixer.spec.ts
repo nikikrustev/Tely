@@ -1,5 +1,5 @@
-// OWNER: A (potencialbg). The ?mix=1 sound mixer, Playwright + axe at the 3 viewports, light and dark. Also proves
-// the judges' page has no mixer without ?mix=1.
+// OWNER: A (potencialbg). The Setup tab's sound desk (?mix=1 still opens it), Playwright + axe at the 3 viewports,
+// light and dark. Also proves the Laptop and Phone views never load it.
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
@@ -11,7 +11,7 @@ test('no mixer on the judges\' page', async ({ page }) => {
   await expect(page.locator('#mixer')).toHaveCount(0);
 });
 
-test('the mixer: a labelled slider per group, Reset, Submit, no axe violations, 44 px targets', async ({ page }) => {
+test('the desk: a labelled 0-100 channel per group, nudges, presets, Reset, Submit, no axe violations, 44 px targets', async ({ page }) => {
   await page.goto('/?mix=1');
   await expect(page.locator('#m-h')).toBeVisible({ timeout: 30_000 });
   for (const id of ['crowdBeds', 'chants', 'roars', 'pass', 'shot', 'whistle', 'commentator', 'nearEnd']) {
@@ -20,13 +20,19 @@ test('the mixer: a labelled slider per group, Reset, Submit, no axe violations, 
   await expect(page.locator('input[name="m-pos"]')).toHaveCount(3);
   // D24: the helper explanation comes before the sliders, and the mix is kept on this device across visits.
   await expect(page.locator('#m-helper')).toContainText('sighted friend or carer');
-  await page.locator('#m-pass').fill('-20');
-  await expect(page.locator('output[for="m-pass"]')).toHaveText('-20.0 dB');
+  await expect(page.locator('#tab-setup')).toHaveAttribute('aria-selected', 'true');
+  await page.locator('#m-pass').fill('40');
+  await expect(page.locator('output[for="m-pass"]')).toHaveText('40');
+  await expect(page.locator('#m-pass')).toHaveAttribute('aria-valuetext', '40 out of 100');
   await expect(page.locator('#m-saved')).toHaveText('Saved on this device.');
+  await page.getByRole('button', { name: 'Passes −5' }).click();
+  await expect(page.locator('output[for="m-pass"]')).toHaveText('35');
   await page.reload();
-  await expect(page.locator('output[for="m-pass"]')).toHaveText('-20.0 dB', { timeout: 30_000 });
+  await expect(page.locator('output[for="m-pass"]')).toHaveText('35', { timeout: 30_000 });
   await page.locator('#m-reset').click();
-  await expect(page.locator('output[for="m-pass"]')).not.toHaveText('-20.0 dB');
+  await expect(page.locator('output[for="m-pass"]')).not.toHaveText('35');
+  await page.locator('[data-preset-mix="voice"]').click();
+  await expect(page.locator('#m-saved')).toHaveText('Saved on this device.');
   const download = page.waitForEvent('download');
   await page.locator('#m-submit').click();
   expect((await download).suggestedFilename()).toBe('audio-mix.json');
