@@ -221,6 +221,26 @@ def test_latency_restarts_with_each_question():
     run(go())
 
 
+def test_an_empty_incomplete_response_is_retried_once():
+    """26 Oct phone run: Voice Live returned an "incomplete" response with no audio after a clear question."""
+    async def go():
+        link = FakeLink()
+        br, out, _, logs = make_bridge(link=link)
+        await br.ask(B.t0 + 30)
+        await br.handle({"type": "input_audio_buffer.speech_stopped", "audio_end_ms": 900})
+        await br.handle({"type": "response.done", "response": {"status": "incomplete"}})
+        assert link.types()[-1] == "response.create"         # one retry, no answer_done yet
+        assert not [o for o in out if o["type"] == "answer_done"]
+        assert "retry_empty_response" in logs[-1]
+        await br.handle({"type": "response.done", "response": {"status": "incomplete"}})
+        done = [o for o in out if o["type"] == "answer_done"]
+        assert len(done) == 1 and done[0]["turn"]["outcome"] == "incomplete"   # never a second retry
+        await br.ask(B.t0 + 40)                              # the next question may retry again
+        await br.handle({"type": "response.done", "response": {"status": "incomplete"}})
+        assert link.types()[-1] == "response.create"
+    run(go())
+
+
 def test_ai_voice_disclosure_is_said_once():
     async def go():
         link = FakeLink()
