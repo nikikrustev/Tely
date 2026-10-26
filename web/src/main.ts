@@ -1,6 +1,7 @@
 // OWNER: B (Nikolay). Builds lane B's services, mounts lane A once, and runs the judge-cut sound stage on Start.
 import type { LaneAHandle } from './contracts/a-exports';
 import type { CrowdBus, LaneBContext, ReplayClock } from './contracts/b-exports';
+import { loadSavedMix, setMix } from './audio/mix';
 import { mountLaneA } from './lane-a';
 import { clipOver, listenClip, type ListenClip } from './replay/listen';
 import { loadClockOffset, Scoreboard } from './scoreboard';
@@ -89,6 +90,9 @@ async function startApp(): Promise<void> {
 
   // ---- settings (work without storage) ----
   let settings = loadSettings();
+  // D24: this device's own mix (set once in the ?mix=1 mixer, often with a helper); none saved = our defaults.
+  const ownMix = loadSavedMix();
+  if (ownMix) setMix(ownMix);
   const haptics = new hap.Haptics(hap.browserEnv());
   const applyHaptics = () => {
     haptics.s = { mode: clip.commentaryOnly ? 'off' : settings.haptics, strength: settings.hapticStrength, myTeam: settings.club === 'H' ? 'home' : 'away' };
