@@ -626,3 +626,19 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
   Playwright + axe 114/114. A test render of every language came back about 2 s long.
 - **Not checked:** the recordings by a native speaker of each language, and a live spoken "speak Spanish" (after the
   deploy).
+
+## D28. Ball-position answers say only what the tool says (27 Oct 2026)
+
+- **Why:** the live check after the D26 deploy asked "Where's the ball?" at 56:34. The tool said "The ball is out of
+  play." (x -53.7, behind the goal line), and the commentator added "It's sitting on the sideline for Reds, near the
+  halfway point", which is made up. It also opened with "Let me check", which the hosting note already forbade.
+- **Relay:** `function_call_output` no longer carries the tool result's raw `x`/`y` (`MODEL_HIDDEN` in
+  `relay/voicelive.py`): the model gets the tool's words only. The golden-turn log keeps the full result for the evals.
+  The tools themselves are unchanged, so the offline presets, the MCP server and the golden cases are untouched.
+- **Persona:** for where the ball is, say what `get_ball_position` says, in its words, adding no side, area, distance
+  or team it didn't give. The hosting note now says nothing comes before the tool result: naming "let me check"
+  alone wasn't enough, the model said "I'll check the current ball position for you now" instead.
+- **Checked:** relay pytest (the model's tool output has no x/y; the log still does) and pipeline pytest. Before the
+  deploy, this relay run locally against real Voice Live (phone test, localhost page): "Where's the ball?" at 56:35
+  got "The ball is out of play." and at 57:58 (the video's take) "Navy have it, defensive third, far side. 80 metres
+  from goal.", each the tool's words exactly; "Who wins?" still got "that's for the match to decide".
