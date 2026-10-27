@@ -81,6 +81,17 @@ export class LocalTools {
     return m ? Number(m[1]) * 60 + Number(m[2]) - this.offset : null;
   }
   sig(id: string): EventSignal { return this.b.signals.events[id] as EventSignal; }
+  /** D34: the times in (from, to] when player pid gets the ball: as the actor of an event at its time, or as the
+   *  receiver of a pass when it arrives (reveal_t). Never ahead of `to`, so a follow cue can't give anything away. */
+  touches(pid: string, from: number, to: number): number[] {
+    const out: number[] = [];
+    for (const e of this.b.events) {
+      const s = this.sig(e.id);
+      if (e.player_id === pid && s.t > from && s.t <= to) out.push(s.t);
+      if (e.receiver_id === pid && e.outcome_type === 'successful' && s.reveal_t > from && s.reveal_t <= to) out.push(s.reveal_t);
+    }
+    return out.sort((a, b) => a - b);
+  }
   team(side: 'home' | 'away'): string { return this.b.meta.teams[side].short_name; }
   private attacks(side: 'home' | 'away'): number { return this.b.meta.teams[side].attacks === '+x' ? 1 : -1; }
   known(p: number): QaEvent[] { return this.b.events.filter((e) => this.sig(e.id).reveal_t <= p); }

@@ -1,4 +1,14 @@
 {
+ "006bdb96f2f193291b56fedbf358a4ecd5c151c6fd4912f1ad20d390a74521e6": {
+  "duration_ms": 1500,
+  "bytes": 9360,
+  "text": "Fenford on the ball."
+ },
+ "00702acf3593963b676aec367574220d289e875fc4148284b990d19b5595ddc7": {
+  "duration_ms": 1550,
+  "bytes": 9648,
+  "text": "Dunaro on the ball."
+ },
  "0243fe855747334633daace0aa0734d1dac5bd3e410db8957cf2d0a674620e78": {
   "duration_ms": 1750,
   "bytes": 10800,
@@ -34,6 +44,11 @@
   "bytes": 4896,
   "text": "Before that:"
  },
+ "1bb018c619af3458c2b4d822b4f1a96e14acca893ce6b18be6d2c6c99df68e69": {
+  "duration_ms": 1400,
+  "bytes": 8784,
+  "text": "Lomade on the ball."
+ },
  "1be16e641b731c38172e7d8eb2bf3b694fa0aa37d502df333c186f1807b4d46e": {
   "duration_ms": 1050,
   "bytes": 6624,
@@ -59,6 +74,11 @@
   "bytes": 22896,
   "text": "Reds nil, Navy one, 61 minutes played."
  },
+ "237dfc4496b891a2811c674e9a8ed9d360657f713b58f1e0b3a01b229bd8e506": {
+  "duration_ms": 1300,
+  "bytes": 8208,
+  "text": "Galic on the ball."
+ },
  "2717c81e5772fa74d2e7aba9eca263f28b7185d5181366107d9aa1d9d7fcf442": {
   "duration_ms": 1350,
   "bytes": 8496,
@@ -68,6 +88,11 @@
   "duration_ms": 1750,
   "bytes": 10800,
   "text": "100 metres from goal."
+ },
+ "2ac209d2ccad86364fb0d0676396a82a751f4074e8e03bf7ddf572d83c6fa660": {
+  "duration_ms": 1500,
+  "bytes": 9360,
+  "text": "Nevaro on the ball."
  },
  "2d1a6ac5971175181aabb7314cda8395128ce2a4097218975afcfb21c85e61cd": {
   "duration_ms": 4500,
@@ -134,6 +159,11 @@
   "bytes": 25488,
   "text": "Nevaro intercepts for Reds, defensive third, centre."
  },
+ "450704895ea88b930b9800dca1bda415aa806e7329f49035491bb5b740b56aa6": {
+  "duration_ms": 1350,
+  "bytes": 8496,
+  "text": "Vaston on the ball."
+ },
  "470c9a5c0a2e5f6b8ec305681ccb31102ae13b5130902fe5e85b9c4497abba9a": {
   "duration_ms": 1650,
   "bytes": 10224,
@@ -169,10 +199,20 @@
   "bytes": 18720,
   "text": "Navy have it, defensive third, centre."
  },
+ "53b7577a072ae0a5ae2a1b5391894ac66cf11a715fa2db5d0591965fdfeceecc": {
+  "duration_ms": 1500,
+  "bytes": 9360,
+  "text": "Wexros on the ball."
+ },
  "53cbf89a26662220b896875887cbf980eec45da4f2c2e3c935c5c474c68d863f": {
   "duration_ms": 1600,
   "bytes": 9936,
   "text": "80 metres from goal."
+ },
+ "5763151a153f91705d2b88c9849afe3c43a9b7031fe6f48f1eb4c96e7474978a": {
+  "duration_ms": 1150,
+  "bytes": 7200,
+  "text": "Morani on the ball."
  },
  "5b229f85b69583492890dd622e003122c09a5bcb3f5adeb990fe4be27c3546cd": {
   "duration_ms": 4800,
@@ -194,6 +234,11 @@
   "bytes": 42624,
   "text": "Attacking third, centre, Navy. Fenford's pass is cut out by Nevaro."
  },
+ "6115238e47f6fb97ce9f25dee7255c53181463e536c0997dda9788fe793d5d24": {
+  "duration_ms": 1250,
+  "bytes": 7920,
+  "text": "Olvard on the ball."
+ },
  "622c818750821225767bdf43bbe8cd71eb41d3901303f763a5bf66c7ed364d55": {
   "duration_ms": 1550,
   "bytes": 9648,
@@ -203,6 +248,26 @@
   "duration_ms": 3400,
   "bytes": 20736,
   "text": "Navy have it, defensive third, far side."
+ },
+ "64205c5d1460846c2568d7fc2568c82af32a4dfc16b1235272074973ec4926e2": {
+  "duration_ms": 1500,
+  "bytes": 9360,
+  "text": "Orlani on the ball."
+ },
+ "6498f030912a9dbfd1aa4e779a040561b23ab94b91d3931cc94a7ced92c6d0d9": {
+  "duration_ms": 1650,
+  "bytes": 10224,
+  "text": "Olvholm on the ball."
+ },
+ "66a97adc7689ad6c17f1c4daacd7a3032f98895af553671b47e259877704ef67": {
+  "duration_ms": 1500,
+  "bytes": 9360,
+  "text": "Nevford on the ball."
+ },
+ "676e3571ee6a8dc4fc8d31ae7d48addb9c23f7778e6cdfecaa5ff394f268d947": {
+  "duration_ms": 1150,
+  "bytes": 7200,
+  "text": "Ashski on the ball."
  },
  "680640914a5897cb98455832f27c613fb1e053432544404e87cbb2684cf1a5bf": {
   "duration_ms": 5800,
@@ -234,6 +299,11 @@
   "bytes": 11088,
   "text": "55 metres from goal."
  },
+ "728e49ee9f2baa48697f3be1f11dee1291d61d485a376654d4287fb71c7a84b2": {
+  "duration_ms": 1200,
+  "bytes": 7488,
+  "text": "Rilford on the ball."
+ },
  "72e70dd82369e62e2d4fdc98cce22d8eee99edb99875b63393947a65293568b2": {
   "duration_ms": 7500,
   "bytes": 45360,
@@ -249,6 +319,16 @@
   "bytes": 32400,
   "text": "Midfield, far side, Navy. Kelski to Strandford."
  },
+ "75d09d0288b62ec3b97e43628376cbf819749038c73487e154eecc8ebc42ccf5": {
+  "duration_ms": 1350,
+  "bytes": 8496,
+  "text": "Olvros on the ball."
+ },
+ "7640c8c9028b8a2e610a23ec9df8be6c5d4b361bbf4f1c53b47ba91eb07b4d33": {
+  "duration_ms": 1250,
+  "bytes": 7920,
+  "text": "Ashard on the ball."
+ },
  "77b628a05df4f2040d36f67b52e68aabb94ad6948ae9529e4d4351481c71b97e": {
   "duration_ms": 3000,
   "bytes": 18288,
@@ -263,6 +343,16 @@
   "duration_ms": 1400,
   "bytes": 8784,
   "text": "50 metres from goal."
+ },
+ "7a4f3a6a8ed608f24c3fec6a45c13d9ec563ca3d8cc467ed9e392f65177bb4e3": {
+  "duration_ms": 1250,
+  "bytes": 7920,
+  "text": "Kelski on the ball."
+ },
+ "7b18307cd7aa611295795105aa50cb6731069c708efec130b89f85e2b0f64e63": {
+  "duration_ms": 1150,
+  "bytes": 7200,
+  "text": "Dunani on the ball."
  },
  "7b6b375872de6267b8b26a1912dc025d53e98eb82faa135ff5bad1c9ab184e3f": {
   "duration_ms": 1500,
@@ -308,6 +398,11 @@
   "duration_ms": 6850,
   "bytes": 41472,
   "text": "Attacking third, far side, Navy. Fenford's pass is cut out by Nevaro."
+ },
+ "91b69ab9f0dee0407cf2433f42761293ea2e4e860a99867e619906c29fddc43f": {
+  "duration_ms": 1100,
+  "bytes": 6912,
+  "text": "Strandford on the ball."
  },
  "933274389237a3d8ae61c02e90775dbba235aa1fef7300b7866264fb160393b4": {
   "duration_ms": 3100,
@@ -359,6 +454,11 @@
   "bytes": 11520,
   "text": "Vaston saved from Fenford"
  },
+ "a32602488cae9cf1e208c0191584f08c5847dd35094caf24ba294b7f9c07c8d1": {
+  "duration_ms": 1250,
+  "bytes": 7920,
+  "text": "Dunwick on the ball."
+ },
  "a4400e4eb5012e29d51c620209bb3b1e0eddd34ba9aaa24ff7cd1ec656cb5c30": {
   "duration_ms": 1500,
   "bytes": 9360,
@@ -383,6 +483,11 @@
   "duration_ms": 1750,
   "bytes": 10800,
   "text": "Saved by Vaston, who holds on."
+ },
+ "a86bd1920a51a585430d4ff8de6ff21916273a360d5dfc0c0d12eeafa4468440": {
+  "duration_ms": 1450,
+  "bytes": 9072,
+  "text": "Lomley on the ball."
  },
  "a8a7f3c25119e81737fcf26c1ac591176422d8eae2eb8014433db2e1c1cf807d": {
   "duration_ms": 5300,
@@ -468,6 +573,11 @@
   "duration_ms": 5400,
   "bytes": 32688,
   "text": "Attacking third, far side, Navy. Kelski shoots, wide."
+ },
+ "e03e9cf7830deaac7384a3fe9f0bf3432b2714decb6496032020237ad5a65f19": {
+  "duration_ms": 1900,
+  "bytes": 11808,
+  "text": "Varell on the ball."
  },
  "e13df5abb0bc8537d48bde32e0c7dcab7991959efa61abd25eae4b969b5385de": {
   "duration_ms": 3350,

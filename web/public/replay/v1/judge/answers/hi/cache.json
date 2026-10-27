@@ -24,6 +24,11 @@
   "bytes": 14112,
   "text": "गोल से 80 मीटर दूर।"
  },
+ "09bff411750c66b74bd42ce62cb90a3f44a991f42eae03b205a81ae520f628e9": {
+  "duration_ms": 2337,
+  "bytes": 14400,
+  "text": "Nevford के पास गेंद है."
+ },
  "0c20dff37cef8ee151b8bb81cc7ed979074c276aa25ef1414b09bff38651cd63": {
   "duration_ms": 2337,
   "bytes": 14400,
@@ -69,6 +74,11 @@
   "bytes": 28656,
   "text": "लाल टीम के पास है, डिफेंसिव थर्ड, दूर वाला साइड।"
  },
+ "1798ef212316212cd6fb926b859e3b05d52945943a4a44d0ac5362c88d56512f": {
+  "duration_ms": 2362,
+  "bytes": 14544,
+  "text": "Rilford के पास गेंद है."
+ },
  "183fbbe42cd877dd83d0f7579370421473fcb61bb112ec272f93a025133397de": {
   "duration_ms": 2412,
   "bytes": 14832,
@@ -78,6 +88,11 @@
   "duration_ms": 6000,
   "bytes": 36288,
   "text": "Dunani ने इंटरसेप्ट किया लाल टीम के लिए, मध्य मैदान, दूर वाला साइड।"
+ },
+ "18cfa1491c4f945b766d64ca7fad852d40eb343e72a88979e9fe215ae83004ff": {
+  "duration_ms": 2375,
+  "bytes": 14544,
+  "text": "Dunaro के पास गेंद है."
  },
  "20f73b75a18d7a8fa70827abe58e7737a43c583685d2590830143500fb8af5f9": {
   "duration_ms": 2350,
@@ -124,6 +139,16 @@
   "bytes": 42624,
   "text": "आक्रमण तिहाई, दूर वाला साइड, नीली टीम। Strandford का क्रॉस Fenford के लिए।"
  },
+ "33a7dd81122015e9fca1a86b1a807356fa5fe82d30255e7a7cb8eb28764cc5cf": {
+  "duration_ms": 2275,
+  "bytes": 13968,
+  "text": "Dunwick के पास गेंद है."
+ },
+ "345199f98d153a98f8855182ad3e90587da2214749b980fcb9662d18f125a375": {
+  "duration_ms": 2387,
+  "bytes": 14688,
+  "text": "Wexros के पास गेंद है."
+ },
  "351eed00a3ad06b86b9d1a21c3cd2162e54bb4a59576d99e3ee66d760467a18b": {
   "duration_ms": 2587,
   "bytes": 15840,
@@ -158,6 +183,11 @@
   "duration_ms": 6087,
   "bytes": 36864,
   "text": "मध्य मैदान, दूर वाला साइड, नीली टीम। Kelski से Strandford।"
+ },
+ "40e49d58425cf24e5efdda3d0c2ad083b3b71b46f7f350cf9addd2486bdcb297": {
+  "duration_ms": 2300,
+  "bytes": 14112,
+  "text": "Olvros के पास गेंद है."
  },
  "4174fd363b778cc473888751ea8567a438125c3363c0cda31b6bc2bc910c9be1": {
   "duration_ms": 5587,
@@ -204,6 +234,11 @@
   "bytes": 28656,
   "text": "लाल टीम के पास है, मध्य मैदान, नजदीकी साइड।"
  },
+ "531d34f74333cfa63d6f4c854eb9b9b1597bc6ad91e388db03fd3c6c7f7cabf3": {
+  "duration_ms": 2387,
+  "bytes": 14688,
+  "text": "Fenford के पास गेंद है."
+ },
  "556c828ae2c17a776cab3769ea3cbb80ff95339350896743f433d76e0bdff5c4": {
   "duration_ms": 5937,
   "bytes": 36000,
@@ -228,6 +263,16 @@
   "duration_ms": 1400,
   "bytes": 11232,
   "text": "उससे पहले:"
+ },
+ "648238c4d91c1044a9ff1d0916ee3d7f444fd84ff0a87381e7a038560af59d36": {
+  "duration_ms": 2250,
+  "bytes": 13824,
+  "text": "Vaston के पास गेंद है."
+ },
+ "682a6f28fb39a28719939aca6372c55f8cae13b31150bcb0cc54da40fc2075f9": {
+  "duration_ms": 2512,
+  "bytes": 15408,
+  "text": "Strandford के पास गेंद है."
  },
  "68dc6b0696ce3614e88024526baaa67b398ed1714e885900d29ee44830c28f7a": {
   "duration_ms": 3237,
@@ -264,6 +309,11 @@
   "bytes": 40608,
   "text": "Nevford ने फाउल किया लाल टीम पर, मध्य मैदान, दूर वाला साइड। येलो कार्ड।"
  },
+ "7eca958fbb1496aefad5066a599877ef86bf23cbc0871fd0547e9c09863e5598": {
+  "duration_ms": 2437,
+  "bytes": 14976,
+  "text": "Olvholm के पास गेंद है."
+ },
  "7fef53e1484b5a78741f560068cd1301ec646b890515511f25eabed9614bab8f": {
   "duration_ms": 4862,
   "bytes": 29520,
@@ -288,6 +338,11 @@
   "duration_ms": 2250,
   "bytes": 13824,
   "text": "फिर से खेल पर वापस।"
+ },
+ "8a12a9780c62e99e99932082ec4345427a628f869fa664e3a0dcaa2593619cb9": {
+  "duration_ms": 2225,
+  "bytes": 13680,
+  "text": "Varell के पास गेंद है."
  },
  "8a795ae0f309d6cb705a366bc23c5eacf44e5dd01098ac278473e4da9c200d20": {
   "duration_ms": 6112,
@@ -324,10 +379,20 @@
   "bytes": 33552,
   "text": "Nevaro ने इंटरसेप्ट किया लाल टीम के लिए, डिफेंसिव थर्ड, केंद्र।"
  },
+ "98f2e42915328026fee7acc6b622bd56b7e09082da562f730bcfbe12e08eeaa1": {
+  "duration_ms": 2262,
+  "bytes": 13968,
+  "text": "Galic के पास गेंद है."
+ },
  "9a35707d1f182ba27b507243d8e6550431405b03e3011ed86de3d8c3a20bb5b3": {
   "duration_ms": 2425,
   "bytes": 14976,
   "text": "अभी तक कुछ बड़ा नहीं हुआ।"
+ },
+ "9eb39b4d7e17e2b9f54c337cdd5f903424f40ef501c47e8c4b7d6a43c187af89": {
+  "duration_ms": 2262,
+  "bytes": 13968,
+  "text": "Ashard के पास गेंद है."
  },
  "a2dedfbb33ff8ce8c161fbbea42f9a01eacc6059b6c1836e1fc58564d82e11c8": {
   "duration_ms": 5875,
@@ -348,6 +413,11 @@
   "duration_ms": 4200,
   "bytes": 25488,
   "text": "लाल टीम के पास है, डिफेंसिव थर्ड, केंद्र।"
+ },
+ "a82aa13551650274c45848c9027693bcf52359401533403f950ee5b32ce6bd1c": {
+  "duration_ms": 2375,
+  "bytes": 14544,
+  "text": "Kelski के पास गेंद है."
  },
  "a9917f9da61cebd783287029f3174ab44937b77301eeb505cccfe137c4f0d26a": {
   "duration_ms": 6875,
@@ -379,6 +449,16 @@
   "bytes": 15408,
   "text": "गोल से 95 मीटर दूर।"
  },
+ "b6ccf5dedda15e1bc76c054788ce0626650bd3e131394c546b85a2253f5343a2": {
+  "duration_ms": 2412,
+  "bytes": 14832,
+  "text": "Morani के पास गेंद है."
+ },
+ "ba78ee440ca14383514ce2118d1d4607f5b6fe224d0abc4a3bf1029dfc3f7d97": {
+  "duration_ms": 2362,
+  "bytes": 14544,
+  "text": "Dunani के पास गेंद है."
+ },
  "bac2714368d11c71e6fd97b924d497d5c72a326d7e0a846951b521ff489d40e9": {
   "duration_ms": 4325,
   "bytes": 26352,
@@ -393,6 +473,11 @@
   "duration_ms": 6312,
   "bytes": 38304,
   "text": "आक्रमण तिहाई, दूर वाला साइड, नीली टीम। Olvholm से Strandford।"
+ },
+ "c13abfca2bad7ef9ea830fe58ff522e9b2fb18dddb42e760c5b8124febed0906": {
+  "duration_ms": 2400,
+  "bytes": 14688,
+  "text": "Nevaro के पास गेंद है."
  },
  "c29ffb691933405ddefa8861f897ec506d0ebac7076d10492b8c84b31f49565b": {
   "duration_ms": 5362,
@@ -418,6 +503,11 @@
   "duration_ms": 4825,
   "bytes": 29376,
   "text": "नीली टीम के पास है, डिफेंसिव थर्ड, नजदीकी साइड।"
+ },
+ "cf26517d0e40099abb4cea0a42382818ae7ecc3d1a16410f87b94f94b798b774": {
+  "duration_ms": 2212,
+  "bytes": 13680,
+  "text": "Olvard के पास गेंद है."
  },
  "cfa03afb7c6ec08485ad9cf4bbdd8a8f7552711aa69078d9e2a852b0740e18cf": {
   "duration_ms": 6625,
@@ -448,6 +538,11 @@
   "duration_ms": 8362,
   "bytes": 50544,
   "text": "आक्रमण तिहाई, केंद्र, नीली टीम। Fenford ने सिर से अंदर किया! नीली टीम के लिए गोल।"
+ },
+ "dcef457845a81453e38e58ad64f3bf33951bbf0bfaa466c01f6d23cc69cf2b3e": {
+  "duration_ms": 2400,
+  "bytes": 14688,
+  "text": "Orlani के पास गेंद है."
  },
  "de7aa9e22c894313d65532235012528f0eb191dfc6ad39c081f5c58d4a12017c": {
   "duration_ms": 2187,
@@ -489,6 +584,11 @@
   "bytes": 25344,
   "text": "नीली टीम के पास है, मध्य मैदान, केंद्र।"
  },
+ "e80217fab81fac8a2c5f7cb0fee1f7fc160671da33337d236bce04f0045cdbb2": {
+  "duration_ms": 2312,
+  "bytes": 14256,
+  "text": "Lomade के पास गेंद है."
+ },
  "ea115f09f3582134cf00ae7f7ce9b5bcd8e24f0a5071db62124afd3fe7ef587e": {
   "duration_ms": 4875,
   "bytes": 29664,
@@ -513,6 +613,16 @@
   "duration_ms": 6587,
   "bytes": 39888,
   "text": "आक्रमण तिहाई, केंद्र, लाल टीम। Orlani ने शॉट किया, ब्लॉक हुआ।"
+ },
+ "f37c41544bdfaefbdde03f13ecd9457b6763085f8ac8ab4c12e0f414489444c9": {
+  "duration_ms": 2337,
+  "bytes": 14400,
+  "text": "Ashski के पास गेंद है."
+ },
+ "f449189f27f9a8a5d9500691cdb8652c808c80f6d5950415f93a33ddd6c9775b": {
+  "duration_ms": 2287,
+  "bytes": 14112,
+  "text": "Lomley के पास गेंद है."
  },
  "f6f6c6bbc81a3d64067629be0c900022b2969a29fd9442d91732d1fd6684b703": {
   "duration_ms": 2187,

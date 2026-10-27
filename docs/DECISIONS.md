@@ -767,3 +767,24 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
 - **Checked:** vitest (the clamp over the whole cut, no outcome words, the texts), pytest (the committed notes match
   the recorded run; `show_after` is the reveal), Playwright + axe on desktop and portrait (empty at the start, an Ask
   trace appears, no violations in light and dark).
+
+## D34. Follow my player (27 Oct 2026)
+
+- **Why:** the brief asks for a player-focus mode that follows one player all match. A fan following a favourite
+  player wants to know when they're on the ball without a sighted friend.
+- **What:** "Follow a player" in Setup lists all 22 players from the roster, and the choice is saved on the device.
+  The fan can also say "follow Olvholm" or "stop following": `set_preferences follow`, resolved by `find_player`, which
+  asks back when a name fits more than one player. Each time that player gets the ball, three things happen:
+  - a soft rising two-note cue plays;
+  - the phone gives a 12 ms buzz (unless vibration is off);
+  - when the voice is free, the commentator says "Olvholm on the ball." No line may be speaking or due within
+    2.5 s, no question may be running, and the name comes at most every 8 s.
+- **Spoiler-safe and verified by construction:** a touch is the actor of an event at its own time, or the receiver
+  of a completed pass when it arrives (`reveal_t`). `LocalTools.touches()` only returns touches at or before the
+  playhead, and a vitest sweeps the whole cut in 0.25 s steps. The name clips are roster-only fragments (`name_<id>`),
+  recorded in all seven languages. No LLM.
+- **Checked:**
+  - pytest (`test_follow.py`: follow by name, stop, ask back on "the keeper"; one clip per player that says only
+    the name);
+  - vitest 151/151 (touches never ahead of the playhead, each once; the setting is sanitised);
+  - Playwright + axe on desktop and portrait (23 options, saved across a reload, no violations).
