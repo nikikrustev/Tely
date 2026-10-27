@@ -140,7 +140,7 @@
    "aligned": true,
    "truth_check_pass": 70,
    "spoiler_check_pass": 70,
-   "audio_matches_text": 69
+   "audio_matches_text": 70
   },
   "bg": {
    "lines": 70,
@@ -154,7 +154,7 @@
    "aligned": true,
    "truth_check_pass": 70,
    "spoiler_check_pass": 70,
-   "audio_matches_text": 69
+   "audio_matches_text": 70
   },
   "es": {
    "lines": 70,
@@ -168,7 +168,7 @@
    "aligned": true,
    "truth_check_pass": 70,
    "spoiler_check_pass": 70,
-   "audio_matches_text": 69
+   "audio_matches_text": 70
   },
   "hi": {
    "lines": 70,

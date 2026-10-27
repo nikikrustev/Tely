@@ -7,7 +7,7 @@
    "low": 64,
    "no_ssml": 0,
    "too_long": 0,
-   "tts_calls": 64,
+   "tts_calls": 0,
    "bytes_normal": 1695600,
    "bytes_low": 1065312
   },
@@ -17,7 +17,7 @@
    "low": 65,
    "no_ssml": 0,
    "too_long": 0,
-   "tts_calls": 65,
+   "tts_calls": 0,
    "bytes_normal": 1999728,
    "bytes_low": 1266048
   },
@@ -27,7 +27,7 @@
    "low": 65,
    "no_ssml": 0,
    "too_long": 0,
-   "tts_calls": 65,
+   "tts_calls": 0,
    "bytes_normal": 2020896,
    "bytes_low": 1277424
   },
@@ -37,9 +37,9 @@
    "low": 64,
    "no_ssml": 0,
    "too_long": 0,
-   "tts_calls": 64,
-   "bytes_normal": 2042496,
-   "bytes_low": 1280160
+   "tts_calls": 0,
+   "bytes_normal": 2042784,
+   "bytes_low": 1280304
   },
   {
    "lang": "fr",
@@ -47,9 +47,9 @@
    "low": 64,
    "no_ssml": 0,
    "too_long": 0,
-   "tts_calls": 64,
-   "bytes_normal": 1764288,
-   "bytes_low": 1102896
+   "tts_calls": 0,
+   "bytes_normal": 1764864,
+   "bytes_low": 1103184
   },
   {
    "lang": "de",
@@ -57,9 +57,9 @@
    "low": 64,
    "no_ssml": 0,
    "too_long": 0,
-   "tts_calls": 64,
-   "bytes_normal": 1923696,
-   "bytes_low": 1200960
+   "tts_calls": 0,
+   "bytes_normal": 1924128,
+   "bytes_low": 1201248
   },
   {
    "lang": "hi",
@@ -67,7 +67,7 @@
    "low": 66,
    "no_ssml": 0,
    "too_long": 0,
-   "tts_calls": 66,
+   "tts_calls": 0,
    "bytes_normal": 2135088,
    "bytes_low": 1368432
   }

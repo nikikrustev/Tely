@@ -23,11 +23,11 @@ Voice: `en-US-Brian:DragonHDLatestNeural`. Director: `dir_v1@gpt-5-mini` on the 
 
 | Language | Lines | Truth check (same numbers and names, no English left) | Spoiler check (outcome words in that language) | Audio rendered from the current text |
 |---|---|---|---|---|
-| ar | 70 | 70/70 | 70/70 | 69/70 |
+| ar | 70 | 70/70 | 70/70 | 70/70 |
 | bg | 70 | 70/70 | 70/70 | 70/70 |
-| de | 70 | 70/70 | 70/70 | 69/70 |
+| de | 70 | 70/70 | 70/70 | 70/70 |
 | es | 70 | 70/70 | 70/70 | 70/70 |
-| fr | 70 | 70/70 | 70/70 | 69/70 |
+| fr | 70 | 70/70 | 70/70 | 70/70 |
 | hi | 70 | 70/70 | 70/70 | 70/70 |
 
 **Director plan per window** (the rules plan alongside, for the A/B listen)
