@@ -216,7 +216,7 @@ async function startApp(): Promise<void> {
     update({ lowData: lowBox.checked });
     lane.setLowData?.(lowBox.checked);
     showLow();
-    say(lowBox.checked ? 'Low data on, for the lines not loaded yet.' : 'Low data off.');
+    say(lowBox.checked ? 'Low data on. It takes full effect the next time the page loads.' : 'Low data off, from the next time the page loads.');
   });
   const monoBox = $<HTMLInputElement>('mono-toggle');
   monoBox.checked = settings.mono;
@@ -249,15 +249,15 @@ async function startApp(): Promise<void> {
     // adjust_sound ("whistle down by 5"): the commentator already says the new level, so the status line is visual only.
     const sound = adjustSound(p);
     if (sound) { status.textContent = `${GROUP_NAMES[sound.key]}: ${sound.level} out of 100.`; return; }
-    const patch = prefsPatch(p);
-    if (patch.lang) { void setLang(patch.lang, false); return; }
-    if ('follow' in patch) { setFollow(patch.follow ?? null, false); return; }   // the commentator said it
-    if (patch.detail) {
-      update({ detail: patch.detail });
+    const { lang, follow, detail, ...rest } = prefsPatch(p);   // the commentator has already said each of these
+    if (lang) void setLang(lang, false);
+    if (follow !== undefined) setFollow(follow, false);
+    if (detail) {
+      update({ detail });
       for (const r of radios('detail')) r.checked = r.value === settings.detail;
       lane.setDetail?.(settings.detail);
-      return;                                            // the commentator has already said it
     }
+    const patch = rest;
     if (!Object.keys(patch).length) return;
     update(patch);
     for (const r of radios('haptics')) r.checked = r.value === settings.haptics;
@@ -588,10 +588,13 @@ async function startApp(): Promise<void> {
   radarToggle.checked = radarWanted();
   let radar: { stop(): void } | null = null;
   let notesPanel: { stop(): void } | null = null;   // D33, shown with the radar
+  let radarGen = 0;
   const syncRadar = async () => {
+    const gen = ++radarGen;                              // a later toggle wins; an earlier call stops after its awaits
     if (!src || !radarWanted()) { radar?.stop(); radar = null; notesPanel?.stop(); notesPanel = null; return; }
     if (radar) return;
     const { startRadar, parseVtt } = await import('./radar/radar');
+    if (gen !== radarGen || radar) return;
     if (!notesPanel) {
       const { startNotes } = await import('./notes/notes');
       const s0 = src;
@@ -599,6 +602,7 @@ async function startApp(): Promise<void> {
     }
     let cues: ReturnType<typeof parseVtt> = [];
     try { cues = parseVtt(await (await fetch(`${bundleBase()}/captions_sdh.vtt`)).text()); } catch { cues = []; }
+    if (gen !== radarGen || radar || !src || !radarWanted()) return;
     const s = src;
     // SEAM(B->A): reads A's captions_sdh.vtt (same seconds as the playhead) for the radar's caption line
     radar = startRadar($('radar'), { now: () => s.now(), doc: s.doc, pulses: () => haptics.played.length, cues,
@@ -672,7 +676,7 @@ async function startApp(): Promise<void> {
         }
         // Follow my player (D34): a soft cue and a short buzz at each touch, and the name when the voice is free.
         if (settings.follow && touchesOf && s.isPlaying() && ctx) {
-          const touched = touchesOf(settings.follow, followFrom, s.now());
+          const touched = s.now() - followFrom > 1 ? [] : touchesOf(settings.follow, followFrom, s.now());   // not across a jump
           if (touched.length) {
             playFollowCue(ctx);
             if (settings.haptics !== 'off') { try { hap.browserEnv().vibrate?.([12]); } catch { /* not allowed */ } }

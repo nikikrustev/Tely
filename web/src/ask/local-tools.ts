@@ -1,5 +1,5 @@
 // TypeScript copies of the offline Q&A tools (pipeline/tely/qa/tools.py), so presets work
-// with no backend (). Every tool reads the match only up to the local playhead: an event counts once
+// with no backend. Every tool reads the match only up to the local playhead: an event counts once
 // its outcome is revealed (reveal_t), and the ball is read at the playhead. pipeline/tests/golden/qa_cases.jsonl holds
 // the Python answers; vitest checks these give exactly the same `say`, fragments and evidence.
 import { bundleBase } from '../replay/base';

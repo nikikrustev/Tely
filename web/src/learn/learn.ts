@@ -1,4 +1,4 @@
-// "Learn the sounds" (; file 37: a short training session lifts
+// "Learn the sounds" (file 37: a short training session lifts
 // earcon recognition to about 80%). A skippable ~2-minute guided tour, offered on the Start screen: each step says
 // what a sound means, then plays it. Nothing here comes from the match, so nothing can spoil it.
 

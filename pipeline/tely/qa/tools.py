@@ -288,6 +288,11 @@ def set_preferences(b: Bundle, p: float, **prefs: Any) -> dict:
             clean[k] = v
         elif k == "crowd_mix" and isinstance(v, (int, float)):
             clean[k] = min(1.0, max(0.0, float(v)))
+    # A follow or detail request carries no vibration or crowd change: the live model was seen filling those in
+    # (27 Oct: "follow Olvholm" arrived with haptics="events", detail="full"), and a fan's settings must never move
+    # unasked. "Turn the crowd down and the vibration off" still works: neither is follow nor detail.
+    if "follow" in prefs or "detail" in clean:
+        clean = {k: v for k, v in clean.items() if k == "detail" and "follow" not in prefs}
     if "follow" in prefs:      # D34: follow one player all match ("follow Olvholm", "stop following")
         q = str(prefs["follow"] or "").strip()
         if q.lower() in ("", "none", "nobody", "no one", "stop", "off"):

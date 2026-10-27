@@ -1,4 +1,4 @@
-"""Ball and player tracks at 25 Hz from generator.py's output (; file 19 Movement model).
+"""Ball and player tracks at 25 Hz from generator.py's output (file 19 Movement model).
 
 
 

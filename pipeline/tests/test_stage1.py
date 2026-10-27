@@ -1,4 +1,4 @@
-# Stage 1 tests (): determinism, the two file 33 fixes, crowd spoiler
+# Stage 1 tests: determinism, the two file 33 fixes, crowd spoiler
 # safety and look-ahead, plus the clock, haptics and judge cut. The format itself is checked in test_contract.py.
 from __future__ import annotations
 

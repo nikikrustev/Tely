@@ -1,6 +1,6 @@
 # Tely: shot list, in recording order
 
-_ Stage 9a, 24 Oct 2026. Goes with [script.md](script.md). Record each take 2–3 times ()._
+_ Stage 9a, 24 Oct 2026. Goes with [script.md](script.md). Record each take 2–3 times._
 
 **Demo:** https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/
 **Relay (live Ask + Stats MCP):** https://ca-relay-calef3.icycliff-4b45d13b.swedencentral.azurecontainerapps.io

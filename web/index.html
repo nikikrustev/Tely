@@ -145,6 +145,7 @@
       #tap { min-height: 5rem; width: 100%; font-size: 1.5rem; font-weight: 700; }
       #radar { margin-top: 1rem; }
       #notes { margin-top: 1rem; }
+      #follow-hint, #lang-hint, #lowdata-hint { margin-bottom: 0.75rem; }   /* air before the next group */
       #notes ol { padding-left: 1.25rem; margin: 0.5rem 0 0; }
       #notes li { margin: 0.25rem 0; line-height: 1.4; }
       #radar canvas { display: block; width: 100%; border-radius: 0.5rem; background: var(--panel); }
@@ -285,7 +286,7 @@
           <label><input type="radio" name="detail" value="key" /> Key moments only: chances, goals, cards</label>
         </fieldset>
         <label for="follow" class="setting">Follow a player
-          <select id="follow"><option value="">Nobody</option></select>
+          <select id="follow" aria-describedby="follow-hint"><option value="">Nobody</option></select>
         </label>
         <p class="hint" id="follow-hint">A soft cue, and the name, each time they get the ball. Or ask: "Follow Olvholm."</p>
         <fieldset>
@@ -319,7 +320,7 @@
           <button id="tap" type="button" hidden>Tap</button>
           <p id="cstatus"></p>
         </fieldset>
-        <label><input id="lowdata-toggle" type="checkbox" /> Low data: smaller commentary files, loaded only as needed
+        <label><input id="lowdata-toggle" type="checkbox" aria-describedby="lowdata-hint" /> Low data: smaller commentary files, loaded only as needed
           (for a slow or capped connection)</label>
         <p class="hint" id="lowdata-hint"></p>
         <label><input id="radar-toggle" type="checkbox" /> Show the sound radar (a visual pitch for sighted viewers)</label>

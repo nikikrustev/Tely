@@ -38,7 +38,7 @@ The crowd, the commentary and the vibration come **from one event stream**, so t
 
 ## What we measured
 
-From `eval/report.json`, on the judge cut (8 synthetic minutes).
+From `eval/report.json` on the judge cut (8 synthetic minutes); the translated lines are checked by a CI test.
 
 | Measure | Result |
 |---|---|

@@ -34,7 +34,7 @@ from .feedback import MAX_BYTES, FeedbackCaps, Invalid, validate
 from .telemetry import Tracker, make_tracker
 from .voicelive import Bridge, Link, connect_voice_live, log_line
 
-CONNECT_TIMEOUT_S = 8.0     # the browser falls back to presets after 8 s anyway ()
+CONNECT_TIMEOUT_S = 8.0     # the browser falls back to presets after 8 s anyway
 MCP_CALLS_PER_MIN = 60      # ours; MCP spec: servers "MUST ... rate limit tool invocations" (file 40 §3)
 
 
