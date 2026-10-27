@@ -2,6 +2,7 @@
 import type { LaneAHandle, MountLaneA } from '../contracts/a-exports';
 import { CommentaryTrackPlayer, parseCues } from './commentary-track';
 import { browserIO, LiveAsk } from './live-ask';
+import { setLiveLanguage } from './language';
 import { bundleBase } from '../replay/base';
 
 export const BUNDLE_BASE = bundleBase();   // the judge cut, or a dev-only soak bundle (replay/base.ts)
@@ -17,10 +18,12 @@ async function getOk(url: string): Promise<Response> {
   return r;
 }
 
-/** Static files only (BUILD_PLAN Stage 4: zero backend): the manifest names the cue file for English Radio. */
-export async function loadRadioCues(base = BUNDLE_BASE) {
+/** Static files only (BUILD_PLAN Stage 4: zero backend): the manifest names the Radio cue file per language (D27).
+ *  A language the bundle has no track for throws, so the caller keeps what is playing. */
+export async function loadRadioCues(base = BUNDLE_BASE, lang = 'en') {
   const man = (await (await getOk(`${base}/manifest.json`)).json()) as Manifest;
-  const file = man.tracks.en?.radio ?? 'cues.en.radio.jsonl';
+  const file = man.tracks[lang]?.radio ?? (lang === 'en' ? 'cues.en.radio.jsonl' : null);
+  if (!file) throw new Error(`no ${lang} commentary in this bundle`);
   return parseCues(await (await getOk(`${base}/${file}`)).text());
 }
 
@@ -111,5 +114,20 @@ export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
       })
       .catch(() => {});
   }
-  return { commentary };
+  // D27: the commentary and the live answers in another language. The live Ask follows at once; the track when loaded.
+  let wanted = 'en';
+  const setLanguage = async (lang: string): Promise<boolean> => {
+    wanted = lang;
+    try {
+      const cues = await loadRadioCues(BUNDLE_BASE, lang);
+      if (wanted !== lang) return false;                 // a newer choice won while this one loaded
+      audioBase = BUNDLE_BASE;
+      commentary.load(cues);
+      setLiveLanguage(lang);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  return { commentary, setLanguage };
 };

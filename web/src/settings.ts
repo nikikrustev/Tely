@@ -3,6 +3,9 @@
 import type { HapticMode } from './haptics/haptics';
 
 export type Club = 'H' | 'A';
+/** The commentator's languages (D27): the pre-recorded match and the live answers. */
+export const LANGS = ['en', 'bg', 'es', 'ar', 'fr', 'de'] as const;
+export type Lang = (typeof LANGS)[number];
 export interface Settings {
   /** Which end you sit with: "H" Reds (home) or "A" Navy (away). Flips whose goals the crowd around you cheers. */
   club: Club;
@@ -15,9 +18,11 @@ export interface Settings {
   radar: boolean;
   /** Measured headphone delay in ms (Bluetooth calibration), or null to use what the browser reports. */
   audioOffsetMs: number | null;
+  /** The commentator's language (D27), set in Setup or by asking the commentator. */
+  lang: Lang;
 }
 
-export const DEFAULTS: Settings = { club: 'H', crowdMix: 0.5, haptics: 'full', hapticStrength: 1, radar: false, audioOffsetMs: null };
+export const DEFAULTS: Settings = { club: 'H', crowdMix: 0.5, haptics: 'full', hapticStrength: 1, radar: false, audioOffsetMs: null, lang: 'en' };
 export const STORAGE_KEY = 'tely.settings.v1';
 /** The key from before the rename to Tely (D26): read once if the new key is empty, so saved settings carry over. */
 export const LEGACY_STORAGE_KEY = 'audiostands.settings.v1';
@@ -46,6 +51,7 @@ export function sanitize(x: unknown): Settings {
     hapticStrength: num(o.hapticStrength, DEFAULTS.hapticStrength, 0.5, 1.5),
     radar: o.radar === true,
     audioOffsetMs: typeof o.audioOffsetMs === 'number' && Number.isFinite(o.audioOffsetMs) ? num(o.audioOffsetMs, 0, 0, 500) : null,
+    lang: LANGS.includes(o.lang as Lang) ? (o.lang as Lang) : DEFAULTS.lang,
   };
 }
 
@@ -86,5 +92,6 @@ export function prefsPatch(p: unknown): Partial<Settings> {
   const patch: Partial<Settings> = {};
   if (o.haptics === 'off' || o.haptics === 'events' || o.haptics === 'full') patch.haptics = o.haptics;
   if (typeof o.crowd_mix === 'number' && Number.isFinite(o.crowd_mix)) patch.crowdMix = Math.min(1, Math.max(0, o.crowd_mix));
+  if (LANGS.includes(o.language as Lang)) patch.lang = o.language as Lang;   // set_language (D27)
   return patch;
 }

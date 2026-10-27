@@ -10,9 +10,9 @@ def test_qa_exports_the_seam_api():
         assert hasattr(qa, name), name
 
 
-def test_nine_voice_live_function_tools():
+def test_ten_voice_live_function_tools():
     names = [t["name"] for t in qa.TOOL_SCHEMAS]
-    assert len(names) == 9 and len(set(names)) == 9
+    assert len(names) == 10 and len(set(names)) == 10
     assert all(t["type"] == "function" for t in qa.TOOL_SCHEMAS)
 
 
