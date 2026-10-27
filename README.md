@@ -148,8 +148,8 @@ Judge cut, voice `en-US-Brian:DragonHDLatestNeural`, Director `gpt-5-mini`, meas
 
   | Metric | Ours | Target | Verdict |
   |---|---|---|---|
-  | Shot conversion | 10.1% | 11–11.9% | 🔴 red |
-  | Pass completion | 85.2% | ~84% (unverified target) | 🔴 red |
+  | Shot conversion | 13.1% | 11–11.9% | 🟢 red |
+  | Pass completion | 85.2% | ~84% (unverified target) | 🟢 red |
   | Goals, passes, shots per match; distance, top speed, time below 6 km/h | inside the target | | 🟢 green (6 rows) |
 
   The targets are published league averages ([file 02](stoynev%20research/02-synthetic-match-data.md),
