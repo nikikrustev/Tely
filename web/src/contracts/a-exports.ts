@@ -8,6 +8,8 @@ export interface CommentaryTrack {
   resume(): void;
   /** True if a commentary line starts within the next `s` seconds of the playhead (B's Ask uses it to wait). */
   nextCueWithin(s: number): boolean;
+  /** Appended 27 Oct (D34): a line is playing or scheduled now. */
+  isSpeaking?(): boolean;
 }
 
 /** What mountLaneA() hands back to B's main.ts. */

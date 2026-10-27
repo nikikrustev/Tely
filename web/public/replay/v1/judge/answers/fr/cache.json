@@ -19,6 +19,11 @@
   "bytes": 33696,
   "text": "Tiers offensif, centre, les Rouges. Orlani tire, contré."
  },
+ "0b7ef2581db9b1ae5a5d625bc824c6066993e2d84c5de9efbed9fe72859d7398": {
+  "duration_ms": 1687,
+  "bytes": 11232,
+  "text": "Ashski sur le ballon."
+ },
  "0b97ae989d691abf81a6b8a74c3f768fa32d5bfb441a6513a925cf0e8cc69657": {
   "duration_ms": 1637,
   "bytes": 11232,
@@ -28,6 +33,11 @@
   "duration_ms": 1887,
   "bytes": 11664,
   "text": "Pendant que tu étais parti,"
+ },
+ "11855026c75d03a001084617c008ea36b0541ac88ad5f2a94c23608a431d47cc": {
+  "duration_ms": 1762,
+  "bytes": 11232,
+  "text": "Fenford sur le ballon."
  },
  "1324ecda3f9ef7af0cece2d72d4492bdabbecda2bc5bb109d32b0e7f706f2bb1": {
   "duration_ms": 4425,
@@ -48,6 +58,11 @@
   "duration_ms": 4012,
   "bytes": 24480,
   "text": "Les Rouges ont le ballon, milieu de terrain, côté proche."
+ },
+ "1999ff889848cb01bc6b235c3546f2d0530725a41009cc05d55a7cf52901ad44": {
+  "duration_ms": 1800,
+  "bytes": 11232,
+  "text": "Lomade sur le ballon."
  },
  "1afab684f5ad82c6fb39ba3a2697f1b06f6379e2138ca1a1d3871cbe212c2074": {
   "duration_ms": 2037,
@@ -99,6 +114,11 @@
   "bytes": 14544,
   "text": "Voici le résumé jusqu'ici."
  },
+ "2a400b499569f96e8d7b1098758c90ace1af2e11511cc2b03e0c6bc52721f5b4": {
+  "duration_ms": 1675,
+  "bytes": 11232,
+  "text": "Lomley sur le ballon."
+ },
  "2ae182d94bf5dd8f55cdb7c536f58bada95270c55492e938b4597a02f77d10f5": {
   "duration_ms": 3987,
   "bytes": 24336,
@@ -149,6 +169,11 @@
   "bytes": 12960,
   "text": "À 45 mètres du but."
  },
+ "39484d64e530582f64b1984d496364d1101e5cd0a680a9be09f81923bebf4b4f": {
+  "duration_ms": 1862,
+  "bytes": 11520,
+  "text": "Olvholm sur le ballon."
+ },
  "3a110adee9bf8685db6c1241934d8a1e72bb2fc66003378d99572deab7264e33": {
   "duration_ms": 4687,
   "bytes": 28512,
@@ -198,6 +223,21 @@
   "duration_ms": 1814,
   "bytes": 11232,
   "text": "Tiens bon, regarde ça !"
+ },
+ "5216c20745568e48fd1920ca62d1d2a35aa7f5eada449f588258df62dfdf675d": {
+  "duration_ms": 1837,
+  "bytes": 11376,
+  "text": "Rilford sur le ballon."
+ },
+ "52e7969ed50659b64497d53a699ad2f279e44834df687e3309dbec425d181390": {
+  "duration_ms": 1775,
+  "bytes": 11232,
+  "text": "Wexros sur le ballon."
+ },
+ "540b232f641746f07b2d6053c52563c36e4764b695e89243b51a270a90e36477": {
+  "duration_ms": 1812,
+  "bytes": 11232,
+  "text": "Dunaro sur le ballon."
  },
  "54635f4fd91f5e889717da9c0765435b69a77928cc38e50db48f304d06f765b1": {
   "duration_ms": 1950,
@@ -299,6 +339,16 @@
   "bytes": 22320,
   "text": "La VAR vérifie le but des Bleus... et il est accordé."
  },
+ "8411245a13e60aeefab2f861fd060b9901a269d492ae7529aece2a2c23ae32ce": {
+  "duration_ms": 1712,
+  "bytes": 11232,
+  "text": "Galic sur le ballon."
+ },
+ "87d4555025a74e24c0a7da554c0f88beffa953e7a831b4f9600fdbe03b7907b7": {
+  "duration_ms": 1787,
+  "bytes": 11232,
+  "text": "Dunwick sur le ballon."
+ },
  "89d51e9880c2498e5069c6c556caecce9aeab0721f448331f5061b90170ca6aa": {
   "duration_ms": 1637,
   "bytes": 11232,
@@ -349,6 +399,11 @@
   "bytes": 26208,
   "text": "Ashard intercepte pour les Bleus, milieu, côté proche."
  },
+ "ac82adeb171236bffdfb537774bbb9fb5f8c969e0f349b34d914c8a740aa0fbf": {
+  "duration_ms": 1962,
+  "bytes": 12096,
+  "text": "Nevford sur le ballon."
+ },
  "ade8748fc820f6e464283fb6eef822628618872622ff4c248af6954674e45336": {
   "duration_ms": 5750,
   "bytes": 34848,
@@ -368,6 +423,11 @@
   "duration_ms": 2162,
   "bytes": 13392,
   "text": "À 55 mètres du but."
+ },
+ "b703177db1aaea00d4c569edd9100a2b85bbe09185ae5f9b7f68e8b40fa38965": {
+  "duration_ms": 1662,
+  "bytes": 11232,
+  "text": "Ashard sur le ballon."
  },
  "b8e6359cdaa6b470ff951924a94c492083688f0665f3fd4b2405e37a183a93dd": {
   "duration_ms": 6412,
@@ -409,6 +469,11 @@
   "bytes": 31104,
   "text": "Milieu, côté éloigné, les Rouges. Ashski pour Nevford."
  },
+ "c3164e8077121feab6b7929082ae92274f8bd5b2f905685eeb8001826b637f35": {
+  "duration_ms": 2062,
+  "bytes": 12672,
+  "text": "Strandford sur le ballon."
+ },
  "c4f9a8cfc66651b071725a0bfea27f1ce7d94d12c265da33b17eeebab41d441e": {
   "duration_ms": 1075,
   "bytes": 11232,
@@ -419,6 +484,16 @@
   "bytes": 11952,
   "text": "À 50 mètres du but."
  },
+ "cb40ce9b2d36c5a6dd8aade3a9ab9bed67065c8b346116e31c54c690d167b1fd": {
+  "duration_ms": 1800,
+  "bytes": 11232,
+  "text": "Nevaro sur le ballon."
+ },
+ "cc03b6b7d74ca727065335218db3fd6327182787b263e228f49da6101d18998b": {
+  "duration_ms": 1712,
+  "bytes": 11232,
+  "text": "Olvros sur le ballon."
+ },
  "cc51ab0aafda7b3465a4a0d6c44e75b9e43eb5c2c33782efe89db9f7e7e9ec8d": {
   "duration_ms": 4150,
   "bytes": 25200,
@@ -428,6 +503,31 @@
   "duration_ms": 5875,
   "bytes": 35568,
   "text": "Tiers offensif, côté éloigné, les Bleus. Strandford pour Olvholm."
+ },
+ "cccf474efc7ef1969e7070b65817b508864ab89d8bc8adc51498113fda330aee": {
+  "duration_ms": 1787,
+  "bytes": 11232,
+  "text": "Morani sur le ballon."
+ },
+ "cd7aeae01b8641f56af52e59c21ae6fff5fcae2d9c82f7eb3bdaf6d413aca8ef": {
+  "duration_ms": 1750,
+  "bytes": 11232,
+  "text": "Vaston sur le ballon."
+ },
+ "d0bde424149df9e66b7b93a5663596267de9176e75e2435c59f7235b3d2cca20": {
+  "duration_ms": 1687,
+  "bytes": 11232,
+  "text": "Olvard sur le ballon."
+ },
+ "d11cc6a0eb2049edf82750c452c641191a88fa8354ff45ef392b11b3babe7bea": {
+  "duration_ms": 1775,
+  "bytes": 11232,
+  "text": "Varell sur le ballon."
+ },
+ "d1aff5dd0ef353eb1893865624fc2721595cb42ac409608a917774229e2de4c6": {
+  "duration_ms": 1762,
+  "bytes": 11232,
+  "text": "Orlani sur le ballon."
  },
  "d4f1d280f92c2b0d0d251b376a46933666adeeabbc02e253bab1e598863763ef": {
   "duration_ms": 4200,
@@ -524,10 +624,20 @@
   "bytes": 36720,
   "text": "Tiers offensif, côté proche, les Bleus. Fenford tire, Vaston sauve."
  },
+ "f4dd1e0e9e185b9178c1e921b9f9bf1efba2d4c350591c0a53827e0a03fb67dd": {
+  "duration_ms": 1712,
+  "bytes": 11232,
+  "text": "Kelski sur le ballon."
+ },
  "f5600a69fdb32dd238a042d01e130941b5e71eb090c2211e3a761208a2df31a2": {
   "duration_ms": 3837,
   "bytes": 23328,
   "text": "Les Rouges ont le ballon, milieu de terrain, centre."
+ },
+ "f9f36f97699c4439475ac322adc3f1f6dcde24faf74f5ccaee3846cf474f71dc": {
+  "duration_ms": 1800,
+  "bytes": 11232,
+  "text": "Dunani sur le ballon."
  },
  "fe6bde7d06fa6e97d2c0f4d4e853a09ee99597e0323b487186267830d3f6676d": {
   "duration_ms": 2087,

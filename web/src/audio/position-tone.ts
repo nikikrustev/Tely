@@ -15,6 +15,23 @@ export function positionPitch(fragment: string | null | undefined, club: Club): 
   return POSITION_HZ[third === 'attacking' ? 'defensive' : third === 'defensive' ? 'attacking' : 'middle'];
 }
 
+/** Follow my player (D34): the name at most this often, so a busy midfielder doesn't crowd out the match. */
+export const FOLLOW_NAME_EVERY_S = 8;
+
+/** Follow my player (D34): a soft rising two-note cue when the followed player gets the ball. */
+export function playFollowCue(c: BaseAudioContext, out: AudioNode = c.destination): void {
+  [784, 1047].forEach((hz, i) => {
+    const osc = c.createOscillator(), g = c.createGain(), at = c.currentTime + 0.01 + i * 0.09;
+    osc.frequency.setValueAtTime(hz, at);
+    g.gain.setValueAtTime(0, at);
+    g.gain.linearRampToValueAtTime(0.035, at + 0.02);
+    g.gain.linearRampToValueAtTime(0, at + 0.08);
+    osc.connect(g).connect(out);
+    osc.start(at);
+    osc.stop(at + 0.09);
+  });
+}
+
 /** 150 ms of sine, faded in and out (no click), well under the commentary. */
 export function playPositionTone(c: BaseAudioContext, hz: number, out: AudioNode = c.destination): void {
   const osc = c.createOscillator(), g = c.createGain(), at = c.currentTime + 0.01;

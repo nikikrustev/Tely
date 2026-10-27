@@ -9,6 +9,11 @@
   "bytes": 24192,
   "text": "Anstoß, die Roten. Orlani zu Wexros."
  },
+ "0d80d0601c7923de86337f9b589fb183fa0036a167daedb2d2f7ea4156e9bfc8": {
+  "duration_ms": 1500,
+  "bytes": 11232,
+  "text": "Ashski am Ball."
+ },
  "0e1deb07ff5945d39d37cb4720bfb2308d822295f8b9ac3f8ec4bd54e740adb4": {
   "duration_ms": 2850,
   "bytes": 17424,
@@ -18,6 +23,16 @@
   "duration_ms": 4912,
   "bytes": 29808,
   "text": "Die Roten 0, die Blauen 1, 61 Minuten gespielt."
+ },
+ "13342f78462538ed343c48b735d21e30a4af8001f9e821a83547f83a74652549": {
+  "duration_ms": 1625,
+  "bytes": 11232,
+  "text": "Olvard am Ball."
+ },
+ "14803dbd55c5b8f079184bf781f4ad31dda86d83534dd0f709613d18131c557a": {
+  "duration_ms": 1637,
+  "bytes": 11232,
+  "text": "Lomade am Ball."
  },
  "1489f4fe7038cfd8f86d67df17464bf35534a9afd97281e14fb752e959f28a40": {
   "duration_ms": 3537,
@@ -89,6 +104,11 @@
   "bytes": 28080,
   "text": "Ashard unterbricht für die Blauen, Mittelfeld, nahe Seite."
  },
+ "2a0e8ebb319781a9cc190f35718d9155f22f244a4f2159e5d9e4fab7b763037a": {
+  "duration_ms": 1600,
+  "bytes": 11232,
+  "text": "Orlani am Ball."
+ },
  "2bc4e516925e1b98c9489c80190f4693e90d1ac400f9399d4ed2af628bd9119f": {
   "duration_ms": 4175,
   "bytes": 25344,
@@ -124,6 +144,11 @@
   "bytes": 41184,
   "text": "Ich bin nur fürs Spiel da. Frag mich nach dem Spielstand, dem Ball oder was gerade passiert ist."
  },
+ "48ace3ae819d2e587575036b02aa507a5062c535cbc63a9665ce56c7162e0743": {
+  "duration_ms": 1662,
+  "bytes": 11232,
+  "text": "Fenford am Ball."
+ },
  "4b7f628dc6838850b61d4f11280a0241c4510f70d0ab8df7d15512a2f40b7bab": {
   "duration_ms": 2600,
   "bytes": 15984,
@@ -139,10 +164,20 @@
   "bytes": 16992,
   "text": "45 Meter vor dem Tor."
  },
+ "4e5c648825242870c778582be9ebba07ec5341434682177efd6c21fc3cd24d68": {
+  "duration_ms": 1537,
+  "bytes": 11232,
+  "text": "Dunani am Ball."
+ },
  "526aa58b11794237612f98e9455ebc3565f16944498d009d5756be45b2976aa1": {
   "duration_ms": 4375,
   "bytes": 26640,
   "text": "Morani unterbricht für die Roten, Mittelfeld, Mitte."
+ },
+ "53c92dcc568fec48f5186ab7b97de536c314e21d2dc532dab5554d665663d4c0": {
+  "duration_ms": 1550,
+  "bytes": 11232,
+  "text": "Lomley am Ball."
  },
  "5f18ba5ef39327a443c1487a6d2975d9f8f72bf9044332fd475ebeebf0f5d648": {
   "duration_ms": 5487,
@@ -174,6 +209,11 @@
   "bytes": 17568,
   "text": "95 Meter vor dem Tor."
  },
+ "67ceee70e2a4711d15f81111ddf123e87d7a6148f80d082f6c2078f87e5d720e": {
+  "duration_ms": 1475,
+  "bytes": 11232,
+  "text": "Dunwick am Ball."
+ },
  "67e52fb0de5020c87f722b6e5b8cd14680daf910bd7c0c4d58d60a4423ed8496": {
   "duration_ms": 4037,
   "bytes": 24624,
@@ -193,6 +233,11 @@
   "duration_ms": 862,
   "bytes": 11232,
   "text": "und"
+ },
+ "70bfa4351f4991ff126b07c58981744410c5ea785b105e455bdf0f35a1db9095": {
+  "duration_ms": 1587,
+  "bytes": 11232,
+  "text": "Dunaro am Ball."
  },
  "71095743afde1b1e5a9cccf2fa793c6fc8a1acb6f3c654219cea3578384f040c": {
   "duration_ms": 5725,
@@ -259,10 +304,20 @@
   "bytes": 17568,
   "text": "55 Meter vor dem Tor."
  },
+ "8bcfdf1ae537e8a6abe98888aff7c465c1cd8cddfa77e1047bb06859edd1c1bf": {
+  "duration_ms": 1600,
+  "bytes": 11232,
+  "text": "Nevaro am Ball."
+ },
  "8d29c97efbedda02678745d24072bf189ebeaa1bc046f0be2ea624e1dcaea9d4": {
   "duration_ms": 5050,
   "bytes": 30672,
   "text": "Olvros unterbricht für die Blauen, Abwehrdrittel, entfernte Seite."
+ },
+ "8f58669ee6c49c5b2350e9c0566115f4a43d846740392a128b17af84aa576ab2": {
+  "duration_ms": 1625,
+  "bytes": 11232,
+  "text": "Morani am Ball."
  },
  "90246ea09b7db0a8c629fa06b522170702388bc16d18e9fb4786654d3e51a023": {
   "duration_ms": 1787,
@@ -304,10 +359,20 @@
   "bytes": 13968,
   "text": "Fenford traf für die Blauen"
  },
+ "9a86e7cb56cdb70467f1f9532386cb3dccd94f96315c0324aaa80252b5937ac2": {
+  "duration_ms": 1575,
+  "bytes": 11232,
+  "text": "Varell am Ball."
+ },
  "9d8a9a0799ca4ff1bd89b4493dafb63ee8f99916d18969cfae281a118a30fc1f": {
   "duration_ms": 1851,
   "bytes": 11520,
   "text": "Wart's ab, pass auf!"
+ },
+ "9e9a357a626366eed7a641fde2a71ecbe12cf7ff7fb0faf700645eade9be1ffd": {
+  "duration_ms": 1887,
+  "bytes": 11664,
+  "text": "Nevford am Ball."
  },
  "9f2e025f6334fde83dadbdf91737b7018886265ed927893f8118a59714f46412": {
   "duration_ms": 2350,
@@ -349,6 +414,11 @@
   "bytes": 30240,
   "text": "Die Roten 0, die Blauen 1, 62 Minuten gespielt."
  },
+ "b02880b7f7a1003eb3331d0921052a58b3062ed0e47273d5465c7a6927cd8638": {
+  "duration_ms": 1612,
+  "bytes": 11232,
+  "text": "Olvros am Ball."
+ },
  "b1245a26990494682595eac6175343a9e61fe2255097ade19d27de0167ffa1c9": {
   "duration_ms": 2350,
   "bytes": 14400,
@@ -358,6 +428,11 @@
   "duration_ms": 2275,
   "bytes": 13968,
   "text": "Nichts Großes ist passiert."
+ },
+ "b32ce3e242e7bd17c111fb8802863fceaccc979bcab03cefbb400d32315aa2a9": {
+  "duration_ms": 1550,
+  "bytes": 11232,
+  "text": "Vaston am Ball."
  },
  "b3b8dc61953108b6854d8b9c22957b81c7040dc1df0f0eb850e44b62da1488ef": {
   "duration_ms": 6112,
@@ -394,10 +469,25 @@
   "bytes": 29664,
   "text": "Dunani unterbricht für die Roten, Mittelfeld, entfernte Seite."
  },
+ "bd72eedf0a2f74527c4c40ed89563f5a23ea209d85addd566dc4987fee1c0717": {
+  "duration_ms": 1550,
+  "bytes": 11232,
+  "text": "Kelski am Ball."
+ },
+ "be098bb4ec6611f2cf062f97bf8f86930d4aa6ed0395e68e464da3e6f38c7cb0": {
+  "duration_ms": 1625,
+  "bytes": 11232,
+  "text": "Rilford am Ball."
+ },
  "c143a8aa9432e233dc205c35f671929dbece04709bbb5061fbd047c28c6d0179": {
   "duration_ms": 5112,
   "bytes": 31104,
   "text": "Die Roten 0, die Blauen 1, 57 Minuten gespielt."
+ },
+ "c1bfd383c1828a4a2fcacf34013cd0adcfce45edf4424dc7b01d526bfd7cd497": {
+  "duration_ms": 1425,
+  "bytes": 11232,
+  "text": "Galic am Ball."
  },
  "cbc6da0a4f54fde3564d06ff8c26403c7fa8371a6eb421aea930f40622f95187": {
   "duration_ms": 6575,
@@ -439,6 +529,16 @@
   "bytes": 11664,
   "text": "Gehalten von Vaston."
  },
+ "dc53cfc7e54dee3a7e4a0206f24bce50d66d70b9f9e2dd986df4d4cfd4ecebdb": {
+  "duration_ms": 1662,
+  "bytes": 11232,
+  "text": "Olvholm am Ball."
+ },
+ "dc90aa7f1f0db0130a1b24a708fe06c4ae21ac39439660bda168d194d36f119e": {
+  "duration_ms": 1537,
+  "bytes": 11232,
+  "text": "Ashard am Ball."
+ },
  "dd6087abed0e86835654c7c5a891594344f7d2ad3c1e6fcd28e4c17dcc738965": {
   "duration_ms": 3587,
   "bytes": 21888,
@@ -453,6 +553,11 @@
   "duration_ms": 2325,
   "bytes": 14256,
   "text": "20 Meter vor dem Tor."
+ },
+ "e8049b9eaed83a041e36ad6214f523e6ab97689584f1542bbabb42d0eafb56a1": {
+  "duration_ms": 1837,
+  "bytes": 11376,
+  "text": "Strandford am Ball."
  },
  "e95fb7be7151f19f8cfa1ae3437bb7b6cf4b1194e7f0b24cd98d8e6a1acdd779": {
   "duration_ms": 5637,
@@ -518,6 +623,11 @@
   "duration_ms": 6537,
   "bytes": 39600,
   "text": "Angriffs drittel, Mitte, die Blauen. Fenfords Pass wird von Nevaro abgefangen."
+ },
+ "fab8ba2ebac94e49c4e9cac07d8bc9647a9812c68a18329a4d831dc8b17399a9": {
+  "duration_ms": 1662,
+  "bytes": 11232,
+  "text": "Wexros am Ball."
  },
  "fea3aaa097718bcff997e889cfde7e6bb4420b3d141daa768e455676de7bdbdf": {
   "duration_ms": 2125,

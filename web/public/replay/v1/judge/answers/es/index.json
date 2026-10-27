@@ -1,7 +1,7 @@
 {
  "voice": "en-US-BrianMultilingualNeural",
  "lang": "es-ES",
- "count": 113,
+ "count": 135,
  "fragments": {
   "hold": {
    "file": "21643dd1ce3be024d139baf4958ac7e93bc181726db57b97adfe715da47271d9.mp3",
@@ -266,6 +266,94 @@
   "score_m64_0_1": {
    "file": "769b4edc882212e4ea53d5bd00630814a47b6ec0a8347990572d266759514fa3.mp3",
    "duration_ms": 5262
+  },
+  "name_n1": {
+   "file": "64299a381622f950ccce7655b9264a03e6d6897c2e2edb87491e5dcfbc87112b.mp3",
+   "duration_ms": 1775
+  },
+  "name_n10": {
+   "file": "f50b5044d79380ab93f8f0db225eae1bc3da59c45b7e1648d55a9894315aec6c.mp3",
+   "duration_ms": 2037
+  },
+  "name_n11": {
+   "file": "8b8ccf5b6e4281cf121bd2800c8c21d6531ae2c40c9b06c5151c5b757785ab1c.mp3",
+   "duration_ms": 1825
+  },
+  "name_n2": {
+   "file": "39dee8874b26889802c0641d0927eafb0b9d205b6fbe0d529c40ab83f56291b2.mp3",
+   "duration_ms": 1825
+  },
+  "name_n3": {
+   "file": "e7d27e9e2108462ef1810b23ec5c79de886ec3cec1368fc63012610756b30018.mp3",
+   "duration_ms": 1737
+  },
+  "name_n4": {
+   "file": "191c0b6c34da9265fa5c4903dc7d0a834981598048e279537a53fbe9466e5c72.mp3",
+   "duration_ms": 1775
+  },
+  "name_n5": {
+   "file": "da23dbb050ab50ac0862ec71e8d0876a4a73d9317c40fa40aa170a2d12c60b65.mp3",
+   "duration_ms": 1925
+  },
+  "name_n6": {
+   "file": "9e654f7de9a9f2bd72e85ce547b1da226da0c8b6327457f77a2e41f01b9f5adf.mp3",
+   "duration_ms": 1700
+  },
+  "name_n7": {
+   "file": "5d8adfda21bafe90f5a9a978785627ae8b0b15a3030e0870e6a109e3ae16bbad.mp3",
+   "duration_ms": 1762
+  },
+  "name_n8": {
+   "file": "1b3e4d3778c282d7c1b85b19e5da47031e87bd851657bd0996f51b8b4b4f836a.mp3",
+   "duration_ms": 1825
+  },
+  "name_n9": {
+   "file": "58dce5a7b10fce53fd5a53b2d26b87f3ad5eb5c8c3af9e942d4b91d5cc8c42fd.mp3",
+   "duration_ms": 1887
+  },
+  "name_r1": {
+   "file": "359c5276e3e69350cd16bd06dfdb4b19fa86054bb6c479f92213085d0fbd04c5.mp3",
+   "duration_ms": 1837
+  },
+  "name_r10": {
+   "file": "ec3a3bcf6c820f073032c1baf1d740e2d1f69e2bf461c5a999199c949873f28a.mp3",
+   "duration_ms": 1750
+  },
+  "name_r11": {
+   "file": "751e2b0f4a9b57edd6595b3bc0006ebc7712440441a30579f379844bd48c5420.mp3",
+   "duration_ms": 1875
+  },
+  "name_r2": {
+   "file": "c7167abf6d50fc1e21d18374d9c68600e783e76445c4cdcd215aa0ae60cb8017.mp3",
+   "duration_ms": 1712
+  },
+  "name_r3": {
+   "file": "f9290e102753207ee23e8c9cfa32a32afabc83c3f2d4ba41d0a531bb5ffc84a2.mp3",
+   "duration_ms": 1800
+  },
+  "name_r4": {
+   "file": "365c80c8d3405bd3285f9e9a56855836588826acc3e790e9e4d6bc18266f1957.mp3",
+   "duration_ms": 1775
+  },
+  "name_r5": {
+   "file": "84b5c2747e136ad0b4fc47b7efef19fd4d2e1a2913ce232b178fe32157f5d55e.mp3",
+   "duration_ms": 1812
+  },
+  "name_r6": {
+   "file": "b27dc97187c09e203cbe598af6bafd414422a6a80a1fa7353cf760ed3ab08d54.mp3",
+   "duration_ms": 1750
+  },
+  "name_r7": {
+   "file": "e81548c8d22255a9e0989681cd671ec9bd4ffc79aae476bed40fd4bb17694d0c.mp3",
+   "duration_ms": 1800
+  },
+  "name_r8": {
+   "file": "65b7960eb0d62e1ca217a83cfe1480d0483df5c4f8c370b4c181ffc7edcdf62e.mp3",
+   "duration_ms": 1825
+  },
+  "name_r9": {
+   "file": "b14c85ea17d4b9a51afcfec2d1b5aeeb51e210ed21d671fac721013a60c0d965.mp3",
+   "duration_ms": 1825
   },
   "ev_e00673": {
    "file": "1250ce008e9963d98a7ce7eab8b560527f8c304a892370ed3e87f8bb98d547b1.mp3",

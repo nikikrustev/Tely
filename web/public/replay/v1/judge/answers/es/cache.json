@@ -54,6 +54,11 @@
   "bytes": 36864,
   "text": "Tercio ofensivo, por la banda lejana, los Azules. Olvholm a Strandford."
  },
+ "191c0b6c34da9265fa5c4903dc7d0a834981598048e279537a53fbe9466e5c72": {
+  "duration_ms": 1775,
+  "bytes": 11232,
+  "text": "Dunaro con el balón."
+ },
  "19e52a7a9551879ba9546de7c0e1374972e43cff0b6dac6d79fe2437d83847e4": {
   "duration_ms": 2075,
   "bytes": 12816,
@@ -63,6 +68,11 @@
   "duration_ms": 5300,
   "bytes": 32112,
   "text": "Tercio ofensivo, centro, los Rojos. Ashski a Orlani."
+ },
+ "1b3e4d3778c282d7c1b85b19e5da47031e87bd851657bd0996f51b8b4b4f836a": {
+  "duration_ms": 1825,
+  "bytes": 11376,
+  "text": "Lomade con el balón."
  },
  "1b7815dc5d770a85db2c9453f855a02aa36b5b78121d30a0b2fb2a144d218714": {
   "duration_ms": 5650,
@@ -124,15 +134,30 @@
   "bytes": 11232,
   "text": "Antes de eso:"
  },
+ "359c5276e3e69350cd16bd06dfdb4b19fa86054bb6c479f92213085d0fbd04c5": {
+  "duration_ms": 1837,
+  "bytes": 11376,
+  "text": "Vaston con el balón."
+ },
  "363ee9dbf92a7661b4113e97df864be5690d956345ff484ce704dbb9e6d6b270": {
   "duration_ms": 4275,
   "bytes": 26064,
   "text": "Los Azules la tienen, tercio ofensivo, centro."
  },
+ "365c80c8d3405bd3285f9e9a56855836588826acc3e790e9e4d6bc18266f1957": {
+  "duration_ms": 1775,
+  "bytes": 11232,
+  "text": "Nevaro con el balón."
+ },
  "3688ee34f2ad197db6d6ac1d52b81d2ee54779189c51f5a9eae8ed9ea5a262d0": {
   "duration_ms": 4837,
   "bytes": 29376,
   "text": "Los Rojos la tienen, tercio defensivo, por la banda lejana."
+ },
+ "39dee8874b26889802c0641d0927eafb0b9d205b6fbe0d529c40ab83f56291b2": {
+  "duration_ms": 1825,
+  "bytes": 11376,
+  "text": "Lomley con el balón."
  },
  "3a5859e88b3112bb6f3d1bf5c7acf620a77c91ba2a74813fb4eea0eaa2594249": {
   "duration_ms": 2612,
@@ -204,6 +229,11 @@
   "bytes": 31680,
   "text": "Los Rojos cero, los Azules uno, 63 minutos jugados."
  },
+ "58dce5a7b10fce53fd5a53b2d26b87f3ad5eb5c8c3af9e942d4b91d5cc8c42fd": {
+  "duration_ms": 1887,
+  "bytes": 11664,
+  "text": "Fenford con el balón."
+ },
  "5947c40c5cfb57496804156fd0f78a7153f5d95690e2f3667fef250a64ed7a47": {
   "duration_ms": 4775,
   "bytes": 28944,
@@ -218,6 +248,21 @@
   "duration_ms": 5662,
   "bytes": 34272,
   "text": "Mediocampo, por la banda lejana, los Azules. Olvros a Kelski."
+ },
+ "5d8adfda21bafe90f5a9a978785627ae8b0b15a3030e0870e6a109e3ae16bbad": {
+  "duration_ms": 1762,
+  "bytes": 11232,
+  "text": "Ashard con el balón."
+ },
+ "64299a381622f950ccce7655b9264a03e6d6897c2e2edb87491e5dcfbc87112b": {
+  "duration_ms": 1775,
+  "bytes": 11232,
+  "text": "Galic con el balón."
+ },
+ "65b7960eb0d62e1ca217a83cfe1480d0483df5c4f8c370b4c181ffc7edcdf62e": {
+  "duration_ms": 1825,
+  "bytes": 11376,
+  "text": "Morani con el balón."
  },
  "670b367a694f4033fd2063b15b594283b27cbfd05fca5f39847e1af3fedc51e5": {
   "duration_ms": 5325,
@@ -269,6 +314,11 @@
   "bytes": 11376,
   "text": "A 100 metros del gol."
  },
+ "751e2b0f4a9b57edd6595b3bc0006ebc7712440441a30579f379844bd48c5420": {
+  "duration_ms": 1875,
+  "bytes": 11664,
+  "text": "Nevford con el balón."
+ },
  "769b4edc882212e4ea53d5bd00630814a47b6ec0a8347990572d266759514fa3": {
   "duration_ms": 5262,
   "bytes": 31968,
@@ -309,6 +359,11 @@
   "bytes": 12240,
   "text": "A 30 metros del gol."
  },
+ "84b5c2747e136ad0b4fc47b7efef19fd4d2e1a2913ce232b178fe32157f5d55e": {
+  "duration_ms": 1812,
+  "bytes": 11232,
+  "text": "Wexros con el balón."
+ },
  "87817dc004cdd83fb353512c9b6e773356034d26f5c75085094b1d03f16a48c2": {
   "duration_ms": 2337,
   "bytes": 14400,
@@ -323,6 +378,11 @@
   "duration_ms": 3300,
   "bytes": 20160,
   "text": "Fenford tuvo un disparo salvado por Vaston"
+ },
+ "8b8ccf5b6e4281cf121bd2800c8c21d6531ae2c40c9b06c5151c5b757785ab1c": {
+  "duration_ms": 1825,
+  "bytes": 11376,
+  "text": "Olvholm con el balón."
  },
  "8df4c621e4f17cb05ab75af80616f1c3e335743f8d8a8d2614a1f1349c838c68": {
   "duration_ms": 1775,
@@ -348,6 +408,11 @@
   "duration_ms": 2475,
   "bytes": 15264,
   "text": "A 85 metros del gol."
+ },
+ "9e654f7de9a9f2bd72e85ce547b1da226da0c8b6327457f77a2e41f01b9f5adf": {
+  "duration_ms": 1700,
+  "bytes": 11232,
+  "text": "Kelski con el balón."
  },
  "9fa06ef30dddaaa1958bec2e366d93ee99a7024f15bd0996f8c22396aecdf4c6": {
   "duration_ms": 5100,
@@ -378,6 +443,16 @@
   "duration_ms": 5050,
   "bytes": 30672,
   "text": "Nevaro intercepta para los Rojos, tercio defensivo, centro."
+ },
+ "b14c85ea17d4b9a51afcfec2d1b5aeeb51e210ed21d671fac721013a60c0d965": {
+  "duration_ms": 1825,
+  "bytes": 11376,
+  "text": "Orlani con el balón."
+ },
+ "b27dc97187c09e203cbe598af6bafd414422a6a80a1fa7353cf760ed3ab08d54": {
+  "duration_ms": 1750,
+  "bytes": 11232,
+  "text": "Ashski con el balón."
  },
  "b34deab01bfbc22d81d178921c2b8f962c1f838ee1b7065ebd6cd8eeeebc11b5": {
   "duration_ms": 4425,
@@ -413,6 +488,11 @@
   "duration_ms": 2037,
   "bytes": 12528,
   "text": "A 80 metros del gol."
+ },
+ "c7167abf6d50fc1e21d18374d9c68600e783e76445c4cdcd215aa0ae60cb8017": {
+  "duration_ms": 1712,
+  "bytes": 11232,
+  "text": "Olvard con el balón."
  },
  "cc9cabd105a97ba2e15955ae85b99b4eb18158c922e4392fba7f9782ca199b32": {
   "duration_ms": 4862,
@@ -454,6 +534,11 @@
   "bytes": 35856,
   "text": "Tercio ofensivo, por la banda lejana, los Azules. Kelski a Olvholm."
  },
+ "da23dbb050ab50ac0862ec71e8d0876a4a73d9317c40fa40aa170a2d12c60b65": {
+  "duration_ms": 1925,
+  "bytes": 11952,
+  "text": "Rilford con el balón."
+ },
  "dde04b9212ac77b570674d9369e5acb1c1e4afa90bbb33291906b66d517e107b": {
   "duration_ms": 2100,
   "bytes": 12960,
@@ -474,6 +559,16 @@
   "bytes": 39312,
   "text": "Solo estoy para el partido. Pregúntame por el marcador, el balón o lo que acaba de pasar."
  },
+ "e7d27e9e2108462ef1810b23ec5c79de886ec3cec1368fc63012610756b30018": {
+  "duration_ms": 1737,
+  "bytes": 11232,
+  "text": "Olvros con el balón."
+ },
+ "e81548c8d22255a9e0989681cd671ec9bd4ffc79aae476bed40fd4bb17694d0c": {
+  "duration_ms": 1800,
+  "bytes": 11232,
+  "text": "Dunwick con el balón."
+ },
  "e84de6a9ae9f2f31f20e174dbf7fbd08403b71e26ef2ce8bf833289f3bb57699": {
   "duration_ms": 4225,
   "bytes": 25776,
@@ -483,6 +578,11 @@
   "duration_ms": 2437,
   "bytes": 14976,
   "text": "A 95 metros del gol."
+ },
+ "ec3a3bcf6c820f073032c1baf1d740e2d1f69e2bf461c5a999199c949873f28a": {
+  "duration_ms": 1750,
+  "bytes": 11232,
+  "text": "Varell con el balón."
  },
  "ec724dcaf7fb9840960211c14a97b56718b6dcf2af916aa2c86883e42f375cc3": {
   "duration_ms": 6162,
@@ -509,6 +609,11 @@
   "bytes": 14976,
   "text": "A 45 metros del gol."
  },
+ "f50b5044d79380ab93f8f0db225eae1bc3da59c45b7e1648d55a9894315aec6c": {
+  "duration_ms": 2037,
+  "bytes": 12528,
+  "text": "Strandford con el balón."
+ },
  "f83e00367423464a01a5743f29b17a0b3d57bc509e2a2d11accc2b21b1ba66e4": {
   "duration_ms": 2750,
   "bytes": 16848,
@@ -518,6 +623,11 @@
   "duration_ms": 2462,
   "bytes": 15120,
   "text": "A 75 metros del gol."
+ },
+ "f9290e102753207ee23e8c9cfa32a32afabc83c3f2d4ba41d0a531bb5ffc84a2": {
+  "duration_ms": 1800,
+  "bytes": 11232,
+  "text": "Dunani con el balón."
  },
  "f97f5b6c6ab89616431e5aefe766d65d17a22eb61b4b66814245610600f59efd": {
   "duration_ms": 2162,

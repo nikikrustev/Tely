@@ -72,6 +72,9 @@ def build_fragments(bundle) -> list[dict[str, str]]:
         if k not in seen:
             seen.add(k)
             out.append(score_frag(names["home"], names["away"], *k))
+    # Follow my player (D34): each player's name, said when they get the ball. Only the roster: no event, no outcome.
+    for pid, p in sorted(bundle.players.items()):
+        out.append((f"name_{pid}", f"{p['last_name']} on the ball."))
     for e in bundle.events:
         s = bundle.sig(e["id"])
         if s["priority"] >= 1:
