@@ -100,6 +100,17 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     },
     {
         "type": "function",
+        "name": "get_recap",
+        "description": "A spoken recap: the score and the big moments so far, in order. moment: 'half_time' at "
+                       "half-time, 'end' when the match (or this part of it) is over, otherwise 'so_far'.",
+        "parameters": {
+            "type": "object",
+            "properties": {"moment": {"type": "string", "enum": ["so_far", "half_time", "end"]}},
+            "additionalProperties": False,
+        },
+    },
+    {
+        "type": "function",
         "name": "set_preferences",
         "description": "Change the crowd level, the vibration, or how much the commentator says: detail 'key' is "
                        "key moments only (chances, goals, cards), 'full' the full radio commentary.",

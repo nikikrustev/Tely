@@ -94,6 +94,11 @@
   "bytes": 25344,
   "text": "Die Roten haben ihn, Abwehrdrittel, entfernte Seite."
  },
+ "329abfe2fda799bf236f7cc33a5d34ab10436e612599f89ce60d65ff7f8c5a67": {
+  "duration_ms": 2687,
+  "bytes": 16416,
+  "text": "Das war der bisherige Spielverlauf."
+ },
  "344ed8b5de5dd3be1d0915ff351ae2d97d522c3caa1f2115161e84b1ae3f7beb": {
   "duration_ms": 4925,
   "bytes": 29952,
@@ -334,6 +339,11 @@
   "bytes": 24624,
   "text": "Die Blauen haben ihn, Angriffs drittel, nahe Seite."
  },
+ "a9230e71d769526d77c8f81205eb9036a5ce1b259ff5c1554a265cf462aca2e2": {
+  "duration_ms": 4187,
+  "bytes": 25488,
+  "text": "Das war das Ende dieses Spielabschnitts. So lief es."
+ },
  "b0063c6dde21fdb28ded7d4568b2dd11d743fe2d37bf9b7eefd9b504b9b367bf": {
   "duration_ms": 4987,
   "bytes": 30240,
@@ -483,6 +493,11 @@
   "duration_ms": 1712,
   "bytes": 11232,
   "text": "Auf der Torlinie."
+ },
+ "f1a1c6e9c5c6d37a217ed716b181bc9a6f7138c1ecafa4b8397b1993b40123e7": {
+  "duration_ms": 3200,
+  "bytes": 19584,
+  "text": "Halbzeit. So verlief die Hälfte."
  },
  "f3a7b637dffb817609c33b5ab8dfc25682110b381a416eaba7065af2920118a8": {
   "duration_ms": 1825,

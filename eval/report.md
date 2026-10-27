@@ -84,7 +84,7 @@ Outcomes: {"answered": 31}. Latency is measured in the relay (relay: fan's last 
 | last_after_goal | What just happened? | 56:52 | answer | last | VAR checks the Navy goal... and it stands. Before that: Attacking third, centre, Navy. Fen | yes | yes | no |
 | missed_during_var | What did I miss? | 56:40 | answer | missed | Nothing big happened. | yes | yes | no |
 | missed_after_goal | Can you catch me up? | 56:52 | answer | missed | While you were away, Fenford scored for Navy and VAR let the Navy goal stand. | yes | yes | no |
-| recap_late | Quick recap please | 63:20 | answer | missed | While you were away, Orlani had a shot blocked. | yes | yes | no |
+| recap_late | Quick recap please | 63:20 | answer | recap | Here's the story so far. Reds nil, Navy one, 63 minutes played. Fenford scored for Navy. V | yes | yes | no |
 | who_scores_next | Who scores next? | 56:16 | refuse | no_spoilers | I can't tell you what happens next. That's for the match to decide. | yes | yes | no |
 | who_wins | Who wins? | 56:16 | refuse | no_spoilers | I can't tell you what happens next. That's for the match to decide. | yes | yes | no |
 | will_navy_win | Will Navy win this? | 60:30 | refuse | no_spoilers | I can't tell you what happens next. That's for the match to decide. | yes | yes | no |

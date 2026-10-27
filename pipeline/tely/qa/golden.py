@@ -4,7 +4,8 @@
 
 Both pytest (pipeline/tests/b/test_qa_golden.py) and vitest (web/tests/b/ask.test.ts) replay every case, so the Python
 tools and their TypeScript copies in web/src/ask/local-tools.ts always say the same thing (TEAM_SPLIT.md seam 4).
-Cases cover the tools the browser runs offline: score, ball, last events, what did I miss, catch-up, hold that thought.
+Cases cover the tools the browser runs offline: score, ball, last events, what did I miss, recap, catch-up, hold that
+thought.
 """
 from __future__ import annotations
 
@@ -33,7 +34,8 @@ def cases(b: Bundle) -> list[dict]:
     out = []
     for p in playheads(b):
         for tool, args in (("get_score_and_clock", {}), ("get_ball_position", {}), ("get_last_events", {"n": 2}),
-                           ("what_did_i_miss", {"since": b.clock_str(max(b.t0, p - 60))})):
+                           ("what_did_i_miss", {"since": b.clock_str(max(b.t0, p - 60))}),
+                           ("get_recap", {"moment": "so_far"}), ("get_recap", {"moment": "end"})):
             r = call(tool, args, p, b)
             out.append({"tool": tool, "args": args, "playhead_s": p, "expected_say": r["say"],
                         "expected_fragments": r["fragments"], "expected_evidence": r["evidence_ids"]})

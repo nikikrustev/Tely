@@ -1,7 +1,7 @@
 {
  "voice": "en-US-BrianMultilingualNeural",
  "lang": "ar-SA",
- "count": 110,
+ "count": 113,
  "fragments": {
   "hold": {
    "file": "da890b78570d924d57ac2d70a4845c7475d396a500bf0fc6f7d1ee6665ec782b.mp3",
@@ -58,6 +58,18 @@
   "done": {
    "file": "7624b242c548947c6b151587d1139bdba6b46b7c529ce7dcbcf6b0a6b418e709.mp3",
    "duration_ms": 937
+  },
+  "recap": {
+   "file": "3d391c82d6f480e307156a40cde3faa61fb798151067fd0825f9d700aba74160.mp3",
+   "duration_ms": 2400
+  },
+  "recap_ht": {
+   "file": "247295f4b9210c5e68ea25ff930388d0a21c6a2cda73ad97a8e4fd26270d488c.mp3",
+   "duration_ms": 4262
+  },
+  "recap_end": {
+   "file": "1ce7c7459e27db0fb961b4713597a97157500e355b74be17168d8351ffccef60.mp3",
+   "duration_ms": 4487
   },
   "zone_H_defensive_third_near": {
    "file": "14540e1a83715c6f8fa0ff42e6a7e35a439d55103c645c8683a4b72bbbc85d16.mp3",

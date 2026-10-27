@@ -54,6 +54,11 @@
   "bytes": 12528,
   "text": "À 70 mètres du but."
  },
+ "1e5e23d0d0bedd08f20b5b97182946be2920837f6c824b6cd9c33b73a7d80bee": {
+  "duration_ms": 4037,
+  "bytes": 24624,
+  "text": "C'est la mi-temps. Voici le résumé de la première mi-temps."
+ },
  "1efd79f62eaedbf744f38703267d41b9c9f3d1cfd9055e8b69acfbee8bf46338": {
   "duration_ms": 1762,
   "bytes": 11232,
@@ -89,6 +94,11 @@
   "bytes": 32112,
   "text": "Milieu, côté éloigné, les Bleus. Kelski pour Strandford."
  },
+ "2997c8195702f453cb8223909c1d1b451c3c6bd1b065e6577b414f822a414781": {
+  "duration_ms": 2362,
+  "bytes": 14544,
+  "text": "Voici le résumé jusqu'ici."
+ },
  "2ae182d94bf5dd8f55cdb7c536f58bada95270c55492e938b4597a02f77d10f5": {
   "duration_ms": 3987,
   "bytes": 24336,
@@ -98,6 +108,11 @@
   "duration_ms": 5425,
   "bytes": 32976,
   "text": "Tiers offensif, centre, les Bleus. Strandford pour Fenford."
+ },
+ "2ca5daf2946931afeb0deb06e94a7e68e6858b8735e797b52e3acda11c43994e": {
+  "duration_ms": 4425,
+  "bytes": 26928,
+  "text": "C'est la fin de cette partie du match. Voici comment ça s'est passé."
  },
  "2dd3fefa4d8be7843cf08be8ee0153bf32e1b508db3de79d13cf9d2bd56f088b": {
   "duration_ms": 3875,
