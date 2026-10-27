@@ -13,7 +13,7 @@ import re
 from typing import Any
 
 from .bundle import HALF_L, Bundle
-from .fragments import STATIC, dist_frag, score_frag, zone_frag
+from .fragments import NUM, STATIC, dist_frag, score_frag, zone_frag
 
 THIRD_WORDS = {"defensive_third": "defensive third", "middle_third": "midfield", "attacking_third": "attacking third"}
 SIDE_WORDS = {"near": "near side", "centre": "centre", "far": "far side"}
@@ -113,16 +113,20 @@ def _player_xy(b: Bundle, pid: str, p: float) -> tuple[float, float, list[list[f
 def get_score_and_clock(b: Bundle, p: float) -> dict:
     sc = b.score(p)
     minute = int(math.floor(b.clock_s(b.clamp(p)) / 60))
-    # Same second as the score row: a goal revealed at 703.76 counts from 704, so the evidence never contradicts "nil".
-    goals = [e["id"] for e in b.known(math.floor(p)) if e["type"] == "shot" and e["outcome_type"] == "successful"]
+    # The goals bundle.score counted, at the same playhead: a goal revealed at 703.76 counts from 703.76.
+    goals = [e["id"] for e in b.known(b.clamp(p)) if e["type"] == "shot" and e["outcome_type"] == "successful"]
     return _ok(b, p, [score_frag(b.team_name("home"), b.team_name("away"), minute, sc["home"], sc["away"])],
                evidence=goals)
 
 
 def get_ball_position(b: Bundle, p: float) -> dict:
-    ball = b.ball(p)
     known = b.known(p)
     ev = [known[-1]["id"]] if known else []
+    if b.pending_shot(p) is not None:
+        # A shot is in flight or under review: "out of play" with x/y in the net would give the goal away (D28), and
+        # the MCP server passes x/y on. Say only THAT something is happening, never where the ball went.
+        return _ok(b, p, [_static("hold")], evidence=ev)
+    ball = b.ball(p)
     if not ball["alive"] or not ball["poss"]:
         return _ok(b, p, [_static("ball_out")], evidence=ev, x=ball["x"], y=ball["y"])
     side = ball["poss"]
@@ -171,8 +175,19 @@ def get_player_stats(b: Bundle, p: float, player: str, metrics: list[str] | None
     return _ok(b, p, None, say=say, evidence=[e["id"] for e in passes + shots], metrics=m)
 
 
-def get_last_events(b: Bundle, p: float, n: int = 3) -> dict:
-    ev = [e for e in b.known(p) if b.sig(e["id"])["priority"] >= 1][-max(1, min(int(n), 5)):][::-1]
+def _count(n: Any, default: int = 3) -> int:
+    """How many events the caller asked for: 2, 2.0, "2" or "two"; anything else (NaN, "lots") is the default."""
+    if isinstance(n, str) and n.strip().lower() in NUM[1:]:
+        return NUM.index(n.strip().lower())
+    try:
+        f = float(n)
+    except (TypeError, ValueError, OverflowError):
+        return default
+    return int(f) if math.isfinite(f) else default
+
+
+def get_last_events(b: Bundle, p: float, n: Any = 3) -> dict:
+    ev = [e for e in b.known(p) if b.sig(e["id"])["priority"] >= 1][-max(1, min(_count(n), 5)):][::-1]
     if not ev:
         return _ok(b, p, [_static("nothing_yet")])
     parts: list[tuple[str, str]] = []
@@ -275,6 +290,16 @@ def get_recap(b: Bundle, p: float, moment: Any = "so_far") -> dict:
     return _ok(b, p, parts, say=say, evidence=[e["id"] for e in keep], moment=lead)
 
 
+def _finite(v: Any) -> bool:
+    """A real, finite number (not a bool, not NaN or inf, not an int too big for a float)."""
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        return False
+    try:
+        return math.isfinite(v)
+    except OverflowError:
+        return False
+
+
 NO_DETAIL_LEVEL = ("I can do key moments only, or the full radio commentary. Say which you'd like.")
 DETAIL_SAID = {"key": "Key moments only from now on: chances, goals and cards.",
                "full": "The full radio commentary from now on."}
@@ -286,7 +311,7 @@ def set_preferences(b: Bundle, p: float, **prefs: Any) -> dict:
     for k, v in prefs.items():
         if k in allowed and v in allowed[k]:
             clean[k] = v
-        elif k == "crowd_mix" and isinstance(v, (int, float)):
+        elif k == "crowd_mix" and _finite(v):
             clean[k] = min(1.0, max(0.0, float(v)))
     # A follow or detail request carries no vibration or crowd change: the live model was seen filling those in
     # (27 Oct: "follow Olvholm" arrived with haptics="events", detail="full"), and a fan's settings must never move
@@ -323,7 +348,7 @@ def adjust_sound(b: Bundle, p: float, sound: Any = None, change: Any = None, lev
     relay adds from the fan's last `ask` (never the model); without it the answer says the change, not the result."""
     if sound not in SOUNDS:
         return {"error": "unknown_sound", "candidates": list(SOUNDS)}
-    num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)   # noqa: E731
+    num = _finite   # NaN is not a level: max(0, NaN) is 0, which would turn the sound off unasked
     if num(level):
         new = round(min(100.0, max(0.0, float(level))))
     elif num(change) and change:
@@ -374,9 +399,9 @@ def call(name: str, args: dict[str, Any], playhead_s: float, bundle: Bundle) -> 
     fn = TOOLS.get(name)
     if fn is None:
         return {"error": "unknown_tool", "candidates": sorted(TOOLS)}
-    p = bundle.clamp(playhead_s)
-    clean = {k: v for k, v in (args or {}).items() if k not in ("playhead_s", "session_id")}   # never trust a clock
     try:
+        p = bundle.clamp(playhead_s)    # a NaN or non-numeric playhead is the cut's start, never an exception
+        clean = {k: v for k, v in (args or {}).items() if k not in ("playhead_s", "session_id")}   # never trust a clock
         return fn(bundle, p, **clean)
-    except TypeError as e:
+    except (TypeError, ValueError, OverflowError) as e:
         return {"error": "bad_arguments", "candidates": [], "hint": str(e)}

@@ -69,3 +69,39 @@ def test_realtime_harness_times_every_build_line(judge):
 def test_percentiles():
     assert realtime.pct([], 50) is None
     assert realtime.pct([1, 2, 3, 4], 50) == 2 and realtime.pct([1, 2, 3, 4], 95) == 4
+    # Nearest rank is the ceil(q/100 * n)-th value. round(x + 0.5) rounded halves to even and took one too many:
+    assert realtime.pct([1, 2], 50) == 1                     # was 2
+    assert realtime.pct(list(range(1, 11)), 50) == 5         # was 6
+    assert realtime.pct(list(range(1, 7)), 50) == 3          # was 4
+    assert realtime.pct(list(range(1, 21)), 95) == 19 and realtime.pct(list(range(1, 11)), 95) == 10
+    assert realtime.pct([5], 50) == 5 and realtime.pct([1, 2, 3], 0) == 1
+
+
+def test_stored_realtime_runs_are_resummarised_from_their_rows():
+    rows = [{"build": True, "budget_ms": 6000, "within_budget": True, "fallback": None, "plan_ms": p, "verify_ms": 1.0,
+             "tts_ms": 1.0, "total_ms": p + 2} for p in (100.0, 300.0)]
+    old = {"measured": "2026-10-23 01:06", "director": "d", "traces": "t", "speed": 1.0, "runs": 1, "rows": rows,
+           "p50_ms": {"total_ms": 302.0}}
+    new = realtime.resummarise(old)
+    assert new["p50_ms"]["total_ms"] == 102.0 and new["p95_ms"]["total_ms"] == 302.0
+    assert (new["measured"], new["director"], new["traces"], new["rows"]) == (old["measured"], "d", "t", rows)
+    assert realtime.resummarise({"speed": 1.0}) == {"speed": 1.0}
+
+
+def test_report_counts_each_languages_truth_and_spoiler_checks(judge, tmp_path):
+    rep = metrics.languages(judge, "judge")
+    from tely.commentary.languages import LANGS
+    assert set(rep) == set(LANGS)
+    for lang, x in rep.items():
+        assert x["aligned"] and x["lines"] == 70, lang
+        assert x["truth_check_pass"] == x["spoiler_check_pass"] == x["lines"], (lang, x)
+    # a wrong minute in a copy of the German track is counted, not hidden
+    import shutil
+    d = tmp_path / "judge"
+    d.mkdir()
+    for name in ("cues.en.radio.jsonl", "cues.de.radio.jsonl"):
+        shutil.copyfile(metrics.BUNDLE / "judge" / name, d / name)
+    de = (d / "cues.de.radio.jsonl").read_text(encoding="utf-8").replace("sechsundfünfzig", "fünfundfünfzig")
+    (d / "cues.de.radio.jsonl").write_text(de, encoding="utf-8", newline="\n")
+    bad = metrics.languages(judge, "judge", tmp_path)
+    assert list(bad) == ["de"] and bad["de"]["truth_check_pass"] == 69

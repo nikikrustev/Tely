@@ -1,6 +1,6 @@
 {
  "stage": 5,
- "generated": "2026-10-23",
+ "generated": "2026-10-27",
  "voice": "en-US-Brian:DragonHDLatestNeural",
  "cut": "judge",
  "lines": 70,
@@ -134,6 +134,50 @@
    }
   ]
  },
+ "languages": {
+  "ar": {
+   "lines": 70,
+   "aligned": true,
+   "truth_check_pass": 70,
+   "spoiler_check_pass": 70,
+   "audio_matches_text": 70
+  },
+  "bg": {
+   "lines": 70,
+   "aligned": true,
+   "truth_check_pass": 70,
+   "spoiler_check_pass": 70,
+   "audio_matches_text": 70
+  },
+  "de": {
+   "lines": 70,
+   "aligned": true,
+   "truth_check_pass": 70,
+   "spoiler_check_pass": 70,
+   "audio_matches_text": 70
+  },
+  "es": {
+   "lines": 70,
+   "aligned": true,
+   "truth_check_pass": 70,
+   "spoiler_check_pass": 70,
+   "audio_matches_text": 70
+  },
+  "fr": {
+   "lines": 70,
+   "aligned": true,
+   "truth_check_pass": 70,
+   "spoiler_check_pass": 70,
+   "audio_matches_text": 70
+  },
+  "hi": {
+   "lines": 70,
+   "aligned": true,
+   "truth_check_pass": 70,
+   "spoiler_check_pass": 70,
+   "audio_matches_text": 70
+  }
+ },
  "foundry_eval": {
   "measured": "2026-10-23",
   "where": "foundry",
@@ -151,6 +195,42 @@
   },
   "error": null
  },
+ "qa_latency": {
+  "measured": "2026-10-23 16:40",
+  "files": [
+   "eval/live/live_2026-10-23.jsonl"
+  ],
+  "questions": 31,
+  "answered": 31,
+  "outcomes": {
+   "answered": 31
+  },
+  "n_latency": 31,
+  "p50_ms": 1137,
+  "p95_ms": 1817,
+  "max_ms": 2853,
+  "facts_p50_ms": 2657,
+  "facts_p95_ms": 3353,
+  "client_p50_ms": 953,
+  "client_p95_ms": 1688,
+  "basis": [
+   "audio_end_ms"
+  ],
+  "tool_calls": 43,
+  "spoiler_hits": 0,
+  "spoiler_hit_list": [],
+  "model": [
+   "gpt-realtime-2.1-mini"
+  ],
+  "voice": [
+   "en-US-Brian:DragonHDLatestNeural"
+  ],
+  "rival_median_s": 4.66,
+  "definition": "relay: fan's last word reached the relay -> first answer audio from Voice Live (includes the 500 ms VAD silence; often a short preamble); facts: the same, to the first audio after the tool results went back; client: relay speech_stopped message -> first answer bytes",
+  "runs": [
+   "20261023T162736"
+  ]
+ },
  "realtime": [
   {
    "measured": "2026-10-23 01:06",
@@ -166,10 +246,10 @@
    ],
    "within_budget": 2,
    "p50_ms": {
-    "plan_ms": 2126.9,
-    "verify_ms": 1.2,
-    "tts_ms": 1614.0,
-    "total_ms": 3749.1
+    "plan_ms": 1275.4,
+    "verify_ms": 1.0,
+    "tts_ms": 1547.2,
+    "total_ms": 2831.8
    },
    "p95_ms": {
     "plan_ms": 2126.9,
@@ -258,10 +338,10 @@
    ],
    "within_budget": 10,
    "p50_ms": {
-    "plan_ms": 1607.4,
+    "plan_ms": 1577.1,
     "verify_ms": 1.0,
-    "tts_ms": 1296.5,
-    "total_ms": 2983.1
+    "tts_ms": 1287.6,
+    "total_ms": 2970.0
    },
    "p95_ms": {
     "plan_ms": 2407.9,
@@ -576,42 +656,6 @@
    ]
   }
  ],
- "qa_latency": {
-  "measured": "2026-10-23 16:40",
-  "files": [
-   "eval/live/live_2026-10-23.jsonl"
-  ],
-  "questions": 31,
-  "answered": 31,
-  "outcomes": {
-   "answered": 31
-  },
-  "n_latency": 31,
-  "p50_ms": 1137,
-  "p95_ms": 1817,
-  "max_ms": 2853,
-  "facts_p50_ms": 2657,
-  "facts_p95_ms": 3353,
-  "client_p50_ms": 953,
-  "client_p95_ms": 1688,
-  "basis": [
-   "audio_end_ms"
-  ],
-  "tool_calls": 43,
-  "spoiler_hits": 0,
-  "spoiler_hit_list": [],
-  "model": [
-   "gpt-realtime-2.1-mini"
-  ],
-  "voice": [
-   "en-US-Brian:DragonHDLatestNeural"
-  ],
-  "rival_median_s": 4.66,
-  "definition": "relay: fan's last word reached the relay -> first answer audio from Voice Live (includes the 500 ms VAD silence; often a short preamble); facts: the same, to the first audio after the tool results went back; client: relay speech_stopped message -> first answer bytes",
-  "runs": [
-   "20261023T162736"
-  ]
- },
  "qa": {
   "questions": 31,
   "spoiler_leaks": 0,
@@ -697,7 +741,7 @@
     "playhead": "56:40",
     "expected": "answer",
     "intent": "ball",
-    "answer": "The ball is out of play.",
+    "answer": "Hold that thought, watch this!",
     "answered": true,
     "correct": true,
     "spoiler_leak": false
@@ -1020,8 +1064,8 @@
   "answers": {
    "answers": 413,
    "clean_blocked": [],
-   "planted": 1015,
-   "caught": 1015,
+   "planted": 1007,
+   "caught": 1007,
    "by_kind": {
     "score": {
      "planted": 177,
@@ -1036,8 +1080,8 @@
      "caught": 413
     },
     "distance": {
-     "planted": 43,
-     "caught": 43
+     "planted": 35,
+     "caught": 35
     },
     "name": {
      "planted": 205,
@@ -1049,10 +1093,10 @@
    "false_block_rate": 0.0
   },
   "verifier_off": {
-   "planted": 1163,
+   "planted": 1155,
    "caught": 0,
    "caught_rate": 0.0,
-   "would_be_spoken": 1163
+   "would_be_spoken": 1155
   },
   "director": {
    "shots": 4,

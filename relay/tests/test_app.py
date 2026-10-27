@@ -3,15 +3,17 @@ from __future__ import annotations
 
 import asyncio
 import json
+import time
 
 import pytest
 from fastapi.testclient import TestClient
 
 from tely.qa.bundle import load_bundle
-from relay.app import create_app
-from relay.caps import Caps
+from relay.app import client_ip, create_app
+from relay.caps import Caps, RateLimit
 
 B = load_bundle()
+OURS = {"origin": "http://localhost:5173"}      # in the default ALLOWED_ORIGINS; browsers always send Origin
 
 
 class ScriptedLink:
@@ -45,10 +47,11 @@ class ScriptedLink:
         pass
 
 
-def client(connect=None, caps=None, mount_mcp=False):
+def client(connect=None, caps=None, mount_mcp=False, mcp_caps=None):
     async def fail():
         raise ConnectionError("no voice live in tests")
-    return TestClient(create_app(bundle=B, caps=caps or Caps(), connect=connect or fail, mount_mcp=mount_mcp))
+    return TestClient(create_app(bundle=B, caps=caps or Caps(), connect=connect or fail, mount_mcp=mount_mcp,
+                                 mcp_caps=mcp_caps))
 
 
 def test_health():
@@ -58,13 +61,13 @@ def test_health():
 
 def test_demo_mode_off_refuses_out_loud(monkeypatch):
     monkeypatch.setenv("DEMO_MODE", "off")
-    with client() as c, c.websocket_connect("/voice") as ws:
+    with client() as c, c.websocket_connect("/voice", headers=OURS) as ws:
         m = ws.receive_json()
         assert m["type"] == "refusal" and m["reason"] == "demo_off" and m["say"]
 
 
 def test_no_voice_live_says_unavailable():
-    with client() as c, c.websocket_connect("/voice") as ws:
+    with client() as c, c.websocket_connect("/voice", headers=OURS) as ws:
         m = ws.receive_json()
         assert m["type"] == "refusal" and m["clip"] == "live_unavailable"
 
@@ -76,13 +79,65 @@ def test_foreign_origin_is_closed():
                 ws.receive_json()
 
 
+def test_no_origin_is_closed():
+    """Browsers always send Origin on a WebSocket; a script without one gets no paid Voice Live session."""
+    with client() as c:
+        with pytest.raises(Exception):
+            with c.websocket_connect("/voice") as ws:
+                ws.receive_json()
+
+
+def test_client_ip_is_the_rightmost_forwarded_entry():
+    class Peer:
+        host = "10.0.0.5"
+    assert client_ip({"x-forwarded-for": "1.2.3.4, 203.0.113.9"}, Peer()) == "203.0.113.9"   # leftmost is the client's
+    assert client_ip({"x-forwarded-for": " 203.0.113.9 "}, Peer()) == "203.0.113.9"
+    assert client_ip({"x-forwarded-for": " , "}, Peer()) == "10.0.0.5"
+    assert client_ip({}, None) == "?"
+
+
+def test_a_spoofed_leftmost_forwarded_for_does_not_dodge_the_per_ip_caps():
+    async def connect():
+        return ScriptedLink()
+
+    def xff(fake):
+        return {**OURS, "x-forwarded-for": f"{fake}, 203.0.113.9"}   # the ingress appended the real address
+
+    with client(connect, Caps(open_per_ip=1)) as c:
+        with c.websocket_connect("/voice", headers=xff("1.1.1.1")) as ws1:
+            assert ws1.receive_json() == {"type": "ready"}
+            with c.websocket_connect("/voice", headers=xff("2.2.2.2")) as ws2:
+                m = ws2.receive_json()
+                assert m["type"] == "refusal" and m["reason"] == "busy"
+
+
+def test_mcp_rate_limit_uses_the_real_ip():
+    with client(mcp_caps=RateLimit(per_ip=2)) as c:
+        codes = [c.post("/mcp", json={}, headers={"x-forwarded-for": f"9.9.9.{i}, 198.51.100.7"}).status_code
+                 for i in range(3)]
+        assert codes[:2] != [429, 429] and codes[2] == 429
+        assert c.post("/mcp", json={}, headers={"x-forwarded-for": "198.51.100.8"}).status_code != 429
+
+
+def test_a_session_ends_at_its_hard_limit_however_busy():
+    async def connect():
+        return ScriptedLink()
+
+    with client(connect, Caps(session_max_s=0.6, idle_s=5)) as c, c.websocket_connect("/voice", headers=OURS) as ws:
+        assert ws.receive_json() == {"type": "ready"}
+        for _ in range(4):                               # each frame would reset an idle timer
+            ws.send_text(json.dumps({"type": "metrics", "client_latency_ms": 1}))
+            time.sleep(0.2)
+        assert ws.receive_json() == {"type": "closed", "reason": "session_limit"}
+
+
 def test_one_live_question_over_the_websocket():
     link = ScriptedLink()
 
     async def connect():
         return link
 
-    with client(connect) as c, c.websocket_connect("/voice") as ws:
+    with client(connect) as c, c.websocket_connect("/voice", headers=OURS) as ws:
         assert ws.receive_json() == {"type": "ready"}
         ws.send_text(json.dumps({"type": "ask", "playhead_s": B.t0 + 45}))
         assert ws.receive_json()["type"] == "listening"
@@ -110,7 +165,7 @@ def test_session_cap_over_the_websocket():
     async def connect():
         return link
 
-    with client(connect, Caps(questions_per_session=0)) as c, c.websocket_connect("/voice") as ws:
+    with client(connect, Caps(questions_per_session=0)) as c, c.websocket_connect("/voice", headers=OURS) as ws:
         ws.receive_json()
         ws.send_text(json.dumps({"type": "ask", "playhead_s": B.t0}))
         m = ws.receive_json()

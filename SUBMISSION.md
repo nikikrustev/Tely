@@ -17,7 +17,7 @@ Open the demo link in Chrome or Edge, with headphones if you have them.
 2. Press **Ask the commentator** (or Enter), wait for the beep and ask out loud: "What's the score?", "Who wins?" (it won't tell you). Press it again mid-answer and it stops.
 3. Say "speak Spanish": the answers and the match switch language. Below the radar, **Director's notes** show what the agents decided, after each moment.
 
-If the first question says live questions aren't available, the relay was asleep: wait 30 s and ask again. **Quick questions** work offline.
+If the first question says live questions aren't available, the relay was asleep: wait up to a minute and ask again. **Quick questions** work offline.
 
 ## The problem
 
@@ -43,8 +43,8 @@ From `eval/report.json` on the judge cut (8 synthetic minutes); the translated l
 | Measure | Result |
 |---|---|
 | Spoiler leaks in commentary | **0** in 70 lines, and 0 in 6 × 70 translated lines |
-| **Planted errors caught** (names, scores, minutes, invented numbers, outcome words) | **148/148** commentary, **1015/1015** answers; 0 clean lines blocked |
-| Verifier switched off | 0/1163 caught |
+| **Planted errors caught** (names, scores, minutes, invented numbers, outcome words) | **148/148** commentary, **1007/1007** answers; 0 clean lines blocked |
+| Verifier switched off | 0/1155 caught |
 | Director handed the outcome | input unchanged 4/4; replies carrying it rejected 8/8 |
 | Director on Foundry (gpt-5-mini) | 4 calls, **0 fallbacks**, 10/10 build-ups inside the 5.8 s budget (p95 3.56 s) |
 | Live spoken questions | **31/31** answered, **0** spoiler hits, **p50 1.14 s** to the first answer audio |

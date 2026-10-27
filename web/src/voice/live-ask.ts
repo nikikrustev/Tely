@@ -3,12 +3,15 @@
 // this file opens the mic, streams it to the relay, plays the answer and resolves when it has finished playing.
 // WHY a relay WebSocket and not browser WebRTC: docs/DECISIONS.md D17 (file 40 §2 routing is preview and ambiguous).
 // On any error, or no answer within 8 s, the fan hears why (a pre-rendered line in the commentary voice) and B's
-// preset menu opens.
+// preset menu opens. A relay waking from zero replicas (D6) takes ~45 s, so a first connect that times out gets a
+// "waking up" line and one longer try first. cancel() stops every step, the connect and the refusal line included.
 import { soundLevels, VoiceStage } from '../audio/mix';
 import { liveLanguage } from './language';
 import type { LaneBContext, LiveAskHandler } from '../contracts/stage';
 
 export const ANSWER_TIMEOUT_MS = 8000;  // presets take over within 8 s
+export const WAKE_TIMEOUT_MS = 60_000;  // the one retry after a connect timeout: a cold relay took ~45 s (27 Oct)
+export const BEEP_MS = 160;             // the "speak now" beep (earcon 'listen'): mic audio after it is sent
 export const MIC_DELAY_MS = 250;        // file 40 §1: the screen reader's "pressed" stays out of the mic
 export const MAX_LISTEN_MS = 12000;     // relay/caps.py max_listen_s: then the relay ends the turn itself
 export const ANSWER_MAX_MS = 30_000;   // safety: no answer runs longer (300 output tokens is ~15 s)
@@ -32,7 +35,10 @@ export const NOT_HEARD: Refusal = {
   clip: 'live_not_heard',
   say: "I didn't catch a question, so here are the preset questions.",
 };
+export const WAKING = { clip: 'live_waking', say: 'Waking up the live commentator, one moment.' };
 const LASTING = new Set(['demo_off', 'daily_cap', 'session_cap']);
+/** connect() ran out of time (not a refusal: the relay may still be waking). */
+const TIMED_OUT: Refusal = { reason: 'timeout', clip: UNAVAILABLE.clip, say: UNAVAILABLE.say };
 
 /** The parts of a WebSocket this file uses (tests pass a fake). */
 export interface RelaySocket {
@@ -64,7 +70,7 @@ export interface LiveIO {
   ping?(): void;
   prefs?(prefs: Record<string, unknown>): void;
   /** Where the question is (D24): the page shows it on screen. Never announced: the mic may still be open. */
-  phase?(p: 'heard' | 'answering'): void;
+  phase?(p: 'waking' | 'heard' | 'answering'): void;
   /** After each answer (D33): the tools Voice Live called and the time to the first answer audio, for the notes. */
   trace?(t: { tools: string[]; latency_ms: number | null }): void;
 }
@@ -81,42 +87,75 @@ export class LiveAsk implements LiveAskHandler {
   private listener: ((m: Msg | ArrayBuffer) => void) | null = null;
   private downUntil = 0;
   private stopCurrent: (() => void) | null = null;
+  /** The running ask(): cancel() sets `cancelled` and resolves `stopped`, whatever step it is on. */
+  private current: Asking | null = null;
 
   constructor(private url: string, private io: LiveIO) {}
 
   async ask(playheadS: number): Promise<void> {
-    if (this.stopCurrent) return;
+    if (this.current) return;
+    let stop = () => {};
+    const stopped = new Promise<null>((res) => { stop = () => res(null); });
+    const cur: Asking = { cancelled: false, stopped, stop };
+    this.current = cur;
     this.events.push([this.io.now(), 'ask']);
-    let r: Refusal | null;
-    if (this.io.now() < this.downUntil) r = UNAVAILABLE;
-    else {
-      try {
-        r = await this.question(playheadS);
-      } catch {
-        r = UNAVAILABLE;
+    try {
+      let r: Refusal | null;
+      if (this.io.now() < this.downUntil) r = UNAVAILABLE;
+      else {
+        try {
+          r = await this.question(playheadS, cur);
+        } catch {
+          r = UNAVAILABLE;
+        }
       }
+      if (r && !cur.cancelled) await this.refuse(r, cur);
+    } finally {
+      this.current = null;
     }
-    if (r) await this.refuse(r);
   }
 
   cancel(): void {
+    const cur = this.current;
+    if (cur && !cur.cancelled) {
+      cur.cancelled = true;
+      cur.stop();
+      this.io.stopPlayback();              // a refusal or "waking up" line stops mid-word too
+    }
     this.stopCurrent?.();
   }
 
-  private async refuse(r: Refusal): Promise<void> {
+  /** p, or null as soon as the fan cancels. */
+  private race<T>(p: Promise<T>, cur: Asking): Promise<T | null> {
+    return Promise.race([p, cur.stopped]);
+  }
+
+  private async refuse(r: Refusal, cur: Asking): Promise<void> {
     this.events.push([this.io.now(), `refusal:${r.reason}`]);
     if (LASTING.has(r.reason)) {
       this.downUntil = this.io.now() + DOWN_FOR_MS;
       this.drop();
     }
-    await this.io.clip(r.clip, r.say);    // the fan is told why, in the commentator's voice
+    await this.race(this.io.clip(r.clip, r.say), cur);   // the fan is told why, in the commentator's voice
+    if (cur.cancelled) return;                            // stopped: no menu pops up after the fan's stop
     this.events.push([this.io.now(), 'presets']);
     this.io.showPresets();
   }
 
-  /** One question. Resolves null once the answer has played, or the refusal to speak instead. */
-  private async question(playheadS: number): Promise<Refusal | null> {
-    const refused = await this.connect();
+  /** One question. Resolves null once the answer has played (or the fan cancelled), or the refusal to speak instead. */
+  private async question(playheadS: number, cur: Asking): Promise<Refusal | null> {
+    let refused = await this.race(this.connect(ANSWER_TIMEOUT_MS), cur);
+    if (cur.cancelled) return null;
+    if (refused === TIMED_OUT) {
+      // A cold relay (minReplicas 0, D6): say so, then one longer try. Both steps stay cancellable.
+      this.events.push([this.io.now(), 'waking']);
+      this.io.phase?.('waking');
+      const again = this.connect(WAKE_TIMEOUT_MS);
+      await this.race(this.io.clip(WAKING.clip, WAKING.say), cur);
+      refused = await this.race(again, cur);
+      if (cur.cancelled) return null;
+      if (refused === TIMED_OUT) return UNAVAILABLE;
+    }
     if (refused) return refused;
     const sock = this.sock as RelaySocket;
     return new Promise<Refusal | null>((resolve) => {
@@ -174,13 +213,24 @@ export class LiveAsk implements LiveAskHandler {
           return;
         }
         switch (m.type) {
-          case 'listening':
-            this.io.earcon('listen');
-            arm(ANSWER_TIMEOUT_MS, NOT_HEARD);
-            void this.io.wait(MIC_DELAY_MS).then(() => (done ? null : this.io.openMic((pcm) => this.send(pcm))))
-              .then((m2) => { if (m2 && done) m2.stop(); else if (m2) mic = m2; })
+          case 'listening': {
+            // The browser's mic permission prompt can take any time: the "speak now" beep and the 8 s "not heard"
+            // timer start only once the mic is really open. Audio from under the beep is not sent.
+            clear();
+            let sendFrom = Infinity;
+            void this.io.wait(MIC_DELAY_MS)
+              .then(() => (done ? null : this.io.openMic((pcm) => { if (this.io.now() >= sendFrom) this.send(pcm); })))
+              .then((m2) => {
+                if (!m2) return;
+                if (done) { m2.stop(); return; }
+                mic = m2;
+                this.io.earcon('listen');
+                sendFrom = this.io.now() + BEEP_MS;
+                arm(ANSWER_TIMEOUT_MS, NOT_HEARD);
+              })
               .catch(() => finish(UNAVAILABLE));      // no mic permission: presets
             break;
+          }
           case 'speech_started':
             heard = true;
             clear();
@@ -226,14 +276,15 @@ export class LiveAsk implements LiveAskHandler {
     });
   }
 
-  /** Open the relay socket once and reuse it until the relay closes it (90 s idle, file 40 §6). */
-  private connect(): Promise<Refusal | null> {
+  /** Open the relay socket once and reuse it until the relay closes it (90 s idle, file 40 §6). Resolves TIMED_OUT
+   *  (and drops the socket) if the relay has not said ready within timeoutMs. */
+  private connect(timeoutMs: number): Promise<Refusal | null> {
     if (this.sock && this.ready) return this.ready;
     const sock = this.io.openSocket(this.url);
     sock.binaryType = 'arraybuffer';
     this.sock = sock;
     this.ready = new Promise<Refusal | null>((resolve) => {
-      const t = setTimeout(() => { this.drop(); resolve(UNAVAILABLE); }, ANSWER_TIMEOUT_MS);
+      const t = setTimeout(() => { if (this.sock === sock) this.drop(); resolve(TIMED_OUT); }, timeoutMs);
       let open = false;                    // the first ready/refusal is the handshake; later ones belong to a question
       sock.onmessage = (ev) => {
         const m = ev.data instanceof ArrayBuffer ? ev.data : (safeJson(ev.data) as Msg | null);
@@ -278,6 +329,8 @@ export class LiveAsk implements LiveAskHandler {
   }
 }
 
+interface Asking { cancelled: boolean; stopped: Promise<null>; stop: () => void }
+
 function safeJson(data: unknown): unknown {
   try {
     return typeof data === 'string' ? JSON.parse(data) : null;
@@ -321,6 +374,8 @@ export interface BrowserIOOptions {
 
 export function browserIO(o: BrowserIOOptions): LiveIO {
   let workletReady: Promise<void> | null = null;
+  let workletCtx: AudioContext | null = null;
+  let speaking = false;                               // the browser voice is saying a fallback line
   let out: GainNode | null = null;
   let answerBus: GainNode | null = null;
   let voice: VoiceStage | null = null;
@@ -342,7 +397,7 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
     }
     return b;
   };
-  if (typeof fetch !== 'undefined') for (const id of [UNAVAILABLE.clip, NOT_HEARD.clip]) void clipBytes(id);
+  if (typeof fetch !== 'undefined') for (const id of [UNAVAILABLE.clip, NOT_HEARD.clip, WAKING.clip]) void clipBytes(id);
   const ctx = (): AudioContext => {
     const c = o.audio();
     if (!c) throw new Error('no audio context yet');
@@ -380,8 +435,16 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 },
       });
-      workletReady ??= c.audioWorklet.addModule(URL.createObjectURL(new Blob([MIC_WORKLET], { type: 'text/javascript' })));
-      await workletReady;
+      if (workletCtx !== c) { workletReady = null; workletCtx = c; }   // a worklet module belongs to one context
+      // A failed load is forgotten, so the next question tries again instead of reusing the rejected promise.
+      workletReady ??= c.audioWorklet.addModule(URL.createObjectURL(new Blob([MIC_WORKLET], { type: 'text/javascript' })))
+        .catch((e: unknown) => { workletReady = null; throw e; });
+      try {
+        await workletReady;
+      } catch (e) {
+        stream.getTracks().forEach((t) => t.stop());   // the mic indicator must not stay on after a failure
+        throw e;
+      }
       const src = c.createMediaStreamSource(stream);
       const node = new AudioWorkletNode(c, 'as-mic');
       const sink = c.createGain();
@@ -434,6 +497,7 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
       playing.forEach((s) => { try { s.stop(at); } catch { /* not started */ } });
       playing.clear();
       nextT = 0;
+      if (speaking && typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
     },
     earcon(kind) {
       try {
@@ -452,13 +516,15 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
         const src = c.createBufferSource();
         src.buffer = buf;
         src.connect(out as GainNode);
+        playing.add(src);                                    // so stopPlayback() (a cancel) stops it too
         await new Promise<void>((res) => {
           const t = setTimeout(res, buf.duration * 1000 + 1500);   // onended never fires in a suspended context
-          src.onended = () => { clearTimeout(t); res(); };
+          src.onended = () => { clearTimeout(t); playing.delete(src); res(); };
           src.start();
         });
       } catch {
-        await browserVoice(text);
+        speaking = true;
+        try { await browserVoice(text); } finally { speaking = false; }
       }
     },
     // SEAM(A->B): contracts/stage.ts Ask.showPresets(). B opens the menu once its own Ask has finished, and focuses it.

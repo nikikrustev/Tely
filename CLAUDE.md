@@ -7,7 +7,7 @@ spoiler firewall), and a voice the fan can question. One owner: potencialbg.
 
 ## Read before starting work
 1. `README.md`, then `docs/architecture.md` for the code map and the seams, and `docs/DECISIONS.md` for why each
-   thing is the way it is (D1–D37, dated).
+   thing is the way it is (D1–D38, dated).
 2. `stoynev research/INDEX.md` lists the research library, one file per topic, each with a TL;DR and sources. Read
    the relevant TL;DR before researching or building. Don't redo work that is already there.
 3. `Berbata_Hackathon_Intel.md`, `Berbata_Idea_Shortlist.html` and `Berbata_Idea_Brainstorm.html` hold the brief and

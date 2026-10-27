@@ -9,6 +9,9 @@
     "foundryResourceGroup": { "value": "${FOUNDRY_RESOURCE_GROUP=rg-as-dev}" },
     "relayImage": { "value": "${RELAY_IMAGE=}" },
     "ttsVoice": { "value": "${TTS_VOICE=en-US-Brian:DragonHDLatestNeural}" },
-    "demoMode": { "value": "${DEMO_MODE=live}" }
+    "demoMode": { "value": "${DEMO_MODE=live}" },
+    "dailyQuestionCap": { "value": "${DAILY_QUESTION_CAP=200}" },
+    "ipDailyQuestionCap": { "value": "${DAILY_QUESTION_CAP_PER_IP=20}" },
+    "budgetEmail": { "value": "${BUDGET_EMAIL=}" }
   }
 }

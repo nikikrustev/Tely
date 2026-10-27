@@ -76,14 +76,25 @@ describe("A's review fixes", () => {
     expect(seen).toBe(1);
   });
 
-  it('the score answer never lists a goal as evidence while it still says the old score', () => {
+  it('the score counts a goal from the moment it is revealed, and lists it (27 Oct review, item 9)', () => {
     const goal = T.b.events.find((e) => e.type === 'shot' && e.outcome_type === 'successful')!;
     const r = T.sig(goal.id).reveal_t;                   // 703.76
-    const during = T.get_score_and_clock(r + 0.1);       // the score row still says nil-nil until 704
-    expect(during.say).toMatch(/Navy nil/);
-    expect(during.evidence_ids).not.toContain(goal.id);
-    const after = T.get_score_and_clock(Math.floor(r) + 1);
-    expect(after.say).toMatch(/Navy one/);
-    expect(after.evidence_ids).toContain(goal.id);
+    const before = T.get_score_and_clock(r - 0.1);
+    expect(before.say).toMatch(/Navy nil/);
+    expect(before.evidence_ids).not.toContain(goal.id);
+    const just = T.get_score_and_clock(r + 0.1);         // the per-second row still said nil-nil here until 704
+    expect(just.say).toMatch(/Navy one/);
+    expect(just.evidence_ids).toContain(goal.id);
+  });
+  it('a NaN playhead is the cut start, and the ball says nothing while a shot is unrevealed (items 11, 12)', () => {
+    expect(T.clamp(Number.NaN)).toBe(T.t0);
+    expect(T.clamp(Number.POSITIVE_INFINITY)).toBe(T.t0);
+    expect(T.get_last_events(800, Number.NaN).say).toBe(T.get_last_events(800, 3).say);
+    const shot = T.b.events.find((e) => e.type === 'shot')!;
+    const s = T.sig(shot.id);
+    const during = T.get_ball_position((s.t + s.reveal_t) / 2);
+    expect(during.fragments).toEqual(['hold']);
+    expect(during.x).toBeUndefined();
+    expect(during.y).toBeUndefined();
   });
 });

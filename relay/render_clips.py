@@ -15,7 +15,7 @@ from tely.commentary.source import BUNDLE
 from tely.commentary.ssml import DEFAULT_VOICE, build_ssml, ssml_sha256
 from tely.commentary.tts import AzureSynthesiser, TtsCache, TtsError, load_env
 
-from .clips import CLIPS
+from .clips import CLIPS, NOTICES
 
 FOLDER = BUNDLE / "judge" / "live"
 STYLE = "calm"
@@ -24,7 +24,7 @@ STYLE = "calm"
 def build(voice: str, synth_factory) -> dict:
     cache = TtsCache(FOLDER, synth_factory, index_name="cache.json")
     table = {}
-    for cid, text in CLIPS.items():
+    for cid, text in {**CLIPS, **NOTICES}.items():
         ssml = build_ssml(text, STYLE, voice)
         sha = ssml_sha256(ssml)
         table[cid] = {"file": f"{sha}.mp3", "text": text, "duration_ms": cache.ensure(sha, ssml, text)}

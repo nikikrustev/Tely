@@ -16,8 +16,9 @@ export interface EventSignal {
   t: number; reveal_t: number; xg: number | null; priority: number; spoken: string; spoken_past: string;
 }
 export interface QaBundle {
-  meta: { judge_cut: { t_start: number; t_end: number }; periods: { clock_start: string }[];
-          teams: Record<'home' | 'away', { short_name: string; attacks: string }> };
+  meta: { judge_cut: { t_start: number; t_end: number; score_at_start?: { home: number; away: number } };
+          periods: { clock_start: string }[];
+          teams: Record<'home' | 'away', { id?: string; short_name: string; attacks: string }> };
   events: QaEvent[];
   signals: { per_second: { t: number; score: { home: number; away: number } }[]; events: Record<string, EventSignal> };
   ticks: { t0: number; ball: { hz: number; rows: [number, number, number, number, string | null][] } };
@@ -66,7 +67,8 @@ export class LocalTools {
 
   get t0(): number { return this.b.meta.judge_cut.t_start; }
   get t1(): number { return this.b.meta.judge_cut.t_end; }
-  clamp(p: number): number { return Math.min(Math.max(p, this.t0), this.t1); }
+  /** p inside the cut; a playhead that isn't a finite number is the cut's start (bundle.py clamp). */
+  clamp(p: number): number { return Number.isFinite(p) ? Math.min(Math.max(p, this.t0), this.t1) : this.t0; }
   private get offset(): number {
     const [mm, ss] = (this.b.meta.periods[0]?.clock_start ?? '00:00').split(':');
     return Number(mm) * 60 + Math.trunc(Number(ss));
@@ -95,10 +97,23 @@ export class LocalTools {
   team(side: 'home' | 'away'): string { return this.b.meta.teams[side].short_name; }
   private attacks(side: 'home' | 'away'): number { return this.b.meta.teams[side].attacks === '+x' ? 1 : -1; }
   known(p: number): QaEvent[] { return this.b.events.filter((e) => this.sig(e.id).reveal_t <= p); }
+  /** Goals revealed by p, on top of the score when the window opens (bundle.py score): not the per-second row, which
+   *  is floor(p) and would read nil-nil just after a goal is revealed. */
   private score(p: number) {
-    const rows = this.b.signals.per_second;
-    const i = Math.min(Math.max(Math.floor(this.clamp(p) - (rows[0]?.t ?? 0)), 0), rows.length - 1);
-    return (rows[i] as (typeof rows)[number]).score;
+    const sc = { ...(this.b.meta.judge_cut.score_at_start ?? { home: 0, away: 0 }) };
+    for (const e of this.goals(p)) {
+      const side = e.team_id === this.b.meta.teams.home.id ? 'home' : e.team_id === this.b.meta.teams.away.id ? 'away' : null;
+      if (side) sc[side] += 1;
+    }
+    return sc;
+  }
+  private goals(p: number): QaEvent[] {
+    return this.known(this.clamp(p)).filter((e) => e.type === 'shot' && e.outcome_type === 'successful');
+  }
+  /** A shot struck by p whose outcome isn't revealed yet (bundle.py pending_shot). */
+  private pendingShot(p: number): boolean {
+    const q = this.clamp(p);
+    return this.b.events.some((e) => e.type === 'shot' && this.sig(e.id).t <= q && q < this.sig(e.id).reveal_t);
   }
   ball(p: number) {
     const b = this.b.ticks.ball;
@@ -118,8 +133,7 @@ export class LocalTools {
     const p = this.clamp(playhead), sc = this.score(p);
     const minute = Math.floor(this.clockS(p) / 60);
     const num = (n: number) => NUM[n] ?? String(n);
-    // Same second as the score row: a goal revealed at 703.76 counts from 704 (never contradicts "nil").
-    const goals = this.known(Math.floor(p)).filter((e) => e.type === 'shot' && e.outcome_type === 'successful').map((e) => e.id);
+    const goals = this.goals(p).map((e) => e.id);       // the goals score() counted, at the same playhead
     return this.ok(p, [[`score_m${minute}_${sc.home}_${sc.away}`,
       `${this.team('home')} ${num(sc.home)}, ${this.team('away')} ${num(sc.away)}, ${minute} minutes played.`]], undefined, goals);
   }
@@ -127,6 +141,8 @@ export class LocalTools {
   get_ball_position(playhead: number): Answer {
     const p = this.clamp(playhead), ball = this.ball(p), known = this.known(p);
     const ev = known.length ? [(known[known.length - 1] as QaEvent).id] : [];
+    // A shot in flight or under review: "out of play" with x/y in the net would give it away (D28). No x/y.
+    if (this.pendingShot(p)) return this.ok(p, [this.st('hold')], undefined, ev);
     if (!ball.alive || !ball.poss) return this.ok(p, [this.st('ball_out')], undefined, ev, { x: ball.x, y: ball.y });
     const side = ball.poss, ax = ball.x * this.attacks(side);
     const third = ax < -17.5 ? 'defensive_third' : ax < 17.5 ? 'middle_third' : 'attacking_third';
@@ -163,7 +179,7 @@ export class LocalTools {
 
   get_last_events(playhead: number, n = 3): Answer {
     const p = this.clamp(playhead);
-    const k = Math.max(1, Math.min(Math.trunc(n), 5));
+    const k = Math.max(1, Math.min(Number.isFinite(n) ? Math.trunc(n) : 3, 5));   // NaN asks for the default 3
     const ev = this.known(p).filter((e) => this.sig(e.id).priority >= 1).slice(-k).reverse();
     if (!ev.length) return this.ok(p, [this.st('nothing_yet')]);
     const parts: Part[] = [];

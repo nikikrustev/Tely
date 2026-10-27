@@ -1,5 +1,6 @@
 # The demo must stay up and free until judging ends (10 Nov).
-# Every 6 h, fetch the deployed page and the replay manifest the player loads first; the README badge shows the result.
+# Every 6 h, fetch the deployed page and the replay manifest the player loads first, and check the live-Ask relay's
+# /health says mode "live"; the README badge shows the result.
 # WHY a GitHub cron and not only an App Insights test: it is free and gives a public badge (file 21 §3). Needs no
 # credentials: it reads the public site only. Caveats (file 21): scheduled runs use the default branch, may start late
 # under load, and GitHub disables them after 60 days without repository activity.
@@ -16,7 +17,7 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10        # the relay check may wait out a cold start
     env:
       # A repository variable DEMO_URL overrides this if the site moves.
       DEMO_URL: ${{ vars.DEMO_URL || 'https://lively-ocean-0efe4ae0f.2.azurestaticapps.net' }}
@@ -34,3 +35,20 @@ jobs:
           cue="$(jq -r '.tracks.en.radio' manifest.json)"
           curl -fsS --retry 3 --retry-all-errors --max-time 30 -o /dev/null "${DEMO_URL%/}/replay/v1/judge/$cue"
           echo "OK: $DEMO_URL, bundle v1, $cue"
+      - name: Live Ask relay is up and live
+        # The relay URL comes from the site's live.json, the same file the page reads (azure.yaml writes it at deploy
+        # from the RELAY_URL azd output); a repository variable RELAY_URL overrides it. The relay scales to zero (D6),
+        # so this call also wakes it: the first request after idle took over 30 s (D17), hence the long timeout.
+        env:
+          RELAY_URL: ${{ vars.RELAY_URL }}
+        run: |
+          relay="$RELAY_URL"
+          if [ -z "$relay" ]; then
+            curl -fsS --retry 3 --retry-all-errors --max-time 30 "${DEMO_URL%/}/live.json" -o live.json
+            relay="$(jq -r '.relay // empty' live.json)"
+          fi
+          case "$relay" in https://*) ;; *) echo "::error::no https relay URL in live.json"; exit 1 ;; esac
+          curl -fsS --retry 3 --retry-all-errors --max-time 90 "${relay%/}/health" -o health.json
+          jq -e '.ok == true and .mode == "live"' health.json > /dev/null \
+            || { echo "::error::$relay/health is not live: $(head -c 200 health.json)"; exit 1; }
+          echo "OK: $relay/health, mode live"

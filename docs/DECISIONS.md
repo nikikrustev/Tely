@@ -248,8 +248,8 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
 - **Numeric truth on Foundry:** the same `grade()` from file 18 ran as a code-based custom evaluator (preview,
   `beta.evaluators.create_version` + an OpenAI-style eval run): `tely-numeric-truth`, 4/4 items passed, matching the local grader.
 - **Real-time latency (`python -m tely.eval --realtime`):** plan → verify → TTS per build-up, from the moment the shot
-  enters the look-ahead to the moment its MP3 exists, against D − lead_s. Wall clock, 1 run: 2/2 within budget, 3.75 s each.
-  Waits ÷10, 5 runs: 10/10 within budget (5.8–6.0 s), p50 2.98 s, p95 3.56 s (plan p95 2.41 s, TTS p95 1.64 s). Each run opens
+  enters the look-ahead to the moment its MP3 exists, against D − lead_s. Wall clock, 1 run: 2/2 within budget, 2.83 s and 3.75 s.
+  Waits ÷10, 5 runs: 10/10 within budget (5.8–6.0 s), p50 2.97 s, p95 3.56 s (plan p95 2.41 s, TTS p95 1.64 s). Each run opens
   its connections with one untimed warm-up call. The cold first call on 23 Oct took 6.2 s, which alone would miss the budget,
   so a live service must warm up before kick-off.
 - **Skipped (BUILD_PLAN "optional, only if < 3 h used"):** LLM colour lines. The stage took longer than 3 h, so every spoken line
@@ -732,8 +732,8 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
     known. **148/148 caught** by `verifier.truth_check` + `spoiler_check`; **0/70** clean lines blocked.
   - **(a) Answers:** every golden Q&A answer (413, `pipeline/tests/golden/qa_cases.jsonl`) gets a wrong name, score,
     minute, distance or an invented number. `check_answer` re-derives each fact from the match files at the playhead.
-    **1015/1015 caught; 0/413** clean answers blocked.
-  - **(b) Verifier off:** 0 of 1,163 caught, so every planted error would have been spoken.
+    **1007/1007 caught; 0/413** clean answers blocked.
+  - **(b) Verifier off:** 0 of 1,155 caught, so every planted error would have been spoken.
   - **(c) Spoiler ablation:** all 4 shots had their outcome handed to the Director (ending rewritten, VAR
     overturned, "X scores!"), and the firewall gave byte-identical input every time. 8/8 replies that tried to carry
     the outcome were rejected by the schema (extra field, `hint_type: goal`, prose, words in a number).
@@ -841,3 +841,31 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
 - **Checked:** pytest (`test_lowdata.py`: every line of every language has a smaller copy of the same SSML),
   vitest (the automatic choice and the fan's override), Playwright (the switch is saved; the commentary then comes
   from `radio-lo`).
+
+## D38. Fixes from the 27 Oct review of a55ab1a (27 Oct 2026)
+
+- **Full time is a state.** At t1 the replay pauses, the Start pad reads "Replay from the start", and the page says
+  "Full time." Ask still works (the stage keeps running, so an answer can play); Space replays from kick-off. Before,
+  Ask at full time looped between "carry on" and "ask" forever.
+- **A cold relay gets one longer try.** The relay stays at minReplicas 0 (D6) and took ~45 s to wake (measured 27 Oct).
+  When the first connect times out after 8 s, the fan hears "Waking up the live commentator, one moment" and the page
+  waits up to 60 s more, then falls back to the quick questions. Every step can be stopped with the same press.
+  The waking line is pre-rendered by `relay/render_clips.py` (`NOTICES`); until it is, the browser voice says it.
+- **The mic opens before the beep.** The "speak now" beep and the 8 s "not heard" timer start once the browser's mic
+  permission prompt has been answered. The relay's own listen limit counts from the first mic audio, for the same reason.
+- **The score counts a goal from its reveal**, to the hundredth of a second (`Bundle.score`, `LocalTools.score`), not
+  from the next whole second. Score, recap and "explain this moment" now agree just after a goal.
+- **The ball says nothing while a shot is unrevealed** (t ≤ p < reveal_t): "Hold that thought, watch this!" and no
+  x/y. `where_is` still gives distances then (a weaker hint, left as it is).
+- **Numbers in every language.** `languages.check()` now reads numbers in words (en, de, es, fr, bg, ar, hi) and
+  requires each translation to say exactly the English numbers. It flagged three lines: c_0007 in German and Arabic
+  (55 for 56) and c_0005 in French (an added "deux"). All three were corrected by hand; their audio needs a re-render.
+  The per-language counts are in `eval/report.json` (`languages`).
+- **Percentiles are nearest-rank** (`ceil(q/100·n) − 1`). The old index rounded halves to even, so the ÷10 p50 moves
+  from 2.98 s to 2.97 s and the wall-clock p50 from 3.75 s to 2.83 s; p95 and max are unchanged.
+- **Relay hardening before the repo goes public:** the client IP is the rightmost X-Forwarded-For entry; a question
+  counts against the caps once Voice Live has heard it, with 20 a day per IP; sessions last at most 10 minutes; the
+  server ends a turn itself 15 s after the first mic audio; at most ~2 minutes of mic audio per session; 64 KB per
+  WebSocket frame; no tool calls after the tool budget is spent (`tool_choice: none`, unverified that Voice Live honours
+  it); a `/voice` connection without an Origin is refused. The caps are in memory and reset when the relay scales from
+  zero. A subscription budget (5 a month, email alert, only when `BUDGET_EMAIL` is set) is in the Bicep.

@@ -15,7 +15,6 @@ No keys anywhere: Voice Live uses the container's managed identity (file 30), an
 from __future__ import annotations
 
 import asyncio
-import collections
 import contextlib
 import json
 import os
@@ -28,7 +27,7 @@ from fastapi.responses import JSONResponse, Response
 
 from tely.qa.bundle import Bundle, load_bundle
 
-from .caps import Caps
+from .caps import Caps, RateLimit
 from .clips import refusal
 from .feedback import MAX_BYTES, FeedbackCaps, Invalid, validate
 from .telemetry import Tracker, make_tracker
@@ -43,13 +42,16 @@ def _csv(name: str, default: str = "") -> list[str]:
 
 
 def client_ip(headers: Any, peer: Any) -> str:
-    xff = headers.get("x-forwarded-for", "")          # set by the Container Apps ingress (file 21, unverified)
-    return xff.split(",")[0].strip() or (peer.host if peer else "?")
+    # The Container Apps ingress appends the address it saw to X-Forwarded-For (file 21, unverified), so only the
+    # rightmost entry is not the client's to choose: anything to its left came in with the request.
+    hops = [h.strip() for h in headers.get("x-forwarded-for", "").split(",") if h.strip()]
+    return hops[-1] if hops else (peer.host if peer else "?")
 
 
 def create_app(*, bundle: Bundle | None = None, caps: Caps | None = None,
                connect: Callable[[], Awaitable[Link]] = connect_voice_live, mount_mcp: bool = True,
-               track: Tracker | None = None, feedback_caps: FeedbackCaps | None = None) -> FastAPI:
+               track: Tracker | None = None, feedback_caps: FeedbackCaps | None = None,
+               mcp_caps: RateLimit | None = None) -> FastAPI:
     b = bundle or load_bundle()
     c = caps or Caps()
     origins = _csv("ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")
@@ -79,18 +81,12 @@ def create_app(*, bundle: Bundle | None = None, caps: Caps | None = None,
     app = FastAPI(title="Tely relay", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=["GET"], allow_headers=[])
     app.state.caps, app.state.bundle = c, b
-    mcp_hits: dict[str, collections.deque] = collections.defaultdict(collections.deque)
+    mcp_limit = mcp_caps or RateLimit(per_ip=MCP_CALLS_PER_MIN, window_s=60.0)
 
     @app.middleware("http")
     async def limit_mcp(req: Request, call_next):
-        if req.url.path.startswith("/mcp"):
-            ip, now = client_ip(req.headers, req.client), time.time()
-            q = mcp_hits[ip]
-            while q and q[0] <= now - 60:
-                q.popleft()
-            if len(q) >= MCP_CALLS_PER_MIN:
-                return JSONResponse({"error": "rate_limit"}, status_code=429, headers={"Retry-After": "60"})
-            q.append(now)
+        if req.url.path.startswith("/mcp") and not mcp_limit.allow(client_ip(req.headers, req.client)):
+            return JSONResponse({"error": "rate_limit"}, status_code=429, headers={"Retry-After": "60"})
         return await call_next(req)
 
     @app.middleware("http")
@@ -141,11 +137,14 @@ def create_app(*, bundle: Bundle | None = None, caps: Caps | None = None,
     @app.websocket("/voice")
     async def voice(ws: WebSocket) -> None:
         origin = ws.headers.get("origin", "")
-        if origins and origin and origin not in origins:
-            await ws.close(code=1008)            # only our own pages may open a paid Voice Live session
+        # Only our own pages may open a paid Voice Live session. Browsers always send Origin on a WebSocket, so a
+        # missing one is a script; eval/qa_latency.py passes --origin.
+        if not origin or (origins and origin not in origins):
+            await ws.close(code=1008)
             return
         await ws.accept()
         ip = client_ip(ws.headers, ws.client)
+        deadline = time.monotonic() + c.session_max_s   # hard: the idle timer below can't push it back
         if (reason := c.open_session(ip)) is not None:
             await ws.send_json(refusal(reason))
             await ws.close()
@@ -170,15 +169,18 @@ def create_app(*, bundle: Bundle | None = None, caps: Caps | None = None,
                 async with lock:
                     await ws.send_bytes(data)
 
-            bridge = Bridge(link, bundle=b, caps=c, to_client=send_json, to_client_audio=send_bytes, connect=connect)
+            bridge = Bridge(link, bundle=b, caps=c, to_client=send_json, to_client_audio=send_bytes, connect=connect,
+                            ip=ip)
             await bridge.start()
             pump = asyncio.create_task(bridge.pump())
             await send_json({"type": "ready"})
             while True:
+                left = deadline - time.monotonic()
                 try:
-                    msg = await asyncio.wait_for(ws.receive(), c.idle_s)
+                    msg = await asyncio.wait_for(ws.receive(), max(0.0, min(c.idle_s, left)))
                 except asyncio.TimeoutError:
-                    await send_json({"type": "closed", "reason": "idle"})   # file 40 §6: close after 90 s idle
+                    # file 40 §6: close after 90 s idle; and every session ends at session_max_s, busy or not
+                    await send_json({"type": "closed", "reason": "idle" if left > c.idle_s else "session_limit"})
                     break
                 if msg.get("type") == "websocket.disconnect":
                     break

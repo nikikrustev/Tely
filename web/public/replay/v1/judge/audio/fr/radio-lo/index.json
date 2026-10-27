@@ -84,11 +84,6 @@
   "bytes": 13392,
   "text": "Milieu, côté opposé, les Rouges."
  },
- "3c0f2d86b8a87e59381050124c7b3ca2ddf5c40bd0325d0db57195bc77bf6440": {
-  "duration_ms": 3529,
-  "bytes": 14544,
-  "text": "Toujours en train de vérifier... les deux camps attendent le VAR."
- },
  "433c0a03ca39e0e135f7bea61c0975cf1ee6c4f723a0966940f9705ad101f86f": {
   "duration_ms": 5562,
   "bytes": 22608,
@@ -198,6 +193,11 @@
   "duration_ms": 5062,
   "bytes": 20592,
   "text": "Tiers offensif, côté opposé, les Bleus. Fenford le tient."
+ },
+ "af9ce9c62d537342ce6976a70ebf506b7bd6776398e34687d981f06139d249e4": {
+  "duration_ms": 3627,
+  "bytes": 14832,
+  "text": "Toujours la vérification... chaque virage attend le VAR."
  },
  "b33e841fea272ee2e1c98d8d7a271bd216384119729ac89d0f1a7a3dfb479df6": {
   "duration_ms": 3700,

@@ -43,7 +43,37 @@ param demoMode string = 'live'
 @description('Live questions per day across all fans (about $0.02 each, file 40 section 6)')
 param dailyQuestionCap int = 200
 
+@description('Live questions per day from one IP address (ours), so one visitor cannot use up the daily cap')
+param ipDailyQuestionCap int = 20
+
+@description('Who gets the monthly cost-budget alerts (BUDGET_EMAIL). Empty: no budget is created.')
+param budgetEmail string = ''
+
+@description('Monthly cost budget, in the billing currency of the subscription. An alert only: it never stops anything.')
+param budgetAmount int = 5
+
+@description('First day of the budget period: the current month (a budget may not start in an earlier month).')
+param budgetStartDate string = utcNow('yyyy-MM-01')
+
 var tags = { 'azd-env-name': environmentName }
+
+// Subscription scope, like this file: the relay's spending lands in this resource group, but Voice Live is billed on
+// the Foundry resource in foundryResourceGroup (rg-as-dev), so a resource-group budget would miss most of the cost.
+// Budgets alert, they don't stop spending (file 21); the brakes are relay/caps.py and the free account's limit (D6).
+resource budget 'Microsoft.Consumption/budgets@2023-05-01' = if (!empty(budgetEmail)) {
+  name: 'budget-tely-${environmentName}'
+  properties: {
+    category: 'Cost'
+    amount: budgetAmount
+    timeGrain: 'Monthly'
+    timePeriod: { startDate: budgetStartDate }
+    notifications: {
+      actual50: { enabled: true, operator: 'GreaterThanOrEqualTo', threshold: 50, thresholdType: 'Actual', contactEmails: [ budgetEmail ] }
+      actual100: { enabled: true, operator: 'GreaterThanOrEqualTo', threshold: 100, thresholdType: 'Actual', contactEmails: [ budgetEmail ] }
+      forecast100: { enabled: true, operator: 'GreaterThan', threshold: 100, thresholdType: 'Forecasted', contactEmails: [ budgetEmail ] }
+    }
+  }
+}
 
 resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
   name: resourceGroupName
@@ -88,6 +118,7 @@ module relay 'relay.bicep' = {
     voiceLiveModel: voiceLiveModel
     demoMode: demoMode
     dailyQuestionCap: dailyQuestionCap
+    ipDailyQuestionCap: ipDailyQuestionCap
     appInsightsConnectionString: monitor.outputs.connectionString   // D19: tester feedback events
   }
 }

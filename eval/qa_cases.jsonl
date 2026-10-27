@@ -4,7 +4,7 @@
 {"id":"winning","question":"Who's winning right now?","playhead_s":930,"expect":{"kind":"answer","intent":"score","must_include":["Navy one"]}}
 {"id":"minute","question":"What minute is it?","playhead_s":930,"expect":{"kind":"answer","intent":"score","must_include":["60 minutes"]}}
 {"id":"ball_attack","question":"Where's the ball?","playhead_s":676,"expect":{"kind":"answer","intent":"ball","must_include":["Navy have it","attacking third"]}}
-{"id":"ball_dead_var","question":"Where's the ball?","playhead_s":700,"expect":{"kind":"answer","intent":"ball","must_include":["out of play"]}}
+{"id":"ball_dead_var","question":"Where's the ball?","playhead_s":700,"expect":{"kind":"answer","intent":"ball","must_include":["Hold that thought"],"spoiler_words":["out of play","goal line","metres from goal"]}}
 {"id":"who_has_it","question":"Who has the ball?","playhead_s":930,"expect":{"kind":"answer","intent":"ball","must_include":["have it"]}}
 {"id":"last_during_var","question":"What just happened?","playhead_s":700,"expect":{"kind":"answer","intent":"last","spoiler_words":["Goal","heads it in","stands","scored"]}}
 {"id":"last_after_goal","question":"What just happened?","playhead_s":712,"expect":{"kind":"answer","intent":"last","must_include":["VAR","Goal for Navy"]}}

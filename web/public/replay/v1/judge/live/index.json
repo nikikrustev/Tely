@@ -25,6 +25,11 @@
    "file": "a84b53bcd7ca3565d55296506ae5cf4785faea658ed10fc30bc227ffdf25b064.mp3",
    "text": "Lots of live questions at once. Here are the preset questions for now.",
    "duration_ms": 4450
+  },
+  "live_waking": {
+   "file": "6c45ce3b78a5281a012a3e37155050d5fe6fdd71175d273c2014852dd9efb1de.mp3",
+   "text": "Waking up the live commentator, one moment.",
+   "duration_ms": 2250
   }
  }
 }

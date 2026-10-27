@@ -69,17 +69,18 @@ export function initialView(search: string, narrow: boolean): View {
   return narrow ? 'phone' : 'laptop';
 }
 
-type HintKey = 'askLive' | 'askPresets' | 'askWait' | 'askStop' | 'start' | 'pause' | 'resume';
+type HintKey = 'askLive' | 'askPresets' | 'askWait' | 'askStop' | 'start' | 'pause' | 'resume' | 'replay';
 /** The words under each pad: touch words on Phone, the keys on Laptop. */
 export const HINTS: Record<'touch' | 'keys', Record<HintKey, string>> = {
   touch: {
     askLive: 'Tap, wait for the beep, then speak', askPresets: 'Tap for quick questions', askWait: 'Works once the match starts',
     askStop: 'Tap to stop the answer', start: 'Starts the match', pause: 'Pauses the match', resume: 'Carries on from where you paused',
+    replay: 'Plays the match again from kick-off',
   },
   keys: {
     askLive: 'Press Enter, wait for the beep, then speak', askPresets: 'Press Enter for quick questions',
     askWait: 'Works once the match starts', askStop: 'Press Enter to stop the answer', start: 'Press Space to start',
-    pause: 'Press Space to pause', resume: 'Press Space to carry on',
+    pause: 'Press Space to pause', resume: 'Press Space to carry on', replay: 'Press Space to replay from the start',
   },
 };
 
@@ -402,7 +403,11 @@ async function startApp(): Promise<void> {
     }
     if (!askMenu.hidden) { closeMenu(); return; }
     // Paused: the stage's audio is suspended, so the answer and catch-up could not play. Carry on first (D24).
-    if (src && !src.isPlaying()) { void resumeMatch(false).then(pressAsk); return; }   // quietly: the mic opens next
+    // Not at full time: there is nothing to carry on, and resumeMatch() would do nothing, so this would loop.
+    if (src && !src.isPlaying() && !fullTime && src.now() < src.doc.t1) {
+      void resumeMatch(false).then(() => { if (src?.isPlaying()) pressAsk(); });   // quietly: the mic opens next
+      return;
+    }
     feedback('ask');
     // D24: one press, then speak. Without live Ask (no relay, or ?live=0) the pad opens the quick questions.
     if (askCtl?.hasLive) void runAsk(() => askCtl!.askLive(), true);
@@ -413,7 +418,8 @@ async function startApp(): Promise<void> {
   window.addEventListener('tely:live-phase', (e) => {
     if (askBtn.dataset.state !== 'stop') return;
     const p = (e as CustomEvent<string>).detail;
-    status.textContent = p === 'heard' ? 'Got your question. Thinking…'
+    status.textContent = p === 'waking' ? 'Waking up the live commentator, one moment.'
+      : p === 'heard' ? 'Got your question. Thinking…'
       : hintSet() === 'touch' ? 'Answering. Tap Stop to interrupt.' : 'Answering. Press Enter to interrupt.';
   });
   $('presets-open').addEventListener('click', () => { if (!askReady) notYet(); else if (!askCtl?.isBusy) openMenu(true); });
@@ -482,17 +488,31 @@ async function startApp(): Promise<void> {
   };
 
   // ---- one audio setup, shared by Start, "Learn the sounds" and Bluetooth calibration (each needs a tap first) ----
-  let audio: { ctx: AudioContext; st: InstanceType<typeof SoundStage>; c: InstanceType<typeof CrowdEngine> } | null = null;
+  type StageAudio = { ctx: AudioContext; st: InstanceType<typeof SoundStage>; c: InstanceType<typeof CrowdEngine> };
+  let audio: StageAudio | null = null;
   let analyser: AnalyserNode | null = null;
-  const ensureAudio = async () => {
+  let audioSetup: Promise<StageAudio> | null = null;
+  const ensureAudio = async (): Promise<StageAudio> => {
     if (audio) { await audio.ctx.resume(); return audio; }
+    // One setup, even if "Learn the sounds" and Space land together; a failed one is forgotten so a retry can work.
+    audioSetup ??= makeAudio().catch((e: unknown) => { audioSetup = null; throw e; });
+    return audioSetup;
+  };
+  const makeAudio = async (): Promise<StageAudio> => {
     const actx = new AudioContext({ latencyHint: 'balanced' });
     registerContext(actx);                             // one-ear mode sums this context to mono too
     const nav = navigator as Navigator & { audioSession?: { type: string } };
     if (nav.audioSession) nav.audioSession.type = 'playback'; // iOS: play even with the silent switch on (file 37)
-    await actx.resume();
+    let buffers: Awaited<ReturnType<typeof loadCrowdBuffers>>;
+    try {
+      await actx.resume();
+      buffers = await loadCrowdBuffers(actx, '/crowd', lowDataOn(settings.lowData));
+    } catch (e) {
+      void actx.close().catch(() => {});               // no half-built context left running
+      throw e;
+    }
     const st = new SoundStage(actx);
-    const c = new CrowdEngine(actx, st.crowdIn, await loadCrowdBuffers(actx, '/crowd', lowDataOn(settings.lowData)));
+    const c = new CrowdEngine(actx, st.crowdIn, buffers);
     c.setOutputGain(crowdGainFor(settings.crowdMix));
     crowdBus.target = c;
     c.start();
@@ -517,6 +537,7 @@ async function startApp(): Promise<void> {
     if (tour) { stopTour(); return; }
     const [{ Tour }, { speakFallback }] = await Promise.all([import('./learn/learn'), import('./ask/ask')]);
     const a = await ensureAudio();
+    if (ctx || tour) return;                             // Start (or a second tap) got there first: no tour over the match
     const t = new Tour({
       stage: {
         ball: (x, y, speed, at) => { a.st.ballAt({ x, y, z: 0.11, speed, alive: true }, at); a.c.followBall(x, at); },
@@ -622,6 +643,52 @@ async function startApp(): Promise<void> {
     say(said);
   };
 
+  /** An answer running, or the commentary held for a next question: stop it quietly before the match moves under it
+   *  (pause, "Next big moment", replay), so nothing resumes the commentary over the change. */
+  const stopAnswer = async () => {
+    if (askCtl?.isBusy) {
+      askCtl.interrupt('back');
+      for (let i = 0; i < 50 && askCtl.isBusy; i++) await new Promise((r) => setTimeout(r, 20));
+    }
+    if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+    askCtl?.dropHold();
+    openMenu(false);
+  };
+
+  // ---- full time (item 1 of the 27 Oct review): the replay stops at t1, and Start offers it again from kick-off ----
+  let fullTime = false;
+  const enterFullTime = () => {
+    if (!src || fullTime) return;
+    fullTime = true;
+    src.pause();                                         // now isPlaying() and the source's own flag agree
+    lane.commentary.pause();                             // SEAM(B->A): CommentaryTrack.pause()
+    dropQueued();
+    setPad(start, 'Replay from the start', 'replay', 'replay');
+    board.update({ state: 'Full time' });
+    say(hintSet() === 'touch' ? 'Full time. Tap Start, the lower big button, to hear it again from kick-off.'
+      : 'Full time. Press Space to hear it again from kick-off.');
+  };
+  const replayFromStart = async () => {
+    if (!src || !ctx) return;
+    feedback('resume');
+    await stopAnswer();
+    fullTime = false;
+    recapDone = false;
+    clipEnded = false;
+    lane.commentary.pause();                             // SEAM(B->A): re-anchors on the seek below
+    dropQueued();
+    src.seek(src.doc.t0, 0);
+    const sec = secondAt(src.doc.t0);
+    if (sec) lastScore = scoreLine(sec.score);           // back to nil-nil is not a score change
+    board.update({ score: sec?.score, playheadS: src.doc.t0, state: 'Playing' });
+    await ctx.resume();
+    src.play(0.1);
+    lane.commentary.resume();
+    w?.pump();
+    setPad(start, 'Pause', 'pause', 'pause');
+    say('Playing from the start.');
+  };
+
   let clipEnded = false;
   let recapDone = false;
   start.addEventListener('click', async () => {
@@ -632,10 +699,21 @@ async function startApp(): Promise<void> {
       learnBtn.hidden = true;
       board.update({ state: 'Loading' });
       say('Loading the stadium…');
-      const a = await ensureAudio();
+      let a: StageAudio, doc: Awaited<ReturnType<typeof loadSegments>>, ch: typeof chapters;
+      try {
+        a = await ensureAudio();
+        [doc, ch] = await Promise.all([loadSegments(), loadChapters()]);
+      } catch {
+        // ctx stays null, so the next press runs this setup again (a slow or dropped connection on the first try).
+        start.disabled = false;
+        learnBtn.hidden = false;
+        board.update({ state: 'Not started' });
+        say('Couldn\'t load the match. Press Start to try again.');
+        start.focus();
+        return;
+      }
       ctx = a.ctx;
       const st = a.st, c = a.c;
-      const [doc, ch] = await Promise.all([loadSegments(), loadChapters()]);
       chapters = ch;
       board.chapters = ch;
       const s = new ReplaySource(ctx, doc);
@@ -674,6 +752,8 @@ async function startApp(): Promise<void> {
           recapDone = true;
           void askCtl.recap('end');
         }
+        // Then full time: once the recap has finished (or there is none: a clip, or no Ask data).
+        if (!fullTime && s.now() >= s.doc.t1 && !askCtl?.isBusy && (recapDone || clip.to !== null || !askCtl)) enterFullTime();
         // Follow my player (D34): a soft cue and a short buzz at each touch, and the name when the voice is free.
         if (settings.follow && touchesOf && s.isPlaying() && ctx) {
           const touched = s.now() - followFrom > 1 ? [] : touchesOf(settings.follow, followFrom, s.now());   // not across a jump
@@ -704,23 +784,16 @@ async function startApp(): Promise<void> {
       return;
     }
     if (!src) return;
+    if (fullTime || src.now() >= src.doc.t1) { await replayFromStart(); return; }
     if (src.isPlaying()) {
       feedback('pause');
-      // An answer running, or the commentary held for a next question: stop it quietly first, so nothing resumes
-      // the commentary behind the pause.
-      if (askCtl?.isBusy) {
-        askCtl.interrupt('back');
-        for (let i = 0; i < 50 && askCtl.isBusy; i++) await new Promise((r) => setTimeout(r, 20));
-      }
-      if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
-      askCtl?.dropHold();
-      openMenu(false);
+      await stopAnswer();                                // nothing resumes the commentary behind the pause
       await new Promise((r) => setTimeout(r, 120));      // let the press tone finish before the context stops
       await pause('Paused.');
     } else await resumeMatch();
   });
   async function resumeMatch(announce = true): Promise<void> {
-    if (!src || !ctx || src.isPlaying()) return;
+    if (!src || !ctx || src.isPlaying() || fullTime || src.now() >= src.doc.t1) return;   // full time: Start replays
     await ctx.resume();
     feedback('resume');
     src.play(0.1);
@@ -731,10 +804,12 @@ async function startApp(): Promise<void> {
     if (announce) say('Playing.'); else status.textContent = 'Playing.';
   }
 
-  next.addEventListener('click', () => {
+  next.addEventListener('click', async () => {
     if (!src || !ctx) return;
     const ch = nextChapter(chapters, src.now());
     if (!ch) { say('No more big moments in this match.'); return; }
+    await stopAnswer();                                  // an answer must not carry on, or resume the commentary, over the jump
+    if (!src) return;
     const playing = src.isPlaying();
     lane.commentary.pause(); // SEAM(B->A): stop the current line; the clock change below re-anchors A's track
     dropQueued();
@@ -797,6 +872,7 @@ async function startApp(): Promise<void> {
   const playClip = (c: ListenClip) => {
     clip = c;
     clipEnded = false;
+    fullTime = false;                                    // a clip after full time plays (and pauses) as usual
     applyHaptics();
     if (!ctx) { start.click(); return; }                 // Start's own path seeks to clip.from and mutes if needed
     if (!src || !audio) return;

@@ -122,7 +122,9 @@ def test_bicep_is_static_web_apps_free_only():
     assert "@allowed(['Free'])" in main  # D6: no money
     assert "Microsoft.Web/staticSites@" in web and "'azd-service-name': 'web'" in main
     resources = re.findall(r"^resource \w+ '([^@']+)@", main + "\n" + web, flags=re.M)
-    assert sorted(resources) == ["Microsoft.Resources/resourceGroups", "Microsoft.Web/staticSites"]
+    # A budget alert costs nothing (27 Oct review, item 18); every other resource here is the Free web host.
+    assert sorted(resources) == ["Microsoft.Consumption/budgets", "Microsoft.Resources/resourceGroups",
+                                 "Microsoft.Web/staticSites"]
     assert not re.search(r"(?i)listKeys|apiKey|secret", main + web)
 
 

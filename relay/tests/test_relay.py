@@ -6,13 +6,14 @@ import base64
 import copy
 import json
 import random
+from pathlib import Path
 
 import pytest
 
 from tely.qa import TOOL_SCHEMAS, call_tool
 from tely.qa.bundle import load_bundle
-from relay.caps import Caps
-from relay.clips import CLIPS, REASON_CLIP
+from relay.caps import Caps, RateLimit
+from relay.clips import CLIPS, NOTICES, REASON_CLIP
 from relay.voicelive import RATE, Bridge, session_update
 
 B = load_bundle()
@@ -164,7 +165,9 @@ def test_session_cap_is_a_spoken_refusal():
 def test_daily_cap_and_demo_mode(monkeypatch):
     c = Caps(daily_questions=1)
     assert c.question(0) is None
-    assert c.question(0) == "daily_cap"
+    assert c.question(0) is None                          # asking counts nothing...
+    c.count_question()
+    assert c.question(0) == "daily_cap"                   # ...a question Voice Live heard does
     monkeypatch.setenv("DEMO_MODE", "off")
     assert Caps().question(0) == "demo_off"
     assert Caps().open_session("1.2.3.4") == "demo_off"
@@ -184,11 +187,53 @@ def test_per_ip_limits():
     assert c.open_session("other") is None
 
 
+def test_per_ip_daily_question_cap(monkeypatch):
+    monkeypatch.setenv("DAILY_QUESTION_CAP_PER_IP", "2")
+    c = Caps()
+    assert c.daily_questions_per_ip == 2
+    c.count_question("a")
+    c.count_question("a")
+    assert c.question(0, "a") == "daily_cap" and c.open_session("a") == "daily_cap"
+    assert c.question(0, "b") is None                     # another fan is not affected
+    assert c._today == 2
+
+
+def test_the_per_ip_counters_are_pruned():
+    t = [1000.0]
+    c = Caps(prune_above=3, clock=lambda: t[0])
+    for i in range(3):
+        assert c.open_session(f"ip{i}") is None
+        c.close_session(f"ip{i}")
+    assert not c._open                                    # closed sessions leave no zero entries
+    assert c.open_session("held") is None                 # still open: kept however old
+    t[0] += 601
+    assert c.open_session("new") is None
+    assert set(c._opened) == {"held", "new"}
+
+
+def test_rate_limit_window_and_pruning():
+    t = [0.0]
+    r = RateLimit(per_ip=2, window_s=60, prune_above=3, clock=lambda: t[0])
+    assert r.allow("a") and r.allow("a") and not r.allow("a")
+    for ip in ("b", "c"):
+        assert r.allow(ip)
+    t[0] += 61
+    assert r.allow("a")                                   # the window moved on
+    assert r.allow("d") and set(r._hits) == {"a", "d"}    # b and c were forgotten
+
+
 def test_every_refusal_reason_has_a_clip():
     for reason, clip in REASON_CLIP.items():
         assert clip in CLIPS, reason
     for text in CLIPS.values():
         assert "preset" in text                           # every refusal points the fan at the presets
+
+
+def test_the_waking_line_is_the_one_the_page_says():
+    # web/src/voice/live-ask.ts falls back to the browser voice with the same words until the clip is rendered.
+    page = (Path(__file__).resolve().parents[2] / "web" / "src" / "voice" / "live-ask.ts").read_text(encoding="utf-8")
+    for cid, text in NOTICES.items():
+        assert f"clip: '{cid}', say: '{text}'" in page
 
 
 # ---------------------------------------------------------------- the Voice Live turn
@@ -311,6 +356,89 @@ def test_tool_budget_per_answer():
         for i in range(3):
             await br.handle(call("get_score_and_clock", call_id=f"c{i}"))
         assert br.turn["tool_calls"][-1]["result"]["error"] == "tool_budget_exceeded"
+    run(go())
+
+
+def test_a_question_counts_only_once_voice_live_heard_it():
+    """An `ask` with no audio costs nothing upstream, so it must not use up the daily caps (review item 15)."""
+    async def go():
+        caps = Caps(questions_per_session=10**6)
+        br, _, _, _ = make_bridge(caps)
+        br.ip = "203.0.113.9"
+        for _ in range(300):
+            await br.ask(B.t0)
+        assert caps._today == 0
+        await br.handle({"type": "conversation.item.input_audio_transcription.completed", "transcript": "Score?"})
+        await br.handle({"type": "response.created"})
+        await br.handle({"type": "response.audio.delta", "delta": "AAA="})
+        assert caps._today == 1 and caps._ip_today["203.0.113.9"] == 1   # once per question
+        await br.ask(B.t0)
+        await br.handle({"type": "response.created"})                    # a response with no transcript also counts
+        assert caps._today == 2
+    run(go())
+
+
+def test_the_relay_ends_a_long_turn_itself_from_the_first_audio():
+    """Server-side max_listen_s: timed from the first mic chunk (the browser may sit in a mic permission prompt
+    after `listening`), restarted at speech_started, with a grace after the browser's own commit."""
+    async def go():
+        t = [0.0]
+        link = FakeLink()
+        out = []
+
+        async def sink(o):
+            out.append(o)
+
+        caps = Caps()
+        br = Bridge(link, bundle=B, caps=caps, to_client=sink, to_client_audio=sink, log=lambda s: None,
+                    clock=lambda: t[0])
+        chunk = bytes(2 * RATE // 50)                    # 20 ms
+        await br.ask(B.t0)
+        t[0] = 30.0                                      # a slow permission prompt: no commit for that
+        await br.audio(chunk)
+        t[0] = 31.0
+        await br.handle({"type": "input_audio_buffer.speech_started"})
+        t[0] = 31.0 + caps.max_listen_s + caps.listen_grace_s - 0.5
+        await br.audio(chunk)
+        assert "input_audio_buffer.commit" not in link.types()
+        t[0] += 1.0
+        await br.audio(chunk)
+        assert link.types()[-2:] == ["input_audio_buffer.commit", "response.create"] and not br.listening
+        # Faster than real time: 16 s of audio at one instant is past the limit too.
+        await br.ask(B.t0)
+        for _ in range(16 * 50):
+            await br.audio(chunk)
+        assert link.types().count("input_audio_buffer.commit") == 2
+    run(go())
+
+
+def test_audio_per_session_is_capped():
+    async def go():
+        link = FakeLink()
+        br, out, _, _ = make_bridge(Caps(audio_bytes_per_session=2 * 960), link)
+        await br.ask(B.t0)
+        for _ in range(3):
+            await br.audio(b"\x00\x00" * 480)
+        assert link.types().count("input_audio_buffer.append") == 2
+        assert link.types()[-2:] == ["input_audio_buffer.commit", "response.create"]
+        await br.ask(B.t0)
+        assert out[-1]["type"] == "refusal" and out[-1]["reason"] == "session_cap"
+    run(go())
+
+
+def test_after_the_tool_budget_the_next_response_may_only_speak():
+    async def go():
+        link = FakeLink()
+        br, _, _, _ = make_bridge(Caps(tool_calls_per_answer=1), link)
+        await br.ask(B.t0 + 30)
+        await br.handle(call("get_score_and_clock"))
+        await br.handle({"type": "response.done", "response": {"status": "completed"}})
+        assert link.sent[-1] == {"type": "response.create", "response": {"tool_choice": "none"}}
+        br2, _, _, _ = make_bridge(Caps(tool_calls_per_answer=2), link2 := FakeLink())
+        await br2.ask(B.t0 + 30)
+        await br2.handle(call("get_score_and_clock"))
+        await br2.handle({"type": "response.done", "response": {"status": "completed"}})
+        assert link2.sent[-1] == {"type": "response.create"}          # budget left: tools still allowed
     run(go())
 
 

@@ -22,4 +22,6 @@ COPY relay relay
 
 USER 65534
 EXPOSE 8080
-CMD ["uvicorn", "relay.app:app", "--host", "0.0.0.0", "--port", "8080"]
+# --ws-max-size: one /voice frame is at most 64 KB (the browser sends 20 ms of mic audio, 960 bytes, per frame);
+# uvicorn's default of 16 MB would let one frame carry minutes of audio.
+CMD ["uvicorn", "relay.app:app", "--host", "0.0.0.0", "--port", "8080", "--ws-max-size", "65536"]

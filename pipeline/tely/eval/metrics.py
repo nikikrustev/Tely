@@ -31,6 +31,33 @@ def firewall(m: Match, cues: list[dict]) -> dict:
             "spoiler_check_pass": sum(c["spoiler_check"] == "pass" for c in cues)}
 
 
+def languages(m: Match, cut: str, bundle: Path = BUNDLE) -> dict:
+    """D27: each translated track against the English one, line by line: the truth check (languages.check: the same
+    numbers, names, no English left), the spoiler check in that language at the line's time, and whether the line's
+    audio was rendered from its current text (a hand-corrected line keeps its old MP3 until it is re-rendered)."""
+    from tely.commentary import languages as L
+    from tely.commentary.lowdata import rebuild_ssml
+
+    en = load_cues(cut, bundle)
+    players = sorted({p["last_name"] for side in ("home", "away") for p in m.meta["teams"][side]["players"]})
+    out = {}
+    for lang in sorted(L.LANGS):
+        path = bundle / cut / f"cues.{lang}.radio.jsonl"
+        if not path.is_file():
+            continue
+        tr = [json.loads(s) for s in path.read_text(encoding="utf-8").splitlines() if s.strip()]
+        out[lang] = {
+            "lines": len(tr),
+            "aligned": [(c["cue_id"], c["t_in"]) for c in tr] == [(c["cue_id"], c["t_in"]) for c in en],
+            "truth_check_pass": sum(not L.check(e["text"]["radio"], t["text"]["radio"], players, lang)
+                                    for e, t in zip(en, tr)),
+            "spoiler_check_pass": sum(not L.spoiler_check_l10n(m, lang, t["text"]["radio"], t["t_in"], t["evidence"])
+                                      for t in tr),
+            "audio_matches_text": sum(rebuild_ssml(t) is not None for t in tr),
+        }
+    return out
+
+
 def text_fallbacks(m: Match, cues: list[dict], plans: dict, voice: str, durations: dict[str, int]) -> dict:
     """Which lines are spoken with a shorter fallback text than their template's first choice.
 
@@ -89,4 +116,5 @@ def report(m: Match, cut: str, voice: str, recorded: Path | None, bundle: Path =
                               "The optional LLM colour lines were skipped (docs/DECISIONS.md D16).",
                       **text_fallbacks(m, cues, plans, voice, durations)},
         "director": dir_rep,
+        "languages": languages(m, cut, bundle),
     }

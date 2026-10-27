@@ -13,6 +13,7 @@ param ttsVoice string
 param voiceLiveModel string
 param demoMode string
 param dailyQuestionCap int
+param ipDailyQuestionCap int             // per IP, so one visitor can't use up dailyQuestionCap (relay/caps.py)
 @secure()
 param appInsightsConnectionString string // D19: POST /feedback -> customEvents "tester_feedback"; a Container Apps secret
 
@@ -97,6 +98,7 @@ resource app 'Microsoft.App/containerApps@2025-01-01' = {
             { name: 'VOICE_LIVE_MODEL', value: voiceLiveModel }
             { name: 'DEMO_MODE', value: demoMode }                       // live | off: the kill switch (file 21)
             { name: 'DAILY_QUESTION_CAP', value: string(dailyQuestionCap) }
+            { name: 'DAILY_QUESTION_CAP_PER_IP', value: string(ipDailyQuestionCap) }
             { name: 'ALLOWED_ORIGINS', value: '${siteUrl},http://localhost:5173' }
             { name: 'MCP_ALLOWED_HOSTS', value: '${fqdn},localhost:*,127.0.0.1:*' }   // B's DNS-rebinding allow-list
             { name: 'FEEDBACK_ORIGINS', value: siteUrl }                 // D19: only the Static Web App may POST /feedback

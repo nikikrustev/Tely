@@ -40,10 +40,14 @@ def test_ssml_speaks_the_locale_in_the_one_multilingual_voice():
 
 
 def test_check_keeps_numbers_and_names_and_rejects_english_words():
-    assert L.check("Nevford scores, 2 goals.", "Nevford marca, 2 goles.", PLAYERS) == []
-    assert L.check("Nevford scores, 2 goals.", "Marca, dos goles.", PLAYERS) == ["number 2 missing", "name Nevford missing"]
-    assert L.check("Reds nil, Navy one.", "Rojos nil, Azules one.", PLAYERS) == ["English word 'nil' left", "English word 'one' left"]
-    assert L.check("Sixty minutes played.", "Soixante minutes jouées.", PLAYERS) == []   # French "minutes" is French
+    assert L.check("Nevford scores, 2 goals.", "Nevford marca, 2 goles.", PLAYERS, "es") == []
+    # digits stay digits: "dos" says the right number, but not the way the English line wrote it
+    assert L.check("Nevford scores, 2 goals.", "Marca, dos goles.", PLAYERS, "es") == ["number 2 missing", "name Nevford missing"]
+    assert L.check("Reds nil, Navy one.", "Rojos nil, Azules one.", PLAYERS, "es") == [
+        "number 0 missing", "number 1 missing", "English word 'nil' left", "English word 'one' left"]
+    assert L.check("Sixty minutes played.", "Soixante minutes jouées.", PLAYERS, "fr") == []   # French "minutes" is French
+    assert L.check("Sixty minutes played.", "Cinquante minutes jouées.", PLAYERS, "fr") == [
+        "number 60 missing", "number 50 added"]
 
 
 def test_translations_come_from_the_cache_and_only_missing_lines_go_to_the_model(tmp_path, monkeypatch):
@@ -128,7 +132,7 @@ def test_every_shipped_translated_line_passes_truth_and_spoiler_checks(lang):
     assert [(c["cue_id"], c["t_in"], c["evidence"]) for c in tr] == [(c["cue_id"], c["t_in"], c["evidence"]) for c in en]
     for e, t in zip(en, tr):
         text = t["text"]["radio"]
-        assert L.check(e["text"]["radio"], text, players) == [], (t["cue_id"], text)
+        assert L.check(e["text"]["radio"], text, players, lang) == [], (t["cue_id"], text)
         assert L.spoiler_check_l10n(m, lang, text, t["t_in"], t["evidence"]) == [], (t["cue_id"], text)
 
 

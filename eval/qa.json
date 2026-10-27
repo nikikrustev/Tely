@@ -83,7 +83,7 @@
       "playhead": "56:40",
       "expected": "answer",
       "intent": "ball",
-      "answer": "The ball is out of play.",
+      "answer": "Hold that thought, watch this!",
       "answered": true,
       "correct": true,
       "spoiler_leak": false
