@@ -231,6 +231,37 @@ def _plan(p: dict | None) -> str:
     return "–" if not p else f"{p['build_up_level']:g} / {p['lead_s']:g} s / {p['hold_ms']} ms / {p['hint_type']}"
 
 
+def planted_section(pl: dict | None) -> list[str]:
+    """D32: eval/planted.json (python -m tely.eval.planted)."""
+    out = ["## Planted errors (eval/planted.json)", ""]
+    if not pl:
+        return out + ["Not run yet: `python -m tely.eval.planted`.", ""]
+    c, a, d, v = pl["commentary"], pl["answers"], pl["director"], pl["verdict"]
+    out += table(["Check", "Result", "Threshold (set before the first run)"], [
+        ["Commentary: planted errors caught", f"**{c['caught']}/{c['planted']}**", "100%"],
+        ["Commentary: clean lines blocked", f"{len(c['clean_blocked'])}/{c['lines']}", "0"],
+        ["Answers: planted errors caught", f"**{a['caught']}/{a['planted']}**", "at least 99%"],
+        ["Answers: clean answers blocked", f"{round(a['false_block_rate'] * a['answers'])}/{a['answers']}", "0"],
+        ["Verifier off: caught", f"{pl['verifier_off']['caught']}/{pl['verifier_off']['planted']} (all would be spoken)", "0"],
+        ["Director handed the outcome: input unchanged", f"{d['input_identical']}/{d['shots']} shots", "all"],
+        ["Director replies carrying an outcome: rejected", f"{d['outcome_replies_blocked']}/{d['outcome_replies']}", "all"],
+    ])
+    kinds = ", ".join(f"{k} {x['caught']}/{x['planted']}" for k, x in c["by_kind"].items())
+    out += ["", f"Commentary by kind: {kinds}.", "", f"**Verdict: {'PASS' if v['pass'] else 'FAIL'}.** {d['note']}", ""]
+    f = pl.get("foundry_eval") or {}
+    if f.get("where") == "foundry":
+        out += [f"Foundry evaluation (`{f['evaluator']}`, run `{f['run_id']}`): {f['planted_scored_below_1']}/{f['planted']} "
+                f"planted items scored below 1.0 and {f['clean_scored_1']}/{f['clean']} clean items scored 1.0, the "
+                "same scores as the local grader. Foundry's own pass flag marked every item passed, so we count from "
+                "its scores.", ""]
+    for h in pl.get("history", []):
+        ex = (h.get("clean_blocked_example") or {}).get("say")
+        out += [f"Earlier run ({h['measured']}): {'PASS' if h['pass'] else 'FAIL'}, answers false-block rate "
+                f"{h['answers']['false_block_rate']}, e.g. \"{ex}\": the answer checker did not allow the keeper of a "
+                "related save. Fixed in the checker; the threshold did not move.", ""]
+    return out
+
+
 def build(here: Path = HERE) -> str:
     a, qa, listening = load(here / "report.json"), load(here / "qa.json"), load(here / "listening.json")
     out = ["# Tely: evaluation report", "",
@@ -240,6 +271,7 @@ def build(here: Path = HERE) -> str:
                                    "Missing: `eval/report.json`. Run `python -m tely.eval --cut judge`.", ""]
     out += generic(qa, "Q&A eval (Person B, eval/qa.json)") if qa is not None else [
         "## Q&A eval (Person B)", "", "Not yet: `eval/qa.json` is not in the repo.", ""]
+    out += planted_section(load(here / "planted.json"))
     out += listening_section(listening)
     return "\n".join(out).rstrip() + "\n"
 
@@ -249,7 +281,8 @@ def merged(here: Path = HERE) -> dict | None:
     a = load(here / "report.json")
     if a is None:
         return None
-    return {**a, "qa": load(here / "qa.json"), "listening": load(here / "listening.json")}
+    return {**a, "qa": load(here / "qa.json"), "listening": load(here / "listening.json"),
+            "planted_errors": load(here / "planted.json")}
 
 
 def main() -> int:
