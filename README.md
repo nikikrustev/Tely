@@ -11,7 +11,7 @@ knows it's coming. You can ask that commentator, out loud and in seven languages
 **Category: Best Use of Microsoft Foundry.** Team Berbata AI, for the Inside the Game hackathon (Microsoft × Premier League).
 
 - **Live demo (no login, no backend needed for the match):** https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/
-- **Demo video (under 2 min):** >>> YOUTUBE URL GOES HERE <<<
+- **Demo video (under 2 min):** https://youtu.be/bi11iL4BHPU
 - **Judges:** the app opens inside a drawn laptop or phone (switch beside it); add `?radar=1` to see the sound radar
   and the Director's notes.
 - **Synthetic match, real pipeline.** Fictional clubs (Reds and Navy), fictional players, AI voices. No real match data.

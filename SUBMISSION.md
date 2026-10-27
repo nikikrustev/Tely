@@ -5,7 +5,7 @@
 **A seat in the stands for fans who can't see the pitch: a crowd, a commentator and a phone that rise with the match, and a voice you can ask.**
 
 - **Live demo (no login):** https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/?view=laptop&radar=1
-- **Video (under 2 min):** >>> YOUTUBE URL GOES HERE <<<
+- **Video (under 2 min):** https://youtu.be/bi11iL4BHPU
 - **Code:** https://github.com/nikikrustev/BerbataAI
 - **Team:** Berbata AI (entry 126726): Nikolay Krastev and potencialbg
 
