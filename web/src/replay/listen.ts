@@ -1,4 +1,4 @@
-// OWNER: B lane (created by A, 24 Oct, Stage 8 item 6). Listening-test clips (eval/listening_test.md) from the URL:
+// Listening-test clips (eval/listening_test.md) from the URL:
 // ?from=&to= in playhead seconds (the contract `t`, as in the ?debug=1 panel), ?sound=commentary for the
 // commentary-only clip: the voice alone, with no crowd, ball, earcons or vibration.
 export interface ListenClip {

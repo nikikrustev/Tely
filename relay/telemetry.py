@@ -1,4 +1,4 @@
-"""Custom events from the relay to Application Insights (D19). OWNER: A (potencialbg).
+"""Custom events from the relay to Application Insights (D19).
 
 Same OpenTelemetry route as the Director's traces (pipeline/tely/agents/tracing.py, D16): the Azure Monitor
 distro, configure_azure_monitor(), and the connection string from APPLICATIONINSIGHTS_CONNECTION_STRING (a Container

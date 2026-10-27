@@ -1,8 +1,8 @@
-// OWNER: B (Nikolay). Builds lane B's services, mounts lane A once, and runs the judge-cut sound stage on Start.
-import type { LaneAHandle } from './contracts/a-exports';
-import type { CrowdBus, LaneBContext, ReplayClock } from './contracts/b-exports';
+// Builds lane B's services, mounts lane A once, and runs the judge-cut sound stage on Start.
+import type { LaneAHandle } from './contracts/voice';
+import type { CrowdBus, LaneBContext, ReplayClock } from './contracts/stage';
 import { adjustSound, GROUP_NAMES, loadSavedMix, setMix } from './audio/mix';
-import { mountLaneA } from './lane-a';
+import { mountLaneA } from './voice';
 import { clipOver, listenClip, type ListenClip } from './replay/listen';
 import { loadClockOffset, Scoreboard } from './scoreboard';
 import type { TesterHandle } from './tester';
@@ -21,7 +21,7 @@ export function createStubContext(): LaneBContext {
 }
 
 export function boot(ctx: LaneBContext = createStubContext()): LaneAHandle {
-  // SEAM(B->A): the only call into A's lane (TEAM_SPLIT.md "The seams" point 3).
+  // SEAM(B->A): the only call into A's lane.
   return mountLaneA(ctx);
 }
 
@@ -609,7 +609,7 @@ async function startApp(): Promise<void> {
   const pause = async (said: string) => {
     if (!src || !ctx) return;
     src.pause();
-    lane.commentary.pause(); // SEAM(B->A): CommentaryTrack.pause() (contracts/a-exports.ts)
+    lane.commentary.pause(); // SEAM(B->A): CommentaryTrack.pause() (contracts/voice.ts)
     dropQueued();
     src.seek(src.now(), 0); // re-queue from the exact pause point on resume
     await ctx.suspend();

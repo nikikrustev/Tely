@@ -1,4 +1,4 @@
-// OWNER: A (potencialbg; B's lane since the 24 Oct handover). The match mix: one level per sound group, in dB on
+// The match mix: one level per sound group, in dB on
 // top of each engine's built-in level, plus where the commentator sits. One shared store, so the ?mix=1 mixer
 // (web/src/tester/mixer.ts) is heard live in all three audio contexts (B's stage, A's commentary, A's live Ask).
 // No Microsoft here: plain Web Audio.

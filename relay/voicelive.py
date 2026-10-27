@@ -1,4 +1,4 @@
-"""One fan's live Ask: browser WebSocket <-> one Foundry Voice Live session. OWNER: A (potencialbg).
+"""One fan's live Ask: browser WebSocket <-> one Foundry Voice Live session.
 
 WHY the GA WebSocket path, not browser WebRTC (docs/DECISIONS.md D17): WebRTC is preview (2026-01-01-preview) and its
 event routing is ambiguous (file 40 §2). Through the relay, every event (VAD, transcripts, tool calls, audio) passes one
@@ -17,7 +17,7 @@ import time
 from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable, Protocol
 
-# SEAM(A->B): B's Q&A brain (TEAM_SPLIT.md seam 2). Imported, never copied: the clamp B tests is the code that runs live.
+# SEAM(A->B): B's Q&A brain. Imported, never copied: the clamp B tests is the code that runs live.
 from tely.qa import PERSONA, TOOL_SCHEMAS, call_tool
 from tely.qa.bundle import Bundle
 from tely.qa.tools import LANGUAGES
@@ -133,7 +133,7 @@ _credential: Any = None
 async def connect_voice_live() -> Link:
     """Real connection: managed identity in Container Apps (AZURE_CLIENT_ID), az login locally. No keys anywhere."""
     global _credential
-    # Lazy imports: CI and the tests never install Azure packages (TEAM_SPLIT.md rule 3).
+    # Lazy imports: CI and the tests never install Azure packages.
     from azure.ai.voicelive.aio import connect
     from azure.identity.aio import DefaultAzureCredential
 

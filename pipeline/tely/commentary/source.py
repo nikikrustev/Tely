@@ -1,6 +1,6 @@
-"""Load one match in B's format (contracts/b/README.md, v0.1.0) and answer "what is true at time t?".
+"""Load one match in B's format (docs/match-format.md, v0.1.0) and answer "what is true at time t?".
 
-OWNER: A (potencialbg). Everything in Stage 3 reads the match through load_match(), and nothing else parses B's files.
+ Everything in Stage 3 reads the match through load_match(), and nothing else parses B's files.
 """
 
 from __future__ import annotations
@@ -15,9 +15,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 BUNDLE = ROOT / "web" / "public" / "replay" / "v1"
 
-# SEAM(A->B): match format v0.2.0 (contracts/b/). "judge" is B's Stage 1 cut; "sample" is B's hand-written 90 s
+# SEAM(A->B): match format v0.2.0 (docs/match-format.md). "judge" is B's Stage 1 cut; "sample" is B's hand-written 90 s
 # sample, which the tests also build so both stay covered.
-MATCH_DIRS = {"judge": BUNDLE / "judge", "sample": ROOT / "contracts" / "b" / "sample"}
+MATCH_DIRS = {"judge": BUNDLE / "judge", "sample": ROOT / "pipeline" / "sample_match" / "sample"}
 
 
 @dataclass
@@ -158,7 +158,7 @@ def rename(m: Match, names: dict) -> Match:
 
 
 def load_match(cut: str = "judge") -> Match:
-    """The one place Stage 3 reads B's match files (stdlib only, as in contracts/b/README.md)."""
+    """The one place Stage 3 reads B's match files (stdlib only, as in docs/match-format.md)."""
     d = MATCH_DIRS[cut]
     meta = json.loads((d / "meta.json").read_text(encoding="utf-8"))
     files = meta.get("files", {})

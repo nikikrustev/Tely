@@ -1,4 +1,4 @@
-"""Pull tester-mode feedback (?test=1, D19) out of Application Insights. OWNER: A (potencialbg).
+"""Pull tester-mode feedback (?test=1, D19) out of Application Insights.
 
     python eval/pull_feedback.py                    # last 30 days, app and resource group from the azd env "judge"
     python eval/pull_feedback.py --paste mail.txt   # also read "Copy my answers" texts (the AS1. code line)

@@ -1,4 +1,4 @@
-"""The relay over HTTP and WebSocket, with a fake Voice Live. OWNER: A (potencialbg). No Azure packages, no keys."""
+"""The relay over HTTP and WebSocket, with a fake Voice Live. No Azure packages, no keys."""
 from __future__ import annotations
 
 import asyncio

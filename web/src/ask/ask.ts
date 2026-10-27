@@ -1,11 +1,11 @@
-// OWNER: B (Nikolay). "Ask the commentator", offline presets (BUILD_PLAN Stage 6; file 40 §1).
+// "Ask the commentator", offline presets (; file 40 §1).
 // A question: hold that thought if a chance is coming (says THAT, never WHAT) -> duck the crowd and pause A's
 // commentary (the playhead keeps running) -> the answer from A's pre-rendered clips -> "back to the action" with a
 // catch-up of anything revealed meanwhile -> unduck and resume. A's live voice mode plugs in via registerLiveMode().
 // Press-to-interrupt (file 49): pressing Ask during an answer stops it at once and keeps the commentary paused while
 // the fan picks the next question; closing the menu instead goes back to the action (catch-up, then resume).
-import type { CommentaryTrack } from '../contracts/a-exports';
-import type { Ask, CrowdBus, LiveAskHandler } from '../contracts/b-exports';
+import type { CommentaryTrack } from '../contracts/voice';
+import type { Ask, CrowdBus, LiveAskHandler } from '../contracts/stage';
 import { HOLD_LOOKAHEAD_S, STATIC, type Answer, type LocalTools } from './local-tools';
 import { bundleBase } from '../replay/base';
 
@@ -46,7 +46,7 @@ export class AskController implements Ask {
   private wake: (() => void) | null = null;        // ends the current wait early
   constructor(private d: AskDeps) {}
 
-  // SEAM(B->A): b-exports.ts Ask.registerLiveMode. A's lane-a/live-ask.ts registers the Voice Live handler here.
+  // SEAM(B->A): contracts/stage.ts Ask.registerLiveMode. A's voice/live-ask.ts registers the Voice Live handler here.
   registerLiveMode(handler: LiveAskHandler): void {
     this.live = handler;
   }
@@ -184,7 +184,7 @@ export class AskController implements Ask {
         if (!this.stopped) await this.hold(HOLD_LOOKAHEAD_S * 1000);
       }
       if (this.pausedAt === null) {
-        // SEAM(B->A): CommentaryTrack.pause() first (a-exports.ts; A's pause() also unducks), THEN duck the crowd,
+        // SEAM(B->A): CommentaryTrack.pause() first (contracts/voice.ts; A's pause() also unducks), THEN duck the crowd,
         // so the answer always sits over a lowered crowd. The playhead keeps running.
         this.d.commentary.pause();
         this.d.crowd.duck(DUCK_DB, DUCK_MS);
@@ -220,7 +220,7 @@ export class LazyAsk implements Ask {
   }
   /** Opens the preset menu; main.ts sets this (the menu is DOM). Before that it does nothing. */
   onShowPresets: (() => void) | null = null;
-  // SEAM(B->A): b-exports.ts Ask.showPresets. A's live-ask.ts calls it after a refusal instead of clicking #ask.
+  // SEAM(B->A): contracts/stage.ts Ask.showPresets. A's live-ask.ts calls it after a refusal instead of clicking #ask.
   showPresets(): void {
     this.onShowPresets?.();
   }

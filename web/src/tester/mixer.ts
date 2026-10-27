@@ -1,4 +1,4 @@
-// OWNER: A (potencialbg). The sound desk on the Setup tab (D25, 27 Oct; the ?mix=1 mixer before that): one channel per
+// The sound desk on the Setup tab (D25, 27 Oct; the ?mix=1 mixer before that): one channel per
 // sound group from audio/mix.ts, heard live while the match plays. main.ts imports this the first time Setup opens,
 // so the Laptop and Phone views never load it.
 // D24 (26 Oct): it is the listener's own mix, set once with a sighted helper and saved on this device (audio/mix.ts

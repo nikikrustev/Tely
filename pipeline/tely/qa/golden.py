@@ -1,9 +1,9 @@
-"""Write contracts/golden/b/qa_cases.jsonl: the offline tools' exact answers at many playheads. OWNER: B (Nikolay).
+"""Write pipeline/tests/golden/qa_cases.jsonl: the offline tools' exact answers at many playheads.
 
     python -m tely.qa.golden
 
-Both pytest (pipeline/tests/b/test_qa_golden.py) and vitest (web/tests/b/ask.test.ts) replay every case, so the Python
-tools and their TypeScript copies in web/src/ask/local-tools.ts always say the same thing (TEAM_SPLIT.md seam 4).
+Both pytest (pipeline/tests/test_qa_golden.py) and vitest (web/tests/ask.test.ts) replay every case, so the Python
+tools and their TypeScript copies in web/src/ask/local-tools.ts always say the same thing.
 Cases cover the tools the browser runs offline: score, ball, last events, what did I miss, recap, catch-up, hold that
 thought.
 """
@@ -16,7 +16,7 @@ from . import hold_that_thought
 from .bundle import Bundle, load_bundle
 from .tools import call, catch_up_answer
 
-OUT = Path(__file__).resolve().parents[3] / "contracts" / "golden" / "b" / "qa_cases.jsonl"
+OUT = Path(__file__).resolve().parents[2] / "tests" / "golden" / "qa_cases.jsonl"
 
 
 def playheads(b: Bundle) -> list[float]:

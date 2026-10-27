@@ -1,4 +1,4 @@
-"""Build video/captions_sdh.srt for the demo video from the judge-cut bundle. OWNER: A (potencialbg).
+"""Build video/captions_sdh.srt for the demo video from the judge-cut bundle.
 
 The match part of the video is cut from the judge-cut replay (EDIT below), so its captions come straight from the
 data that made the sound: the commentary cue text (cues.en.radio.jsonl), the crowd captions A's build_bundle wrote
@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BUNDLE = ROOT / "web" / "public" / "replay" / "v1" / "judge"
 VIDEO = ROOT / "video"
 OUT = VIDEO / "captions_sdh.srt"
-MAX_S = 115.0          # the video must stay under 1:55 (BUILD_PLAN Stage 9, file 14)
+MAX_S = 115.0          # the video must stay under 1:55 (file 14)
 MERGE_S = 0.6          # sounds this close together share one caption
 SOUND_MIN_S = 2.0      # a sound caption stays up at least this long
 RISE = 0.2             # crowd excitement up this much in 2 s reads as "[crowd rises]"

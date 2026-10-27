@@ -1,4 +1,4 @@
-# OWNER: A (potencialbg). BUILD_PLAN Stage 8 item 5: the demo must stay up and free until judging ends (10 Nov).
+# The demo must stay up and free until judging ends (10 Nov).
 # Every 6 h, fetch the deployed page and the replay manifest the player loads first; the README badge shows the result.
 # WHY a GitHub cron and not only an App Insights test: it is free and gives a public badge (file 21 §3). Needs no
 # credentials: it reads the public site only. Caveats (file 21): scheduled runs use the default branch, may start late

@@ -1,4 +1,4 @@
-# OWNER: A (potencialbg). `azd up` in env "judge": the zero-backend replay on Static Web Apps Free (web), and from Stage 7
+# `azd up` in env "judge": the zero-backend replay on Static Web Apps Free (web), and from Stage 7
 # the relay on Container Apps (live spoken questions through Voice Live, plus B's Stats MCP server at /mcp).
 # Before deploying: python -m tely.build_bundle --cut judge (from pipeline/), so web/public/replay/v1/judge/ is
 # current. The bundle is committed, so the web deploy needs no TTS and no keys; the relay hook needs Python + uv (D17).
@@ -25,9 +25,9 @@ services:
     host: staticwebapp
     dist: dist        # vite build copies web/public/ (the replay bundle) into dist/
     hooks:
-      # staticwebapp.config.json lives in web/ (TEAM_SPLIT.md) but must ship inside the deployed folder.
+      # staticwebapp.config.json lives in web/ but must ship inside the deployed folder.
       # Whether azd would also pick it up from web/ on its own is (unverified); copying it is safe either way.
-      # live.json tells the page where the relay is (lane-a/index.ts liveRelayUrl). RELAY_URL is a Bicep output.
+      # live.json tells the page where the relay is (voice/index.ts liveRelayUrl). RELAY_URL is a Bicep output.
       predeploy:
         posix:
           shell: sh

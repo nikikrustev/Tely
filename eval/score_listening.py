@@ -1,5 +1,4 @@
-"""Score the eyes-closed listening test: eval/listening_test.csv -> eval/listening.json. OWNER: B lane (created by A,
-24 Oct, Stage 8 item 6). Stdlib only, no Azure, no keys.
+"""Score the eyes-closed listening test: eval/listening_test.csv -> eval/listening.json. Stdlib only, no Azure, no keys.
 
     python eval/score_listening.py
     python eval/build_report.py        # puts the summary into eval/report.md and eval/report.json

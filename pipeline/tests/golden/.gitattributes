@@ -1,0 +1,2 @@
+# Golden cases are compared byte for byte by pytest: keep LF on every OS.
+*.jsonl text eol=lf

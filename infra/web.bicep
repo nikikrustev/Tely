@@ -1,4 +1,4 @@
-// OWNER: A (potencialbg). The Static Web App itself (resource-group scope, called from main.bicep).
+// The Static Web App itself (resource-group scope, called from main.bicep).
 param name string
 param location string
 param sku string

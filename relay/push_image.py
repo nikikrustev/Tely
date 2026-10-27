@@ -1,4 +1,4 @@
-"""Build the relay image without Docker or ACR Tasks and push it to our ACR. OWNER: A (potencialbg).
+"""Build the relay image without Docker or ACR Tasks and push it to our ACR.
 
     python -m relay.push_image                    # from the repo root; az login; prints the image reference
     (needs `pip install uv` on the deploying machine: it resolves the Linux wheels)

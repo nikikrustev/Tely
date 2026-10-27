@@ -1,4 +1,4 @@
-"""Every fixed phrase the offline Ask can play (BUILD_PLAN Stage 6; file 43 §6). OWNER: B (Nikolay).
+"""Every fixed phrase the offline Ask can play (; file 43 §6).
 
 A's answers.py renders each {id, text} with Azure TTS into answers/<sha>.mp3 and answers/index.json (id -> file).
 The tools build their spoken answers from these same pieces (tools.py returns their ids as `fragments`), so the

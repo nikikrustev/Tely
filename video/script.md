@@ -1,6 +1,6 @@
 # Tely: demo video script (1:52)
 
-_OWNER: A (potencialbg). Stage 9a, 24 Oct 2026. Target length 1:52, hard stop 1:55 (file 14). Category: Best Use of Microsoft Foundry._
+_ Stage 9a, 24 Oct 2026. Target length 1:52, hard stop 1:55 (file 14). Category: Best Use of Microsoft Foundry._
 
 **How to read this.** One row per beat. "On screen" is what the viewer sees, "Voiceover" is the narrator (exact text and
 timing in [voiceover.srt](voiceover.srt)), and "Burned caption" is what [captions_sdh.srt](captions_sdh.srt) shows
@@ -13,7 +13,7 @@ builds the SDH track from the bundle's cue text, crowd captions and sound events
 - It must work **muted**: every sound has a caption, and the sound radar shows where the ball and crowd are.
 - It must work on **laptop speakers**: nothing depends on stereo; "left" is captioned and drawn on the radar.
 - Every number on screen or in the voiceover is in `eval/report.json`, the bundle's `manifest.json`, or a cited
-  research file. `pipeline/tests/a/test_video_captions.py` fails if the report stops saying what the voiceover says.
+  research file. `pipeline/tests/test_video_captions.py` fails if the report stops saying what the voiceover says.
 - No music, no logos, no real clubs, players or commentators (file 12). AI voices are labelled on screen and on the end card.
 - The voiceover is about **165 words**, not file 14's 255: about 35 s of the video is the product's own audio (the
   match and the live answers), and the voiceover stays off it.
@@ -59,4 +59,4 @@ test, and update this table.
   commentator's voice), change the label to **"PRESET answer (works offline)"**, and change voiceover cue 8 to "The
   presets work offline, in the commentator's own voice." Drop the "Who wins?" take and hold the firewall diagram longer.
 - **Listener footage:** see 1:40 above. Never caption an eyes-closed sighted volunteer as a blind fan (file 42).
-- **Too long:** trim the VAR title (0:30.6) and the 1:01 overlay first; never trim the build-up (BUILD_PLAN: never cut it).
+- **Too long:** trim the VAR title (0:30.6) and the 1:01 overlay first; never trim the build-up (never cut it).

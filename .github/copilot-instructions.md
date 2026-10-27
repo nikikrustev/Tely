@@ -4,19 +4,17 @@ Audio-first match experience for blind and low-vision fans. SYNTHETIC match data
 Premier League data, names, crests, chants or copyrighted audio. Fictional clubs and players, CC0 crowd clips,
 and every AI voice is labelled as AI. No GPL or AGPL code, dependencies or build tools.
 
-## Two lanes, one owner per file
-Read `TEAM_SPLIT.md` before editing. Person A (potencialbg) owns all Microsoft work; Person B (Nikolay) has no
-Microsoft in his lane. Only edit files your person owns ("File ownership", mirrored in `.github/CODEOWNERS`).
-Ask for anything else under "HANDOFF to A/B" in the PR description.
+## Where things are
+Read `docs/architecture.md` for the code map and the seams, and `docs/DECISIONS.md` for why.
 
 ## Stack
 - Python 3.12 package `tely` in `pipeline/`: generator, interpret, commentary, agents, eval, bundle
-  builder; the Q&A brain in `tely/qa/` (B). Tests: `cd pipeline && pytest` (finds `tests/a/` and `tests/b/`).
+  builder; the Q&A tools in `tely/qa/`. Tests: `cd pipeline && pytest` (finds `tests/`).
 - Azure SDKs (Speech, Identity, openai, Agent Framework) go in `pipeline/requirements-azure.txt` only, never in
   `pyproject.toml`. CI never installs them; tests mock the synthesiser and the model.
-- TypeScript (Vite, vanilla, strict) in `web/`. Tests: `cd web && npm test` (vitest, `tests/a/` and `tests/b/`).
-  A's browser code lives in `web/src/lane-a/`; `web/src/main.ts` calls `mountLaneA()` once and nothing else of A's.
-- Stage 7 relay (FastAPI, Voice Live) in `relay/`. It imports `tely.qa`; never copy B's tools.
+- TypeScript (Vite, vanilla, strict) in `web/`. Tests: `cd web && npm test` (vitest, `tests/`).
+  The commentary track and live Ask live in `web/src/voice/`; `web/src/main.ts` calls `mountLaneA()` once.
+- Stage 7 relay (FastAPI, Voice Live) in `relay/`. It imports `tely.qa`; never copy the tools.
 - Infra: Bicep in `infra/`, deployed with `azd` (env `judge`, `rg-as-judge`, Sweden Central; Static Web Apps in eastus2).
 
 ## Rules
@@ -25,7 +23,8 @@ Ask for anything else under "HANDOFF to A/B" in the PR description.
   The relay injects the playhead; the model never sets the clock.
 - Cues follow the cue format in `stoynev research/43-tely-architecture.md` §3. Commentary cues live in
   `cues.*.jsonl`; `segments.json` carries no cues.
-- HD voices are en-US DragonHD only and real-time only. No `<prosody>` or `express-as`; use `[style]` tags and `<break>`.
+- The English HD voice is en-US DragonHD: no `<prosody>` or `express-as`, use `[style]` tags and `<break>`. Other
+  languages use BrianMultilingual with `<lang>` and `<prosody>` (D27).
   Never re-synthesise a cached SSML hash.
 - Audio: one shared AudioContext; never start audio without a user gesture; duck with GainNode ramps
   (`setTargetAtTime`), no abrupt gain jumps; respect `prefers-reduced-motion` for haptics.

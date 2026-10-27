@@ -54,7 +54,7 @@ hackathon entry or product we found combines a look-ahead commentator, a reactiv
 | **Interpret** | Per second: win probability, suspense, tension, danger, and the crowd's mood at each end. Per event: xG, priority, zone, and the words a commentator may say before and after the outcome. | `interpret.py`, `crowd.py`, `haptics.py` | Python |
 | **Explain** | The **Director** agent sees the next 10 s and returns only a tension plan. The **Commentator** turns facts plus that plan into lines; the **Verifier** checks every number against the truth and every word for spoilers. | `agents/`, `commentary/` | **Microsoft Agent Framework**, **Foundry** (gpt-5-mini), Application Insights |
 | **Render** | Each line is pre-rendered in an **Azure Speech HD voice** (Brian), and in **BrianMultilingual** for Bulgarian, Spanish, Arabic, French, German and Hindi. In the browser, Web Audio plays a crowd per end whose nearer end lifts with the ball, sound icons for passes, shots and whistles panned by where they happen, and ducks the crowd under the voice. The same timed lines ship machine-readable for any other renderer: [`overlays.json`](https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/replay/v1/judge/overlays.json) (every language, the score, layout and verifier verdicts per line), SDH captions and a WebVTT description track per language. | `commentary/tts.py`, `commentary/languages.py`, `render_out.py`, `web/src/audio/` | **Azure Speech**, **Azure Static Web Apps** |
-| **Personalise** | Your end (Reds or Navy), **seven languages**, **detail** (full radio or key moments only), **screen-reader mode** (your own screen reader reads each line at your speed), **one-ear mode** (mono, with a position tone), **follow a player**, **low-data mode**, vibration (off, key moments, heartbeat), every sound on a 0–100 mixer a helper sets once, Bluetooth delay calibration, a "learn the sounds" tour. **Ask**: five offline quick questions (incl. *What did I miss?* and *Recap so far*), or any question out loud; "turn the whistle down by 5", "speak Spanish", "follow Olvholm" work by voice too. | `web/src/settings.ts`, `web/src/ask/`, `web/src/lane-a/`, `relay/` | **Foundry Voice Live**, **Azure Container Apps** |
+| **Personalise** | Your end (Reds or Navy), **seven languages**, **detail** (full radio or key moments only), **screen-reader mode** (your own screen reader reads each line at your speed), **one-ear mode** (mono, with a position tone), **follow a player**, **low-data mode**, vibration (off, key moments, heartbeat), every sound on a 0–100 mixer a helper sets once, Bluetooth delay calibration, a "learn the sounds" tour. **Ask**: five offline quick questions (incl. *What did I miss?* and *Recap so far*), or any question out loud; "turn the whistle down by 5", "speak Spanish", "follow Olvholm" work by voice too. | `web/src/settings.ts`, `web/src/ask/`, `web/src/voice/`, `relay/` | **Foundry Voice Live**, **Azure Container Apps** |
 
 ## Architecture (what shipped)
 
@@ -183,12 +183,15 @@ cd web && npm ci && npm test && npx playwright install chromium && npm run test:
 Rebuilding the voice, the Director or the relay needs our Azure resources: see `pipeline/requirements-azure.txt`,
 [`relay/README.md`](relay/README.md) and [`scripts/bootstrap_azure.sh`](scripts/bootstrap_azure.sh).
 
-**Repo map:** `pipeline/` (match, signals, commentary, agents, Q&A brain, evals) · `web/` (the player) · `relay/`
-(live Ask and MCP) · `infra/` (Bicep) · `contracts/` (the match format and golden test cases) · `eval/` (results) ·
-`video/` (the demo video's script, shot list and captions) · `stoynev research/` (our research library).
+**Repo map:** `web/` (the player: `src/voice/` commentary and live Ask, `src/ask/` quick questions, `src/audio/` the
+stadium, `tests/` vitest and Playwright + axe) · `pipeline/` (the match generator, signals, commentary, agents, Q&A tools,
+evals; `tests/`, `sample_match/`) · `relay/` (live Ask and the MCP server) · `infra/` (Bicep) · `eval/` (results) ·
+`video/` (the demo video) · `assets/` (crowd sources and licences) · `docs/` (decisions, architecture, match format) ·
+`stoynev research/` (our research library).
 
 ## Licences
 
+- **Code:** MIT ([`LICENSE`](LICENSE)).
 - **Crowd sounds:** 16 clips cut from Freesound recordings, all **CC0-1.0**, each listed with author, source URL and the
   cut used in [`assets/licences.json`](assets/licences.json).
 - **Voices:** Azure AI Speech neural HD voices (`en-US-Brian`), used under our Azure subscription, and labelled as AI in
@@ -228,7 +231,7 @@ Rebuilding the voice, the Director or the relay needs our Azure resources: see `
 
 | Tool | What it actually did | Evidence |
 |---|---|---|
-| **Claude Code** (Anthropic) | The research library, then each build stage: both of us worked stage by stage from the prompts in [`PROMPTS.md`](PROMPTS.md), and reviewed, tested and merged the result ourselves. | [`PROMPTS.md`](PROMPTS.md), `Co-Authored-By: Claude` commit trailers |
+| **Claude Code** (Anthropic) | The research library, then each build stage, from written prompts; we reviewed, tested and merged every change ourselves. Each decision and what we measured is in the decision log. | [`docs/DECISIONS.md`](docs/DECISIONS.md), `Co-Authored-By: Claude` commit trailers |
 | **GitHub Copilot Agent Mode** + **Azure MCP Server** | Read-only checks of the deployed Azure resources from VS Code (Copilot Free, `@azure/mcp` 3.0.0, `--read-only`). It wrote none of our code. | [`docs/DECISIONS.md` D14](docs/DECISIONS.md), [`.vscode/mcp.json`](.vscode/mcp.json) |
 | **Azure Developer CLI + Bicep** | Provisioning and deploys | [`infra/`](infra/), [`azure.yaml`](azure.yaml) |
 | **GitHub Actions** | CI (pytest, vitest, Playwright + axe) with no Azure credentials, and the uptime check every 6 h | [`.github/workflows/`](.github/workflows/) |

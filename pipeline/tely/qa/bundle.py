@@ -1,6 +1,6 @@
-"""The judge-cut match as the Q&A tools see it. OWNER: B (Nikolay).
+"""The judge-cut match as the Q&A tools see it.
 
-`bundle` in the qa API (TEAM_SPLIT.md seam 2) is a Bundle from load_bundle(). Every accessor takes the playhead and
+`bundle` in the qa API is a Bundle from load_bundle(). Every accessor takes the playhead and
 returns only what the listener already knows (file 43 §2 spoiler firewall, file 40 "clamped to the delayed clock"):
 - an event counts only once its outcome is revealed (signals reveal_t <= playhead);
 - ball and player positions are read at the playhead, never after;

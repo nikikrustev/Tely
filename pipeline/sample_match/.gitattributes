@@ -1,0 +1,4 @@
+# Keep the sample byte-identical on every OS: LF line endings, gzip untouched.
+sample/*.json text eol=lf
+sample/*.jsonl text eol=lf
+sample/*.gz binary

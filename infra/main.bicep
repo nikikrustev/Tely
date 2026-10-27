@@ -1,7 +1,7 @@
-// OWNER: A (potencialbg). Stage 4 hosting: one Static Web App (Free) for the zero-backend replay.
+// Stage 4 hosting: one Static Web App (Free) for the zero-backend replay.
 // Stage 5: a workspace-based Application Insights (1 GB/day cap) for the Director workflow's traces (monitor.bicep).
 // Stage 7: the relay on Container Apps (relay.bicep) and its Voice Live roles on the Foundry resource (foundry-roles.bicep).
-// azd env "judge" -> resource group rg-as-judge (BUILD_PLAN Stage 4). D6: no money, so the SKU is Free only.
+// azd env "judge" -> resource group rg-as-judge (). D6: no money, so the SKU is Free only.
 targetScope = 'subscription'
 
 @description('azd environment name, for example judge')

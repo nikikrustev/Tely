@@ -1,9 +1,9 @@
-"""Render relay/clips.py to MP3 in the commentary voice. OWNER: A (potencialbg).
+"""Render relay/clips.py to MP3 in the commentary voice.
 
     python -m relay.render_clips            # from the repo root, PYTHONPATH=pipeline;.  (needs Azure Speech, A only)
 
 Writes web/public/replay/v1/judge/live/: <ssml sha256>.mp3 per clip, cache.json, and index.json
-{"voice", "clips": {id: {"file", "text", "duration_ms"}}}, which lane-a/live-ask.ts reads. Same SSML builder and hash cache
+{"voice", "clips": {id: {"file", "text", "duration_ms"}}}, which voice/live-ask.ts reads. Same SSML builder and hash cache
 as the commentary and answers (Stage 3/6), so a rebuild makes 0 TTS calls and the refusal sounds like the commentator.
 """
 from __future__ import annotations

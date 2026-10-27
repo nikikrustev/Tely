@@ -1,4 +1,4 @@
-"""Director -> Commentator (templates) -> Verifier (code) -> TTS, once per Director window. OWNER: A (potencialbg).
+"""Director -> Commentator (templates) -> Verifier (code) -> TTS, once per Director window.
 
 File 43 §1: the Director decides, templates write, code verifies, Azure Speech renders. One window per shot: the
 Director first learns of a shot when truth time reaches it, with the listener's playhead D = 10 s behind, so the

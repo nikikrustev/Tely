@@ -1,4 +1,4 @@
-// OWNER: A (potencialbg). Lets the relay's identity call Voice Live on the existing Foundry resource (bootstrap made it
+// Lets the relay's identity call Voice Live on the existing Foundry resource (bootstrap made it
 // in rg-as-dev, D8), so this module runs at that resource group's scope. Roles from Learn "How to use the Voice Live
 // API": Cognitive Services User + Foundry User (GUIDs checked with `az role definition list`, 23 Oct 2026).
 param foundryName string

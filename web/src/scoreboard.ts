@@ -1,4 +1,4 @@
-// OWNER: B lane (created by A, 25 Oct, final product UI). The match-state card: score, match clock, current chapter.
+// The match-state card: score, match clock, current chapter.
 // Visual for sighted judges; a screen-reader user can read it on demand, but it is NOT a live region: the clock ticks
 // every second and would drown the match (file 32). Score changes are announced once by main.ts's say().
 import type { Chapter } from './replay/chapters';

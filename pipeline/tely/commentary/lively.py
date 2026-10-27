@@ -1,6 +1,6 @@
 """Lively commentary lines: the same facts as templates.py (radio_v1), said the way radio commentators say them.
 
-OWNER: A (potencialbg). Research: file 48 (commentator language). lively_v2 also narrates pass by pass (D21).
+ Research: file 48 (commentator language). lively_v2 also narrates pass by pass (D21).
 What changes from radio_v1:
 - verbs and movement ("picks it up", "lets fly", "steps in") instead of bare zone labels; natural place phrases
   ("deep in their own half", "over on the far side") and the listener's side ("to your right") where it helps;

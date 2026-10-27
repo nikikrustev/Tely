@@ -1,4 +1,4 @@
-"""Look-ahead planner over the window [P, P + D] (file 39 planner; file 43 §2 timing). OWNER: A (potencialbg).
+"""Look-ahead planner over the window [P, P + D] (file 39 planner; file 43 §2 timing).
 
 1. Every event becomes zero or more Drafts (templates.py).
 2. Highest priority claims its slot first; a line may slide later in 100 ms steps up to its stale_s, trying shorter
@@ -92,7 +92,7 @@ def plan(m: Match, duration_of: DurationFn = estimate, plans: dict | None = None
         # hold, then without it, and only then the next, shorter text.
         held = (d, replace(d, pause_ms=0)) if d.kind == "build" and d.pause_ms else (d,)
         # A build-up should end by its shot, so the call ("Fenford, the header!") at shot + 0.2 s can still be heard
-        # (file 39). Only if no text fits that way does it run on (BUILD_PLAN: never cut the build-up).
+        # (file 39). Only if no text fits that way does it run on (never cut the build-up).
         shot_t = m.t(m.by_id(d.evidence[0])) if d.kind == "build" else None
         for by_shot in ((True, False) if shot_t is not None else (False,)):
             for text in d.texts:

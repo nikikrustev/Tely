@@ -1,4 +1,4 @@
-"""DragonHD SSML for one commentary line. OWNER: A (potencialbg).
+"""DragonHD SSML for one commentary line.
 
 DragonHD has no <prosody> and no express-as; intensity comes from [style] tags, wording, <break> and a low
 temperature (files 39 §4, 43 §7). All five tags below were checked on 21 Oct 2026 by rendering them with
@@ -12,7 +12,7 @@ import re
 from xml.sax.saxutils import escape
 
 DEFAULT_VOICE = "en-US-Andrew:DragonHDLatestNeural"
-TEMPERATURE = 0.4  # "low" per BUILD_PLAN Stage 3: one steady commentator across lines (our pick; file 39 shows 0.6)
+TEMPERATURE = 0.4  # "low" per one steady commentator across lines (our pick; file 39 shows 0.6)
 BANDS = ("calm", "curious", "urgent", "excited", "shouting")
 NS = 'version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts"'
 _SENTENCE = re.compile(r"(?<=[.!?])\s+")

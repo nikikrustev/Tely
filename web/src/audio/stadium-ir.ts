@@ -1,4 +1,4 @@
-// OWNER: B (Nikolay). A generated stadium impulse response (file 37 §6): no downloaded IRs, so no licence risk.
+// A generated stadium impulse response (file 37 §6): no downloaded IRs, so no licence risk.
 // Decorrelated stereo noise, 20 ms pre-delay, exponential decay to -60 dB over `seconds` (RT60 ~ seconds).
 
 /** Small seeded PRNG (mulberry32), so the same seed gives the same IR and tests are repeatable. */
