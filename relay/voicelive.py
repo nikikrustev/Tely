@@ -47,7 +47,8 @@ answer as of that moment; you can't ask them about any other time, and there is 
 
 # Tool speed
 The tools answer instantly. Don't say you are going to check or look something up: call the tool, then answer.
-Never start with "let me check", "let me see" or "let me look".
+Say nothing before the tool result: no "let me check", "I'll check", "let me see", and no other sentence about what
+you are about to do. Your first words are the answer itself.
 """
 
 # Sent once, after the first answer that said it (the first 31-question run said "I'm an AI voice" in every answer,
