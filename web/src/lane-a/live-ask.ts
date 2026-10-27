@@ -65,6 +65,8 @@ export interface LiveIO {
   prefs?(prefs: Record<string, unknown>): void;
   /** Where the question is (D24): the page shows it on screen. Never announced: the mic may still be open. */
   phase?(p: 'heard' | 'answering'): void;
+  /** After each answer (D33): the tools Voice Live called and the time to the first answer audio, for the notes. */
+  trace?(t: { tools: string[]; latency_ms: number | null }): void;
 }
 
 type Msg = { type: string; [k: string]: unknown };
@@ -123,6 +125,8 @@ export class LiveAsk implements LiveAskHandler {
       let listenCap: ReturnType<typeof setTimeout> | null = null;
       let stoppedAt: number | null = null;
       let heard = false, answering = false, done = false;
+      let firstAudioMs: number | null = null;
+      const tools: string[] = [];             // the tools this answer called (D33 notes)
       const clear = () => {
         if (timer) clearTimeout(timer);
         timer = null;
@@ -161,7 +165,10 @@ export class LiveAsk implements LiveAskHandler {
             answering = true;
             this.io.phase?.('answering');
             arm(ANSWER_MAX_MS, null);          // an answer that never says "done" can't hold the Ask forever
-            if (stoppedAt !== null) this.send({ type: 'metrics', client_latency_ms: this.io.now() - stoppedAt });
+            if (stoppedAt !== null) {
+              firstAudioMs = this.io.now() - stoppedAt;
+              this.send({ type: 'metrics', client_latency_ms: firstAudioMs });
+            }
           }
           this.io.play(m);
           return;
@@ -188,11 +195,13 @@ export class LiveAsk implements LiveAskHandler {
             arm(ANSWER_TIMEOUT_MS, UNAVAILABLE);
             break;
           case 'tool':
+            if (typeof m.name === 'string') tools.push(m.name);
             if (m.name === 'get_ball_position') this.io.ping?.();
             if (m.prefs && typeof m.prefs === 'object') this.io.prefs?.(m.prefs as Record<string, unknown>);
             break;
           case 'answer_done':
             if (m.turn) this.turns.push(m.turn);
+            if (answering) this.io.trace?.({ tools, latency_ms: firstAudioMs });
             clear();
             closeMic();
             if (!answering) {
@@ -461,5 +470,6 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
     prefs: (p) => o.lane.applyPrefs?.(p),
     // SEAM(A->B): a window event, so B's main.ts can show the phase without a contract change.
     phase: (p) => window.dispatchEvent(new CustomEvent('tely:live-phase', { detail: p })),
+    trace: (t) => window.dispatchEvent(new CustomEvent('tely:ask-trace', { detail: t })),
   };
 }
