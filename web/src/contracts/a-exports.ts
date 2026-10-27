@@ -23,6 +23,8 @@ export interface LaneAHandle {
   /** Appended 27 Oct (Tier 1): screen-reader mode. On: the AI voice is silent and onLine gets each line's text and
    *  language instead. Off (null): the voice speaks again. */
   setReader?(onLine: ((text: string, lang: string) => void) | null): void;
+  /** Appended 27 Oct (D36): low-data mode, the 32 kbps commentary fetched just in time. Applies to lines not yet loaded. */
+  setLowData?(on: boolean): void;
 }
 
 /** B's main.ts calls this once, and nothing else of A's. */

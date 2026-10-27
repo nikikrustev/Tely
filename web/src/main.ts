@@ -7,6 +7,7 @@ import { clipOver, listenClip, type ListenClip } from './replay/listen';
 import { loadClockOffset, Scoreboard } from './scoreboard';
 import type { TesterHandle } from './tester';
 import { bundleBase } from './replay/base';
+import { autoLowData, lowDataOn } from './lowdata';
 import { registerContext, setMono } from './audio/mono';
 import { playFollowCue, playPositionTone, positionPitch, FOLLOW_NAME_EVERY_S, POSITION_TONE_EVERY_S } from './audio/position-tone';
 
@@ -142,6 +143,8 @@ async function startApp(): Promise<void> {
   const crowdSlider = $<HTMLInputElement>('crowd'), strength = $<HTMLSelectElement>('strength');
   crowdSlider.value = String(Math.round(settings.crowdMix * 100));
   strength.value = String(settings.hapticStrength);
+  // Low-data mode (D36), set before the commentary track loads its files.
+  lane.setLowData?.(lowDataOn(settings.lowData));
   const update = (patch: Partial<typeof settings>) => {
     settings = { ...settings, ...patch };
     saveSettings(settings);
@@ -201,6 +204,20 @@ async function startApp(): Promise<void> {
     if (announce) say(pid ? `Following ${PLAYER_NAMES.get(pid) ?? 'that player'}.` : 'Not following a player.');
   };
   followSel.addEventListener('change', () => setFollow(followSel.value || null, true));
+  const lowBox = $<HTMLInputElement>('lowdata-toggle'), lowHint = $('lowdata-hint');
+  const showLow = () => {
+    lowBox.checked = lowDataOn(settings.lowData);
+    lowHint.textContent = settings.lowData === null
+      ? (autoLowData() ? 'On automatically: your browser asked to save data.' : 'Off: your connection looks fast enough.')
+      : '';
+  };
+  showLow();
+  lowBox.addEventListener('change', () => {
+    update({ lowData: lowBox.checked });
+    lane.setLowData?.(lowBox.checked);
+    showLow();
+    say(lowBox.checked ? 'Low data on, for the lines not loaded yet.' : 'Low data off.');
+  });
   const monoBox = $<HTMLInputElement>('mono-toggle');
   monoBox.checked = settings.mono;
   setMono(settings.mono);
@@ -475,7 +492,7 @@ async function startApp(): Promise<void> {
     if (nav.audioSession) nav.audioSession.type = 'playback'; // iOS: play even with the silent switch on (file 37)
     await actx.resume();
     const st = new SoundStage(actx);
-    const c = new CrowdEngine(actx, st.crowdIn, await loadCrowdBuffers(actx));
+    const c = new CrowdEngine(actx, st.crowdIn, await loadCrowdBuffers(actx, '/crowd', lowDataOn(settings.lowData)));
     c.setOutputGain(crowdGainFor(settings.crowdMix));
     crowdBus.target = c;
     c.start();

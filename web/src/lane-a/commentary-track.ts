@@ -99,6 +99,9 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
   /** Called when a line starts to be heard (at its t_in on the audio clock), with that line. A line stopped before
    *  then (pause, seek, Ask, language switch) is never reported. Screen-reader mode sends it to a live region. */
   onLine: ((cue: Cue) => void) | null = null;
+  /** Fetch every line's MP3 at load (default). Low-data mode (D36) turns it off: each line is fetched when it comes
+   *  within DECODE_AHEAD_S, so a fan who stops early never downloads the rest. */
+  prefetch = true;
   private paused = false; // pause() from B, independent of the clock
   private playing = false; // what the replay clock last said
   private interrupted = -1; // the line that was speaking when the clock stopped: it resumes mid-line
@@ -121,7 +124,7 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
     this.interrupted = -1;
     this.cues = cues;
     this.status = cues.map(() => 'pending');
-    for (const c of cues) this.fetch(c.utterance.audio_url);
+    if (this.prefetch) for (const c of cues) this.fetch(c.utterance.audio_url);
     this.reset(this.opts.clock.now(), this.opts.clock.isPlaying());
   }
 
