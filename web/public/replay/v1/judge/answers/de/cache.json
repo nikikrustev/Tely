@@ -1,0 +1,522 @@
+{
+ "00ccd8fa9d1895e8ead45669ec26237f7b7ff9c0746ee0ec8894ae144ef04722": {
+  "duration_ms": 1250,
+  "bytes": 11232,
+  "text": "Erledigt."
+ },
+ "031e64853fd9cbf066664539e3e2b39a57b84e734115f2c572af41d2ae94bdd0": {
+  "duration_ms": 3962,
+  "bytes": 24192,
+  "text": "Anstoß, die Roten. Orlani zu Wexros."
+ },
+ "0e1deb07ff5945d39d37cb4720bfb2308d822295f8b9ac3f8ec4bd54e740adb4": {
+  "duration_ms": 2850,
+  "bytes": 17424,
+  "text": "65 Meter vor dem Tor."
+ },
+ "0e5d545821f79d7255d47b644864c12705d176c7ee0743f555566f56b8b037ce": {
+  "duration_ms": 4912,
+  "bytes": 29808,
+  "text": "Die Roten 0, die Blauen 1, 61 Minuten gespielt."
+ },
+ "1489f4fe7038cfd8f86d67df17464bf35534a9afd97281e14fb752e959f28a40": {
+  "duration_ms": 3537,
+  "bytes": 21600,
+  "text": "Die Roten haben ihn, Mittelfeld, Mitte."
+ },
+ "15a4dce81564fc4f4cee7a8d17b4c8edc1d81395498b1afdd513a6574c73f88a": {
+  "duration_ms": 3825,
+  "bytes": 23328,
+  "text": "Die Blauen haben ihn, Mittelfeld, nahe Seite."
+ },
+ "164b8a46bedb8c41f84936d9f6d2eecde60e34387bac755086a409ab85d13978": {
+  "duration_ms": 4475,
+  "bytes": 27216,
+  "text": "Nevaro unterbricht für die Roten, Abwehrdrittel, Mitte."
+ },
+ "19767694079d4fc389148e35fe6f50116ddb92a405b18e28024e398bebd47c8c": {
+  "duration_ms": 6037,
+  "bytes": 36576,
+  "text": "Angriffs drittel, entfernte Seite, die Blauen. Olvholm zu Strandford."
+ },
+ "1a453fc219c0cbad196a8d6d7f0d20243bcce543c613418f1e42a700b70f6af2": {
+  "duration_ms": 2825,
+  "bytes": 17280,
+  "text": "75 Meter vor dem Tor."
+ },
+ "1bcd12b5ebd65c1ebd2cfd83e4a4f9a7d676227c30924eb99ad18f6dbcf82df8": {
+  "duration_ms": 5900,
+  "bytes": 35712,
+  "text": "Angriffs drittel, entfernte Seite, die Blauen. Olvros zu Olvholm."
+ },
+ "1cc91d77ffbacd4a06814d3f01b29a58e42e3147d7ae769fcbd3192c304e3757": {
+  "duration_ms": 2837,
+  "bytes": 17424,
+  "text": "25 Meter vor dem Tor."
+ },
+ "1d381838d182e938b48bd35929d2489bb283bd12d62aaaa4696e722f82a1313b": {
+  "duration_ms": 5462,
+  "bytes": 33120,
+  "text": "Ich kann nicht bei Wetten oder Quoten helfen. Frag mich stattdessen nach dem Spiel."
+ },
+ "1e7d2d8de153672ba71c90f9d3358d5a26b0556c7d711199d50a5cac71fc679b": {
+  "duration_ms": 4887,
+  "bytes": 29664,
+  "text": "Die Roten 0, die Blauen 1, 64 Minuten gespielt."
+ },
+ "1eefd521d05e6b145e64f1b83dfeff5824094b3e105ab82c1cdae15d3d8a1e66": {
+  "duration_ms": 6175,
+  "bytes": 37440,
+  "text": "Angriffs drittel, entfernte Seite, die Blauen. Kelski schießt, vorbei."
+ },
+ "22df61d38c5d42e5e9fa8961c4a933bbd6f4fd0f8d46042b302f2fd700835d88": {
+  "duration_ms": 3937,
+  "bytes": 24048,
+  "text": "Die Roten haben ihn, Abwehrdrittel, nahe Seite."
+ },
+ "25df53c4ee1901fe3b32db59228bc1f42405e65870037fe165a0b3215151fc8c": {
+  "duration_ms": 4537,
+  "bytes": 27648,
+  "text": "Die Roten 0, die Blauen 1, 60 Minuten gespielt."
+ },
+ "25e0a33fc17466f2d6117d93e9b0b9679d5636503451b3e19ff2573f964a9ac5": {
+  "duration_ms": 6112,
+  "bytes": 37008,
+  "text": "Angriffs drittel, entfernte Seite, die Blauen. Strandford zu Olvholm."
+ },
+ "26291e0c8dbb829ba2c8ddc5608518a862281a1c81219b13c1b9a02f83b7e432": {
+  "duration_ms": 4625,
+  "bytes": 28080,
+  "text": "Ashard unterbricht für die Blauen, Mittelfeld, nahe Seite."
+ },
+ "2bc4e516925e1b98c9489c80190f4693e90d1ac400f9399d4ed2af628bd9119f": {
+  "duration_ms": 4175,
+  "bytes": 25344,
+  "text": "Die Roten haben ihn, Abwehrdrittel, entfernte Seite."
+ },
+ "344ed8b5de5dd3be1d0915ff351ae2d97d522c3caa1f2115161e84b1ae3f7beb": {
+  "duration_ms": 4925,
+  "bytes": 29952,
+  "text": "Strandford unterbricht für die Blauen, Angriffs drittel, Mitte."
+ },
+ "344fd4ff1d0b2e1c0ad5ea1285060999d7e72516bd33f585a75daf9411aad865": {
+  "duration_ms": 2312,
+  "bytes": 14256,
+  "text": "90 Meter vor dem Tor."
+ },
+ "371eaa972fd4279fdb3953e5ade3464c1be77c57b415b0c5b6c6612ca2acdee1": {
+  "duration_ms": 3700,
+  "bytes": 22608,
+  "text": "Die Blauen haben ihn, Angriffs drittel, Mitte."
+ },
+ "37749c3b3f0f83acf3bab64b7938edb52307206e46a089450258bb1bb8a45d64": {
+  "duration_ms": 3850,
+  "bytes": 23472,
+  "text": "VAR prüft das Tor der Blauen... und es bleibt."
+ },
+ "44df4452c2cecdc7336c78223a9b7813c58e4e13f9b54024fd6f246ae98248a3": {
+  "duration_ms": 6812,
+  "bytes": 41184,
+  "text": "Ich bin nur fürs Spiel da. Frag mich nach dem Spielstand, dem Ball oder was gerade passiert ist."
+ },
+ "4b7f628dc6838850b61d4f11280a0241c4510f70d0ab8df7d15512a2f40b7bab": {
+  "duration_ms": 2600,
+  "bytes": 15984,
+  "text": "Orlani hatte einen Schuss geblockt"
+ },
+ "4cbdb6deda4ab8218dd14e0286302e7e672ae6e8dd03ca7aa08b1212de30d2b9": {
+  "duration_ms": 3737,
+  "bytes": 22752,
+  "text": "Die Roten haben ihn, Angriffs drittel, Mitte."
+ },
+ "4e412812efe3fdd5ada6609753f36763d1f13fbd3c7e845b2836bd71f319122a": {
+  "duration_ms": 2775,
+  "bytes": 16992,
+  "text": "45 Meter vor dem Tor."
+ },
+ "526aa58b11794237612f98e9455ebc3565f16944498d009d5756be45b2976aa1": {
+  "duration_ms": 4375,
+  "bytes": 26640,
+  "text": "Morani unterbricht für die Roten, Mittelfeld, Mitte."
+ },
+ "5f18ba5ef39327a443c1487a6d2975d9f8f72bf9044332fd475ebeebf0f5d648": {
+  "duration_ms": 5487,
+  "bytes": 33264,
+  "text": "Mittelfeld, entfernte Seite, die Blauen. Olvros zu Kelski."
+ },
+ "601ef3a0d64f0783b0176b38050a00773e2214ce09e28e4d03c724ac1ed0e345": {
+  "duration_ms": 4150,
+  "bytes": 25200,
+  "text": "Die Blauen haben ihn, Abwehrdrittel, entfernte Seite."
+ },
+ "648c8f70386e215ab7c4942ba37c2c2448a4c1381e34ce707b0671f01d761a8e": {
+  "duration_ms": 4350,
+  "bytes": 26496,
+  "text": "Die Roten haben ihn, Angriffs drittel, entfernte Seite."
+ },
+ "64e96cac2d137d2148df4969f98d4b1408d2487b9263e79236e8af0ef82e8bf9": {
+  "duration_ms": 3600,
+  "bytes": 21888,
+  "text": "Die Roten haben ihn, Abwehrdrittel, Mitte."
+ },
+ "6585e4d1880fe198db71d86e510d621b17e51de94e0712da4e45e7d46a771b84": {
+  "duration_ms": 2312,
+  "bytes": 14256,
+  "text": "40 Meter vor dem Tor."
+ },
+ "674393b5ff7264b1e813a8f626687faa7f40632fcb281979cb5415dd815cfbf7": {
+  "duration_ms": 2862,
+  "bytes": 17568,
+  "text": "95 Meter vor dem Tor."
+ },
+ "67e52fb0de5020c87f722b6e5b8cd14680daf910bd7c0c4d58d60a4423ed8496": {
+  "duration_ms": 4037,
+  "bytes": 24624,
+  "text": "Die Blauen haben ihn, Mittelfeld, entfernte Seite."
+ },
+ "689fac90f9527a0949327706809e75dfca59fc846a83976a51b8a0799dbb843b": {
+  "duration_ms": 5537,
+  "bytes": 33552,
+  "text": "Mittelfeld, entfernte Seite, die Roten. Nevford zu Ashski."
+ },
+ "6c5548435db7346387fdbdee21fc4e83f602469f5b08060a9882c7adc660bb47": {
+  "duration_ms": 6475,
+  "bytes": 39168,
+  "text": "Angriffs drittel, entfernte Seite, die Blauen. Strandford flankt auf Fenford."
+ },
+ "6c93e5df4505d080720e07d2712a88cb3d9a9a9cfbec39144ec484fad607282a": {
+  "duration_ms": 862,
+  "bytes": 11232,
+  "text": "und"
+ },
+ "71095743afde1b1e5a9cccf2fa793c6fc8a1acb6f3c654219cea3578384f040c": {
+  "duration_ms": 5725,
+  "bytes": 34704,
+  "text": "Mittelfeld, entfernte Seite, die Blauen. Kelski zu Strandford."
+ },
+ "758db675aa2fdd1ba85c1f072f1b6682ed3dc82c88f9e6f0c7b587df2cfbad33": {
+  "duration_ms": 4137,
+  "bytes": 25200,
+  "text": "Die Roten haben ihn, Angriffs drittel, nahe Seite."
+ },
+ "794f7d0532412e452b69cc38ad9b336fb78866d502b26712a6ea7c410cbe691c": {
+  "duration_ms": 4362,
+  "bytes": 26496,
+  "text": "Rilford blockt ihn für die Blauen, Abwehrdrittel, Mitte."
+ },
+ "795c1ab4368761f49d44ed7e239cd3ef794867c63d5bcfcf9f922b6a97eefe81": {
+  "duration_ms": 4987,
+  "bytes": 30240,
+  "text": "Die Roten 0, die Blauen 1, 59 Minuten gespielt."
+ },
+ "7c27d94eee5384c67055d04700c2e43207c58a2829b06adbee770cbe43a4a88d": {
+  "duration_ms": 4100,
+  "bytes": 24912,
+  "text": "Die Roten haben ihn, Mittelfeld, entfernte Seite."
+ },
+ "7ceb5ac53789ffb46d4c7e83d6a40ed2f90e772dca218096d4dbf1d4bb35f711": {
+  "duration_ms": 5850,
+  "bytes": 35424,
+  "text": "Angriffs drittel, entfernte Seite, die Blauen. Kelski zu Olvholm."
+ },
+ "7da43bc8b46399475b00340fb6ce2551f238f4d18b0883d614f9960feb136e94": {
+  "duration_ms": 2175,
+  "bytes": 13392,
+  "text": "5 Meter vor dem Tor."
+ },
+ "83369970f42cf040582c39fdb70b26d47e199265e3343e559ff50f2e7dec9776": {
+  "duration_ms": 1762,
+  "bytes": 11232,
+  "text": "Während du weg warst,"
+ },
+ "851f9636b4e12fc90616b4804000459a0ee18a1a5dfdf68fea3bec977c9376f3": {
+  "duration_ms": 4912,
+  "bytes": 29808,
+  "text": "Die Roten 0, die Blauen 1, 63 Minuten gespielt."
+ },
+ "8534ce1d58d4821626c517678ff521688e8db26f3ab90601dfe1689dfe59046a": {
+  "duration_ms": 2837,
+  "bytes": 17424,
+  "text": "35 Meter vor dem Tor."
+ },
+ "85bf5edc9fc7c05dbb7a32cdadefc08642ba4e5b31a8fff06238e0ee7e95cc8c": {
+  "duration_ms": 2475,
+  "bytes": 15264,
+  "text": "Vaston pariert gegen Fenford"
+ },
+ "87e5246ab1250c354be507973a8ad65ee86274934ec2d90f8852703d46edac70": {
+  "duration_ms": 6462,
+  "bytes": 39168,
+  "text": "Foul von Nevford von den Roten, Mittelfeld, entfernte Seite. Gelbe Karte."
+ },
+ "88756ae2d80d07de151605ffffdcb46a7bf369b928dcf99d5886430d73b2e7de": {
+  "duration_ms": 2875,
+  "bytes": 17568,
+  "text": "55 Meter vor dem Tor."
+ },
+ "8d29c97efbedda02678745d24072bf189ebeaa1bc046f0be2ea624e1dcaea9d4": {
+  "duration_ms": 5050,
+  "bytes": 30672,
+  "text": "Olvros unterbricht für die Blauen, Abwehrdrittel, entfernte Seite."
+ },
+ "90246ea09b7db0a8c629fa06b522170702388bc16d18e9fb4786654d3e51a023": {
+  "duration_ms": 1787,
+  "bytes": 11232,
+  "text": "Kelski-Schuss vorbei"
+ },
+ "91e64e829f2f9abfa2e69532942fc5d59a479ba0359c0ae67e00575de20aee85": {
+  "duration_ms": 2362,
+  "bytes": 14544,
+  "text": "100 Meter vor dem Tor."
+ },
+ "96ac69e74952e8343c423609fed2f372afeaa1fd3d020fa44856fe6c745b39a1": {
+  "duration_ms": 6687,
+  "bytes": 40464,
+  "text": "Sorry, das habe ich nicht verstanden. Versuch: wie steht's, oder wo ist der Ball."
+ },
+ "96b26faeb9ea52d10904377b80a158ba606b2300dfd6e78a59185d53fa7cb361": {
+  "duration_ms": 2125,
+  "bytes": 13104,
+  "text": "10 Meter vor dem Tor."
+ },
+ "96bd5e3ce4eb3b113529778545c0ca68b7358732ffb9632944250b98ab2a0299": {
+  "duration_ms": 2425,
+  "bytes": 14976,
+  "text": "Noch ist nichts Großes passiert."
+ },
+ "97873c4884923a6f067bbb370af5e478cf01127b5673014c5bf29be81cf99c6d": {
+  "duration_ms": 2300,
+  "bytes": 14112,
+  "text": "30 Meter vor dem Tor."
+ },
+ "9828f4eb09069c5cd22e8517332f7df9b30c37e51ee97884aaf664ca85e6e70a": {
+  "duration_ms": 5750,
+  "bytes": 34848,
+  "text": "Angriffs drittel, Mitte, die Roten. Orlani schießt, geblockt."
+ },
+ "990e17f05d5a1ab94fc8c6cfdaa68c4555943791450ef0e86c5a2a10158092b2": {
+  "duration_ms": 2262,
+  "bytes": 13968,
+  "text": "Fenford traf für die Blauen"
+ },
+ "9d8a9a0799ca4ff1bd89b4493dafb63ee8f99916d18969cfae281a118a30fc1f": {
+  "duration_ms": 1851,
+  "bytes": 11520,
+  "text": "Wart's ab, pass auf!"
+ },
+ "9f2e025f6334fde83dadbdf91737b7018886265ed927893f8118a59714f46412": {
+  "duration_ms": 2350,
+  "bytes": 14400,
+  "text": "60 Meter vor dem Tor."
+ },
+ "a1f0ad13b52b9f52269845b175bfecac63a8c571e17f6467c2fe65e48323418b": {
+  "duration_ms": 5850,
+  "bytes": 35424,
+  "text": "Angriffs drittel, entfernte Seite, die Blauen. Olvholm zu Kelski."
+ },
+ "a4b515a9ab34966aa3655b8e5fb85ecb23de4e1313280c08f1539e716738f907": {
+  "duration_ms": 4900,
+  "bytes": 29808,
+  "text": "Olvholm unterbricht für die Blauen, Mittelfeld, entfernte Seite."
+ },
+ "a5e4ab3ea97bfc2990084c6f90b9973fc69d5098df10c325f71ea62ad711c1d8": {
+  "duration_ms": 3500,
+  "bytes": 21312,
+  "text": "Die Blauen haben ihn, Mittelfeld, Mitte."
+ },
+ "a6deb99f52790343c7cc62f500c07aa73c89d6590166ef71d5e0d0c4456e0a24": {
+  "duration_ms": 3400,
+  "bytes": 20736,
+  "text": "Fenford hatte einen Schuss, Vaston pariert"
+ },
+ "a7d686fb7259f61095f31d6bdac4fc18d421256f623189c2dcf4d3ae30d58f3b": {
+  "duration_ms": 4050,
+  "bytes": 24624,
+  "text": "Die Blauen haben ihn, Angriffs drittel, nahe Seite."
+ },
+ "b0063c6dde21fdb28ded7d4568b2dd11d743fe2d37bf9b7eefd9b504b9b367bf": {
+  "duration_ms": 4987,
+  "bytes": 30240,
+  "text": "Die Roten 0, die Blauen 1, 62 Minuten gespielt."
+ },
+ "b1245a26990494682595eac6175343a9e61fe2255097ade19d27de0167ffa1c9": {
+  "duration_ms": 2350,
+  "bytes": 14400,
+  "text": "15 Meter vor dem Tor."
+ },
+ "b17eee0baf375de18ddfc9601fd9bdb6f945383e906e84ea5dcd310bbc1080f3": {
+  "duration_ms": 2275,
+  "bytes": 13968,
+  "text": "Nichts Großes ist passiert."
+ },
+ "b3b8dc61953108b6854d8b9c22957b81c7040dc1df0f0eb850e44b62da1488ef": {
+  "duration_ms": 6112,
+  "bytes": 37008,
+  "text": "Angriffs drittel, entfernte Seite, die Blauen. Fenford zu Strandford."
+ },
+ "b720fb5c84382aa94d87b42f5664c143c0eddc0aaf5f9d40c2cb31de41db62b4": {
+  "duration_ms": 4987,
+  "bytes": 30240,
+  "text": "Die Roten 0, die Blauen 1, 58 Minuten gespielt."
+ },
+ "b8c7eb11db7bae17c695fdc869870e6e29b0c1c20e6c365072bbcc47812caf84": {
+  "duration_ms": 4287,
+  "bytes": 26064,
+  "text": "Die Blauen haben ihn, Angriffs drittel, entfernte Seite."
+ },
+ "b8ef2bacc9db5861344601071df7ae597571cffe716614677e9f157e587b1866": {
+  "duration_ms": 7175,
+  "bytes": 43344,
+  "text": "Angriffs drittel, entfernte Seite, die Blauen. Fenfords Pass wird von Nevaro abgefangen."
+ },
+ "ba1e5e9107db83d20b2bf55b21788082d3b25787760db88ea2da9b8e5680eeee": {
+  "duration_ms": 2250,
+  "bytes": 13824,
+  "text": "80 Meter vor dem Tor."
+ },
+ "ba3e85e1b1841a8fb83de453bbbe82c6a0cf26b0e4259616b5b33a71ca136092": {
+  "duration_ms": 7000,
+  "bytes": 42336,
+  "text": "Angriffs drittel, Mitte, die Blauen. Fenford köpft ihn rein! Tor für die Blauen."
+ },
+ "bd68a28cc0ad04ee6ee27f72857db0e67e8941c80f1e5155fc9747b6ca3d39b9": {
+  "duration_ms": 4887,
+  "bytes": 29664,
+  "text": "Dunani unterbricht für die Roten, Mittelfeld, entfernte Seite."
+ },
+ "c143a8aa9432e233dc205c35f671929dbece04709bbb5061fbd047c28c6d0179": {
+  "duration_ms": 5112,
+  "bytes": 31104,
+  "text": "Die Roten 0, die Blauen 1, 57 Minuten gespielt."
+ },
+ "cbc6da0a4f54fde3564d06ff8c26403c7fa8371a6eb421aea930f40622f95187": {
+  "duration_ms": 6575,
+  "bytes": 39744,
+  "text": "Angriffs drittel, nahe Seite, die Blauen. Fenford schießt, Vaston pariert."
+ },
+ "ce044df4b33a670cb4346a5b93beaf3eacb4988be95398222ff677567e62654a": {
+  "duration_ms": 5087,
+  "bytes": 30816,
+  "text": "Angriffs drittel, Mitte, die Roten. Ashski zu Orlani."
+ },
+ "cf0259d7597f9d5a912a518d4ad114681e07145217936d688e2323289232e287": {
+  "duration_ms": 4937,
+  "bytes": 29952,
+  "text": "Die Roten 0, die Blauen 0, 56 Minuten gespielt."
+ },
+ "d2163138367b0d1b3aa60626afbde7512022e203963251aaf06398ae0e231624": {
+  "duration_ms": 3862,
+  "bytes": 23472,
+  "text": "Die Blauen haben ihn, Abwehrdrittel, nahe Seite."
+ },
+ "d2d7581eafce39f1ae4f7ebe712ca26f92317b203f501a7b52b7fc648151535e": {
+  "duration_ms": 3850,
+  "bytes": 23472,
+  "text": "Die Roten haben ihn, Mittelfeld, nahe Seite."
+ },
+ "d85f3bb69c3e7fafffc997ac114d21c95d99f353cf9bddeec8b063c729c9bb9b": {
+  "duration_ms": 1812,
+  "bytes": 11232,
+  "text": "Nevford sieht Gelb"
+ },
+ "d95c801de4a8246ef2c7537ee01f183e26fe4d74b1d8bebabb3d67dac1f68eab": {
+  "duration_ms": 5087,
+  "bytes": 30816,
+  "text": "Die Roten 0, die Blauen 1, 56 Minuten gespielt."
+ },
+ "d9f81117872c9edc65e10a880243a13e115f147b347d404bfe3ab75205fc567a": {
+  "duration_ms": 1887,
+  "bytes": 11664,
+  "text": "Gehalten von Vaston."
+ },
+ "dd6087abed0e86835654c7c5a891594344f7d2ad3c1e6fcd28e4c17dcc738965": {
+  "duration_ms": 3587,
+  "bytes": 21888,
+  "text": "Die Blauen haben ihn, Abwehrdrittel, Mitte."
+ },
+ "de8d825c8552d0a7e5382ddecb257aa51ba67d34e7fd04eff3e935170decc23b": {
+  "duration_ms": 5700,
+  "bytes": 34560,
+  "text": "Ich kann dir nicht sagen, was als Nächstes passiert. Das entscheidet das Spiel."
+ },
+ "e710e0ffec678a03e5d955425ba867cea710c86d96fccf7a5c07dd1a964f2e15": {
+  "duration_ms": 2325,
+  "bytes": 14256,
+  "text": "20 Meter vor dem Tor."
+ },
+ "e95fb7be7151f19f8cfa1ae3437bb7b6cf4b1194e7f0b24cd98d8e6a1acdd779": {
+  "duration_ms": 5637,
+  "bytes": 34128,
+  "text": "Mittelfeld, entfernte Seite, die Roten. Ashski zu Nevford."
+ },
+ "e9b9e7820ea55f2766f53e7d3b72b82e9b6b97d475b9621ad8cfe9d259a4cbbc": {
+  "duration_ms": 2387,
+  "bytes": 14688,
+  "text": "50 Meter vor dem Tor."
+ },
+ "ea6ffd423a30d61ed66bf6b3a10df9d3af050da2b0fbe0c3b013978936d7c49d": {
+  "duration_ms": 5912,
+  "bytes": 35856,
+  "text": "Angriffs drittel, entfernte Seite, die Roten. Nevford zu Ashski."
+ },
+ "ea70052863719a4ee2e29bc2d54c0cb0c3bbf9544aaee95bb243e85f11142a13": {
+  "duration_ms": 1562,
+  "bytes": 11232,
+  "text": "Zurück ins Spiel."
+ },
+ "eb41afb76a23b63f15b0948c01243294fa0553419766da9defe2abd4ffdb7428": {
+  "duration_ms": 5437,
+  "bytes": 32976,
+  "text": "Angriffs drittel, Mitte, die Blauen. Strandford zu Fenford."
+ },
+ "ed6ec36973287dbda239fb36f8510f98a5958449031f7f201c721a57af103e3f": {
+  "duration_ms": 2800,
+  "bytes": 17136,
+  "text": "85 Meter vor dem Tor."
+ },
+ "ef79fb13ae33e73a1928b128209ce304c9ad03051b9058bb982cb5033a606ea1": {
+  "duration_ms": 2362,
+  "bytes": 14544,
+  "text": "70 Meter vor dem Tor."
+ },
+ "f08031b8a74afdf7348e5a312349aabde56cd376a7eb6fc9e6fc18d63022c525": {
+  "duration_ms": 1712,
+  "bytes": 11232,
+  "text": "Auf der Torlinie."
+ },
+ "f3a7b637dffb817609c33b5ab8dfc25682110b381a416eaba7065af2920118a8": {
+  "duration_ms": 1825,
+  "bytes": 11376,
+  "text": "Während wir redeten,"
+ },
+ "f3d4f547260a3b84d260efe5c47d46770af050f4f0a7376096e5aa1b4e33584d": {
+  "duration_ms": 3062,
+  "bytes": 18720,
+  "text": "VAR ließ das Tor der Blauen stehen"
+ },
+ "f3f6f922a60eb834dd2e47b9a4a332c1f945bfc733591da43348795b3fac69e4": {
+  "duration_ms": 1062,
+  "bytes": 11232,
+  "text": "Davor:"
+ },
+ "fab7e1f23c1717037aa0dcab75030af629af9cf358b337ba2e98b4bdec581cd3": {
+  "duration_ms": 6537,
+  "bytes": 39600,
+  "text": "Angriffs drittel, Mitte, die Blauen. Fenfords Pass wird von Nevaro abgefangen."
+ },
+ "fea3aaa097718bcff997e889cfde7e6bb4420b3d141daa768e455676de7bdbdf": {
+  "duration_ms": 2125,
+  "bytes": 13104,
+  "text": "Der Ball ist aus dem Spiel."
+ },
+ "fed7aad56a6dfb8eff2f37bb066a26ff2a715cf737b74c2e478fc39492bb95c4": {
+  "duration_ms": 6337,
+  "bytes": 38448,
+  "text": "Angriffs drittel, entfernte Seite, die Blauen. Olvholm flankt auf Fenford."
+ },
+ "ff7b371fc61187efbdda029368ac37836c6ef2507674ce7238c4beab339ec30e": {
+  "duration_ms": 5575,
+  "bytes": 33840,
+  "text": "Angriffs drittel, nahe Seite, die Blauen. Ashard zu Fenford."
+ }
+}

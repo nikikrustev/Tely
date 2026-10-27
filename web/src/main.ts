@@ -129,6 +129,7 @@ async function startApp(): Promise<void> {
   };
   applyHaptics();
   let crowd: InstanceType<typeof CrowdEngine> | null = null;
+  let presetVoice: { setLanguage(lang: string): Promise<boolean> } | null = null;   // the quick questions' voice (D27)
   const radios = (name: string) => [...document.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`)];
   for (const r of radios('club')) r.checked = r.value === settings.club;
   for (const r of radios('haptics')) r.checked = r.value === settings.haptics;
@@ -151,11 +152,12 @@ async function startApp(): Promise<void> {
   // D27: the commentator's language, from Setup or from the commentator's set_language. Saved on this device.
   const langSel = $<HTMLSelectElement>('lang');
   langSel.value = settings.lang;
-  const LANG_NAME: Record<typeof settings.lang, string> = { en: 'English', bg: 'Bulgarian', es: 'Spanish', ar: 'Arabic', fr: 'French', de: 'German' };
+  const LANG_NAME: Record<typeof settings.lang, string> = { en: 'English', bg: 'Bulgarian', es: 'Spanish', ar: 'Arabic', fr: 'French', de: 'German', hi: 'Hindi' };
   const setLang = async (lang: typeof settings.lang, announce: boolean) => {
     update({ lang });
     langSel.value = lang;
     const ok = (await lane.setLanguage?.(lang)) ?? false;
+    if (ok) void presetVoice?.setLanguage(lang);              // the quick questions answer in it too
     const line = ok ? `Commentary in ${LANG_NAME[lang]}.` : `${LANG_NAME[lang]} commentary isn't available. Staying with what was playing.`;
     if (announce) say(line); else status.textContent = line;   // after an answer, the commentator has already said it
   };
@@ -372,6 +374,8 @@ async function startApp(): Promise<void> {
       const tools = new LocalTools(await loadQaBundle());
       const player = new askMod.FragmentPlayer(actx, st.commentaryIn);
       await player.load();
+      presetVoice = player;
+      if (settings.lang !== 'en') void player.setLanguage(settings.lang);
       askCtl = new askMod.AskController({
         tools, clock: s, crowd: c, commentary: lane.commentary,
         speak: (f, text) => player.speak(f, text),

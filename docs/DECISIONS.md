@@ -648,3 +648,31 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
   deploy, this relay run locally against real Voice Live (phone test, localhost page): "Where's the ball?" at 56:35
   got "The ball is out of play." and at 57:58 (the video's take) "Navy have it, defensive third, far side. 80 metres
   from goal.", each the tool's words exactly; "Who wins?" still got "that's for the match to decide".
+
+## D29. Languages finished: the quick questions, Hindi, and the spoiler firewall in every language (27 Oct 2026)
+
+- **Why:** D27 left the offline answers in English, and its truth check on translations covered digits and names but
+  not spoilers. The firewall only knew English outcome words, so a translation could give a result away unnoticed.
+- **The firewall in each language** (`languages.py` `OUTCOME_L10N`, `spoiler_check_l10n`): per-language regexes for
+  a shot's and a pass's outcome words (stems where the language inflects; "Tor" but not "Torwart", "гол" but not
+  "голям"), checked at the English line's own time with `verifier.spoiler_check`'s rules. The translator now gets a
+  `reject` hook, so a line that fails is asked again (three tries, then the build fails).
+  - **It found a real leak** in the shipped Arabic track: c_0004, "VAR is checking it", was translated as "VAR is
+    checking **the goal**" (الهدف) 20 s before the VAR decision. Re-translated: "في الشباك... لحظة، الفار يراجعها."
+  - The instructions now also say: add no outcome word the English doesn't say, and keep digits as digits (the first
+    French run wrote "cinq mètres" for "5 metres", which the digit check rejects).
+- **Quick questions in every language:** the 110 answer fragments are translated with the same checks and recorded in
+  BrianMultilingual into `answers/<lang>/` (same `index.json` shape). `FragmentPlayer.setLanguage()` switches folder,
+  and keeps the current answers if a language has none. The page switches it with the commentary.
+- **Hindi** (`hi-IN`) is the seventh language: commentary, answers, live answers (`set_language`, MCP schema, persona).
+  The team names are "लाल टीम" and "नीली टीम". 14 Hindi lines were re-recorded faster to fit; one (c_0022) still runs
+  past the next line's start at the +45 % cap (`l10n.fits: false`).
+- **Page words stay English, so the page's `lang` stays `en`** (WCAG 3.1.1: the page language is the language of its
+  words; `lang="ar"` on English buttons would make a screen reader read them with an Arabic voice). What is in the
+  chosen language carries its own `lang`, and Arabic also `dir="rtl"`: the picker's options and, in screen-reader
+  mode (D30), each commentary line.
+- **Numbers:** 7 tracks, 1,266 files, 33.8 MB. Translations: `l10n_v1@gpt-5-mini`, cached in `commentary/l10n/`.
+- **Checked:** pytest (new: each language's outcome words; a leaking translation is asked again; every shipped
+  translated line passes the digit/name check and the firewall in its language, with the English line's time and
+  evidence; every language has all 110 answers), vitest 139/139 (new: FragmentPlayer.setLanguage).
+- **Not checked:** the recordings by a native speaker of each language.
