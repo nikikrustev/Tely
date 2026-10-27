@@ -1,4 +1,4 @@
-// OWNER: A (potencialbg). Low-data mode (Tier 2 item 11, D36): for capped or slow connections. On, it plays the
+// Low-data mode (Tier 2 item 11, D36): for capped or slow connections. On, it plays the
 // commentary from the 32 kbps copies (audio/<lang>/radio-lo/), fetches each line only shortly before it is needed
 // instead of the whole track at Start, and loads one recording of each crowd reaction instead of up to six.
 // Automatic when the browser says so (Save-Data, or a 2G/3G connection); the Setup switch overrides it.

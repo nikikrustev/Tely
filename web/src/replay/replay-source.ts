@@ -1,6 +1,6 @@
-// OWNER: B (Nikolay). Judge mode: plays web/public/replay/v1/<cut>/segments.json from static files (file 43 §6).
-// It is also the one replay clock (ReplayClock in contracts/b-exports.ts) that A's commentary track follows.
-import type { ReplayClock } from '../contracts/b-exports';
+// Judge mode: plays web/public/replay/v1/<cut>/segments.json from static files (file 43 §6).
+// It is also the one replay clock (ReplayClock in contracts/stage.ts) that A's commentary track follows.
+import type { ReplayClock } from '../contracts/stage';
 import type { CrowdState } from '../audio/crowd-engine';
 import type { Earcon } from '../audio/sound-stage';
 import { bundleBase } from './base';
@@ -44,7 +44,7 @@ export class ReplaySource implements ReplayClock {
     this.anchorMatch = doc.t0;
   }
 
-  // SEAM(B->A): ReplayClock (contracts/b-exports.ts). A's commentary schedules its lines against now().
+  // SEAM(B->A): ReplayClock (contracts/stage.ts). A's commentary schedules its lines against now().
   now(): number {
     const t = this.playing ? this.anchorMatch + (this.ctx.currentTime - this.anchorCtx) : this.anchorMatch;
     return Math.min(Math.max(t, this.doc.t0), this.doc.t1);

@@ -1,4 +1,4 @@
-"""azd predeploy hook: build + push the relay image, point the Container App at it. OWNER: A (potencialbg).
+"""azd predeploy hook: build + push the relay image, point the Container App at it.
 
 azure.yaml runs this before every `azd up` / `azd deploy` (D17: no ACR Tasks on the free subscription, no Docker here).
 It also saves the image as RELAY_IMAGE in the azd env, so a later `azd provision` keeps it (infra/main.parameters.json).

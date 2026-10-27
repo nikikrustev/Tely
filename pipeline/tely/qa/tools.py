@@ -1,4 +1,4 @@
-"""The 8 Q&A tools (file 43 §3 schemas, ported from file 40's match_tools.py). OWNER: B (Nikolay).
+"""The 8 Q&A tools (file 43 §3 schemas, ported from file 40's match_tools.py).
 
 Every tool takes the listener's playhead from the caller (A's relay injects it; the model never sets the clock) and
 reads the match only through Bundle accessors that stop at the playhead (bundle.py). Each returns

@@ -1,4 +1,4 @@
-// OWNER: B (Nikolay). Phone vibration (file 41 haptics.ts): heartbeat tempo from tension, event tactons with a
+// Phone vibration (file 41 haptics.ts): heartbeat tempo from tension, event tactons with a
 // home/away signature, fired at the moment the matching audio is heard (minus a 20 ms lead, never late).
 // Adapted: the browser bits (vibrate, timers, clock) are passed in, so Node tests can check every pattern.
 export type Team = 'home' | 'away';

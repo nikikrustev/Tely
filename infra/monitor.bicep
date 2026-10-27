@@ -1,5 +1,5 @@
-// OWNER: A (potencialbg). Stage 5 tracing: a workspace-based Application Insights for the Director workflow's
-// OpenTelemetry spans (file 18 §5). The workspace caps ingestion at 1 GB/day (BUILD_PLAN Stage 5) so a runaway
+// Stage 5 tracing: a workspace-based Application Insights for the Director workflow's
+// OpenTelemetry spans (file 18 §5). The workspace caps ingestion at 1 GB/day () so a runaway
 // exporter can't eat the free credit (D6); the first 5 GB/month of Log Analytics ingestion is free (file 21, unverified).
 param location string
 param tags object

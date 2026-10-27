@@ -1,4 +1,4 @@
-# OWNER: A (potencialbg). Runtime deps of the relay container. B's package comes from ../pipeline ([mcp] extra).
+# Runtime deps of the relay container. B's package comes from ../pipeline ([mcp] extra).
 # CI never installs this file (azure-*); it installs requirements-test.txt instead.
 fastapi>=0.141,<1
 uvicorn[standard]>=0.54,<1

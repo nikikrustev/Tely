@@ -1,4 +1,4 @@
-// OWNER: B (Nikolay). "Next big moment": the chapter stops A's build_bundle writes into manifest.json (file 43 §6).
+// "Next big moment": the chapter stops A's build_bundle writes into manifest.json (file 43 §6).
 // Spoiler-safe by design (A's D11): every stop sits before a build-up or a card, named alike for a goal or a miss.
 import { bundleBase } from './base';
 export interface Chapter { t: number; label: string }

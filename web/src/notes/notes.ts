@@ -1,4 +1,4 @@
-// OWNER: A (potencialbg). Director's notes (Tier 1 item 9, D33): for sighted judges with the radar on (?radar=1),
+// Director's notes (Tier 1 item 9, D33): for sighted judges with the radar on (?radar=1),
 // what the agents decided, shown only AFTER each moment has played. Every build-up's note waits until its shot's
 // outcome is out (show_after = reveal_t, the spoiler clamp), so the panel can never hint that a chance is coming.
 // Asks add a note when their answer is done: the Voice Live tools called and the time to the first answer audio.

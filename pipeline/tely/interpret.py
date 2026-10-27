@@ -1,4 +1,4 @@
-"""Interpret: the per-second and per-event signals in signals.json (contracts/README.md). OWNER: B (Nikolay).
+"""Interpret: the per-second and per-event signals in signals.json (docs/match-format.md).
 
 Per second: win probability (file 23 live Poisson), suspense (file 39), tension 0-1 (file 39 tension_curve,
 look-ahead weighted by xG only) and danger per team (Berbata definition, below). The crowd is in crowd.py.

@@ -1,5 +1,5 @@
-# OWNER: B (Nikolay). Only B's generated match files (TEAM_SPLIT.md). Keep them byte-identical on every OS:
-# LF line endings (the CDF validator rejects CRLF) and the gzip untouched, so A's rebuild never shows a diff.
+# The generated match files. Keep them byte-identical on every OS:
+# LF line endings (the CDF validator rejects CRLF) and the gzip untouched, so a rebuild never shows a diff.
 meta.json text eol=lf
 events.jsonl text eol=lf
 signals.json text eol=lf

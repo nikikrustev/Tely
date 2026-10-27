@@ -1,4 +1,4 @@
-// OWNER: B (Nikolay). ?debug=1 panel: crowd gain, ball x and playhead, refreshed every animation frame.
+// ?debug=1 panel: crowd gain, ball x and playhead, refreshed every animation frame.
 // Visual only (aria-hidden): it is for checking the sound stage, not for listeners.
 export interface DebugSource {
   playhead(): number;

@@ -1,4 +1,4 @@
-// OWNER: A (potencialbg). Tester mode (?test=1, D19): getting each event to the relay's POST /feedback.
+// Tester mode (?test=1, D19): getting each event to the relay's POST /feedback.
 // fetch with keepalive (it survives the tab closing) and one retry after 30 s, because the relay scales to zero and
 // its cold start is over 30 s (D17). If both tries fail, the event stays saved as "unsent": the thank-you screen
 // offers "Copy my answers", and the next visit tries again. An answer is never thrown away.
@@ -38,7 +38,7 @@ export const browserTransport: Transport = {
   wait: (ms) => new Promise((r) => setTimeout(r, ms)),
 };
 
-/** The relay's /feedback URL from its /voice URL (lane-a liveRelayUrl), or null without a relay. */
+/** The relay's /feedback URL from its /voice URL (voice/index.ts liveRelayUrl), or null without a relay. */
 export function feedbackUrl(voiceUrl: string | null): string | null {
   return voiceUrl ? voiceUrl.replace(/^ws/, 'http').replace(/\/voice$/, '/feedback') : null;
 }

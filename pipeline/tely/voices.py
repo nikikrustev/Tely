@@ -1,6 +1,6 @@
 """Render the same 4 lines in 3 en-US DragonHD voices to out/voices/, so a person can pick TTS_VOICE by ear.
 
-OWNER: A (potencialbg). Run on A's machine after `az login`:
+ Run on A's machine after `az login`:
     python -m tely.voices                     # TTS_VOICE from .env + two more
     python -m tely.voices --voices en-US-Davis:DragonHDLatestNeural,en-US-Emma:DragonHDLatestNeural
 It uses the same SSML builder and hash cache as build_commentary, so a sample sounds exactly like the real track

@@ -1,4 +1,4 @@
-// OWNER: B (Nikolay; A since the 24 Oct handover). Seat-in-the-stands spatial audio (file 37 sound-stage.ts), adapted:
+// Seat-in-the-stands spatial audio (file 37 sound-stage.ts), adapted:
 // - the AudioContext is passed in (tests use a fake one; nodes come from its factory methods);
 // - earcons are generated here (procedural thud / whistle / net / ping), nothing downloaded;
 // - ball moves are scheduled at an exact audio time (`at`), so the replay can queue them ahead;

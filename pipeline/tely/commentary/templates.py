@@ -1,4 +1,4 @@
-"""Radio-level, ball-first commentary lines (file 36 design rules 1-4, file 22 template-first). OWNER: A (potencialbg).
+"""Radio-level, ball-first commentary lines (file 36 design rules 1-4, file 22 template-first).
 
 Grammar for every live line: where (third, side), which team, then who (file 36 rule 1). The scorer is named only
 after the play is described. "Ball's out" comes before any background. Phrasings vary, chosen by a seeded RNG keyed
@@ -50,7 +50,7 @@ def number_words(n: int) -> str:
 
 
 def zone(x: float, y: float, attacks: str) -> dict:
-    """Same rule as B's signals zone (contracts/b/README.md): thirds from the team's view, sides absolute."""
+    """Same rule as B's signals zone (docs/match-format.md): thirds from the team's view, sides absolute."""
     ax = x if attacks == "+x" else -x
     third = "defensive_third" if ax < -17.5 else "middle_third" if ax <= 17.5 else "attacking_third"
     side = "near" if y < -34 / 3 else "far" if y > 34 / 3 else "centre"
@@ -197,7 +197,7 @@ def call(m: Match, shot: dict) -> Draft:
 
 
 def react(m: Match, shot: dict) -> Draft:
-    """The outcome, at the moment it is revealed (contracts/b spoiler rule; for a VAR review, the decision)."""
+    """The outcome, at the moment it is revealed (docs/match-format.md spoiler rule; for a VAR review, the decision)."""
     side, rt = m.side(shot), m.reveal_t(shot)
     rng = _rng(m, f"react:{shot['id']}")
     team, s = m.team_name(side), m.surname(shot["player_id"])

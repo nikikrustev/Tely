@@ -1,7 +1,7 @@
-// OWNER: B (Nikolay). Connects the replay to the sound stage and haptics (file 43 §6 wire()). Sound is scheduled on
+// Connects the replay to the sound stage and haptics (file 43 §6 wire()). Sound is scheduled on
 // the audio clock at the exact match time it belongs to, a few seconds ahead, so a busy main thread never makes it late.
 // Vibration and per-second callbacks use timers aimed at the same moments. No cues here: A's commentary track loads
-// cues.*.jsonl itself (TEAM_SPLIT.md).
+// cues.*.jsonl itself.
 import type { SoundStage } from './audio/sound-stage';
 import type { CrowdEngine } from './audio/crowd-engine';
 import type { Haptics, Tacton } from './haptics/haptics';

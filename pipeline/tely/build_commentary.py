@@ -1,4 +1,4 @@
-"""Build the Radio commentary track for one cut: cues, HD-voice MP3s, captions. OWNER: A (potencialbg).
+"""Build the Radio commentary track for one cut: cues, HD-voice MP3s, captions.
 
     python -m tely.build_commentary --cut judge
     python -m tely.build_commentary --style lively --names pipeline/names/liverpool-arsenal.local.json

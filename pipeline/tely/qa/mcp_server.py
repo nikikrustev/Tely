@@ -1,4 +1,4 @@
-"""The Stats MCP server: the same 8 Q&A tools over MCP SDK v2 `MCPServer`, streamable HTTP (file 18). OWNER: B (Nikolay).
+"""The Stats MCP server: the same 8 Q&A tools over MCP SDK v2 `MCPServer`, streamable HTTP (file 18).
 
     pip install -e "pipeline[mcp]"
     python -m tely.qa.mcp_server --port 8080        # POST http://host:8080/mcp

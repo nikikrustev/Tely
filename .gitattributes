@@ -1,4 +1,4 @@
-# OWNER: A (potencialbg). Shell scripts must stay LF or bash fails on them.
+# Shell scripts must stay LF or bash fails on them.
 *.sh text eol=lf
 
 # A's generated replay files (Stage 3): byte-identical on every OS, so rebuilds never show as changed.

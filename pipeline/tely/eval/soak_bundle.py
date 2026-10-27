@@ -1,5 +1,5 @@
 """Full-length soak bundles: each half of the synthetic match (seed 24, the one the judge cut comes from) as its own
-replay bundle, for the 90-minute live-readiness run (D24). OWNER: A (potencialbg).
+replay bundle, for the 90-minute live-readiness run (D24).
 
     python -m tely.eval.soak_bundle            # both halves -> web/.local/soak1/ and web/.local/soak2/
 

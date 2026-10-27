@@ -1,4 +1,4 @@
-"""Run eval/qa_cases.jsonl through answer_text() and write eval/qa.json. OWNER: B (Nikolay).
+"""Run eval/qa_cases.jsonl through answer_text() and write eval/qa.json.
 
     python -m tely.qa.eval_qa
 

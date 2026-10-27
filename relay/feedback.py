@@ -1,4 +1,4 @@
-"""POST /feedback: tester-mode answers and problem reports (web/src/tester/, D19). OWNER: A (potencialbg).
+"""POST /feedback: tester-mode answers and problem reports (web/src/tester/, D19).
 
 One small, flat JSON object per request. Every key must be in SCHEMA (no free-form keys), every value is checked
 against its type, range or choice list, and free text is trimmed and capped. The result is one Application Insights

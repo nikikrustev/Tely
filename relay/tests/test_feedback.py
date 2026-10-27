@@ -1,4 +1,4 @@
-"""POST /feedback (tester mode, D19), with telemetry mocked. OWNER: A (potencialbg). No Azure packages, no keys."""
+"""POST /feedback (tester mode, D19), with telemetry mocked. No Azure packages, no keys."""
 from __future__ import annotations
 
 import json

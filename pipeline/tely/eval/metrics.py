@@ -1,4 +1,4 @@
-"""(a) The offline numbers for one built cut: spoiler firewall, numbers, fallbacks, Director. OWNER: A (potencialbg).
+"""(a) The offline numbers for one built cut: spoiler firewall, numbers, fallbacks, Director.
 
 Everything here reads the committed bundle and the recorded Director replies, so it needs no Azure and runs in CI.
 """

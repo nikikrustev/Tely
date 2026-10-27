@@ -1,4 +1,4 @@
-# OWNER: A (potencialbg). Build context for relay/Dockerfile (context = repo root): an allow-list, so no .env, .azure/,
+# Build context for relay/Dockerfile (context = repo root): an allow-list, so no .env, .azure/,
 # out/ or other file can ever reach an image.
 *
 !relay/

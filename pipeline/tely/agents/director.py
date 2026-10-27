@@ -1,10 +1,10 @@
-"""The Director agent: reads the look-ahead window [P, P + D] and outputs only a tension plan. OWNER: A (potencialbg).
+"""The Director agent: reads the look-ahead window [P, P + D] and outputs only a tension plan.
 
 File 43 §2 firewall: the Director may output build_up_level, lead_s, hold_ms and hint_type ("danger, not result"),
 and never the outcome of a future event. Three layers keep that true:
 1. features() is the firewall. It copies an allow-list of fields out of the window (event types, zones, xG, seconds
    to the shot) and nothing else: no outcome_type, no shot end point, no VAR, no related save/block, no signals text.
-   A goal and a save with the same build-up give byte-identical features (tests/a/test_director.py).
+   A goal and a save with the same build-up give byte-identical features (tests/test_director.py).
 2. The model's reply must match SCHEMA exactly; validate() (the Verifier, in code) rejects anything else, including a
    hint the window does not support ("on the break!" with no regain is a false statement).
 3. Any failure (no quota, 429, timeout, bad JSON, schema) falls back to the rules Director for that window, and the
@@ -211,7 +211,7 @@ class FoundryDirector:
 
 
 class ReplayDirector:
-    """Recorded Director replies (tests/a/fixtures), so CI runs DIRECTOR=foundry with no Azure call.
+    """Recorded Director replies (tests/fixtures), so CI runs DIRECTOR=foundry with no Azure call.
 
     A fixture entry {"error": "..."} replays a failure, for example a 429, as an exception.
     """

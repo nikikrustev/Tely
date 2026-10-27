@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
-# OWNER: A (potencialbg). Optional finishing step for the demo video (BUILD_PLAN Stage 9a, file 42 "Video assembly").
+# Optional finishing step for the demo video (file 42 "Video assembly").
 # Takes the Clipchamp export (no captions burned in yet) and adds, for a muted viewer:
 #   - the SDH captions from video/captions_sdh.srt, burned in;
 #   - a left/right level meter (showvolume) top-left, so stereo position shows without sound;
 #   - a two-channel waveform strip along the bottom (showwaves, split_channels).
 # Then checks the length is under 1:55 (file 14).
-#
 # Works with an LGPL ffmpeg build: every filter below (asplit, showwaves, showvolume, overlay, subtitles via libass)
 # and the AAC encoder are LGPL-compatible, and the H.264 encoder is picked from LGPL-safe ones (OpenH264, or the
 # GPU/OS encoders). libx264 is GPL, so it is never used. The script checks each filter and the encoder before it runs.
-#
 # Usage, from anywhere:  bash video/assemble.sh [edit.mp4] [out.mp4]
 #   defaults: out/video/edit.mp4 -> out/video/tely_demo.mp4 (out/ is git-ignored)
 #   ENCODER=h264_nvenc bash video/assemble.sh   to force an encoder

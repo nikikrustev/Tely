@@ -1,4 +1,4 @@
-// OWNER: A (potencialbg). Stage 7: the relay (Voice Live live Ask + B's Stats MCP server) on Container Apps.
+// Stage 7: the relay (Voice Live live Ask + B's Stats MCP server) on Container Apps.
 // Keyless (file 30): a user-assigned identity pulls the image from ACR and calls Voice Live; no secret or key is set.
 // D6, no money: minReplicas 0 (the page wakes the relay on load), 0.25 vCPU / 0.5 GiB, maxReplicas 2, ACR Basic.
 param location string

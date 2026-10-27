@@ -1,4 +1,4 @@
-"""truth_check and spoiler_check for one commentary line (file 22 verifier, file 43 firewall). OWNER: A (potencialbg).
+"""truth_check and spoiler_check for one commentary line (file 22 verifier, file 43 firewall).
 
 truth_check re-derives every fact from the match at the line's start time; it never trusts what a template meant:
 - every player named must be the actor of one of the line's evidence events (or the receiver, once revealed);

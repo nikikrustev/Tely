@@ -1,4 +1,4 @@
-"""(b) Real-time harness: plays the cut at wall-clock speed, live Director + live TTS. OWNER: A (potencialbg).
+"""(b) Real-time harness: plays the cut at wall-clock speed, live Director + live TTS.
 
 File 43 §2: the Director first sees a shot when truth time reaches it, while the listener's playhead is D = 10 s
 behind. The build-up line plays at shot - lead_s, so plan -> verify -> TTS has D - lead_s seconds (6 s at 4.0).

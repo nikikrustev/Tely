@@ -1,5 +1,5 @@
-# OWNER: B (Nikolay). Stub created by A in Stage 0; from merge on, only B edits this file.
-# No Microsoft packages here: Azure deps live in requirements-azure.txt (A), which CI never installs.
+# The pipeline package: generator, signals, commentary, agents, Q&A tools and evals.
+# No Microsoft packages here: Azure deps live in requirements-azure.txt, which CI never installs.
 [build-system]
 requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
@@ -19,7 +19,7 @@ mcp = ["mcp==2.3.0"]   # the Stats MCP server (qa/mcp_server.py, file 18); open 
 include = ["tely*"]
 
 [tool.pytest.ini_options]
-# importlib mode: tests/a/test_x.py and tests/b/test_x.py can share a basename without clashing,
+# importlib mode: test files in different folders can share a basename without clashing,
 # and neither folder needs an __init__.py. CI runs plain `pytest`, so new test files are found automatically.
 addopts = "--import-mode=importlib -q"
 testpaths = ["tests"]

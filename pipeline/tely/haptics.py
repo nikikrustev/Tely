@@ -1,4 +1,4 @@
-"""Haptic cues {t, tacton, team} from file 41's vocabulary. OWNER: B (Nikolay).
+"""Haptic cues {t, tacton, team} from file 41's vocabulary.
 
 The heartbeat itself is not listed: the browser drives it from the per-second `tension`. These are the one-off
 event tactons. Outcome tactons (goal / nearMiss) fire at reveal_t, never earlier (spoiler rule).

@@ -1,4 +1,4 @@
-"""Numeric truth: every number a line speaks, graded against the synthetic ground truth (file 18 §5). OWNER: A.
+"""Numeric truth: every number a line speaks, graded against the synthetic ground truth (file 18 §5).
 
 One dataset item per spoken line that states a number: the claims parsed from its text, and the truth at its t_in
 (score, minutes played). The ground truth sits inside the item because Foundry's code-based evaluator sandbox has no

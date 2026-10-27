@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
-# Stage 0 Azure bootstrap for Tely (file 44 "Reuse", cut to what BUILD_PLAN.md uses).
-# OWNER: A (potencialbg). Person A runs this by hand after `az login`. Claude never runs it.
+# Stage 0 Azure bootstrap for Tely (file 44 "Reuse", cut to what Tely uses).
+# Person A runs this by hand after `az login`. Claude never runs it.
 # Creates: rg-as-dev + rg-as-judge (swedencentral), one AIServices S0 resource with a custom domain,
 # a gpt-5-mini GlobalStandard deployment (capacity 10, NoAutoUpgrade), and A's own data-plane roles.
 # Does NOT create Cosmos DB, Web PubSub or Event Hubs: this plan doesn't use them.
-# Does NOT give Nikolay (B) any Azure role: B's lane has no Microsoft (TEAM_SPLIT.md).
-#
 # Flags checked against the Azure CLI reference on Microsoft Learn (20 Oct 2026), not against `--help` on this
 # machine (az isn't installed here). Run `az <cmd> --help` if a step fails; doubtful items say (unverified).
-#
 # Usage:  az login && bash scripts/bootstrap_azure.sh
 # Override names with env vars, e.g.  FOUNDRY_NAME=as-foundry-dev2 bash scripts/bootstrap_azure.sh
 set -euo pipefail

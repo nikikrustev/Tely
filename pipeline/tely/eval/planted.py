@@ -4,7 +4,7 @@
     python -m tely.eval.planted --foundry-eval   # also runs the numeric part as a Foundry evaluation
 
 Three parts, all on the judge cut, all offline (no model calls) except the optional Foundry run:
-(a) Planted errors. Every commentary line (70) and every golden Q&A answer (contracts/golden/b/qa_cases.jsonl) gets
+(a) Planted errors. Every commentary line (70) and every golden Q&A answer (pipeline/tests/golden/qa_cases.jsonl) gets
     each mutation that applies to it: a wrong player name, a wrong score, a wrong minute, a wrong distance, an
     invented number, and (commentary only, before an outcome is known) an outcome word. The checkers are the ones
     that guard the product: verifier.truth_check + spoiler_check for commentary, check_answer() below for answers.
@@ -37,7 +37,7 @@ from tely.commentary.verifier import _NUM_RE, _WORD_NUM, _names, allowed_players
 from tely.spoiler import D_S
 
 OUT = ROOT / "eval" / "planted.json"
-GOLDEN = ROOT / "contracts" / "golden" / "b" / "qa_cases.jsonl"
+GOLDEN = ROOT / "pipeline" / "tests" / "golden" / "qa_cases.jsonl"
 
 # Pass/fail, set before the first run (27 Oct 2026). A catch rate is caught / planted; a false-block rate is clean
 # lines the checker rejected / clean lines checked.
@@ -238,7 +238,7 @@ def part_a_b(m, b, cues: list[dict]) -> dict:
 def part_c(m) -> dict:
     shots = [e for e in m.events if e["type"] == "shot"]
     identical = 0
-    for k, shot in enumerate(shots):          # as tests/a/test_director.py: one shot's ending rewritten at a time
+    for k, shot in enumerate(shots):          # as tests/test_director.py: one shot's ending rewritten at a time
         other = copy.deepcopy(m)
         e = [x for x in other.events if x["type"] == "shot"][k]
         e.update(outcome_type="wide" if e["outcome_type"] == "successful" else "successful",

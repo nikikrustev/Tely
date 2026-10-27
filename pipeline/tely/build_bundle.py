@@ -1,22 +1,22 @@
-"""Build the whole replay bundle for one cut, then write manifest.json. OWNER: A (potencialbg).
+"""Build the whole replay bundle for one cut, then write manifest.json.
 
     python -m tely.build_bundle --cut judge
 
     DIRECTOR=foundry python -m tely.build_bundle --cut judge   # live Director on Foundry, traced
 
-Order (BUILD_PLAN Stages 4-5, TEAM_SPLIT changes):
+Order ():
     1. B's build_match      -> meta.json, events.jsonl, signals.json, ticks.json.gz
     1b. A's Director workflow (Stage 5): Director -> Commentator -> Verifier -> TTS, one window per shot.
         DIRECTOR=foundry  calls the Foundry model and records every reply in agents/recorded/<cut>.json;
         DIRECTOR=replay   (default when that file exists) replays it: no Azure, same plans, byte-identical bundle;
-        DIRECTOR=rules    the rules Director only (no quota; BUILD_PLAN drop-list item 5).
+        DIRECTOR=rules    the rules Director only (no quota).
     2. A's build_commentary -> cues.en.radio.jsonl, audio/en/radio/*.mp3, captions_sdh.vtt, descriptions.vtt
     2b. A's answers         -> answers/<sha>.mp3 + answers/index.json: B's Q&A FRAGMENTS in the same voice (Stage 6)
     3. B's build_segments   -> segments.json (B's Stage 2, on main since #7; skipped and reported if it is ever missing)
     4. manifest.json        -> file 43 §6 shape, with the sha256 of every file
-Cues are NOT merged into segments.json: A's commentary track loads the cue file itself (TEAM_SPLIT.md).
+Cues are NOT merged into segments.json: A's commentary track loads the cue file itself.
 
-B's files must come out byte-identical (TEAM_SPLIT.md "cross-lane rules"). This build snapshots them before and after:
+B's files must come out byte-identical. This build snapshots them before and after:
 - a .gz whose unzipped content is identical but whose bytes differ (another zlib build re-compressed it; contracts/b
   README) gets its original bytes written back, so git stays clean;
 - any real content change exits 2: that is a determinism bug for B, and the changed files must not be committed.
@@ -44,7 +44,7 @@ from tely.commentary.ssml import DEFAULT_VOICE, build_ssml, ssml_sha256
 from tely.commentary.tts import AzureSynthesiser, Synthesiser, TtsCache, TtsError, load_env
 
 B_FILES = ("meta.json", "events.jsonl", "signals.json", "ticks.json.gz", "segments.json")
-MAX_BYTES = 200 * 1024 * 1024   # BUILD_PLAN Stage 4; SWA Free allows 250 MB per environment (file 21)
+MAX_BYTES = 200 * 1024 * 1024   # ; SWA Free allows 250 MB per environment (file 21)
 MAX_FILES = 15_000              # SWA limit (file 21)
 DELAY_S = 10.0                  # the broadcast delay D the look-ahead uses (files 39, 43)
 CHAPTER_LEAD_S = 6.0            # a chapter starts this long before the build-up, so the rise is heard whole
@@ -94,7 +94,7 @@ def run_b_segments(cut: str, out_dir: Path) -> str:
     mod = importlib.import_module("tely.build_segments")
     builder = getattr(mod, "build", None)
     if builder is None:
-        return "skipped: tely.build_segments has no build() (HANDOFF to B)"
+        return "skipped: tely.build_segments has no build()"
     builder(cut, out_dir)
     return "built"
 

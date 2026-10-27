@@ -1,4 +1,4 @@
-"""Pre-synthesise SSML to MP3 with Azure Speech, cached by SSML sha256. OWNER: A (potencialbg).
+"""Pre-synthesise SSML to MP3 with Azure Speech, cached by SSML sha256.
 
 HD voices are real-time only (no batch), so we render line by line in an SDK loop (file 43 §7). An existing hash is
 never re-synthesised, so a rebuild makes 0 TTS calls and the replay always sounds the same.

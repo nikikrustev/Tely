@@ -1,4 +1,4 @@
-// OWNER: A (potencialbg). Tester mode (?test=1, D19): the events sent to the relay's POST /feedback, and the text
+// Tester mode (?test=1, D19): the events sent to the relay's POST /feedback, and the text
 // behind "Copy my answers". Every key here is in relay/feedback.py SCHEMA; the relay refuses anything else.
 import {
   ASK_WORKED, DEVICE, HEADPHONES, labelOf, PREFERRED, PROBES, SCALE, SCREEN_READER, SETTINGS_EASY, SIGHT, type ClipNo,
