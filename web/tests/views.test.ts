@@ -2,7 +2,7 @@
 // commentator's adjust_sound result reaching the mix. The page itself is covered by tests/a11y.spec.ts.
 import { afterEach, describe, expect, it } from 'vitest';
 import { adjustSound, dbFromLevel, DEFAULT_MIX, getMix, levelFromDb, MAX_DB, MIN_DB, MIX_KEY, setMix, SOUNDS, soundLevels } from '../src/audio/mix';
-import { HINTS, initialView } from '../src/main';
+import { HINTS, initialScreen, initialView } from '../src/main';
 import { presetMix, PRESETS, SAY_AS } from '../src/tester/mixer';
 
 afterEach(() => { setMix(DEFAULT_MIX); });
@@ -13,13 +13,26 @@ function memory() {
 }
 
 describe('views', () => {
-  it('opens ?view= when valid, Setup for the old ?mix=1 link, else Phone on a narrow screen and Laptop otherwise', () => {
-    expect(initialView('?view=setup', true)).toBe('setup');
+  it('opens the device in ?view= when valid, else Phone on a narrow screen and Laptop otherwise (D39)', () => {
     expect(initialView('?view=phone', false)).toBe('phone');
+    expect(initialView('?view=laptop', true)).toBe('laptop');
     expect(initialView('?view=tv', false)).toBe('laptop');
-    expect(initialView('?mix=1', true)).toBe('setup');
+    expect(initialView('?view=setup', true)).toBe('phone');            // Setup is a screen now, not a device
     expect(initialView('', true)).toBe('phone');
     expect(initialView('', false)).toBe('laptop');
+  });
+
+  it('opens on the match list, Settings for the old Setup links, and the match for links that play something', () => {
+    expect(initialScreen('')).toBe('list');
+    expect(initialScreen('?view=laptop')).toBe('list');
+    expect(initialScreen('?screen=match')).toBe('match');
+    expect(initialScreen('?screen=nowhere')).toBe('list');
+    expect(initialScreen('?view=setup')).toBe('settings');
+    expect(initialScreen('?mix=1')).toBe('settings');
+    expect(initialScreen('?test=1')).toBe('match');
+    expect(initialScreen('?from=1146')).toBe('match');
+    expect(initialScreen('?sound=commentary')).toBe('match');
+    expect(initialScreen('?view=setup&screen=list')).toBe('list');     // ?screen= wins
   });
 
   it('says keys on Laptop and taps on Phone, for every pad state', () => {

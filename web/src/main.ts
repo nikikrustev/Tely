@@ -9,6 +9,7 @@ import type { TesterHandle } from './tester';
 import { bundleBase } from './replay/base';
 import { autoLowData, lowDataOn } from './lowdata';
 import { registerContext, setMono } from './audio/mono';
+import { mountMatchList } from './matches';
 import { playFollowCue, playPositionTone, positionPitch, FOLLOW_NAME_EVERY_S, POSITION_TONE_EVERY_S } from './audio/position-tone';
 
 /** Placeholder services (tests, and before Start). */
@@ -56,17 +57,45 @@ export class LazyClock implements ReplayClock {
   }
 }
 
-/** The three views of one match (27 Oct, D25): Setup (the helper's sound desk), Laptop (keys), Phone (two pads). */
-export type View = 'setup' | 'laptop' | 'phone';
-export const VIEWS: readonly View[] = ['setup', 'laptop', 'phone'];
+/** The two devices the app is drawn in (27 Oct, D39; D25 had a third, Setup, which is now the Settings screen). */
+export type View = 'laptop' | 'phone';
+export const VIEWS: readonly View[] = ['laptop', 'phone'];
 
-/** The view a page opens in: ?view= if valid, ?mix=1 (the old mixer link) is Setup, else Phone on a narrow screen. */
+/** The device a page opens in: ?view= if valid, else Phone on a narrow screen. */
 export function initialView(search: string, narrow: boolean): View {
-  const q = new URLSearchParams(search);
-  const v = q.get('view') as View | null;
+  const v = new URLSearchParams(search).get('view') as View | null;
   if (v && VIEWS.includes(v)) return v;
-  if (q.get('mix') === '1') return 'setup';
   return narrow ? 'phone' : 'laptop';
+}
+
+/** The app's three screens (D39): the match list, the match (the two pads) and Settings. */
+export type Screen = 'list' | 'match' | 'settings';
+export const SCREENS: readonly Screen[] = ['list', 'match', 'settings'];
+
+/** The screen a page opens on: ?screen= if valid; the old Setup links (?view=setup, ?mix=1) open Settings; a link that
+ *  plays something (tester mode, a listening clip) opens the match; anything else opens the match list. */
+export function initialScreen(search: string): Screen {
+  const q = new URLSearchParams(search);
+  const s = q.get('screen') as Screen | null;
+  if (s && SCREENS.includes(s)) return s;
+  if (q.get('view') === 'setup' || q.get('mix') === '1') return 'settings';
+  if (q.get('test') === '1' || q.has('from') || q.has('to') || q.get('sound') === 'commentary') return 'match';
+  return 'list';
+}
+
+/** Shows one screen and marks it in the Home / Settings pill. Before the app code loads too, so the page doesn't jump. */
+export function paintScreen(s: Screen): void {
+  const ids: Record<Screen, string> = { list: 'scr-list', match: 'stage', settings: 'scr-settings' };
+  for (const k of SCREENS) {
+    const el = document.getElementById(ids[k]);
+    if (el) el.hidden = k !== s;
+  }
+  const mark = (id: string, on: boolean) => {
+    const b = document.getElementById(id);
+    if (on) b?.setAttribute('aria-current', 'page'); else b?.removeAttribute('aria-current');
+  };
+  mark('nav-home', s === 'list');
+  mark('nav-settings', s === 'settings');
 }
 
 type HintKey = 'askLive' | 'askPresets' | 'askWait' | 'askStop' | 'start' | 'pause' | 'resume' | 'replay';
@@ -90,8 +119,10 @@ export function scoreLine(score: { home: number; away: number }): string {
 }
 
 async function startApp(): Promise<void> {
-  // The view's layout before the code below loads, so the page doesn't jump (showView() takes over from here).
+  // The device and the screen before the code below loads, so the page doesn't jump (showView() and showScreen() take
+  // over from here).
   document.getElementById('app')?.classList.add(`v-${initialView(location.search, matchMedia('(max-width: 40rem)').matches)}`);
+  paintScreen(initialScreen(location.search));
   const [{ SoundStage }, { CrowdEngine, loadCrowdBuffers }, { ReplaySource, loadSegments }, { wire }, { startDebugPanel },
     hap, settingsMod, { loadChapters, nextChapter }, askMod, { LocalTools, loadQaBundle }] = await Promise.all([
     import('./audio/sound-stage'), import('./audio/crowd-engine'), import('./replay/replay-source'), import('./wire'),
@@ -104,7 +135,7 @@ async function startApp(): Promise<void> {
   let tester: TesterHandle | null = null;
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
   const start = $<HTMLButtonElement>('start'), next = $<HTMLButtonElement>('next');
-  const status = $('status'), polite = $('sr-polite'), panel = $('settings'), hstatus = $('hstatus');
+  const status = $('status'), polite = $('sr-polite'), hstatus = $('hstatus');
   const say = (text: string) => {
     status.textContent = text;
     polite.textContent = ''; // clear first, so a repeated message is announced again
@@ -276,11 +307,13 @@ async function startApp(): Promise<void> {
   });
   if (!haptics.available) hstatus.textContent = hap.NO_VIBRATION_MESSAGE;
 
-  // ---- the three views (D25): layouts of one page, so switching never stops the match ----
+  // ---- the two devices (D39): layouts of one page, so switching never stops the match ----
   let view: View = initialView(location.search, matchMedia('(max-width: 40rem)').matches);
-  /** Phone speaks in taps; Laptop in keys; Setup in whichever this device has. */
-  const hintSet = (): 'touch' | 'keys' =>
-    view === 'phone' || (view === 'setup' && matchMedia('(pointer: coarse)').matches) ? 'touch' : 'keys';
+  /** Phone speaks in taps; Laptop in keys. */
+  const hintSet = (): 'touch' | 'keys' => (view === 'phone' ? 'touch' : 'keys');
+  let screen: Screen = initialScreen(location.search);
+  /** The match screen is open (the pads are on screen). */
+  const onMatch = () => start.offsetParent !== null;
   const readyLine = () => (hintSet() === 'touch' ? 'Ready. Press Start, the lower big button, to hear the match.'
     : 'Ready. Press Space to start the match, then Enter to ask the commentator.');
   status.textContent = readyLine();
@@ -422,7 +455,11 @@ async function startApp(): Promise<void> {
       : p === 'heard' ? 'Got your question. Thinking…'
       : hintSet() === 'touch' ? 'Answering. Tap Stop to interrupt.' : 'Answering. Press Enter to interrupt.';
   });
-  $('presets-open').addEventListener('click', () => { if (!askReady) notYet(); else if (!askCtl?.isBusy) openMenu(true); });
+  // Quick questions sits in Settings (D39): it goes back to the match and opens them over the Ask pad.
+  $('presets-open').addEventListener('click', () => {
+    if (!askReady) notYet();
+    else if (!askCtl?.isBusy) { showScreen('match', { focus: false }); openMenu(true); }
+  });
   $('ask-close').addEventListener('click', closeMenu);
   lazyAsk.onShowPresets = () => {
     if (!askCtl) return;                                 // never before Ask is ready
@@ -436,14 +473,14 @@ async function startApp(): Promise<void> {
   document.addEventListener('keydown', (e) => {
     const typing = (e.target as HTMLElement | null)?.closest('input, select, textarea');
     if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
-    if (e.key === 'a' || e.key === 'A') { if (askReady) { e.preventDefault(); pressAsk(); } }
+    if (e.key === 'a' || e.key === 'A') { if (askReady && onMatch()) { e.preventDefault(); pressAsk(); } }
     else if (e.key === 'Escape') {
       if (askCtl?.isBusy) askCtl.interrupt('back');
       else if (!askMenu.hidden || askCtl?.isHolding) closeMenu();
     }
   });
-  // D25: Space = Start / Pause / Carry on, Enter = Ask (or stop an answer), in every view. Only when focus is on a pad
-  // or on nothing, so every other button, tab and field keeps its own Space and Enter.
+  // D25: Space = Start / Pause / Carry on, Enter = Ask (or stop an answer), on the match screen of either device (D39).
+  // Only when focus is on a pad or on nothing, so every other button, tab and field keeps its own Space and Enter.
   let spaceTaken = false;
   document.addEventListener('keydown', (e) => {
     if ((e.key !== ' ' && e.key !== 'Enter') || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
@@ -558,8 +595,10 @@ async function startApp(): Promise<void> {
       learnBtn.textContent = 'Learn the sounds again';
       if (tester) tester.tourEnded(t.skipped);           // the tester's task panel says what comes next
       else {
+        // The tour is in Settings (D39), and the match is what comes next. A fan who has moved on stays where they are.
+        if (screen === 'settings') showScreen('match', { focus: false });
         say(t.skipped ? 'Tour skipped. Press Start to hear the match.' : 'Tour finished. Press Start to hear the match.');
-        start.focus();
+        if (onMatch()) start.focus();
       }
     }
   });
@@ -806,6 +845,8 @@ async function startApp(): Promise<void> {
 
   next.addEventListener('click', async () => {
     if (!src || !ctx) return;
+    showScreen('match', { focus: false });               // from Settings (D39): the jump is heard on the match screen
+    start.focus();
     const ch = nextChapter(chapters, src.now());
     if (!ch) { say('No more big moments in this match.'); return; }
     await stopAnswer();                                  // an answer must not carry on, or resume the commentary, over the jump
@@ -825,10 +866,42 @@ async function startApp(): Promise<void> {
     say(sec ? `${ch.label}. ${lastScore}` : `${ch.label}.`);
   });
 
-  // ---- the view tabs (D25): automatic activation, arrow keys between tabs (WAI-ARIA APG tabs pattern) ----
+  // ---- the screens (D39): the match list, the match and Settings, inside either device ----
+  let desk: Promise<unknown> | null = null;
+  const listTop = $('list-h'), setupTop = $('setup-h');
+  /** Change screen. The match never stops; the new screen is announced by moving focus to it (and a line on the match). */
+  const showScreen = (s: Screen, { focus = true } = {}) => {
+    if (s !== 'match' && !askMenu.hidden) openMenu(false);
+    if (s !== 'list') matchList.reset();
+    screen = s;
+    paintScreen(s);
+    viewPanel.scrollTop = 0;
+    // The sound desk loads the first time Settings opens, so the list and the match never carry it.
+    if (s === 'settings' && !desk) desk = import('./tester/mixer').then(({ mountMixer }) => mountMixer({ say, analyser: () => analyser, host: $('mixer-slot') }));
+    if (!focus) return;
+    if (s === 'match') {
+      start.focus();
+      say(ctx ? 'Reds against Navy.' : `Reds against Navy. ${readyLine()}`);
+    } else (s === 'list' ? listTop : setupTop).focus();
+  };
+  // The match list: tap the card, or say "Play Reds" and press Enter on the card that pops up (matches.ts).
+  const matchList = mountMatchList({
+    open: () => showScreen('match'),
+    // Said aloud in the browser's voice, as the sound tour is; in screen-reader mode the fan's screen reader says it.
+    tell: (text) => {
+      if (settings.reader) { say(text); return; }
+      void import('./ask/ask').then(({ speakFallback }) => speakFallback(text));
+    },
+    keys: () => hintSet() === 'keys',
+    listTop,
+  });
+  $('nav-home').addEventListener('click', () => showScreen('list'));
+  $('nav-settings').addEventListener('click', () => showScreen('settings'));
+  $('back-match').addEventListener('click', () => showScreen('match'));
+
+  // ---- the device tabs (D25, two since D39): automatic activation, arrow keys between tabs (WAI-ARIA APG tabs) ----
   const app = $('app'), viewPanel = $('view');
   const tabs = VIEWS.map((v) => $<HTMLButtonElement>(`tab-${v}`));
-  let desk: Promise<unknown> | null = null;
   const showView = (v: View) => {
     view = v;
     for (const k of VIEWS) app.classList.toggle(`v-${k}`, k === v);
@@ -838,11 +911,8 @@ async function startApp(): Promise<void> {
       t.tabIndex = on ? 0 : -1;
     });
     viewPanel.setAttribute('aria-labelledby', `tab-${v}`);
-    panel.hidden = v !== 'setup';                          // the settings live on Setup
     for (const b of [start, askBtn]) if (b.dataset.hint) setPad(b, b.querySelector('.pad-label')?.textContent ?? '', b.dataset.state ?? '', b.dataset.hint as HintKey);
     if (!ctx && !tour && status.textContent?.startsWith('Ready.')) status.textContent = readyLine();
-    // The sound desk loads the first time Setup opens, so the Laptop and Phone pages never carry it.
-    if (v === 'setup' && !desk) desk = import('./tester/mixer').then(({ mountMixer }) => mountMixer({ say, analyser: () => analyser, host: $('mixer-slot') }));
   };
   VIEWS.forEach((v, i) => {
     const t = tabs[i]!;
@@ -865,6 +935,10 @@ async function startApp(): Promise<void> {
   start.dataset.hint = 'start';
   askBtn.dataset.hint = 'askWait';
   showView(view);
+  // The page opens on its first screen with focus on that screen's main control: the microphone, or Start.
+  showScreen(screen, { focus: false });
+  if (screen === 'list') $('voice-pick').focus();
+  else if (screen === 'match') start.focus();
 
   if (!testerMode) return;
   // ---- tester mode (?test=1, D19) ----

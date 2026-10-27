@@ -1,5 +1,5 @@
 // Playwright + @axe-core/playwright
-// on every screen a fan meets: Start, the Ask menu, Settings, the sound radar (?radar=1) and "Learn the sounds".
+// on every screen a fan meets: the match list, the match, the Ask menu, Settings, the sound radar (?radar=1) and "Learn the sounds".
 // Each runs at 3 viewports, with and without reduced motion (playwright.config.ts projects), in light and dark.
 // WHY the extra checks at the end: file 32 §6, axe can't see live-region setup, target size of hidden-then-shown
 // controls or running animations, so we assert those ourselves.
@@ -28,21 +28,23 @@ async function startMatch(page: Page): Promise<void> {
   await expect(page.locator('#start')).toHaveText('Pause', { timeout: 30_000 });
 }
 
-// The final product UI (25 Oct): the default URL is what judges see. Name, pitch, the match card, Start and Ask on one
-// screen, with none of the test tools (?test=1, ?mix=1, ?debug=1) in the page.
+// The product UI (25 Oct; D39): the default URL is what judges see. The match list (name, pitch, the microphone),
+// then the match: only Start and Ask, with none of the test tools (?test=1, ?mix=1, ?debug=1) in the page.
 test('product view', async ({ page }, info) => {
   await ready(page);
   await expect(page.locator('h1')).toHaveText('Tely');
   await expect(page.locator('.pitch')).toBeVisible();
-  await expect(page.locator('#match')).toBeVisible();
+  await expect(page.locator('#voice-pick')).toBeFocused();
+  await page.locator('#card-demo').click();
+  await expect(page.locator('#match')).toHaveClass(/sr-only/);         // no scoreline on screen; a screen reader can read it
   await expect(page.locator('[data-sb="clock"]')).toHaveText('56:10');
   await expect(page.locator('[data-sb="state"]')).toHaveText('Not started');
   await expect(page.locator('#start')).toBeFocused();
   await expect(page.locator('#ask')).toBeVisible();
   for (const sel of ['#tester', '#t-bar', '#t-report', '#mixer']) await expect(page.locator(sel)).toHaveCount(0);
   for (const sel of ['#debug', '#radar', '#settings']) await expect(page.locator(sel)).toBeHidden();
-  // Desktop: one screen, no scrolling. Phone portrait (D24): the two pads are the two halves of the screen (each at
-  // least a third of it, both fully on screen) and the secondary buttons scroll below. Landscape scrolls as normal.
+  // Desktop: one screen, no scrolling (the device is drawn to fit). Phone portrait (D24): the two pads are the two
+  // halves of the screen (each at least a third of it, both fully on screen). Landscape scrolls as normal.
   const fits = () => page.evaluate(() => document.documentElement.scrollHeight <= window.innerHeight);
   const halves = () => page.evaluate(() => ['ask', 'start'].map((id) => {
     const r = document.getElementById(id)!.getBoundingClientRect();
@@ -61,19 +63,21 @@ test('product view', async ({ page }, info) => {
   await expectNoViolations(page, 'product view, playing');
 });
 
-test('Start screen', async ({ page }) => {
+test('match list and match screen', async ({ page }) => {
   await ready(page);
-  await expectNoViolations(page, 'Start');
+  await expectNoViolations(page, 'match list');
+  await page.locator('#card-demo').click();
+  await expectNoViolations(page, 'match screen');
 });
 
 test('Ask menu', async ({ page }) => {
-  await ready(page);
+  await ready(page, '/?screen=match');
   await startMatch(page);
   const ask = page.locator('#ask');
   await expect(ask).toBeEnabled({ timeout: 30_000 });
   // D24: with a relay (A11Y_BASE_URL, the deployed site) the Ask pad asks out loud, so the menu opens from Quick
   // questions there; the preview build has no relay and the pad itself opens it.
-  if (process.env.A11Y_BASE_URL) await page.locator('#presets-open').click();
+  if (process.env.A11Y_BASE_URL) { await page.locator('#nav-settings').click(); await page.locator('#presets-open').click(); }
   else await ask.click();
   await expect(page.locator('#ask-menu')).toBeVisible();
   await expect(ask).toHaveAttribute('aria-expanded', 'true');
@@ -81,17 +85,17 @@ test('Ask menu', async ({ page }) => {
   await expectNoViolations(page, 'Ask menu');
 });
 
-test('Setup tab: the sound desk and the settings (D25)', async ({ page }) => {
+test('Settings: the sound desk and the settings (D25, a screen since D39)', async ({ page }) => {
   await ready(page);
-  await page.locator('#tab-setup').click();
-  await expect(page.locator('#tab-setup')).toHaveAttribute('aria-selected', 'true');
+  await page.locator('#nav-settings').click();
+  await expect(page.locator('#nav-settings')).toHaveAttribute('aria-current', 'page');
   await expect(page.locator('#settings')).toBeVisible();
   await expect(page.locator('#mixer')).toBeVisible({ timeout: 30_000 });
   await expectNoViolations(page, 'Setup');
 });
 
 test('sound radar (?radar=1)', async ({ page }) => {
-  await ready(page, '/?radar=1');
+  await ready(page, '/?radar=1&screen=match');
   await startMatch(page);
   const radar = page.locator('#radar');
   await expect(radar).toBeVisible();
@@ -101,7 +105,7 @@ test('sound radar (?radar=1)', async ({ page }) => {
 });
 
 test('Learn the sounds', async ({ page }) => {
-  await ready(page);
+  await ready(page, '/?screen=settings');
   const learn = page.locator('#learn');
   await learn.click();
   await expect(learn).toHaveText('Skip the tour', { timeout: 30_000 });
@@ -117,8 +121,8 @@ test('what axe cannot see: live regions, target size, motion', async ({ page }, 
   await expect(page.locator('#sr-polite')).toHaveAttribute('role', 'status');
   await expect(page.locator('[aria-live="assertive"]')).toHaveCount(1);
   await expect(page.locator('#sr-assertive')).toHaveText('');
-  // WCAG 2.5.8 floor is 24 px; index.html aims for 44 px on every control, including those the Setup tab shows.
-  await page.locator('#tab-setup').click();
+  // WCAG 2.5.8 floor is 24 px; index.html aims for 44 px on every control, including those Settings shows.
+  await page.locator('#nav-settings').click();
   await expect(page.locator('#mixer')).toBeVisible({ timeout: 30_000 });
   for (const el of await page.locator('button:visible, select:visible, input[type="range"]:visible').all()) {
     const box = await el.boundingBox();

@@ -46,7 +46,7 @@ test('without ?test=1 the judges\' page is unchanged', async ({ page }) => {
   page.on('request', (r) => { if (/\/tester\//.test(r.url())) testerCode.push(r.url()); });
   await page.goto('/');
   await expect(page.locator('#status')).toHaveText(/Ready/);
-  await expect(page.locator('#start')).toBeFocused();
+  await expect(page.locator('#voice-pick')).toBeFocused();
   for (const sel of ['#tester', '#t-bar', '#t-report', '[id^="t-"]']) await expect(page.locator(sel)).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.classList.contains('t-mode'))).toBe(false);
   // The template is there but inert: nothing from it is in the tab order or the accessibility tree.

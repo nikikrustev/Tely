@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 test("Director's notes: shown with the radar, nothing before its moment, Ask traces added, no axe violations", async ({ page }) => {
-  await page.goto('/?view=laptop&radar=1&live=0');
+  await page.goto('/?view=laptop&radar=1&live=0&screen=match');
   await expect(page.locator('#status')).toHaveText(/Ready/);
   await page.locator('#start').click();
   await expect(page.locator('#start')).toHaveText('Pause', { timeout: 30_000 });

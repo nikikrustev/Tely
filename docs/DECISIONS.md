@@ -869,3 +869,40 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
   WebSocket frame; no tool calls after the tool budget is spent (`tool_choice: none`, unverified that Voice Live honours
   it); a `/voice` connection without an Origin is refused. The caps are in memory and reset when the relay scales from
   zero. A subscription budget (5 a month, email alert, only when `BUDGET_EMAIL` is set) is in the Bicep.
+
+## D39. One app in a drawn laptop or phone, with a match list picked by voice (27 Oct 2026)
+
+- **Why:** potencialbg, 27 Oct: judges watching the demo or the video should see the app as a fan would hold it, on a
+  phone or a laptop, and go through one flow: match list, pick a game by voice, the match. The match screen should
+  show nothing but the two pads (D24), as in the phone mock-up: the logo, a Home / Settings pill and the pads.
+- **Two devices, three screens.** The D25 tabs are now two device tabs (Laptop, Phone, same tablist and arrow keys).
+  Setup is no longer a tab but the **Settings** screen behind the gear. Every device has the same three screens: the
+  **match list** (Home), the **match** and **Settings**. `?view=laptop|phone` picks the device, `?screen=` the screen,
+  and the old Setup links (`?view=setup`, `?mix=1`) open Settings. Tester mode and listening-clip links open the match.
+  Changing screen never stops the match, and focus moves to the new screen (its heading, or Start), so a screen
+  reader says where the fan now is.
+- **The match screen** has the bar and the two pads only. The score card and the status line are still in the page for
+  screen readers (`sr-only`), not on screen. Quick questions, Next big moment and Learn the sounds moved to Settings;
+  Quick questions and Next big moment go back to the match when pressed, and the sound tour returns there when it ends.
+  On Laptop each pad shows its key (Enter on Ask, Space on Start / Pause) instead of the hint line, which stays the pad's
+  description. The keys card moved to Settings and still reads Space, Enter, Esc. The keys themselves are unchanged
+  from D25, and they only act on the match screen (A as well, which also still asks).
+- **The match list** is livescore-style: Reds v Navy (the only playable match) and four fictional fixtures
+  (Saltmere, Brackenmoor, Fernhallow, Quarrydale, Ostwick, Duneholt, Glenvarra, Velmora: invented names, D21), each
+  marked "Not available in the demo". **Say a match** is pinned at the bottom. It uses the browser's own speech
+  recognition (Web Speech API: Chrome, Edge and Safari, not Firefox), listens once for up to 8 s and looks for a club
+  name in any of up to 5 alternatives (`matches.ts findFixture`, "Play Red" counts as Reds). A playable match pops up
+  as a card over the list with focus on it, so Enter or a tap opens it. A fixture that is not in the demo, no match,
+  a refused microphone or no speech recognition at all falls back to the list (focus on its heading) and says why
+  aloud, in the browser's voice as the sound tour does, or through the fan's screen reader in screen-reader mode.
+  While listening the page announces nothing, as for live Ask, so the request isn't drowned.
+- **The devices are drawn in CSS** (borders, a camera island and side button on the phone, a lid, camera and base on
+  the laptop) in the existing colours, sized to fit the window with no page scroll. They show only when the window is
+  at least 48rem wide and 36rem tall. On a phone-sized screen, or a phone on its side, the app fills the screen like a
+  normal app and the device tabs are hidden. The logo is an inline copy of `tely-logo-dark.svg` from the brand work
+  (PR 53, not merged yet), drawn in the page's own text colour so it works in light and dark.
+- **Checked:** vitest 173/173 (new `matches.test.ts`, `initialScreen`), Playwright + axe 200 passed and 4 skipped at
+  all 6 projects (new: the flow, device tabs, voice found, voice falling back, no speech recognition, Space and Enter
+  doing nothing on the list; the device-tab test skips on the four phone-sized projects, where the tabs are hidden).
+  The key chips sit beside the pad buttons, not in them, so each button's text is still just its label.
+- **Not checked:** real speech recognition (the tests use a stand-in), and a real screen reader through the new screens.

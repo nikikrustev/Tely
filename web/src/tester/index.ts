@@ -84,9 +84,9 @@ export function mountTester(hooks: TesterHooks): TesterHandle {
   const bar = frag.getElementById('t-bar')!;
   const root = frag.getElementById('tester')!;
   const dialog = frag.getElementById('t-report') as HTMLDialogElement;
-  const h1 = app.querySelector('h1')!;
-  app.insertBefore(bar, h1);
-  h1.after(root);
+  const top = document.getElementById('appbar')!;      // inside the app, under its bar (D39)
+  top.before(bar);
+  top.after(root);
   document.body.append(dialog);
   document.documentElement.classList.add('t-mode');
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
