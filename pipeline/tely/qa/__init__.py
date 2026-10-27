@@ -136,7 +136,7 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
                        "es Spanish, ar Arabic, fr French, de German.",
         "parameters": {
             "type": "object",
-            "properties": {"language": {"type": "string", "enum": ["en", "bg", "es", "ar", "fr", "de"]}},
+            "properties": {"language": {"type": "string", "enum": ["en", "bg", "es", "ar", "fr", "de", "hi"]}},
             "required": ["language"],
             "additionalProperties": False,
         },

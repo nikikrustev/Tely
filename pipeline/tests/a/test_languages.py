@@ -84,3 +84,58 @@ def test_a_line_too_long_for_its_slot_is_sped_up_and_a_rebuild_renders_nothing(t
     synth3 = FakeSynth()
     L.build_lang(tmp_path, "es", cues, 30.0, lines, lambda: synth3, measured)
     assert synth3.calls == 0
+
+
+# ---- the shipped tracks: every translated line keeps the English line's facts and passes the firewall in its language
+
+import pytest  # noqa: E402
+
+from tely.commentary.source import BUNDLE, load_match  # noqa: E402
+
+
+def _cues(name):
+    return [json.loads(s) for s in (BUNDLE / "judge" / name).read_text(encoding="utf-8").splitlines() if s.strip()]
+
+
+def test_the_firewall_knows_each_languages_outcome_words():
+    assert L.outcome_said("es", "¡Gol para los Azules!") and not L.outcome_said("es", "Los Azules atacan.")
+    assert L.outcome_said("de", "Tor für die Blauen!") and not L.outcome_said("de", "Der Torwart hat ihn.")
+    assert L.outcome_said("bg", "Гол за Сините!") and not L.outcome_said("bg", "Голям шанс!")
+    assert L.outcome_said("ar", "الفار يفحص الهدف") and L.outcome_said("fr", "But pour les Bleus !")
+    assert set(L.OUTCOME_L10N) == set(L.LANGS) == set(L.PASS_OUTCOME_L10N)
+
+
+def test_a_translation_that_gives_the_outcome_away_is_asked_again(tmp_path, monkeypatch):
+    monkeypatch.setattr(L, "L10N", tmp_path)
+    replies = iter([["داخل الشباك... الفار يفحص الهدف."], ["داخل الشباك... الفار يراجع اللقطة."]])
+
+    class T:
+        name = "fake@model"
+
+        def translate(self, lang, lines):
+            return next(replies)
+
+    en = "It's in the net... but hold on, VAR is checking it."
+    out = L.translations("ar", [en], PLAYERS, T, reject=lambda e, tr: L.outcome_said("ar", tr))
+    assert out[en] == "داخل الشباك... الفار يراجع اللقطة."
+
+
+@pytest.mark.parametrize("lang", sorted(L.LANGS))
+def test_every_shipped_translated_line_passes_truth_and_spoiler_checks(lang):
+    m = load_match("judge")
+    players = sorted({p["last_name"] for side in ("home", "away") for p in m.meta["teams"][side]["players"]})
+    en, tr = _cues("cues.en.radio.jsonl"), _cues(f"cues.{lang}.radio.jsonl")
+    assert [(c["cue_id"], c["t_in"], c["evidence"]) for c in tr] == [(c["cue_id"], c["t_in"], c["evidence"]) for c in en]
+    for e, t in zip(en, tr):
+        text = t["text"]["radio"]
+        assert L.check(e["text"]["radio"], text, players) == [], (t["cue_id"], text)
+        assert L.spoiler_check_l10n(m, lang, text, t["t_in"], t["evidence"]) == [], (t["cue_id"], text)
+
+
+@pytest.mark.parametrize("lang", sorted(L.LANGS))
+def test_the_quick_questions_answer_in_every_language(lang):
+    en = json.loads((BUNDLE / "judge" / "answers" / "index.json").read_text(encoding="utf-8"))
+    tr = json.loads((BUNDLE / "judge" / "answers" / lang / "index.json").read_text(encoding="utf-8"))
+    assert set(tr["fragments"]) == set(en["fragments"]) and tr["voice"] == L.VOICE
+    for f in tr["fragments"].values():
+        assert (BUNDLE / "judge" / "answers" / lang / f["file"]).is_file() and f["duration_ms"] > 0

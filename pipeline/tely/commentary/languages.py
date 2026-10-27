@@ -7,6 +7,7 @@ the multilingual Brian voice, at the English line's time. OWNER: A (potencialbg)
 Writes into web/public/replay/v1/<cut>/:
     cues.<lang>.radio.jsonl        the English cues with text and utterance replaced (same t_in, same evidence)
     audio/<lang>/radio/<sha>.mp3   one MP3 per line; index.json holds the real durations
+    answers/<lang>/                the offline Ask's fragments in that language (build_answers)
     manifest.json                  tracks.<lang> added, every file's sha256 again (build_bundle.manifest)
 
 WHY translate the finished lines and not the templates (file 35 recommends templates): the English track is 70 lines
@@ -44,6 +45,7 @@ LANGS: dict[str, tuple[str, str, tuple[str, str]]] = {
     "ar": ("ar-SA", "Arabic", ("الحمر", "الزرق")),
     "fr": ("fr-FR", "French", ("les Rouges", "les Bleus")),
     "de": ("de-DE", "German", ("die Roten", "die Blauen")),
+    "hi": ("hi-IN", "Hindi", ("लाल टीम", "नीली टीम")),
 }
 # Livelier lines go a little faster and higher (DragonHD's [style] tags don't exist on this voice). Ours, by ear.
 BAND_PROSODY = {"calm": (0, 0), "curious": (3, 0), "urgent": (8, 3), "excited": (12, 6), "shouting": (15, 10)}
@@ -75,7 +77,7 @@ def instructions(lang: str, players: list[str]) -> str:
         "commentator to a blind fan. Translate every line as a native radio commentator would say it: short, spoken, "
         "natural football language, no longer than the English. Keep every fact exactly and add nothing. Scores, "
         f"minutes and counts are often English words (nil, one, sixty minutes played): say them the way a {name} "
-        f"commentator would, in {name}. Never leave an English word in the translation. The team 'Reds' is '{home}' and the team 'Navy' is '{away}', in every line. Player names stay "
+        f"commentator would, in {name}. Where the English has digits (5, 57), write the same digits, never the number in words. Never leave an English word in the translation. Never add a word for a goal, a save, a miss, a block or the post that the English line doesn't say: before an outcome the English avoids those words on purpose. The team 'Reds' is '{home}' and the team 'Navy' is '{away}', in every line. Player names stay "
         f"exactly as written, in Latin letters: {', '.join(players)}. Return one translation per input line, in order.")
 
 
@@ -115,6 +117,51 @@ def check(en: str, tr: str, players: list[str]) -> list[str]:
     return errs
 
 
+# The spoiler firewall in each language: the words a commentator uses for a shot's or a pass's outcome, as regexes
+# (stems where the language inflects). Ours, from the translations we ship; spoiler.OUTCOME is the English list.
+# WHY regexes and not word sets: "Tor" is a goal but "Torwart" is the keeper, "гол" a goal but "голям" means big.
+_AR = r"(?<!\w)(?:[وفبل])?(?:ال)?"
+OUTCOME_L10N: dict[str, list[str]] = {
+    "bg": [r"\bгол(?:ът|а|ове|ов)?\b", r"\bотбеляз\w*", r"\bвкар\w*", r"\bспас\w*", r"\bгред\w*", r"\bблокир\w*",
+           r"\bпропус\w*", r"\bпокрай\b"],
+    "es": [r"\bgol(?:es|azo)?\b", r"\bmarc(?:a|ó|an)\b", r"\banot(?:a|ó)\b", r"\bparad(?:a|ón)\b", r"\bataj\w*",
+           r"\bdesviad[oa]\b", r"\bposte\b", r"\blarguero\b", r"\bbloque\w*", r"\bfall(?:a|ó)\b", r"\bdetiene\b"],
+    "ar": [_AR + r"هدف", r"(?<!\w)[وف]?(?:ي|ت)?سجل", _AR + r"تصد", r"(?<!\w)[وف]?ي?تصدى", _AR + r"إنقاذ", r"ينقذ",
+           _AR + r"قائم", _AR + r"عارضة", r"(?<!\w)[وف]?ي?هدر", r"أهدر"],
+    "fr": [r"\bbuts?\b", r"\bmarqu(?:e|é|ent)\b", r"\barr[eê]t\w*", r"\bsauv\w*", r"\bpoteau\b", r"\btransversale\b",
+           r"\bcontr[ée]\b", r"\bmanqu[ée]\b", r"\brat[ée]\b", r"\bà côté\b"],
+    "de": [r"\b[Tt]or\b", r"\btrifft\b", r"\bgetroffen\b", r"\bTreffer\b", r"\bpariert\w*", r"\bgehalten\b",
+           r"\bParade\b", r"\bvorbei\b", r"\bdaneben\b", r"\bPfosten\b", r"\bLatte\b", r"\bgeblockt\b", r"\bblockt\b",
+           r"\bverschossen\b"],
+    "hi": [r"गोल", r"बचाव", r"बचा", r"चूक", r"पोस्ट", r"ब्लॉक"],
+}
+PASS_OUTCOME_L10N: dict[str, list[str]] = {
+    "bg": [r"\bпрехва\w*", r"\bпресеч\w*"], "es": [r"\bintercept\w*", r"\bcort(?:a|ó|ado)\b"],
+    "ar": [r"(?<!\w)[وف]?(?:ي|ت)?قطع", _AR + r"اعتراض"], "fr": [r"\bintercept\w*", r"\bcoup[ée]\b"],
+    "de": [r"\babgefangen\b", r"\bfängt\b", r"\bunterbr\w*"], "hi": [r"इंटरसेप्ट", r"छीन"],
+}
+
+
+def outcome_said(lang: str, text: str, passes: bool = False) -> bool:
+    rx = OUTCOME_L10N[lang] + (PASS_OUTCOME_L10N[lang] if passes else [])
+    return any(re.search(p, text, flags=re.IGNORECASE) for p in rx)
+
+
+def spoiler_check_l10n(m, lang: str, text: str, t_in: float, evidence: list[str]) -> list[str]:
+    """verifier.spoiler_check with this language's outcome words, for a translated line at the English line's time."""
+    from tely.spoiler import D_S
+
+    errs = []
+    for eid in evidence:
+        e = m.by_id(eid)
+        if m.reveal_t(e) > t_in and outcome_said(lang, text, passes=True):
+            errs.append(f"outcome word before {eid} is revealed at {m.reveal_t(e)}")
+    for e in m.events:
+        if e["type"] == "shot" and outcome_said(lang, text) and m.t(e) - D_S < t_in < m.reveal_t(e):
+            errs.append(f"outcome word within {D_S} s before shot {e['id']} is revealed")
+    return errs
+
+
 def load_cache(lang: str) -> dict:
     p = L10N / f"{lang}.json"
     return json.loads(p.read_text(encoding="utf-8")) if p.is_file() else {"translator": None, "lines": {}}
@@ -128,23 +175,26 @@ def save_cache(lang: str, cache: dict) -> None:
     (L10N / f"{lang}.json").write_text(json.dumps(cache, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
 
 
-def translations(lang: str, english: list[str], players: list[str], translator: Callable[[], Translator]) -> dict[str, str]:
-    """English line -> translation, from the cache; only missing lines go to the model (twice at most, then fail)."""
+def translations(lang: str, english: list[str], players: list[str], translator: Callable[[], Translator],
+                 reject: Callable[[str, str], bool] | None = None) -> dict[str, str]:
+    """English line -> translation, from the cache; only missing lines go to the model (three times at most, then
+    fail). reject(en, tr): an extra check, here the spoiler firewall in that language at the line's time."""
+    ok = lambda en, tr: not check(en, tr, players) and not (reject and reject(en, tr))  # noqa: E731
     cache = load_cache(lang)
-    cache["lines"] = {en: tr for en, tr in cache["lines"].items() if not check(en, tr, players)}   # a stricter check re-asks
-    for _ in range(2):
+    cache["lines"] = {en: tr for en, tr in cache["lines"].items() if ok(en, tr)}   # a stricter check re-asks
+    for _ in range(3):
         missing = [s for s in dict.fromkeys(english) if s not in cache["lines"]]
         if not missing:
             break
         t = translator()
         for en, tr in zip(missing, t.translate(lang, missing)):
-            if not check(en, tr, players):
+            if ok(en, tr):
                 cache["lines"][en] = tr
         cache["translator"] = t.name
         save_cache(lang, cache)
     bad = [s for s in english if s not in cache["lines"]]
     if bad:
-        raise ValueError(f"{lang}: {len(bad)} lines lost a number or a name in translation, e.g. {bad[0]!r}")
+        raise ValueError(f"{lang}: {len(bad)} lines lost a number or a name, or gave an outcome away, e.g. {bad[0]!r}")
     return cache["lines"]
 
 
@@ -188,6 +238,32 @@ def build_lang(out_dir: Path, lang: str, cues: list[dict], t_end: float, lines: 
             "overlaps": sum(not c["l10n"]["fits"] for c in out)}
 
 
+def build_answers(out_dir: Path, lang: str, frags: list[dict[str, str]], lines: dict[str, str],
+                  synth_factory: Callable[[], Synthesiser]) -> dict:
+    """The offline Ask's fragments (answers.py) in this language, into answers/<lang>/ with the same index.json shape,
+    so the browser's FragmentPlayer only changes folder. "hold" leans in, like the English one (answers.STYLES)."""
+    from tely.answers import FOLDER, STYLES
+
+    locale = LANGS[lang][0]
+    folder = out_dir / FOLDER / lang
+    cache = TtsCache(folder, synth_factory, index_name="cache.json")
+    table: dict[str, dict] = {}
+    for f in frags:
+        ssml = build_ssml(lines[f["text"]], locale, 0.6 if STYLES.get(f["id"]) == "urgent" else 0.0)
+        sha = ssml_sha256(ssml)
+        table[f["id"]] = {"file": f"{sha}.mp3", "duration_ms": cache.ensure(sha, ssml, lines[f["text"]])}
+    used = {v["file"] for v in table.values()}
+    stale = [p for p in folder.glob("*.mp3") if p.name not in used]
+    for p in stale:
+        p.unlink()
+    cache.index = {k: v for k, v in cache.index.items() if f"{k}.mp3" in used}
+    cache.save()
+    body = {"voice": VOICE, "lang": locale, "count": len(table), "fragments": table}
+    (folder / "index.json").write_text(json.dumps(body, indent=1, ensure_ascii=False) + "\n", encoding="utf-8",
+                                       newline="\n")
+    return {"lang": lang, "answers": len(table), "tts_calls": cache.calls, "pruned": len(stale)}
+
+
 def main(argv: list[str] | None = None) -> int:
     from tely import build_bundle
 
@@ -206,14 +282,23 @@ def main(argv: list[str] | None = None) -> int:
     env = load_env()
     env.update(build_bundle.dir_env(env))   # FOUNDRY_* from the process env win, as in build_bundle
     english = [c["text"]["radio"] for c in cues]
+    from tely.answers import fragments_for
+    frags = fragments_for(out_dir)
+    at: dict[str, list[dict]] = {}
+    for c in cues:
+        at.setdefault(c["text"]["radio"], []).append(c)
     try:
         for lang in langs:
-            lines = translations(lang, english, players, lambda: FoundryTranslator(env, players))
+            def spoils(en: str, tr: str, lang: str = lang) -> bool:   # answer fragments play after the reveal (tools clamp)
+                return any(spoiler_check_l10n(m, lang, tr, c["t_in"], c["evidence"]) for c in at.get(en, []))
+            lines = translations(lang, english + [f["text"] for f in frags], players,
+                                 lambda: FoundryTranslator(env, players), reject=spoils)
             l10n = load_cache(lang)
             measured = l10n.setdefault("measured", {})
             rep = build_lang(out_dir, lang, cues, m.t_end, lines, lambda: AzureSynthesiser(env), measured)
             save_cache(lang, l10n)
             print(json.dumps(rep, ensure_ascii=False))
+            print(json.dumps(build_answers(out_dir, lang, frags, lines, lambda: AzureSynthesiser(env)), ensure_ascii=False))
     except (TtsError, ValueError) as exc:
         print(f"FAIL: {exc}")
         return 1
