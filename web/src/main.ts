@@ -132,7 +132,8 @@ async function startApp(): Promise<void> {
   applyHaptics();
   let crowd: InstanceType<typeof CrowdEngine> | null = null;
   let presetVoice: { setLanguage(lang: string): Promise<boolean> } | null = null;   // the quick questions' voice (D27)
-  let zoneAt: ((p: number) => string | null) | null = null;   // where the ball is, for one-ear mode's tone
+  let zoneAt: ((p: number) => string | null) | null = null;
+  let clockAt: ((p: number) => string) | null = null;          // match clock (mm:ss), for the notes   // where the ball is, for one-ear mode's tone
   const radios = (name: string) => [...document.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`)];
   for (const r of radios('club')) r.checked = r.value === settings.club;
   for (const r of radios('haptics')) r.checked = r.value === settings.haptics;
@@ -418,6 +419,7 @@ async function startApp(): Promise<void> {
       presetVoice = player;
       if (settings.lang !== 'en') void player.setLanguage(settings.lang);
       zoneAt = (p) => tools.get_ball_position(p).fragments?.[0] ?? null;
+      clockAt = (p) => tools.clockStr(p);
       askCtl = new askMod.AskController({
         tools, clock: s, crowd: c, commentary: lane.commentary,
         speak: (f, text) => player.speak(f, text),
@@ -541,10 +543,16 @@ async function startApp(): Promise<void> {
   const radarWanted = () => settings.radar || new URLSearchParams(location.search).get('radar') === '1';
   radarToggle.checked = radarWanted();
   let radar: { stop(): void } | null = null;
+  let notesPanel: { stop(): void } | null = null;   // D33, shown with the radar
   const syncRadar = async () => {
-    if (!src || !radarWanted()) { radar?.stop(); radar = null; return; }
+    if (!src || !radarWanted()) { radar?.stop(); radar = null; notesPanel?.stop(); notesPanel = null; return; }
     if (radar) return;
     const { startRadar, parseVtt } = await import('./radar/radar');
+    if (!notesPanel) {
+      const { startNotes } = await import('./notes/notes');
+      const s0 = src;
+      notesPanel = startNotes($('notes'), { now: () => s0.now(), clock: (p) => clockAt?.(p) ?? '' });
+    }
     let cues: ReturnType<typeof parseVtt> = [];
     try { cues = parseVtt(await (await fetch(`${bundleBase()}/captions_sdh.vtt`)).text()); } catch { cues = []; }
     const s = src;

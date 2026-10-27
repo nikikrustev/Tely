@@ -144,6 +144,9 @@
       #debug { font: 0.95rem/1.4 ui-monospace, monospace; border: 1px dashed var(--muted); padding: 0.75rem; margin-top: 1rem; }
       #tap { min-height: 5rem; width: 100%; font-size: 1.5rem; font-weight: 700; }
       #radar { margin-top: 1rem; }
+      #notes { margin-top: 1rem; }
+      #notes ol { padding-left: 1.25rem; margin: 0.5rem 0 0; }
+      #notes li { margin: 0.25rem 0; line-height: 1.4; }
       #radar canvas { display: block; width: 100%; border-radius: 0.5rem; background: var(--panel); }
       .radar-caption { min-height: 3em; font-size: 1.25rem; font-weight: 600; margin: 0.5rem 0 0; }
       #settings > label { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; }
@@ -318,6 +321,8 @@
       <!-- Screen-reader mode: each commentary line, read by the fan's own screen reader (empty otherwise). -->
       <div id="reader-lines" class="sr-only" aria-live="polite" aria-atomic="true"></div>
       <div id="radar" hidden aria-hidden="true"></div>
+      <!-- D33: with the radar on, what the agents decided, each note only after its moment has played. -->
+      <section id="notes" hidden></section>
       <div id="debug" hidden aria-hidden="true"></div>
       <p class="notice" id="notice">A synthetic match with fictional clubs. Commentary uses AI voices. Headphones recommended.</p>
       </div>

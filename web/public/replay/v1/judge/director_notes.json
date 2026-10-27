@@ -1,0 +1,107 @@
+{
+ "director": "dir_v1@gpt-5-mini",
+ "notes": [
+  {
+   "key": "e00675",
+   "show_after": 703.76,
+   "clock": "56:19",
+   "plan": {
+    "build_up_level": 0.62,
+    "lead_s": 4.0,
+    "hold_ms": 300,
+    "hint_type": "danger"
+   },
+   "rules_plan": {
+    "build_up_level": 0.72,
+    "lead_s": 4.0,
+    "hold_ms": 0,
+    "hint_type": "none"
+   },
+   "plan_check": "pass",
+   "latency_ms": 6203,
+   "tokens": 524,
+   "xg": 0.217,
+   "zone": "attacking third, centre",
+   "line": {
+    "cue_id": "c_0002",
+    "text": "Navy coming... Olvholm... here's a chance!",
+    "truth_check": "pass",
+    "spoiler_check": "pass"
+   }
+  },
+  {
+   "key": "e00706",
+   "show_after": 880.52,
+   "clock": "59:39",
+   "plan": {
+    "build_up_level": 0.12,
+    "lead_s": 4.2,
+    "hold_ms": 300,
+    "hint_type": "none"
+   },
+   "rules_plan": {
+    "build_up_level": 0.0,
+    "lead_s": 4.0,
+    "hold_ms": 0,
+    "hint_type": "none"
+   },
+   "plan_check": "pass",
+   "latency_ms": 2462,
+   "tokens": 497,
+   "xg": 0.014,
+   "zone": "attacking third, near side",
+   "line": null
+  },
+  {
+   "key": "e00740",
+   "show_after": 1067.44,
+   "clock": "62:47",
+   "plan": {
+    "build_up_level": 0.68,
+    "lead_s": 4.0,
+    "hold_ms": 350,
+    "hint_type": "danger"
+   },
+   "rules_plan": {
+    "build_up_level": 0.58,
+    "lead_s": 4.0,
+    "hold_ms": 0,
+    "hint_type": "none"
+   },
+   "plan_check": "pass",
+   "latency_ms": 1472,
+   "tokens": 465,
+   "xg": 0.083,
+   "zone": "attacking third, centre",
+   "line": {
+    "cue_id": "c_0058",
+    "text": "Reds... Orlani... danger!",
+    "truth_check": "pass",
+    "spoiler_check": "pass"
+   }
+  },
+  {
+   "key": "e00754",
+   "show_after": 1140.28,
+   "clock": "63:59",
+   "plan": {
+    "build_up_level": 0.12,
+    "lead_s": 4.2,
+    "hold_ms": 200,
+    "hint_type": "none"
+   },
+   "rules_plan": {
+    "build_up_level": 0.0,
+    "lead_s": 4.0,
+    "hold_ms": 0,
+    "hint_type": "none"
+   },
+   "plan_check": "pass",
+   "latency_ms": 1006,
+   "tokens": 466,
+   "xg": 0.011,
+   "zone": "attacking third, far side",
+   "line": null
+  }
+ ]
+}
