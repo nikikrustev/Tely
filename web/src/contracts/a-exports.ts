@@ -16,6 +16,11 @@ export interface LaneAHandle {
   /** Appended 27 Oct (D27). Switch the commentary track and the live answers to a language ("bg"). Resolves false
    *  if the bundle has no track for it (the English track keeps playing). */
   setLanguage?(lang: string): Promise<boolean>;
+  /** Appended 27 Oct (Tier 1): "key" plays only the lines with priority KEY_PRIORITY and up, "full" all of them. */
+  setDetail?(detail: 'full' | 'key'): void;
+  /** Appended 27 Oct (Tier 1): screen-reader mode. On: the AI voice is silent and onLine gets each line's text and
+   *  language instead. Off (null): the voice speaks again. */
+  setReader?(onLine: ((text: string, lang: string) => void) | null): void;
 }
 
 /** B's main.ts calls this once, and nothing else of A's. */

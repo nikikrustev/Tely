@@ -275,6 +275,18 @@
           </select>
         </label>
         <p class="hint" id="lang-hint">The fan can also ask the commentator: "Speak Spanish."</p>
+        <fieldset>
+          <legend>How much the commentator says</legend>
+          <label><input type="radio" name="detail" value="full" /> Full radio: the ball and every moment</label>
+          <label><input type="radio" name="detail" value="key" /> Key moments only: chances, goals, cards</label>
+        </fieldset>
+        <fieldset>
+          <legend>Listening mode</legend>
+          <label><input id="reader-toggle" type="checkbox" /> Screen-reader mode: your screen reader reads the
+            commentary at your own speed; the crowd and vibration stay</label>
+          <label><input id="mono-toggle" type="checkbox" /> One ear (mono): every sound in both ears, and a soft tone
+            for where the ball is (low: your half, high: your attacking third)</label>
+        </fieldset>
         <label for="crowd">Whole crowd level</label>
         <input id="crowd" type="range" min="0" max="100" step="5" />
         <fieldset>
@@ -302,6 +314,8 @@
         <label><input id="radar-toggle" type="checkbox" /> Show the sound radar (a visual pitch for sighted viewers)</label>
       </section>
 
+      <!-- Screen-reader mode: each commentary line, read by the fan's own screen reader (empty otherwise). -->
+      <div id="reader-lines" class="sr-only" aria-live="polite" aria-atomic="true"></div>
       <div id="radar" hidden aria-hidden="true"></div>
       <div id="debug" hidden aria-hidden="true"></div>
       <p class="notice" id="notice">A synthetic match with fictional clubs. Commentary uses AI voices. Headphones recommended.</p>

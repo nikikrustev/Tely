@@ -312,7 +312,7 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
   With `DEMO_MODE=off` and with an unreachable relay, the refusal came within 0.2 s of `live.ask()`, and the presets
   opened 4.8 s later, after the spoken reason.
 
-## D18. Radio only: the Describer and Calm detail levels are dropped (24 Oct 2026)
+## D18. Radio only: the Describer and Calm detail levels are dropped (24 Oct 2026; superseded by D30: two levels)
 
 - **What ships:** one detail level, **Radio** (file 36 rule 3: the ball and key moments, with short pauses). The bundle
   has one cue track (`manifest.json` `tracks.en.radio`), and the page has no detail-level setting.
@@ -676,3 +676,28 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
   translated line passes the digit/name check and the firewall in its language, with the English line's time and
   evidence; every language has all 110 answers), vitest 139/139 (new: FragmentPlayer.setLanguage).
 - **Not checked:** the recordings by a native speaker of each language.
+
+## D30. Two detail levels, screen-reader mode and one-ear mode (27 Oct 2026)
+
+- **Why:** blind fans listen in different ways. Some want only the big moments; many run a screen reader at a speed no
+  AI voice matches; some have one earbud or hear in one ear, so anything panned left or right is lost.
+- **Detail level** (Setup, saved on the device; or by voice through `set_preferences detail`): **Full radio** (today's
+  track) or **Key moments only**: the cues with `priority >= 3` (`lane-a` `KEY_PRIORITY`). On the judge cut that's 12 of
+  70 lines: the AI notice, both build-ups, the header call, VAR, the four outcome reactions, the goal's detail and the
+  yellow card. A filter on existing cues: no new words and no LLM call, so every line kept is already verified. D18's
+  "one detail level" no longer holds; the old `verbosity` argument now names the two levels instead of "Done.".
+- **Screen-reader mode:** the voice's own gain goes to 0 and each line goes to a polite, atomic live region
+  (`#reader-lines`) when it would have started, with the line's `lang` (and `dir="rtl"` for Arabic), so the fan's
+  screen reader reads it at their own speed. Lines still duck the crowd; crowd, sound icons and vibration stay. A line
+  stopped before it is heard (pause, seek, Ask, language switch) is never announced, and a line resumed mid-sentence
+  isn't read twice. Answers to questions are still spoken by the AI voice.
+- **One-ear mode:** every AudioContext (stage, commentary, live answers) registers with `audio/mono.ts`, which sets its
+  destination to 1 channel (Web Audio's "speakers" down-mix sums L and R). Where the ball is still comes through:
+  the end nearest the ball lifts (D20), and every 5 s in play a soft 150 ms tone is pitched by the ball's third, seen
+  from the fan's team: 262 Hz own third, 330 Hz midfield, 440 Hz attacking third (`audio/position-tone.ts`).
+- **Checked:** vitest 145/145 (new: the key filter on the real cues, settings, mono on/off for late contexts, the pitch
+  per third and side, the track's mute and `onLine`, and that a stopped line is never announced), pytest and relay
+  pytest (the new `detail` argument), Playwright + axe on desktop and phone portrait (the controls, saved across a
+  reload, axe on Settings in light and dark, and the first line reaching the live region on time).
+- **Not checked:** NVDA, Narrator, TalkBack or VoiceOver reading the live region on a real device; the mono down-mix
+  on a real one-ear Bluetooth earbud.

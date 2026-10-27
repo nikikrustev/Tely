@@ -2,10 +2,18 @@
 import type { LaneAHandle, MountLaneA } from '../contracts/a-exports';
 import { CommentaryTrackPlayer, parseCues } from './commentary-track';
 import { browserIO, LiveAsk } from './live-ask';
-import { setLiveLanguage } from './language';
+import { liveLanguage, setLiveLanguage } from './language';
+import { registerContext } from '../audio/mono';
 import { bundleBase } from '../replay/base';
 
 export const BUNDLE_BASE = bundleBase();   // the judge cut, or a dev-only soak bundle (replay/base.ts)
+/** "Key moments only": the lines whose priority is at least this. On the judge cut that's 12 of 70: the AI notice,
+ *  both build-ups, the header call, VAR, the four outcome reactions, the goal's detail and the yellow card. */
+export const KEY_PRIORITY = 3;
+
+export function filterDetail<T extends { priority?: number }>(cues: T[], detail: 'full' | 'key'): T[] {
+  return detail === 'key' ? cues.filter((c) => (c.priority ?? 0) >= KEY_PRIORITY) : cues;
+}
 
 interface Manifest {
   tracks: Record<string, Record<string, string>>;
@@ -79,6 +87,8 @@ export async function liveRelayUrl(search: string, fetchJson: (u: string) => Pro
 // SEAM(A->B): B's main.ts calls this once with LaneBContext (crowd bus, Ask, replay clock).
 export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
   let audioBase = BUNDLE_BASE;
+  let all: ReturnType<typeof parseCues> = [];
+  let detail: 'full' | 'key' = 'full';
   const commentary = new CommentaryTrackPlayer({
     clock: ctx.clock,
     crowd: ctx.crowd,
@@ -90,13 +100,13 @@ export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
       ? getOk(`${local}/cues.en.radio.jsonl`).then(async (r) => { const c = parseCues(await r.text()); audioBase = local; return c; })
         .catch(() => loadRadioCues())
       : loadRadioCues();
-    cues.then((c) => commentary.load(c))
+    cues.then((c) => { all = c; commentary.load(filterDetail(c, detail)); })
       .catch((err: unknown) => console.warn('[commentary] no commentary track; the match plays without it', err));
-    unlockOnGesture((c) => commentary.attach(c));
+    unlockOnGesture((c) => { registerContext(c); commentary.attach(c); });
     // The live Ask gets its own context: CommentaryTrack.pause() suspends the commentary's, and B pauses the
     // commentary before every answer. Created in the same Start tap, so it may play (file 37).
     let liveVoice: AudioContext | null = null;
-    unlockOnGesture((c) => { liveVoice = c; });
+    unlockOnGesture((c) => { registerContext(c); liveVoice = c; });
     const debug = new URLSearchParams(location.search).get('debug') === '1';
     if (debug) {
       (window as unknown as { telyCommentary?: CommentaryTrackPlayer }).telyCommentary = commentary;
@@ -122,12 +132,22 @@ export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
       const cues = await loadRadioCues(BUNDLE_BASE, lang);
       if (wanted !== lang) return false;                 // a newer choice won while this one loaded
       audioBase = BUNDLE_BASE;
-      commentary.load(cues);
+      all = cues;
+      commentary.load(filterDetail(cues, detail));
       setLiveLanguage(lang);
       return true;
     } catch {
       return false;
     }
   };
-  return { commentary, setLanguage };
+  const setDetail = (d: 'full' | 'key') => {
+    if (d === detail) return;
+    detail = d;
+    if (all.length) commentary.load(filterDetail(all, d));
+  };
+  const setReader = (onLine: ((text: string, lang: string) => void) | null) => {
+    commentary.setVoiceMuted(onLine !== null);
+    commentary.onLine = onLine ? (c) => onLine(c.text.radio, liveLanguage()) : null;
+  };
+  return { commentary, setLanguage, setDetail, setReader };
 };

@@ -94,6 +94,11 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
   private ctx: VoiceContext | null = null;
   private out: GainNode | null = null;
   voice: VoiceStage | null = null;
+  private mute: GainNode | null = null; // screen-reader mode: the voice is silent, the lines still run on time
+  private muted = false;
+  /** Called when a line starts to be heard (at its t_in on the audio clock), with that line. A line stopped before
+   *  then (pause, seek, Ask, language switch) is never reported. Screen-reader mode sends it to a live region. */
+  onLine: ((cue: Cue) => void) | null = null;
   private paused = false; // pause() from B, independent of the clock
   private playing = false; // what the replay clock last said
   private interrupted = -1; // the line that was speaking when the clock stopped: it resumes mid-line
@@ -125,7 +130,10 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
     this.ctx = ctx;
     // SEAM(A->B): mix.ts (B's folder) holds the shared mix, so the ?mix=1 mixer moves this voice live.
     this.voice = new VoiceStage(ctx as unknown as BaseAudioContext, ctx.destination);
-    this.out = this.voice.input;
+    this.mute = ctx.createGain();
+    this.mute.gain.value = this.muted ? 0 : 1;
+    this.mute.connect(this.voice.input);
+    this.out = this.mute;
     this.reset(this.opts.clock.now(), this.opts.clock.isPlaying());
   }
 
@@ -147,6 +155,12 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
     // dropped and B's catch-up covers it. A replay pause keeps the playhead still, so that line resumes in sync.
     if (Math.abs(p - this.pausedAt) > RESUME_IN_SYNC_S) this.interrupted = -1;
     this.reset(p, this.opts.clock.isPlaying());
+  }
+
+  /** Screen-reader mode: silence the AI voice (lines still start, duck the crowd and call onLine). */
+  setVoiceMuted(on: boolean): void {
+    this.muted = on;
+    if (this.mute) this.mute.gain.value = on ? 0 : 1;
   }
 
   nextCueWithin(s: number): boolean {
@@ -244,7 +258,8 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
       return;
     }
     let at = when, into = 0;
-    if (i === this.interrupted) {
+    const resumed = i === this.interrupted;
+    if (resumed) {
       // Resume mid-sentence, in sync with the match: start at the offset the playhead has reached.
       at = Math.max(when, now);
       into = at - when;
@@ -276,19 +291,23 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
     this.status[i] = 'scheduled';
     this.starts.push({ cue_id: c.cue_id, t_in: c.t_in, at, into });
     this.duckAround(at, at + buf.duration - into);
+    if (this.onLine && !resumed) this.later(at, () => this.onLine?.(c));   // a line resumed mid-sentence isn't re-read
+  }
+
+  /** Run fn at audio-clock time atS; cancelled with the duck timers by stopAll(). */
+  private later(atS: number, fn: () => void): void {
+    const ctx = this.ctx as VoiceContext;
+    const id = setTimeout(() => {
+      this.duckTimers.delete(id);
+      fn();
+    }, Math.max(0, (atS - ctx.currentTime) * 1000));
+    this.duckTimers.add(id);
   }
 
   /** Duck the crowd from DUCK_LEAD_S before the line until UNDUCK_HOLD_S after it. Holds are counted, so lines
    *  closer together than the hold share one duck instead of pumping the crowd up and down between them. */
   private duckAround(start: number, end: number): void {
-    const ctx = this.ctx as VoiceContext;
-    const later = (atS: number, fn: () => void) => {
-      const id = setTimeout(() => {
-        this.duckTimers.delete(id);
-        fn();
-      }, Math.max(0, (atS - ctx.currentTime) * 1000));
-      this.duckTimers.add(id);
-    };
+    const later = (atS: number, fn: () => void) => this.later(atS, fn);
     later(start - DUCK_LEAD_S, () => {
       // SEAM(A->B): CrowdBus.duck (contracts/b-exports.ts); B's engine ramps with setTargetAtTime.
       if (this.ducks++ === 0) this.opts.crowd.duck(DUCK_DB, DUCK_RAMP_MS);

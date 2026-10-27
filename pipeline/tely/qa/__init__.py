@@ -101,13 +101,14 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     {
         "type": "function",
         "name": "set_preferences",
-        "description": "Change the crowd level or the vibration. The commentary has one level of detail: it can't be "
-                       "made more or less detailed yet.",
+        "description": "Change the crowd level, the vibration, or how much the commentator says: detail 'key' is "
+                       "key moments only (chances, goals, cards), 'full' the full radio commentary.",
         "parameters": {
             "type": "object",
             "properties": {
                 "crowd_mix": {"type": "number", "minimum": 0, "maximum": 1},
                 "haptics": {"type": "string", "enum": ["off", "events", "full"]},
+                "detail": {"type": "string", "enum": ["key", "full"]},
             },
             "additionalProperties": False,
         },

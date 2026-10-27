@@ -107,8 +107,8 @@ def test_set_preferences_never_touches_match_state():
         assert call_tool("get_score_and_clock", {}, playhead_s=p, bundle=B) == score
         assert (B.events, B.signals, B.meta) == before
         tool_msg = [o for o in out if o["type"] == "tool"][-1]
-        assert tool_msg["prefs"] == {"crowd_mix": 0.2, "haptics": "off"}   # no detail levels (D18): verbosity dropped
-        assert "can't change how much I say" in tool_msg["say"]
+        assert tool_msg["prefs"] == {"crowd_mix": 0.2, "haptics": "off"}   # "verbosity" is not a setting: dropped (D30)
+        assert "key moments only, or the full radio" in tool_msg["say"]
     run(go())
 
 

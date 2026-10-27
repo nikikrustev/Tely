@@ -96,8 +96,9 @@ def build_server(bundle: Bundle | None = None) -> MCPServer:
                                           open_world_hint=False))
     def set_preferences(ctx: Context,
                         crowd_mix: Annotated[float, Field(ge=0, le=1)] | None = None,
-                        haptics: Literal["off", "events", "full"] | None = None) -> dict[str, Any]:
-        return run("set_preferences", {"crowd_mix": crowd_mix, "haptics": haptics}, ctx)
+                        haptics: Literal["off", "events", "full"] | None = None,
+                        detail: Literal["key", "full"] | None = None) -> dict[str, Any]:
+        return run("set_preferences", {"crowd_mix": crowd_mix, "haptics": haptics, "detail": detail}, ctx)
 
     @mcp.tool(name="adjust_sound", description=DESCRIPTIONS["adjust_sound"],
               annotations=ToolAnnotations(read_only_hint=False, destructive_hint=False, idempotent_hint=False,

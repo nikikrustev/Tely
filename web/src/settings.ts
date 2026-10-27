@@ -6,6 +6,8 @@ export type Club = 'H' | 'A';
 /** The commentator's languages (D27): the pre-recorded match and the live answers. */
 export const LANGS = ['en', 'bg', 'es', 'ar', 'fr', 'de', 'hi'] as const;
 export type Lang = (typeof LANGS)[number];
+/** How much the commentator says: today's whole Radio track, or only the lines with priority KEY_PRIORITY and up. */
+export type Detail = 'full' | 'key';
 export interface Settings {
   /** Which end you sit with: "H" Reds (home) or "A" Navy (away). Flips whose goals the crowd around you cheers. */
   club: Club;
@@ -20,9 +22,17 @@ export interface Settings {
   audioOffsetMs: number | null;
   /** The commentator's language (D27), set in Setup or by asking the commentator. */
   lang: Lang;
+  /** "Key moments only" or "Full radio" (the default): a filter on the cues' priority, no other words. */
+  detail: Detail;
+  /** Screen-reader mode: the AI voice is quiet and each commentary line goes to a polite live region instead, read at
+   *  the fan's own screen-reader speed. Crowd, sound icons and vibration stay. */
+  reader: boolean;
+  /** One-ear mode: every sound summed to mono (one earbud, or hearing in one ear), plus a soft position tone. */
+  mono: boolean;
 }
 
-export const DEFAULTS: Settings = { club: 'H', crowdMix: 0.5, haptics: 'full', hapticStrength: 1, radar: false, audioOffsetMs: null, lang: 'en' };
+export const DEFAULTS: Settings = { club: 'H', crowdMix: 0.5, haptics: 'full', hapticStrength: 1, radar: false, audioOffsetMs: null, lang: 'en',
+  detail: 'full', reader: false, mono: false };
 export const STORAGE_KEY = 'tely.settings.v1';
 /** The key from before the rename to Tely (D26): read once if the new key is empty, so saved settings carry over. */
 export const LEGACY_STORAGE_KEY = 'audiostands.settings.v1';
@@ -52,6 +62,9 @@ export function sanitize(x: unknown): Settings {
     radar: o.radar === true,
     audioOffsetMs: typeof o.audioOffsetMs === 'number' && Number.isFinite(o.audioOffsetMs) ? num(o.audioOffsetMs, 0, 0, 500) : null,
     lang: LANGS.includes(o.lang as Lang) ? (o.lang as Lang) : DEFAULTS.lang,
+    detail: o.detail === 'key' ? 'key' : 'full',
+    reader: o.reader === true,
+    mono: o.mono === true,
   };
 }
 
@@ -84,7 +97,7 @@ export function crowdGainFor(mix: number): number {
 
 /**
  * The live commentator's set_preferences result (A7: relay -> live-ask.ts) as a settings patch. Only what the fan
- * asked for out loud and the tool allowed (haptics, crowd_mix); anything else, including verbosity (no setting yet),
+ * asked for out loud and the tool allowed (haptics, crowd_mix, detail); anything else, including the old verbosity,
  * is dropped. Empty when nothing applies.
  */
 export function prefsPatch(p: unknown): Partial<Settings> {
@@ -93,5 +106,6 @@ export function prefsPatch(p: unknown): Partial<Settings> {
   if (o.haptics === 'off' || o.haptics === 'events' || o.haptics === 'full') patch.haptics = o.haptics;
   if (typeof o.crowd_mix === 'number' && Number.isFinite(o.crowd_mix)) patch.crowdMix = Math.min(1, Math.max(0, o.crowd_mix));
   if (LANGS.includes(o.language as Lang)) patch.lang = o.language as Lang;   // set_language (D27)
+  if (o.detail === 'key' || o.detail === 'full') patch.detail = o.detail;     // set_preferences detail
   return patch;
 }
