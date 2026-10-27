@@ -749,3 +749,21 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
     runtime guard on the live model's speech; that guard is D28 (the model gets the tool's words only).
   - A Director that knew the outcome could still choose a higher `build_up_level`; the firewall stops it from
     knowing.
+
+## D33. Director's notes for sighted judges, never ahead of the playhead (27 Oct 2026)
+
+- **Why:** the agents work out of sight, and a judge with the radar on (`?radar=1`) should be able to see what they
+  decided, without the page ever giving a moment away.
+- **`director_notes.json`** in the bundle (`pipeline/tely/director_notes.py`, also run by `build_bundle`). One entry
+  per Director window, from the recorded Foundry run:
+  - the plan, what the rules Director would have said, the latency and tokens, and the shot's xG and zone;
+  - the Verifier's verdict on the plan and on the spoken build-up line (truth and spoiler checks).
+  - `show_after` is the shot's `reveal_t`: the page shows a note only once the playhead has passed it. The entries
+    hold no outcome (a test checks the texts against the outcome words).
+- **Asks:** after each live answer, LiveAsk reports the tools Voice Live called and the time to the first answer
+  audio (`tely:ask-trace`), and the panel adds a line.
+- **The panel** (`web/src/notes/notes.ts`): a labelled region with a heading and a list, shown with the radar. It is
+  not a live region, so it never talks over the match; a screen-reader user can read it like any list.
+- **Checked:** vitest (the clamp over the whole cut, no outcome words, the texts), pytest (the committed notes match
+  the recorded run; `show_after` is the reveal), Playwright + axe on desktop and portrait (empty at the start, an Ask
+  trace appears, no violations in light and dark).

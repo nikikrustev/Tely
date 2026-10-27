@@ -35,7 +35,7 @@ import sys
 from pathlib import Path
 from typing import Callable
 
-from tely import answers, build_commentary
+from tely import answers, build_commentary, director_notes
 from tely.agents import director as dir_agent
 from tely.agents import tracing
 from tely.agents import workflow as dir_workflow
@@ -184,6 +184,7 @@ def build(cut: str, out_dir: Path, synth_factory: Callable[[], Synthesiser], voi
     commentary = build_commentary.build(cut, out_dir, synth_factory, voice, run.plans,
                                         {s.window.key: s.director for s in run.steps})
     ans = answers.build(out_dir, synth_factory, voice)
+    director_notes.write(cut, out_dir)                 # D33: the ?radar=1 panel, shown only after each reveal
     segments = run_segments(cut, out_dir)
     man = manifest(cut, out_dir, load_match(cut), voice, run.name)
     if man["bytes"] > MAX_BYTES or man["files"] > MAX_FILES:
