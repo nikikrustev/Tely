@@ -982,5 +982,154 @@
    "protocol": "eval/listening_test.md",
    "note": "Self-run, sighted volunteers: friends of the team who followed tester mode (?test=1) on their own device with nobody watching, eyes closed by request, answering multiple-choice versions of the four probes (each with \"Don't know\"). They are not blind or partially sighted fans, a multiple-choice probe is easier to get right than the moderated open question, and nobody checked that their eyes stayed closed. These results are reported apart from the moderated sessions and are not evidence for blind fans (file 36)."
   }
+ },
+ "planted_errors": {
+  "measured": "2026-10-27",
+  "cut": "judge",
+  "commentary": {
+   "lines": 70,
+   "clean_blocked": [],
+   "planted": 148,
+   "caught": 148,
+   "by_kind": {
+    "invented_number": {
+     "planted": 70,
+     "caught": 70
+    },
+    "spoiler": {
+     "planted": 30,
+     "caught": 30
+    },
+    "name": {
+     "planted": 42,
+     "caught": 42
+    },
+    "score": {
+     "planted": 4,
+     "caught": 4
+    },
+    "minute": {
+     "planted": 2,
+     "caught": 2
+    }
+   },
+   "missed": [],
+   "catch_rate": 1.0,
+   "false_block_rate": 0.0
+  },
+  "answers": {
+   "answers": 413,
+   "clean_blocked": [],
+   "planted": 1015,
+   "caught": 1015,
+   "by_kind": {
+    "score": {
+     "planted": 177,
+     "caught": 177
+    },
+    "minute": {
+     "planted": 177,
+     "caught": 177
+    },
+    "invented_number": {
+     "planted": 413,
+     "caught": 413
+    },
+    "distance": {
+     "planted": 43,
+     "caught": 43
+    },
+    "name": {
+     "planted": 205,
+     "caught": 205
+    }
+   },
+   "missed": [],
+   "catch_rate": 1.0,
+   "false_block_rate": 0.0
+  },
+  "verifier_off": {
+   "planted": 1163,
+   "caught": 0,
+   "caught_rate": 0.0,
+   "would_be_spoken": 1163
+  },
+  "director": {
+   "shots": 4,
+   "input_identical": 4,
+   "input_identical_rate": 1.0,
+   "outcome_replies": 8,
+   "outcome_replies_blocked": 8,
+   "outcome_replies_blocked_rate": 1.0,
+   "note": "The plan has four numeric/enum fields and nothing else, so no reply can carry words. What this can't show: a Director that knew the outcome could still pick a higher build_up_level."
+  },
+  "verdict": {
+   "thresholds": {
+    "commentary_catch_rate_min": 1.0,
+    "commentary_false_block_max": 0.0,
+    "answers_catch_rate_min": 0.99,
+    "answers_false_block_max": 0.0,
+    "verifier_off_caught_max": 0.0,
+    "director_input_identical_min": 1.0,
+    "director_outcome_reply_blocked_min": 1.0
+   },
+   "checks": {
+    "commentary_catch_rate_min": true,
+    "commentary_false_block_max": true,
+    "answers_catch_rate_min": true,
+    "answers_false_block_max": true,
+    "verifier_off_caught_max": true,
+    "director_input_identical_min": true,
+    "director_outcome_reply_blocked_min": true
+   },
+   "pass": true
+  },
+  "history": [
+   {
+    "measured": "2026-10-27",
+    "pass": false,
+    "commentary": {
+     "caught": 148,
+     "planted": 148,
+     "false_block_rate": 0.0
+    },
+    "answers": {
+     "caught": 1015,
+     "planted": 1015,
+     "false_block_rate": 0.1889
+    },
+    "clean_blocked_example": {
+     "tool": "what_did_i_miss",
+     "p": 880.52,
+     "say": "While you were away, Fenford had a shot saved by Vaston.",
+     "why": [
+      "name 'Vaston' not an actor of ['e00706']"
+     ]
+    }
+   }
+  ],
+  "foundry_eval": {
+   "measured": "2026-10-27",
+   "items": 10,
+   "planted": 6,
+   "clean": 4,
+   "planted_scored_below_1": 6,
+   "clean_scored_1": 4,
+   "scores_match_local": true,
+   "where": "foundry",
+   "evaluator": "tely-numeric-truth:2",
+   "eval_id": "eval_764341eeb7e2407291f5957d98b5a0f9",
+   "run_id": "evalrun_06911d20ff334ad6a0ff290b84afbccb",
+   "status": "completed",
+   "report_url": "https://ai.azure.com/nextgen/r/7gR2XUcQTUCXnRqsCn3zow,rg-as-dev,,as-foundry-stoynev,audiostands/build/evaluations/eval_764341eeb7e2407291f5957d98b5a0f9/run/evalrun_06911d20ff334ad6a0ff290b84afbccb",
+   "result_counts": {
+    "errored": 0,
+    "failed": 0,
+    "passed": 10,
+    "total": 10,
+    "skipped": 0
+   },
+   "error": null
+  }
  }
 }

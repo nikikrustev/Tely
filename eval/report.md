@@ -104,6 +104,26 @@ Outcomes: {"answered": 31}. Latency is measured in the relay (relay: fan's last 
 | the_keeper | Where is the keeper? | 60:30 | clarify | where_is | Which player? For example: Omar Vaston (Reds #1), Gus Galic (Navy #1). | yes | yes | no |
 | reds_keeper | Where is the Reds keeper? | 60:30 | answer | where_is | Omar Vaston of Reds is in the defensive third, centre, 64 metres from the ball. | yes | yes | no |
 
+## Planted errors (eval/planted.json)
+
+| Check | Result | Threshold (set before the first run) |
+|---|---|---|
+| Commentary: planted errors caught | **148/148** | 100% |
+| Commentary: clean lines blocked | 0/70 | 0 |
+| Answers: planted errors caught | **1015/1015** | at least 99% |
+| Answers: clean answers blocked | 0/413 | 0 |
+| Verifier off: caught | 0/1163 (all would be spoken) | 0 |
+| Director handed the outcome: input unchanged | 4/4 shots | all |
+| Director replies carrying an outcome: rejected | 8/8 | all |
+
+Commentary by kind: invented_number 70/70, spoiler 30/30, name 42/42, score 4/4, minute 2/2.
+
+**Verdict: PASS.** The plan has four numeric/enum fields and nothing else, so no reply can carry words. What this can't show: a Director that knew the outcome could still pick a higher build_up_level.
+
+Foundry evaluation (`tely-numeric-truth:2`, run `evalrun_06911d20ff334ad6a0ff290b84afbccb`): 6/6 planted items scored below 1.0 and 4/4 clean items scored 1.0, the same scores as the local grader. Foundry's own pass flag marked every item passed, so we count from its scores.
+
+Earlier run (2026-10-27): FAIL, answers false-block rate 0.1889, e.g. "While you were away, Fenford had a shot saved by Vaston.": the answer checker did not allow the keeper of a related save. Fixed in the checker; the threshold did not move.
+
 ## Eyes-closed listening test (eval/listening.json)
 
 Not run yet: 0 participants in `eval/listening_test.csv`. The protocol is `eval/listening_test.md`; enter each session in the CSV, then run `python eval/score_listening.py` and this script. No numbers are shown until then.
