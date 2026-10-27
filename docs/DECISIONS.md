@@ -804,3 +804,19 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
 - **Not counted:** the "ball" and "state" lines are regular position updates (D15), not replies to an event. The
   audible delay of the crowd roar itself wasn't measured with an analyser; we only say when it is scheduled.
 - For comparison, the live spoken answer's 1.14 s median (D17) is from the end of the question.
+
+## D37. The Render stage as machine-readable output (27 Oct 2026)
+
+- **Why:** the brief's Render stage asks for "clean, timed, machine-readable output that can drive synchronised
+  graphic overlays". Our audio is one renderer of the cue track; a broadcast graphics system, a caption encoder or
+  a braille display should be able to take the same verified lines at the same times.
+- **What** (`pipeline/tely/render_out.py`, also run by `build_bundle` and the languages build):
+  - `overlays.json` (`tely.overlays/1`) has one record per line: in and out time, match clock and timecode, kind,
+    priority, layout, anchor, metric, the score at that moment, the text in all 7 languages, the evidence, and the
+    truth and spoiler verdicts.
+  - `descriptions.<lang>.vtt` is a WebVTT description track per translation, next to the English
+    `captions_sdh.vtt` and `descriptions.vtt`. All are served from the demo, e.g.
+    `/replay/v1/judge/overlays.json`.
+- Nothing is generated here: every field comes from the committed, verified cue files.
+- **Checked:** pytest (`test_render_out.py`: the committed file is current, all 70 lines have all 7 languages and
+  pass both checks, and each translation has a description track).

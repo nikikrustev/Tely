@@ -1,0 +1,2198 @@
+{
+ "format": "tely.overlays/1",
+ "match_id": "syn_s0024",
+ "synthetic": true,
+ "languages": [
+  "en",
+  "ar",
+  "bg",
+  "de",
+  "es",
+  "fr",
+  "hi"
+ ],
+ "time_base": "seconds of match time (t_in, t_out); tc_in is the broadcast timecode",
+ "cues": [
+  {
+   "cue_id": "c_0001",
+   "t_in": 670.0,
+   "t_out": 673.15,
+   "match_clock": "56:10",
+   "tc_in": "00:11:10:00",
+   "kind": "intro",
+   "priority": 4,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 0
+   },
+   "text": {
+    "en": "AI commentary, synthetic match.",
+    "ar": "تعليق ذكي، مباراة اصطناعية.",
+    "bg": "AI коментар, синтетичен мач.",
+    "de": "KI-Kommentar, synthetisches Spiel.",
+    "es": "Comentario AI, partido sintético.",
+    "fr": "Commentaire IA, match synthétique.",
+    "hi": "एआई कमेंट्री, सिंथेटिक मैच।"
+   },
+   "evidence": [],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0002",
+   "t_in": 675.4,
+   "t_out": 679.25,
+   "match_clock": "56:15",
+   "tc_in": "00:11:15:10",
+   "kind": "build",
+   "priority": 5,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 0
+   },
+   "text": {
+    "en": "Navy coming... Olvholm... here's a chance!",
+    "ar": "الزرق قادمون... Olvholm... هاي فرصة!",
+    "bg": "Сините напред... Olvholm... шанс!",
+    "de": "Die Blauen kommen... Olvholm... hier ist eine Chance!",
+    "es": "Los Azules vienen... Olvholm... ¡aquí hay una ocasión!",
+    "fr": "Les Bleus qui montent... Olvholm... voilà une occasion !",
+    "hi": "नीली टीम आ रही है... Olvholm... मौका है!"
+   },
+   "evidence": [
+    "e00675",
+    "e00673"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0003",
+   "t_in": 679.7,
+   "t_out": 681.05,
+   "match_clock": "56:19",
+   "tc_in": "00:11:19:17",
+   "kind": "call",
+   "priority": 3,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 0
+   },
+   "text": {
+    "en": "Fenford, the header!",
+    "ar": "Fenford، رأسية!",
+    "bg": "Fenford, глава!",
+    "de": "Fenford, der Kopfball!",
+    "es": "Fenford, ¡el remate de cabeza!",
+    "fr": "Fenford, la tête !",
+    "hi": "Fenford, हेडर!"
+   },
+   "evidence": [
+    "e00675"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0004",
+   "t_in": 682.2,
+   "t_out": 684.55,
+   "match_clock": "56:22",
+   "tc_in": "00:11:22:05",
+   "kind": "var",
+   "priority": 6,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 0
+   },
+   "text": {
+    "en": "It's in the net... but hold on, VAR is checking it.",
+    "ar": "في الشباك... لحظة، الفار يراجعها.",
+    "bg": "В мрежата е... чакайте, VAR проверява.",
+    "de": "Er ist im Netz... aber halt, VAR prüft.",
+    "es": "En la red... pero espera, el VAR lo está repasando.",
+    "fr": "C'est au fond... mais attendez, le VAR vérifie.",
+    "hi": "जाल में है...रुको, वीएआर इसे देख रहा है।"
+   },
+   "evidence": [
+    "e00676",
+    "e00675"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0005",
+   "t_in": 692.98,
+   "t_out": 695.83,
+   "match_clock": "56:32",
+   "tc_in": "00:11:32:24",
+   "kind": "var",
+   "priority": 6,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 0
+   },
+   "text": {
+    "en": "Still checking... both ends waiting on VAR.",
+    "ar": "لا يزال الفحص... الطرفان ينتظران الڤار.",
+    "bg": "Все още проверяват... и двете страни чакат VAR.",
+    "de": "Immer noch Prüfung... beide Seiten warten auf VAR.",
+    "es": "Siguen repasando... ambos banquillos esperando al VAR.",
+    "fr": "Toujours en train de vérifier... les deux camps attendent le VAR.",
+    "hi": "अभी भी देख रहे हैं... दोनों सिरे VAR का इंतजार कर रहे हैं।"
+   },
+   "evidence": [
+    "e00676",
+    "e00675"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0006",
+   "t_in": 703.76,
+   "t_out": 707.21,
+   "match_clock": "56:43",
+   "tc_in": "00:11:43:19",
+   "kind": "react",
+   "priority": 7,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "The goal stands! Goal for Navy!",
+    "ar": "الهدف محتسب! هدف للزرق!",
+    "bg": "Голът остава! Гол за Сините!",
+    "de": "Der Treffer zählt! Tor für die Blauen!",
+    "es": "¡El gol sube! ¡Gol para los Azules!",
+    "fr": "Le but est validé ! But pour les Bleus !",
+    "hi": "गोल कायम! नीली टीम के लिए गोल!"
+   },
+   "evidence": [
+    "e00675",
+    "e00676"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0007",
+   "t_in": 707.96,
+   "t_out": 716.71,
+   "match_clock": "56:47",
+   "tc_in": "00:11:47:24",
+   "kind": "detail",
+   "priority": 6,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Olvholm's cross from the far side... and Fenford heads it in! Reds nil, Navy one, fifty-six minutes played.",
+    "ar": "عرضية Olvholm من الطرف البعيد... وFenford يهدّف برأسه! الحمر صفر، الزرق واحد، دقيقة خمس وخمسون.",
+    "bg": "Крос на Olvholm от далечната страна... и Fenford го засича с глава! Червените 0, Сините 1, 56-та минута.",
+    "de": "Olvholms Flanke von der anderen Seite... und Fenford köpft ein! Die Roten null, die Blauen eins, fünfundfünfzig Minuten gespielt.",
+    "es": "El centro de Olvholm desde la banda contraria... y Fenford lo remata de cabeza. Los Rojos cero, los Azules uno, cincuenta y seis minutos jugados.",
+    "fr": "Centre d'Olvholm du côté opposé... et Fenford la met de la tête ! Les Rouges zéro, les Bleus un, cinquante-six minutes jouées.",
+    "hi": "Olvholm का क्रॉस दूर वाली तरफ से... और Fenford ने सिर से अंदर किया! लाल टीम 0, नीली टीम 1, 56 मिनट खेल हुए।"
+   },
+   "evidence": [
+    "e00675",
+    "e00674"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0008",
+   "t_in": 717.2,
+   "t_out": 725.9,
+   "match_clock": "56:57",
+   "tc_in": "00:11:57:05",
+   "kind": "kits",
+   "priority": 2,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Reds, in red shirts, white shorts, attack to your right. Navy, in navy shirts with sky-blue sleeves, attack to your left.",
+    "ar": "الحمر، بالقميص الأحمر والبنطال الأبيض، يهاجمون لجهتك اليمنى. الزرق، بالقميص البحري وأكمام سماوية، يهاجمون لجهتك اليسرى.",
+    "bg": "Червените, в червени фланелки, бели гащета, атакуват на дясно. Сините, в тъмносини фланелки със светлосини ръкави, атакуват на ляво.",
+    "de": "Die Roten, in roten Trikots, weißen Hosen, greifen nach rechts an. Die Blauen, in marineblauen Trikots mit himmelblauen Ärmeln, greifen nach links an.",
+    "es": "Los Rojos, con camisetas rojas, pantalones blancos, atacan hacia vuestra derecha. Los Azules, con camisetas azules marinas y mangas celestes, atacan hacia vuestra izquierda.",
+    "fr": "Les Rouges, en maillots rouges, shorts blancs, attaquent vers votre droite. Les Bleus, en maillots bleu marine aux manches bleu ciel, attaquent vers votre gauche.",
+    "hi": "लाल टीम, लाल शर्ट, सफेद शॉर्ट, आपका आक्रमण दाहिनी तरफ। नीली टीम, नेवी शर्ट और स्काई-ब्लू आस्तीन, आपका आक्रमण बायीं तरफ।"
+   },
+   "evidence": [],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0009",
+   "t_in": 731.9,
+   "t_out": 738.4,
+   "match_clock": "57:11",
+   "tc_in": "00:12:11:23",
+   "kind": "state",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Ball's out. Navy still celebrating, Reds waiting to restart. Reds nil, Navy one.",
+    "ar": "الكرة خارج. الزرق ما زالوا يحتفلون، الحمر ينتظرون إعادة اللعب. الحمر صفر، الزرق واحد.",
+    "bg": "Топката вън. Сините още празнуват, Червените чакат да подновят. Червените 0, Сините 1.",
+    "de": "Ball ist draußen. Die Blauen feiern noch, die Roten warten auf den Anstoß. Die Roten null, die Blauen eins.",
+    "es": "Balón fuera. Los Azules siguen celebrando, los Rojos esperando para reanudar. Los Rojos cero, los Azules uno.",
+    "fr": "Le ballon est sorti. Les Bleus fêtent toujours, les Rouges attendent de remettre. Les Rouges zéro, les Bleus un.",
+    "hi": "गेंद बाहर है। नीली टीम अभी जश्न मना रही है, लाल टीम री-स्टार्ट का इंतजार कर रही है। लाल टीम 0, नीली टीम 1।"
+   },
+   "evidence": [],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0010",
+   "t_in": 744.44,
+   "t_out": 749.79,
+   "match_clock": "57:24",
+   "tc_in": "00:12:24:11",
+   "kind": "describe",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, centre, Reds. Orlani on the ball.",
+    "ar": "منتصف الملعب، وسط، الحمر. Orlani مع الكرة.",
+    "bg": "Средна линия, център, Червените. Orlani с топката.",
+    "de": "Mittelfeld, Zentrum, die Roten. Orlani am Ball.",
+    "es": "Centro del campo, centro, Rojos. Orlani con el balón.",
+    "fr": "Milieu de terrain, centre, les Rouges. Orlani touche le ballon.",
+    "hi": "मध्य मैदान, केंद्र, लाल टीम। Orlani पास पर।"
+   },
+   "evidence": [
+    "e00677"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0011",
+   "t_in": 751.32,
+   "t_out": 754.32,
+   "match_clock": "57:31",
+   "tc_in": "00:12:31:08",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Reds.",
+    "ar": "منتصف الملعب، الطرف البعيد، الحمر.",
+    "bg": "Средна линия, далечна страна, Червените.",
+    "de": "Mittelfeld, andere Seite, die Roten.",
+    "es": "Centro del campo, banda contraria, Rojos.",
+    "fr": "Milieu, côté opposé, les Rouges.",
+    "hi": "मध्य मैदान, दूर वाली तरफ, लाल टीम।"
+   },
+   "evidence": [
+    "e00679"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0012",
+   "t_in": 757.0,
+   "t_out": 760.35,
+   "match_clock": "57:37",
+   "tc_in": "00:12:37:00",
+   "kind": "describe",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Reds. It's with Ashski.",
+    "ar": "منتصف الملعب، الطرف البعيد، الحمر. مع Ashski.",
+    "bg": "Средна линия, далечна страна, Червените. Ashski е с топката.",
+    "de": "Mittelfeld, andere Seite, die Roten. Ashski hat den Ball.",
+    "es": "Centro del campo, banda contraria, Rojos. Lo tiene Ashski.",
+    "fr": "Milieu, côté opposé, les Rouges. C'est Ashski.",
+    "hi": "मध्य मैदान, दूर वाली तरफ, लाल टीम। गेंद Ashski के पास है।"
+   },
+   "evidence": [
+    "e00680"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0013",
+   "t_in": 765.66,
+   "t_out": 768.66,
+   "match_clock": "57:45",
+   "tc_in": "00:12:45:17",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Reds.",
+    "ar": "منتصف الملعب، الطرف البعيد، الحمر.",
+    "bg": "Средна линия, далечна страна, Червените.",
+    "de": "Mittelfeld, andere Seite, die Roten.",
+    "es": "Centro del campo, banda contraria, Rojos.",
+    "fr": "Milieu, côté opposé, les Rouges.",
+    "hi": "मध्य मैदान, दूर वाली तरफ, लाल टीम।"
+   },
+   "evidence": [
+    "e00681"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0014",
+   "t_in": 774.32,
+   "t_out": 777.27,
+   "match_clock": "57:54",
+   "tc_in": "00:12:54:08",
+   "kind": "describe",
+   "priority": 2,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Intercepted by Olvros! Navy have it back.",
+    "ar": "قطعها Olvros! الزرق استعادوا الكرة.",
+    "bg": "Пресечена от Olvros! Сините имат топката обратно.",
+    "de": "Abgefangen von Olvros! Die Blauen haben ihn zurück.",
+    "es": "¡Intercepcionado por Olvros! Los Azules lo tienen de nuevo.",
+    "fr": "Intercepté par Olvros ! Les Bleus le récupèrent.",
+    "hi": "Olvros ने इंटरसेप्ट किया! नीली टीम के पास वापस है।"
+   },
+   "evidence": [
+    "e00683",
+    "e00682"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0015",
+   "t_in": 779.22,
+   "t_out": 782.47,
+   "match_clock": "57:59",
+   "tc_in": "00:12:59:05",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, far side, Navy.",
+    "ar": "الثلث الدفاعي، الطرف البعيد، الزرق.",
+    "bg": "Защитна третина, далечна страна, Сините.",
+    "de": "Defensivdrittel, andere Seite, die Blauen.",
+    "es": "Tercio defensivo, banda contraria, Azules.",
+    "fr": "Tiers défensif, côté opposé, les Bleus.",
+    "hi": "डिफेंसिव थर्ड, दूर वाला साइड, नीली टीम।"
+   },
+   "evidence": [
+    "e00684"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0016",
+   "t_in": 784.12,
+   "t_out": 788.67,
+   "match_clock": "58:04",
+   "tc_in": "00:13:04:03",
+   "kind": "describe",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Navy. Dunaro on the ball.",
+    "ar": "منتصف الملعب، الطرف البعيد، الزرق. Dunaro مع الكرة.",
+    "bg": "Средна линия, далечна страна, Сините. Dunaro с топката.",
+    "de": "Mittelfeld, andere Seite, die Blauen. Dunaro am Ball.",
+    "es": "Centro del campo, banda contraria, Azules. Dunaro con el balón.",
+    "fr": "Milieu, côté opposé, les Bleus. Dunaro a le ballon.",
+    "hi": "मध्य मैदान, दूर वाली तरफ, नीली टीम। Dunaro पास पर।"
+   },
+   "evidence": [
+    "e00685"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0017",
+   "t_in": 790.24,
+   "t_out": 791.54,
+   "match_clock": "58:10",
+   "tc_in": "00:13:10:06",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, Navy.",
+    "ar": "منتصف الملعب، الزرق.",
+    "bg": "Средна линия, Сините.",
+    "de": "Mittelfeld, die Blauen.",
+    "es": "Centro del campo, Azules.",
+    "fr": "Milieu, les Bleus.",
+    "hi": "मध्य मैदान, नीली टीम।"
+   },
+   "evidence": [
+    "e00685"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0018",
+   "t_in": 793.36,
+   "t_out": 799.26,
+   "match_clock": "58:13",
+   "tc_in": "00:13:13:09",
+   "kind": "describe",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Navy. Olvholm, looking for a way forward.",
+    "ar": "منتصف الملعب، الطرف البعيد، الزرق. Olvholm يحاول التقدم.",
+    "bg": "Средна линия, далечна страна, Сините. Olvholm търси пробив.",
+    "de": "Mittelfeld, andere Seite, die Blauen. Olvholm, sucht eine Lösung nach vorn.",
+    "es": "Centro del campo, banda contraria, Azules. Olvholm buscando avanzar.",
+    "fr": "Milieu, côté opposé, les Bleus. Olvholm cherche à avancer.",
+    "hi": "मध्य मैदान, दूर वाली तरफ, नीली टीम। Olvholm, आगे का रास्ता देख रहा है।"
+   },
+   "evidence": [
+    "e00686"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0019",
+   "t_in": 800.82,
+   "t_out": 803.77,
+   "match_clock": "58:20",
+   "tc_in": "00:13:20:20",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Navy.",
+    "ar": "منتصف الملعب، الطرف البعيد، الزرق.",
+    "bg": "Средна линия, далечна страна, Сините.",
+    "de": "Mittelfeld, andere Seite, die Blauen.",
+    "es": "Centro del campo, banda contraria, Azules.",
+    "fr": "Milieu, côté opposé, les Bleus.",
+    "hi": "मध्य मैदान, दूर वाली तरफ, नीली टीम।"
+   },
+   "evidence": [
+    "e00686"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0020",
+   "t_in": 806.08,
+   "t_out": 809.83,
+   "match_clock": "58:26",
+   "tc_in": "00:13:26:02",
+   "kind": "describe",
+   "priority": 2,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Intercepted by Dunani! Reds have it back.",
+    "ar": "قطعها Dunani! الحمر استعادوا الكرة.",
+    "bg": "Пресечена от Dunani! Червените имат обратно.",
+    "de": "Abgefangen von Dunani! Die Roten haben ihn zurück.",
+    "es": "¡Intercepcionado por Dunani! Los Rojos lo tienen de nuevo.",
+    "fr": "Intercepté par Dunani ! Les Rouges reprennent.",
+    "hi": "Intercepted by Dunani! लाल टीम के पास वापस है।"
+   },
+   "evidence": [
+    "e00688",
+    "e00687"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0021",
+   "t_in": 812.44,
+   "t_out": 815.49,
+   "match_clock": "58:32",
+   "tc_in": "00:13:32:11",
+   "kind": "describe",
+   "priority": 2,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Intercepted by Olvholm! Navy have it back.",
+    "ar": "قطعها Olvholm! الزرق استعادوا الكرة.",
+    "bg": "Пресечена от Olvholm! Сините я връщат.",
+    "de": "Abgefangen von Olvholm! Die Blauen haben ihn zurück.",
+    "es": "¡Intercepcionado por Olvholm! Los Azules lo tienen de nuevo.",
+    "fr": "Intercepté par Olvholm ! Les Bleus récupèrent.",
+    "hi": "Intercepted by Olvholm! नीली टीम के पास वापस है।"
+   },
+   "evidence": [
+    "e00692",
+    "e00691"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0022",
+   "t_in": 819.92,
+   "t_out": 823.92,
+   "match_clock": "58:39",
+   "tc_in": "00:13:39:23",
+   "kind": "describe",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Navy. It's with Olvholm.",
+    "ar": "منتصف الملعب، الطرف البعيد، الزرق. الكرة مع Olvholm.",
+    "bg": "Средна линия, далечна страна, Сините. Olvholm е с топката.",
+    "de": "Mittelfeld, andere Seite, die Blauen. Olvholm hat den Ball.",
+    "es": "Centro del campo, banda contraria, Azules. Lo tiene Olvholm.",
+    "fr": "Milieu, côté opposé, les Bleus. C'est Olvholm.",
+    "hi": "मध्य मैदान, दूर वाली तरफ, नीली टीम। गेंद Olvholm के पास है।"
+   },
+   "evidence": [
+    "e00695"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0023",
+   "t_in": 824.48,
+   "t_out": 830.43,
+   "match_clock": "58:44",
+   "tc_in": "00:13:44:12",
+   "kind": "describe",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, far side, Navy. Kelski, looking for a way forward.",
+    "ar": "الثلث الهجومي، الطرف البعيد، الزرق. Kelski يحاول الاختراق.",
+    "bg": "Атакуваща третина, далечна страна, Сините. Kelski търси пробив.",
+    "de": "Angriffsdrittel, andere Seite, die Blauen. Kelski, sucht eine Lösung.",
+    "es": "Tercio atacante, banda contraria, Azules. Kelski buscando hueco.",
+    "fr": "Tiers offensif, côté opposé, les Bleus. Kelski cherche à faire jouer.",
+    "hi": "आक्रमण तिहाई, दूर वाला साइड, नीली टीम। Kelski, आगे का रास्ता देख रहा है।"
+   },
+   "evidence": [
+    "e00696"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0024",
+   "t_in": 832.5,
+   "t_out": 838.2,
+   "match_clock": "58:52",
+   "tc_in": "00:13:52:12",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, far side, Navy, Olvholm on the ball.",
+    "ar": "الثلث الهجومي، الطرف البعيد، الزرق، Olvholm مع الكرة.",
+    "bg": "Атакуваща третина, далечна страна, Сините, Olvholm с топката.",
+    "de": "Angriffsdrittel, andere Seite, die Blauen, Olvholm am Ball.",
+    "es": "Tercio atacante, banda contraria, Azules, Olvholm con el balón.",
+    "fr": "Tiers offensif, côté opposé, les Bleus, Olvholm a le ballon.",
+    "hi": "आक्रमण तिहाई, दूर वाला साइड, नीली टीम, Olvholm पास पर।"
+   },
+   "evidence": [
+    "e00696"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0025",
+   "t_in": 840.52,
+   "t_out": 843.52,
+   "match_clock": "59:00",
+   "tc_in": "00:14:00:13",
+   "kind": "describe",
+   "priority": 2,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Cut out! Nevaro wins it back for Reds.",
+    "ar": "تدخل! Nevaro يستعيدها للحمر.",
+    "bg": "Пресечено! Nevaro я връща за Червените.",
+    "de": "Abgewehrt! Nevaro erobert ihn zurück für die Roten.",
+    "es": "¡Cortado! Nevaro lo recupera para los Rojos.",
+    "fr": "Dégagé ! Nevaro le reprend pour les Rouges.",
+    "hi": "काट दिया गया! Nevaro ने लाल टीम के लिए वापसी जीती।"
+   },
+   "evidence": [
+    "e00699",
+    "e00698"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0026",
+   "t_in": 847.22,
+   "t_out": 850.72,
+   "match_clock": "59:07",
+   "tc_in": "00:14:07:05",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, far side, Reds with the ball.",
+    "ar": "الثلث الدفاعي، الطرف البعيد، الحمر مع الكرة.",
+    "bg": "Защитна третина, далечна страна, Червените с топката.",
+    "de": "Defensivdrittel, andere Seite, die Roten mit dem Ball.",
+    "es": "Tercio defensivo, banda contraria, Rojos con el balón.",
+    "fr": "Tiers défensif, côté opposé, les Rouges en possession.",
+    "hi": "डिफेंसिव थर्ड, दूर वाला साइड, लाल टीम के पास गेंद।"
+   },
+   "evidence": [
+    "e00700"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0027",
+   "t_in": 853.92,
+   "t_out": 858.07,
+   "match_clock": "59:13",
+   "tc_in": "00:14:13:23",
+   "kind": "describe",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, centre, Reds. It's with Dunani.",
+    "ar": "الثلث الدفاعي، الوسط، الحمر. الكرة مع Dunani.",
+    "bg": "Защитна третина, център, Червените. Dunani с топката.",
+    "de": "Defensivdrittel, Zentrum, die Roten. Dunani am Ball.",
+    "es": "Tercio defensivo, centro, Rojos. Lo tiene Dunani.",
+    "fr": "Tiers défensif, centre, les Rouges. C'est Dunani.",
+    "hi": "डिफेंसिव थर्ड, केंद्र, लाल टीम। गेंद Dunani के पास है।"
+   },
+   "evidence": [
+    "e00701"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0028",
+   "t_in": 859.78,
+   "t_out": 863.68,
+   "match_clock": "59:19",
+   "tc_in": "00:14:19:19",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, centre, Reds.",
+    "ar": "الثلث الدفاعي، الوسط، الحمر.",
+    "bg": "Защитна третина, център, Червените.",
+    "de": "Defensivdrittel, Zentrum, die Roten.",
+    "es": "Tercio defensivo, centro, Rojos.",
+    "fr": "Tiers défensif, centre, les Rouges.",
+    "hi": "डिफेंसिव थर्ड, केंद्र, लाल टीम।"
+   },
+   "evidence": [
+    "e00702"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0029",
+   "t_in": 865.64,
+   "t_out": 869.09,
+   "match_clock": "59:25",
+   "tc_in": "00:14:25:16",
+   "kind": "describe",
+   "priority": 2,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Intercepted by Ashard! Navy have it back.",
+    "ar": "قطعها Ashard! الزرق استعادوا الكرة.",
+    "bg": "Пресечено от Ashard! Сините имат обратно.",
+    "de": "Abgefangen von Ashard! Die Blauen haben ihn zurück.",
+    "es": "¡Intercepcionado por Ashard! Los Azules lo tienen de nuevo.",
+    "fr": "Intercepté par Ashard ! Les Bleus récupèrent.",
+    "hi": "Intercepted by Ashard! नीली टीम के पास वापस है।"
+   },
+   "evidence": [
+    "e00704",
+    "e00703"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0030",
+   "t_in": 873.08,
+   "t_out": 877.53,
+   "match_clock": "59:33",
+   "tc_in": "00:14:33:02",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, near side, Navy on the ball.",
+    "ar": "الثلث الهجومي، الطرف القريب، الزرق مع الكرة.",
+    "bg": "Атакуваща третина, близка страна, Сините с топката.",
+    "de": "Angriffsdrittel, naheste Seite, die Blauen am Ball.",
+    "es": "Tercio atacante, banda cercana, Azules con el balón.",
+    "fr": "Tiers offensif, côté proche, les Bleus ont le ballon.",
+    "hi": "आक्रमण तिहाई, नजदीकी साइड, नीली टीम के पास गेंद।"
+   },
+   "evidence": [
+    "e00704"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0031",
+   "t_in": 880.52,
+   "t_out": 883.82,
+   "match_clock": "59:40",
+   "tc_in": "00:14:40:13",
+   "kind": "react",
+   "priority": 7,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Saved by Vaston! Fenford denied.",
+    "ar": "تصدي Vaston! Fenford مُحبط.",
+    "bg": "Спасен от Vaston! Fenford не успява.",
+    "de": "Gehalten von Vaston! Fenford gestoppt.",
+    "es": "¡Parado por Vaston! Fenford detenido.",
+    "fr": "Arrêt de Vaston ! Fenford arrêté.",
+    "hi": "Vaston ने बचाया! Fenford रोका गया।"
+   },
+   "evidence": [
+    "e00706",
+    "e00707"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0032",
+   "t_in": 885.24,
+   "t_out": 888.29,
+   "match_clock": "59:45",
+   "tc_in": "00:14:45:06",
+   "kind": "describe",
+   "priority": 2,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Cut out! Strandford wins it back for Navy.",
+    "ar": "تدخل! Strandford يستعيدها للزرق.",
+    "bg": "Пресечено! Strandford я печели обратно за Сините.",
+    "de": "Abgefangen! Strandford erobert ihn zurück für die Blauen.",
+    "es": "¡Cortado! Strandford lo recupera para los Azules.",
+    "fr": "Dégagé ! Strandford le reprend pour les Bleus.",
+    "hi": "काट दिया गया! Strandford ने नीली टीम के लिए जीत हासिल की।"
+   },
+   "evidence": [
+    "e00709",
+    "e00708"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0033",
+   "t_in": 889.96,
+   "t_out": 892.16,
+   "match_clock": "59:49",
+   "tc_in": "00:14:49:24",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, Navy.",
+    "ar": "الثلث الهجومي، الزرق.",
+    "bg": "Атакуваща третина, Сините.",
+    "de": "Angriffsdrittel, die Blauen.",
+    "es": "Tercio atacante, Azules.",
+    "fr": "Tiers offensif, les Bleus.",
+    "hi": "आक्रमण तिहाई, नीली टीम।"
+   },
+   "evidence": [
+    "e00709"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0034",
+   "t_in": 894.68,
+   "t_out": 897.93,
+   "match_clock": "59:54",
+   "tc_in": "00:14:54:17",
+   "kind": "describe",
+   "priority": 2,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Intercepted by Nevaro! Reds have it back.",
+    "ar": "قطعها Nevaro! الحمر استعادوا الكرة.",
+    "bg": "Пресечено от Nevaro! Червените имат обратно.",
+    "de": "Abgefangen von Nevaro! Die Roten haben ihn zurück.",
+    "es": "¡Intercepcionado por Nevaro! Los Rojos lo tienen de nuevo.",
+    "fr": "Intercepté par Nevaro ! Les Rouges reprennent.",
+    "hi": "Intercepted by Nevaro! लाल टीम के पास वापस है।"
+   },
+   "evidence": [
+    "e00712",
+    "e00711"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0035",
+   "t_in": 900.75,
+   "t_out": 908.0,
+   "match_clock": "60:00",
+   "tc_in": "00:15:00:19",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, far side, Reds in possession. Reds nil, Navy one.",
+    "ar": "الثلث الدفاعي، الطرف البعيد، الحمر يحتفظون بالكرة. الحمر صفر، الزرق واحد.",
+    "bg": "Защитна третина, далечна страна, Червените в притежание. Червените 0, Сините 1.",
+    "de": "Defensivdrittel, andere Seite, die Roten in Ballbesitz. Die Roten null, die Blauen eins.",
+    "es": "Tercio defensivo, banda lejana, los Rojos en posesión. Los Rojos cero, los Azules uno.",
+    "fr": "Tiers défensif, côté opposé, les Rouges en possession. Les Rouges zéro, les Bleus un.",
+    "hi": "डिफेंसिव थर्ड, दूर वाला साइड, लाल टीम के कब्जे में। लाल टीम 0, नीली टीम 1।"
+   },
+   "evidence": [
+    "e00713"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0036",
+   "t_in": 909.52,
+   "t_out": 911.32,
+   "match_clock": "60:09",
+   "tc_in": "00:15:09:13",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, Reds.",
+    "ar": "منتصف الملعب، الحمر.",
+    "bg": "Средна линия, Червените.",
+    "de": "Mittelfeld, die Roten.",
+    "es": "Centro del campo, Rojos.",
+    "fr": "Milieu, les Rouges.",
+    "hi": "मध्य मैदान, लाल टीम।"
+   },
+   "evidence": [
+    "e00713"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0037",
+   "t_in": 912.88,
+   "t_out": 919.28,
+   "match_clock": "60:12",
+   "tc_in": "00:15:12:22",
+   "kind": "describe",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Reds. Nevford, looking for a way forward.",
+    "ar": "منتصف الملعب، الطرف البعيد، الحمر. Nevford يحاول التقدم.",
+    "bg": "Средна линия, далечна страна, Червените. Nevford търси пробив.",
+    "de": "Mittelfeld, andere Seite, die Roten. Nevford, sucht eine Lösung nach vorn.",
+    "es": "Centro del campo, banda contraria, Rojos. Nevford buscando avanzar.",
+    "fr": "Milieu, côté opposé, les Rouges. Nevford cherche à avancer.",
+    "hi": "मध्य मैदान, दूर वाला साइड, लाल टीम। Nevford, आगे का रास्ता देख रहा है।"
+   },
+   "evidence": [
+    "e00716"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0038",
+   "t_in": 919.88,
+   "t_out": 922.43,
+   "match_clock": "60:19",
+   "tc_in": "00:15:19:22",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, Reds.",
+    "ar": "الثلث الهجومي، الحمر.",
+    "bg": "Атакуваща третина, Червените.",
+    "de": "Angriffsdrittel, die Roten.",
+    "es": "Tercio atacante, Rojos.",
+    "fr": "Tiers offensif, les Rouges.",
+    "hi": "आक्रमण तिहाई, लाल टीम।"
+   },
+   "evidence": [
+    "e00716"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0039",
+   "t_in": 923.48,
+   "t_out": 926.43,
+   "match_clock": "60:23",
+   "tc_in": "00:15:23:12",
+   "kind": "describe",
+   "priority": 2,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Intercepted by Olvros! Navy have it back.",
+    "ar": "قطعها Olvros! الزرق استعادوا الكرة.",
+    "bg": "Пресечена от Olvros! Сините имат топката обратно.",
+    "de": "Abgefangen von Olvros! Die Blauen haben ihn zurück.",
+    "es": "¡Intercepcionado por Olvros! Los Azules lo tienen de nuevo.",
+    "fr": "Intercepté par Olvros ! Les Bleus le récupèrent.",
+    "hi": "Olvros ने इंटरसेप्ट किया! नीली टीम के पास वापस है।"
+   },
+   "evidence": [
+    "e00718",
+    "e00717"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0040",
+   "t_in": 927.98,
+   "t_out": 932.78,
+   "match_clock": "60:27",
+   "tc_in": "00:15:28:00",
+   "kind": "describe",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, far side, Navy. It's with Olvros.",
+    "ar": "الثلث الدفاعي، الطرف البعيد، الزرق. الكرة مع Olvros.",
+    "bg": "Защитна третина, далечна страна, Сините. Olvros с топката.",
+    "de": "Defensivdrittel, andere Seite, die Blauen. Olvros hat den Ball.",
+    "es": "Tercio defensivo, banda contraria, Azules. Lo tiene Olvros.",
+    "fr": "Tiers défensif, côté opposé, les Bleus. C'est Olvros.",
+    "hi": "डिफेंसिव थर्ड, दूर वाला साइड, नीली टीम। गेंद Olvros के पास है।"
+   },
+   "evidence": [
+    "e00719"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0041",
+   "t_in": 934.29,
+   "t_out": 937.24,
+   "match_clock": "60:34",
+   "tc_in": "00:15:34:07",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Navy.",
+    "ar": "منتصف الملعب، الطرف البعيد، الزرق.",
+    "bg": "Средна линия, далечна страна, Сините.",
+    "de": "Mittelfeld, andere Seite, die Blauen.",
+    "es": "Centro del campo, banda contraria, Azules.",
+    "fr": "Milieu, côté opposé, les Bleus.",
+    "hi": "मध्य मैदान, दूर वाली तरफ, नीली टीम।"
+   },
+   "evidence": [
+    "e00719"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0042",
+   "t_in": 940.0,
+   "t_out": 944.25,
+   "match_clock": "60:40",
+   "tc_in": "00:15:40:00",
+   "kind": "foul",
+   "priority": 4,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Foul by Nevford... and it's a yellow card for Reds.",
+    "ar": "مخالفة من Nevford... وبطاقة صفراء للحمر.",
+    "bg": "Фаул от Nevford... и жълт картон за Червените.",
+    "de": "Foul von Nevford... und Gelb für die Roten.",
+    "es": "Falta de Nevford... y tarjeta amarilla para los Rojos.",
+    "fr": "Faute de Nevford... et c'est un carton jaune pour les Rouges.",
+    "hi": "फाउल by Nevford... और लाल टीम को येलो कार्ड।"
+   },
+   "evidence": [
+    "e00720"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0043",
+   "t_in": 950.25,
+   "t_out": 954.55,
+   "match_clock": "60:50",
+   "tc_in": "00:15:50:06",
+   "kind": "state",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Ball's out. Reds nil, Navy one, sixty minutes played.",
+    "ar": "الكرة خارج. الحمر صفر، الزرق واحد، الدقيقة ستون.",
+    "bg": "Топката вън. Червените 0, Сините 1, 60-та минута.",
+    "de": "Ball ist raus. Die Roten null, die Blauen eins, sechzig Minuten gespielt.",
+    "es": "Balón fuera. Los Rojos cero, los Azules uno, sesenta minutos jugados.",
+    "fr": "Le ballon est sorti. Les Rouges zéro, les Bleus un, soixante minutes jouées.",
+    "hi": "गेंद बाहर है। लाल टीम 0, नीली टीम 1, 60 मिनट खेल हुए।"
+   },
+   "evidence": [],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0044",
+   "t_in": 967.28,
+   "t_out": 972.03,
+   "match_clock": "61:07",
+   "tc_in": "00:16:07:07",
+   "kind": "describe",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Free kick, midfield, far side, Navy. Dunaro takes it.",
+    "ar": "الضربة الحرة، منتصف الملعب، الطرف البعيد، الزرق. Dunaro ينفذ.",
+    "bg": "Свободен удар, средна линия, далечна страна, Сините. Dunaro изпълнява.",
+    "de": "Freistoß, Mittelfeld, andere Seite, die Blauen. Dunaro führt aus.",
+    "es": "Tiro libre, centro del campo, banda contraria, Azules. Dunaro lo ejecuta.",
+    "fr": "Coup franc, milieu, côté opposé, les Bleus. Dunaro le tire.",
+    "hi": "फ्री किक, मध्य मैदान, दूर वाला साइड, नीली टीम। Dunaro ले रहा है।"
+   },
+   "evidence": [
+    "e00721"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0045",
+   "t_in": 975.0,
+   "t_out": 981.1,
+   "match_clock": "61:15",
+   "tc_in": "00:16:15:00",
+   "kind": "describe",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Navy. Kelski, looking for a way forward.",
+    "ar": "منتصف الملعب، الطرف البعيد، الزرق. Kelski يحاول التقدم.",
+    "bg": "Средна линия, далечна страна, Сините. Kelski търси пробив.",
+    "de": "Mittelfeld, andere Seite, die Blauen. Kelski, sucht eine Lösung.",
+    "es": "Centro del campo, banda contraria, Azules. Kelski buscando avanzar.",
+    "fr": "Milieu, côté opposé, les Bleus. Kelski cherche à avancer.",
+    "hi": "मध्य मैदान, दूर वाला साइड, नीली टीम। Kelski, आगे का रास्ता देख रहा है।"
+   },
+   "evidence": [
+    "e00724"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0046",
+   "t_in": 983.52,
+   "t_out": 990.52,
+   "match_clock": "61:23",
+   "tc_in": "00:16:23:13",
+   "kind": "describe",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, far side, Navy. Olvholm, looking for a way forward.",
+    "ar": "الثلث الهجومي، الطرف البعيد، الزرق. Olvholm يحاول الاختراق.",
+    "bg": "Атакуваща третина, далечна страна, Сините. Olvholm търси пробив.",
+    "de": "Angriffsdrittel, andere Seite, die Blauen. Olvholm, sucht eine Lösung.",
+    "es": "Tercio atacante, banda contraria, Azules. Olvholm buscando avanzar.",
+    "fr": "Tiers offensif, côté opposé, les Bleus. Olvholm cherche à passer.",
+    "hi": "आक्रमण तिहाई, दूर वाला साइड, नीली टीम। Olvholm, आगे का रास्ता देख रहा है।"
+   },
+   "evidence": [
+    "e00726"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0047",
+   "t_in": 992.08,
+   "t_out": 994.28,
+   "match_clock": "61:32",
+   "tc_in": "00:16:32:02",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, Navy.",
+    "ar": "الثلث الهجومي، الزرق.",
+    "bg": "Атакуваща третина, Сините.",
+    "de": "Angriffsdrittel, die Blauen.",
+    "es": "Tercio atacante, Azules.",
+    "fr": "Tiers offensif, les Bleus.",
+    "hi": "आक्रमण तिहाई, नीली टीम।"
+   },
+   "evidence": [
+    "e00726"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0048",
+   "t_in": 996.64,
+   "t_out": 1000.89,
+   "match_clock": "61:36",
+   "tc_in": "00:16:36:16",
+   "kind": "describe",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, far side, Navy. Fenford has it.",
+    "ar": "الثلث الهجومي، الطرف البعيد، الزرق. Fenford مع الكرة.",
+    "bg": "Атакуваща третина, далечна страна, Сините. Fenford е с топката.",
+    "de": "Angriffsdrittel, andere Seite, die Blauen. Fenford hat ihn.",
+    "es": "Tercio atacante, banda contraria, Azules. Fenford la tiene.",
+    "fr": "Tiers offensif, côté opposé, les Bleus. Fenford le tient.",
+    "hi": "आक्रमण तिहाई, दूर वाला साइड, नीली टीम। Fenford के पास है।"
+   },
+   "evidence": [
+    "e00727"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0049",
+   "t_in": 1002.4,
+   "t_out": 1006.25,
+   "match_clock": "61:42",
+   "tc_in": "00:16:42:10",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, far side, Navy.",
+    "ar": "الثلث الهجومي، الطرف البعيد، الزرق.",
+    "bg": "Атакуваща третина, далечна страна, Сините.",
+    "de": "Angriffsdrittel, andere Seite, die Blauen.",
+    "es": "Tercio atacante, banda contraria, Azules.",
+    "fr": "Tiers offensif, côté opposé, les Bleus.",
+    "hi": "आक्रमण तिहाई, दूर वाला साइड, नीली टीम।"
+   },
+   "evidence": [
+    "e00728"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0050",
+   "t_in": 1007.76,
+   "t_out": 1010.76,
+   "match_clock": "61:47",
+   "tc_in": "00:16:47:19",
+   "kind": "describe",
+   "priority": 2,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Cut out! Nevaro wins it back for Reds.",
+    "ar": "تدخل! Nevaro يستعيدها للحمر.",
+    "bg": "Пресечено! Nevaro я връща за Червените.",
+    "de": "Abgewehrt! Nevaro erobert ihn zurück für die Roten.",
+    "es": "¡Cortado! Nevaro lo recupera para los Rojos.",
+    "fr": "Dégagé ! Nevaro le reprend pour les Rouges.",
+    "hi": "काट दिया गया! Nevaro ने लाल टीम के लिए वापसी जीती।"
+   },
+   "evidence": [
+    "e00732",
+    "e00731"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0051",
+   "t_in": 1012.48,
+   "t_out": 1018.18,
+   "match_clock": "61:52",
+   "tc_in": "00:16:52:12",
+   "kind": "describe",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, centre, Reds. Nevaro, looking for a way forward.",
+    "ar": "الثلث الدفاعي، الوسط، الحمر. Nevaro يحاول التقدم.",
+    "bg": "Защитна третина, център, Червените. Nevaro търси пробив.",
+    "de": "Defensivdrittel, Zentrum, die Roten. Nevaro, sucht eine Lösung nach vorn.",
+    "es": "Tercio defensivo, centro, Rojos. Nevaro buscando avanzar.",
+    "fr": "Tiers défensif, centre, les Rouges. Nevaro cherche à relancer.",
+    "hi": "डिफेंसिव थर्ड, केंद्र, लाल टीम। Nevaro, आगे का रास्ता देख रहा है।"
+   },
+   "evidence": [
+    "e00733"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0052",
+   "t_in": 1020.64,
+   "t_out": 1025.04,
+   "match_clock": "62:00",
+   "tc_in": "00:17:00:16",
+   "kind": "describe",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, far side, Reds. Dunani has it.",
+    "ar": "الثلث الدفاعي، الطرف البعيد، الحمر. Dunani مع الكرة.",
+    "bg": "Защитна третина, далечна страна, Червените. Dunani с топката.",
+    "de": "Defensivdrittel, andere Seite, die Roten. Dunani hat ihn.",
+    "es": "Tercio defensivo, banda contraria, Rojos. Dunani con el balón.",
+    "fr": "Tiers défensif, côté opposé, les Rouges. Dunani a le ballon.",
+    "hi": "डिफेंसिव थर्ड, दूर वाला साइड, लाल टीम। Dunani पास पर।"
+   },
+   "evidence": [
+    "e00734"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0053",
+   "t_in": 1028.28,
+   "t_out": 1032.03,
+   "match_clock": "62:08",
+   "tc_in": "00:17:08:07",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, far side, Reds.",
+    "ar": "الثلث الدفاعي، الطرف البعيد، الحمر.",
+    "bg": "Защитна третина, далечна страна, Червените.",
+    "de": "Defensivdrittel, andere Seite, die Roten.",
+    "es": "Tercio defensivo, banda contraria, Rojos.",
+    "fr": "Tiers défensif, côté opposé, les Rouges.",
+    "hi": "डिफेंसिव थर्ड, दूर वाला साइड, लाल टीम।"
+   },
+   "evidence": [
+    "e00734"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0054",
+   "t_in": 1035.92,
+   "t_out": 1040.12,
+   "match_clock": "62:15",
+   "tc_in": "00:17:15:23",
+   "kind": "describe",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Reds. Ashski on the ball.",
+    "ar": "منتصف الملعب، الطرف البعيد، الحمر. Ashski مع الكرة.",
+    "bg": "Средна линия, далечна страна, Червените. Ashski с топката.",
+    "de": "Mittelfeld, andere Seite, die Roten. Ashski am Ball.",
+    "es": "Centro del campo, banda contraria, Rojos. Ashski con el balón.",
+    "fr": "Milieu, côté opposé, les Rouges. Ashski sur le ballon.",
+    "hi": "मध्य मैदान, दूर वाला साइड, लाल टीम। Ashski पास पर।"
+   },
+   "evidence": [
+    "e00737"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0055",
+   "t_in": 1040.78,
+   "t_out": 1044.58,
+   "match_clock": "62:20",
+   "tc_in": "00:17:20:20",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, far side, Reds with the ball.",
+    "ar": "الثلث الهجومي، الطرف البعيد، الحمر مع الكرة.",
+    "bg": "Атакуваща третина, далечна страна, Червените с топката.",
+    "de": "Angriffsdrittel, andere Seite, die Roten mit dem Ball.",
+    "es": "Tercio atacante, banda contraria, Rojos con el balón.",
+    "fr": "Tiers offensif, côté opposé, les Rouges ont le ballon.",
+    "hi": "आक्रमण तिहाई, दूर वाला साइड, लाल टीम के पास गेंद।"
+   },
+   "evidence": [
+    "e00737"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0056",
+   "t_in": 1045.44,
+   "t_out": 1051.14,
+   "match_clock": "62:25",
+   "tc_in": "00:17:25:11",
+   "kind": "describe",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, far side, Reds. Nevford, looking for a way forward.",
+    "ar": "الثلث الهجومي، الطرف البعيد، الحمر. Nevford يحاول التقدم.",
+    "bg": "Атакуваща третина, далечна страна, Червените. Nevford търси пробив.",
+    "de": "Angriffsdrittel, andere Seite, die Roten. Nevford, sucht eine Lösung nach vorn.",
+    "es": "Tercio atacante, banda contraria, Rojos. Nevford buscando avanzar.",
+    "fr": "Tiers offensif, côté opposé, les Rouges. Nevford cherche à avancer.",
+    "hi": "आक्रमण तिहाई, दूर वाला साइड, लाल टीम। Nevford, आगे का रास्ता देख रहा है।"
+   },
+   "evidence": [
+    "e00738"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0057",
+   "t_in": 1054.44,
+   "t_out": 1060.24,
+   "match_clock": "62:34",
+   "tc_in": "00:17:34:11",
+   "kind": "describe",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, centre, Reds. Ashski on the ball.",
+    "ar": "الثلث الهجومي، الوسط، الحمر. Ashski مع الكرة.",
+    "bg": "Атакуваща третина, център, Червените. Ashski с топката.",
+    "de": "Angriffsdrittel, Zentrum, die Roten. Ashski am Ball.",
+    "es": "Tercio atacante, centro, Rojos. Ashski con el balón.",
+    "fr": "Tiers offensif, centre, les Rouges. Ashski a le ballon.",
+    "hi": "आक्रमण तिहाई, केंद्र, लाल टीम। Ashski पास पर।"
+   },
+   "evidence": [
+    "e00739"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0058",
+   "t_in": 1063.2,
+   "t_out": 1066.15,
+   "match_clock": "62:43",
+   "tc_in": "00:17:43:05",
+   "kind": "build",
+   "priority": 5,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Reds... Orlani... danger!",
+    "ar": "الحمر... Orlani... خطِر!",
+    "bg": "Червените... Orlani... опасност!",
+    "de": "Die Roten... Orlani... Gefahr!",
+    "es": "Rojos... Orlani... ¡peligro!",
+    "fr": "Les Rouges... Orlani... danger !",
+    "hi": "लाल टीम... Orlani... खतरा!"
+   },
+   "evidence": [
+    "e00740",
+    "e00739"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0059",
+   "t_in": 1067.44,
+   "t_out": 1069.84,
+   "match_clock": "62:47",
+   "tc_in": "00:17:47:11",
+   "kind": "react",
+   "priority": 7,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Blocked! Rilford gets in the way.",
+    "ar": "تصدى! Rilford اعترض الطريق.",
+    "bg": "Блокиран! Rilford се намесва.",
+    "de": "Abgeblockt! Rilford stellt sich rein.",
+    "es": "¡Bloqueado! Rilford se interpone.",
+    "fr": "Bloqué ! Rilford s'interpose.",
+    "hi": "बंद कर दिया गया! Rilford ने रास्ता रोका।"
+   },
+   "evidence": [
+    "e00740",
+    "e00741"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0060",
+   "t_in": 1074.24,
+   "t_out": 1078.39,
+   "match_clock": "62:54",
+   "tc_in": "00:17:54:06",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, centre, Navy.",
+    "ar": "الثلث الدفاعي، الوسط، الزرق.",
+    "bg": "Защитна третина, център, Сините.",
+    "de": "Defensivdrittel, Zentrum, die Blauen.",
+    "es": "Tercio defensivo, centro, Azules.",
+    "fr": "Tiers défensif, centre, les Bleus.",
+    "hi": "डिफेंसिव थर्ड, केंद्र, नीली टीम।"
+   },
+   "evidence": [
+    "e00742"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0061",
+   "t_in": 1081.04,
+   "t_out": 1084.79,
+   "match_clock": "63:01",
+   "tc_in": "00:18:01:01",
+   "kind": "describe",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, centre, Navy. It's with Galic.",
+    "ar": "الثلث الدفاعي، الوسط، الزرق. الكرة مع Galic.",
+    "bg": "Защитна третина, център, Сините. Galic е с топката.",
+    "de": "Defensivdrittel, Zentrum, die Blauen. Galic hat den Ball.",
+    "es": "Tercio defensivo, centro, Azules. Lo tiene Galic.",
+    "fr": "Tiers défensif, centre, les Bleus. C'est Galic.",
+    "hi": "डिफेंसिव थर्ड, केंद्र, नीली टीम। गेंद Galic के पास है।"
+   },
+   "evidence": [
+    "e00743"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0062",
+   "t_in": 1087.56,
+   "t_out": 1092.61,
+   "match_clock": "63:07",
+   "tc_in": "00:18:07:14",
+   "kind": "describe",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, centre, Navy. Galic on the ball.",
+    "ar": "الثلث الدفاعي، الوسط، الزرق. Galic مع الكرة.",
+    "bg": "Защитна третина, център, Сините. Galic с топката.",
+    "de": "Defensivdrittel, Zentrum, die Blauen. Galic am Ball.",
+    "es": "Tercio defensivo, centro, Azules. Galic con el balón.",
+    "fr": "Tiers défensif, centre, les Bleus. Galic a le ballon.",
+    "hi": "डिफेंसिव थर्ड, केंद्र, नीली टीम। Galic पास पर।"
+   },
+   "evidence": [
+    "e00745"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0063",
+   "t_in": 1093.78,
+   "t_out": 1096.18,
+   "match_clock": "63:13",
+   "tc_in": "00:18:13:19",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Defensive third, Navy.",
+    "ar": "الثلث الدفاعي، الزرق.",
+    "bg": "Защитна третина, Сините.",
+    "de": "Defensivdrittel, die Blauen.",
+    "es": "Tercio defensivo, Azules.",
+    "fr": "Tiers défensif, les Bleus.",
+    "hi": "डिफेंसिव थर्ड, नीली टीम।"
+   },
+   "evidence": [
+    "e00746"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0064",
+   "t_in": 1096.8,
+   "t_out": 1100.9,
+   "match_clock": "63:16",
+   "tc_in": "00:18:16:20",
+   "kind": "describe",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Navy. Kelski on the ball.",
+    "ar": "منتصف الملعب، الطرف البعيد، الزرق. Kelski مع الكرة.",
+    "bg": "Средна линия, далечна страна, Сините. Kelski с топката.",
+    "de": "Mittelfeld, andere Seite, die Blauen. Kelski am Ball.",
+    "es": "Centro del campo, banda contraria, Azules. Kelski con el balón.",
+    "fr": "Milieu, côté opposé, les Bleus. Kelski sur le ballon.",
+    "hi": "मध्य मैदान, दूर वाला साइड, नीली टीम। Kelski पास पर।"
+   },
+   "evidence": [
+    "e00747"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0065",
+   "t_in": 1104.56,
+   "t_out": 1107.26,
+   "match_clock": "63:24",
+   "tc_in": "00:18:24:14",
+   "kind": "describe",
+   "priority": 2,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Cut out! Morani wins it back for Reds.",
+    "ar": "تدخل! Morani يستعيدها للحمر.",
+    "bg": "Пресечено! Morani я печели обратно за Червените.",
+    "de": "Abgefangen! Morani erobert ihn zurück für die Roten.",
+    "es": "¡Cortado! Morani lo recupera para los Rojos.",
+    "fr": "Dégagé ! Morani le reprend pour les Rouges.",
+    "hi": "काट दिया गया! Morani ने लाल टीम के लिए वापसी जीती।"
+   },
+   "evidence": [
+    "e00749",
+    "e00748"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0066",
+   "t_in": 1113.48,
+   "t_out": 1116.53,
+   "match_clock": "63:33",
+   "tc_in": "00:18:33:12",
+   "kind": "describe",
+   "priority": 2,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Intercepted by Olvholm! Navy have it back.",
+    "ar": "قطعها Olvholm! الزرق استعادوا الكرة.",
+    "bg": "Пресечена от Olvholm! Сините я връщат.",
+    "de": "Abgefangen von Olvholm! Die Blauen haben ihn zurück.",
+    "es": "¡Intercepcionado por Olvholm! Los Azules lo tienen de nuevo.",
+    "fr": "Intercepté par Olvholm ! Les Bleus récupèrent.",
+    "hi": "Intercepted by Olvholm! नीली टीम के पास वापस है।"
+   },
+   "evidence": [
+    "e00751",
+    "e00750"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0067",
+   "t_in": 1120.6,
+   "t_out": 1123.7,
+   "match_clock": "63:40",
+   "tc_in": "00:18:40:15",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Navy keeping it.",
+    "ar": "منتصف الملعب، الطرف البعيد، الزرق يحافظون على الكرة.",
+    "bg": "Средна линия, далечна страна, Сините задържат.",
+    "de": "Mittelfeld, andere Seite, die Blauen behalten den Ball.",
+    "es": "Centro del campo, banda contraria, Azules manteniéndolo.",
+    "fr": "Milieu, côté opposé, les Bleus qui gardent.",
+    "hi": "मध्य मैदान, दूर वाला साइड, नीली टीम गेंद रख रही है।"
+   },
+   "evidence": [
+    "e00752"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0068",
+   "t_in": 1127.72,
+   "t_out": 1132.37,
+   "match_clock": "63:47",
+   "tc_in": "00:18:47:18",
+   "kind": "describe",
+   "priority": 1,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Midfield, far side, Navy. It's with Olvros.",
+    "ar": "منتصف الملعب، الطرف البعيد، الزرق. الكرة مع Olvros.",
+    "bg": "Средна линия, далечна страна, Сините. Olvros с топката.",
+    "de": "Mittelfeld, andere Seite, die Blauen. Olvros hat den Ball.",
+    "es": "Centro del campo, banda contraria, Azules. Lo tiene Olvros.",
+    "fr": "Milieu, côté opposé, les Bleus. C'est Olvros.",
+    "hi": "मध्य मैदान, दूर वाला साइड, नीली टीम। गेंद Olvros के पास है।"
+   },
+   "evidence": [
+    "e00753"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0069",
+   "t_in": 1134.0,
+   "t_out": 1137.85,
+   "match_clock": "63:54",
+   "tc_in": "00:18:54:00",
+   "kind": "ball",
+   "priority": 0,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "none",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Attacking third, far side, Navy keeping it.",
+    "ar": "الثلث الهجومي، الطرف البعيد، الزرق يحافظون عليها.",
+    "bg": "Атакуваща третина, далечна страна, Сините задържат.",
+    "de": "Angriffsdrittel, andere Seite, die Blauen behalten ihn.",
+    "es": "Tercio atacante, banda contraria, Azules manteniéndolo.",
+    "fr": "Tiers offensif, côté opposé, les Bleus qui tiennent le ballon.",
+    "hi": "आक्रमण तिहाई, दूर वाला साइड, नीली टीम गेंद रख रही है।"
+   },
+   "evidence": [
+    "e00753"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  },
+  {
+   "cue_id": "c_0070",
+   "t_in": 1140.28,
+   "t_out": 1141.68,
+   "match_clock": "64:00",
+   "tc_in": "00:19:00:07",
+   "kind": "react",
+   "priority": 7,
+   "layout": "audio",
+   "anchor": null,
+   "metric": "tension",
+   "reveal": "outcome",
+   "score": {
+    "Reds": 0,
+    "Navy": 1
+   },
+   "text": {
+    "en": "Wide from Kelski!",
+    "ar": "بعيد عن المرمى Kelski!",
+    "bg": "В аут Kelski!",
+    "de": "Weit vorbei von Kelski!",
+    "es": "¡Fuera de Kelski!",
+    "fr": "Faute de Kelski, à côté !",
+    "hi": "Kelski का शॉट चौड़ा!"
+   },
+   "evidence": [
+    "e00754"
+   ],
+   "truth_check": "pass",
+   "spoiler_check": "pass"
+  }
+ ]
+}
