@@ -262,6 +262,27 @@ def planted_section(pl: dict | None) -> list[str]:
     return out
 
 
+def speed_section(sp: dict | None) -> list[str]:
+    """D35: eval/speed.json (python -m tely.eval.speed): scheduled on the cut, and heard in the browser."""
+    out = ["## Speed (eval/speed.json)", ""]
+    if not sp:
+        return out + ["Not run yet: `python -m tely.eval.speed`.", ""]
+    s, h = sp["scheduled"], sp["heard_in_browser"]
+    out += table(["Moment", "Scheduled on the judge cut", "Notes"], [
+        ["Event -> its commentary line starts", f"p50 {s['description_after_event_s']['p50']} s, p95 "
+         f"{s['description_after_event_s']['p95']} s", f"{s['description_after_event_s']['n']} described events"],
+        ["Outcome revealed -> the reaction line starts", f"p50 {s['reaction_after_reveal_s']['p50']} s, p95 "
+         f"{s['reaction_after_reveal_s']['p95']} s", f"{s['reaction_after_reveal_s']['n']} reactions; a reaction waits for the reveal"],
+        ["Goal confirmed -> crowd roar", f"{s['goal_to_crowd_roar_s']['max']} s", "on the audio clock, at the reveal"],
+        ["Goal confirmed -> phone vibration", f"{s['goal_to_vibration_s']['max']} s", "same moment, timer against the audio clock"],
+        ["Build-up line -> the shot", f"{s['build_up_before_shot_s']['p50']} s before", "the look-ahead"],
+    ])
+    out += ["", f"**Heard in the browser** ({', '.join(h['source'])}, {h['lines']} lines): each line's first audible "
+            f"output against its due time, median {' / '.join(map(str, h['median_lag_ms']))} ms, 90th percentile "
+            f"{' / '.join(map(str, h['p90_abs_lag_ms']))} ms. So an event's commentary is heard about 0.1 s after it.", ""]
+    return out
+
+
 def build(here: Path = HERE) -> str:
     a, qa, listening = load(here / "report.json"), load(here / "qa.json"), load(here / "listening.json")
     out = ["# Tely: evaluation report", "",
@@ -272,6 +293,7 @@ def build(here: Path = HERE) -> str:
     out += generic(qa, "Q&A eval (Person B, eval/qa.json)") if qa is not None else [
         "## Q&A eval (Person B)", "", "Not yet: `eval/qa.json` is not in the repo.", ""]
     out += planted_section(load(here / "planted.json"))
+    out += speed_section(load(here / "speed.json"))
     out += listening_section(listening)
     return "\n".join(out).rstrip() + "\n"
 
@@ -282,7 +304,7 @@ def merged(here: Path = HERE) -> dict | None:
     if a is None:
         return None
     return {**a, "qa": load(here / "qa.json"), "listening": load(here / "listening.json"),
-            "planted_errors": load(here / "planted.json")}
+            "planted_errors": load(here / "planted.json"), "speed": load(here / "speed.json")}
 
 
 def main() -> int:
