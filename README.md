@@ -1,8 +1,8 @@
 # Tely
 
-**A seat in the stands for football fans who can't see the pitch.** A reactive crowd, a ball you can hear move, a
+**A seat in the stands for football fans who can't see the pitch.** A crowd at each end that follows the ball, a
 heartbeat on your phone, and an AI commentator whose voice builds *before* the big chance, because the pipeline already
-knows it's coming. And you can ask that commentator, out loud, "where's the ball?" at any moment.
+knows it's coming. You can ask that commentator, out loud and in seven languages, "where's the ball?" at any moment.
 
 [![Demo uptime](https://github.com/nikikrustev/BerbataAI/actions/workflows/uptime.yml/badge.svg)](https://github.com/nikikrustev/BerbataAI/actions/workflows/uptime.yml)
 [![CI incl. WCAG 2.2 AA axe tests](https://github.com/nikikrustev/BerbataAI/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/nikikrustev/BerbataAI/actions/workflows/ci.yml)
@@ -11,7 +11,8 @@ knows it's coming. And you can ask that commentator, out loud, "where's the ball
 **Category: Best Use of Microsoft Foundry.** Team Berbata AI, for the Inside the Game hackathon (Microsoft × Premier League).
 
 - **Live demo (no login, no backend needed for the match):** https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/
-- **Demo video (1:52):** _link added at submission (Stage 9b)_
+- **Demo video (under 2 min):** >>> YOUTUBE URL GOES HERE <<<
+- **Judges:** add `?radar=1` to see the sound radar and the Director's notes; `?view=laptop` shows the keys.
 - **Synthetic match, real pipeline.** Fictional clubs (Reds and Navy), fictional players, AI voices. No real match data.
 
 ## Judges' quick path (60 s)
@@ -52,8 +53,8 @@ hackathon entry or product we found combines a look-ahead commentator, a reactiv
 | **Ingest** | A seeded match generator plays a whole synthetic match: CDF v0.3.2 events, the ball at 25 Hz and all 22 players at 5 Hz. The judge cut is 8 minutes of the second half (56:10–64:10, seed 24): a goal with a VAR check, a save, a block, a yellow card. | `pipeline/tely/generator.py`, `movement.py`, `judge_cut.py`, `build_match.py` | Python, numpy |
 | **Interpret** | Per second: win probability, suspense, tension, danger, and the crowd's mood at each end. Per event: xG, priority, zone, and the words a commentator may say before and after the outcome. | `interpret.py`, `crowd.py`, `haptics.py` | Python |
 | **Explain** | The **Director** agent sees the next 10 s and returns only a tension plan. The **Commentator** turns facts plus that plan into lines; the **Verifier** checks every number against the truth and every word for spoilers. | `agents/`, `commentary/` | **Microsoft Agent Framework**, **Foundry** (gpt-5-mini), Application Insights |
-| **Render** | Each line is pre-rendered in an **Azure Speech HD voice** (Brian). In the browser, Web Audio plays a crowd per end, a ball rattle panned left to right, sound icons for passes, shots and whistles, and ducks the crowd under the voice. Captions (SDH) and descriptions ship as WebVTT. | `commentary/tts.py`, `web/src/audio/`, `web/src/lane-a/commentary-track.ts` | **Azure Speech**, **Azure Static Web Apps** |
-| **Personalise** | Pick your end (Reds or Navy), crowd level, vibration (off, key moments, or heartbeat too), Bluetooth delay calibration, a 2-minute "learn the sounds" tour. **Ask**: four offline presets, or a spoken question answered live; "turn the crowd down" works by voice too. | `web/src/settings.ts`, `web/src/ask/`, `web/src/lane-a/live-ask.ts`, `relay/` | **Foundry Voice Live**, **Azure Container Apps** |
+| **Render** | Each line is pre-rendered in an **Azure Speech HD voice** (Brian), and in **BrianMultilingual** for Bulgarian, Spanish, Arabic, French, German and Hindi. In the browser, Web Audio plays a crowd per end whose nearer end lifts with the ball, sound icons for passes, shots and whistles panned by where they happen, and ducks the crowd under the voice. The same timed lines ship machine-readable for any other renderer: [`overlays.json`](https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/replay/v1/judge/overlays.json) (every language, the score, layout and verifier verdicts per line), SDH captions and a WebVTT description track per language. | `commentary/tts.py`, `commentary/languages.py`, `render_out.py`, `web/src/audio/` | **Azure Speech**, **Azure Static Web Apps** |
+| **Personalise** | Your end (Reds or Navy), **seven languages**, **detail** (full radio or key moments only), **screen-reader mode** (your own screen reader reads each line at your speed), **one-ear mode** (mono, with a position tone), **follow a player**, **low-data mode**, vibration (off, key moments, heartbeat), every sound on a 0–100 mixer a helper sets once, Bluetooth delay calibration, a "learn the sounds" tour. **Ask**: five offline quick questions (incl. *What did I miss?* and *Recap so far*), or any question out loud; "turn the whistle down by 5", "speak Spanish", "follow Olvholm" work by voice too. | `web/src/settings.ts`, `web/src/ask/`, `web/src/lane-a/`, `relay/` | **Foundry Voice Live**, **Azure Container Apps** |
 
 ## Architecture (what shipped)
 
@@ -97,14 +98,19 @@ better, and build the agents so that it can't leak:
 | **Verifier** | Every line and every plan | Pass, or a fallback: any failure (timeout, quota, bad JSON, a failed check) drops that window to the rules Director, which is the MVP's output byte for byte | Code |
 | **Q&A (live)** | Only the playhead the fan pressed at, injected by the relay. The model never sets the clock. | Spoken answers in the commentary voice, 1–2 sentences, no predictions, no betting | Foundry Voice Live (`gpt-realtime-2.1-mini`), tools from `tely.qa` |
 
-**The 8 Q&A tools** (`pipeline/tely/qa/`): `get_score_and_clock`, `get_ball_position`, `where_is`,
-`get_player_stats`, `get_last_events`, `explain_moment`, `what_did_i_miss`, `set_preferences`. Each is clamped to the
+**The 11 Q&A tools** (`pipeline/tely/qa/`): `get_score_and_clock`, `get_ball_position`, `where_is`,
+`get_player_stats`, `get_last_events`, `explain_moment`, `what_did_i_miss`, `get_recap`, `set_preferences` (vibration,
+crowd, detail, follow a player), `adjust_sound` and `set_language`. Each is clamped to the
 playhead; a property test checks 200 random playheads for evidence from the future. The same tools power the offline
 presets (a keyword router, no LLM), the live voice (Voice Live function calls) and the **Stats MCP server** (MCP SDK,
 streamable HTTP, mounted at `/mcp` on the relay; `.vscode/mcp.json` lists it next to the Azure MCP Server).
 
 If you ask during a build-up, the commentator says "Hold that thought, watch this!": it tells you *that* something is
-coming, never *what*.
+coming, never *what*. Press Ask again mid-answer and it stops at once (65–206 ms, measured in a phone-sized browser, D24).
+
+**Director's notes.** With `?radar=1`, a panel shows what the agents decided for each build-up (the plan, what the
+rules Director would have said, the latency, the Verifier's verdicts) and the tools Voice Live called for each Ask,
+each note only after its moment has played ([D33](docs/DECISIONS.md)).
 
 ## Results (measured)
 
@@ -123,7 +129,14 @@ Judge cut, voice `en-US-Brian:DragonHDLatestNeural`, Director `gpt-5-mini`, meas
 | Live latency: end of question → first answer audio | **p50 1.14 s**, p95 1.82 s | to the first audio after the tool results: p50 2.66 s, p95 3.35 s |
 | Offline Q&A router | 31/31 correct, 0 leaks | answer 18/18, clarify 4/4, redirect 2/2, refuse 7/7 |
 | Accessibility CI | axe, WCAG 2.0/2.1/2.2 A and AA tags, 3 viewports, with and without reduced motion, light and dark | must pass with zero violations ([CI](https://github.com/nikikrustev/BerbataAI/actions/workflows/ci.yml)) |
-| Eyes-closed listening test | **TODO: not run yet** | Protocol: [`eval/listening_test.md`](eval/listening_test.md). Results go here and in `eval/report.md` once `eval/listening_test.csv` is filled in; no numbers until then. |
+| **Planted errors caught** (names, scores, minutes, invented numbers, outcome words) | **148/148** commentary, **1015/1015** answers | 0/70 clean lines and 0/413 clean answers blocked; thresholds committed before the first run; Verifier off: 0/1163 caught ([D32](docs/DECISIONS.md)) |
+| Director handed the outcome | input byte-identical **4/4**; outcome-carrying replies rejected **8/8** | the spoiler ablation |
+| Planted errors as a Foundry evaluation | 6/6 planted scored below 1.0, 4/4 clean scored 1.0 | same scores as the local grader |
+| Event → its commentary line (scheduled) | p50 **0.0 s**, p95 0.0 s | 33 events; reactions wait for the outcome: p50 0.0 s, p95 2.52 s after it |
+| Goal confirmed → crowd roar, vibration | **0.0 s** | scheduled on the audio clock at the reveal |
+| Commentary heard vs due, in the browser | median **84 / 82 ms**, p90 123 ms | 747 lines, both halves in real time (soak, D24) |
+| Translated lines through the spoiler firewall in their own language | 6 × 70, **0** leaks | it caught one real leak in Arabic before we shipped this check ([D29](docs/DECISIONS.md)) |
+| Eyes-closed listening test | **not run yet** | Protocol: [`eval/listening_test.md`](eval/listening_test.md). No numbers until `eval/listening_test.csv` is filled in. |
 
 **Honest limits.**
 - **Spoiler lift is not meaningful yet:** P(goal | build-up) = 0.5 against mean xG 0.15, but n = 2. It needs many seeds.
@@ -139,7 +152,8 @@ Judge cut, voice `en-US-Brian:DragonHDLatestNeural`, Director `gpt-5-mini`, meas
   The targets are published league averages ([file 02](stoynev%20research/02-synthetic-match-data.md),
   [file 19](stoynev%20research/19-realistic-player-movement.md)); they only set the ranges we check against, and no real
   match data goes into the generator.
-- **One detail level ships: Radio** (the ball and key moments). Describer and Calm were cut ([D18](docs/DECISIONS.md)).
+- **Two detail levels, not three:** Full radio and Key moments only ([D30](docs/DECISIONS.md)); a Describer level was cut (D18).
+- **Page words are English.** The commentary, the answers and the live voice speak seven languages; the buttons don't yet.
 - **Not yet tested with blind users.** Tely is designed from published research with blind and partially sighted
   football fans (RNIB 2022–23, Level Playing Field, UEFA/CAFE guidance). Our next step is testing with blind fans.
 
@@ -234,10 +248,10 @@ trailer even though they came from Claude Code sessions. Recount with
 ## What's next
 
 - **Test with blind and partially sighted fans**, paid and one to one, repeating RNIB's two-clip design.
-- The **Describer** and **Calm** detail levels (D18).
+- Spoken half-time recaps on a full-match bundle (the judge cut has no half-time), and the page's own words in every language.
 - A **live** path instead of the replay: Event Hubs → a Container Apps worker → Web PubSub.
 - Personalisation that follows you between devices (Cosmos DB); settings live in the browser today.
-- Bulgarian commentary; game-controller rumble; a "point your phone to listen" mode; native iPhone haptics (AHAP).
+- Native-speaker review of every language; game-controller rumble; native iPhone haptics (AHAP).
 
 ## Team
 

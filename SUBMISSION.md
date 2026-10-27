@@ -11,30 +11,30 @@
 
 ## Judges: hear it in under 60 seconds
 
-Open the demo link above in Chrome or Edge, with headphones if you have them.
+Open the demo link in Chrome or Edge, with headphones if you have them.
 
 1. Press **Start** (or Space). About 5 s in, the voice builds ("Navy coming... Olvholm... here's a chance!") four seconds *before* the header, and the crowd rises with it.
-2. Press **Ask the commentator** (or Enter), wait for the beep and ask out loud: "What's the score?", "Where's the ball?", "Who wins?" (it won't tell you). Press it again mid-answer and it stops at once.
-3. Say "speak Spanish" (or pick **Commentator language** in **Setup**): the answers and the match commentary switch language mid-match.
+2. Press **Ask the commentator** (or Enter), wait for the beep and ask out loud: "What's the score?", "Who wins?" (it won't tell you). Press it again mid-answer and it stops.
+3. Say "speak Spanish": the answers and the match switch language. Below the radar, **Director's notes** show what the agents decided, after each moment.
 
-The live relay sleeps when idle. If the first question says live questions aren't available, wait 30 s and ask again; **Quick questions** works offline.
+If the first question says live questions aren't available, the relay was asleep: wait 30 s and ask again. **Quick questions** work offline.
 
 ## The problem
 
-In RNIB's 2022 research, blind and partially sighted fans scored ordinary TV football commentary 6.1 out of 15. They want one voice that says where the ball is, in real time, and they hate the lag: the crowd roars before the description says why. What they have today is one-way and the same for everyone.
+In RNIB's 2022 research, blind and partially sighted fans scored ordinary TV football commentary 6.1 out of 15. They want one voice that says where the ball is, in real time, and they hate the lag. What they have today is one-way and the same for everyone.
 
 ## What it does
 
-Tely generates the crowd, the commentary and the vibration **from one event stream**, so they can't drift apart.
+The crowd, the commentary and the vibration come **from one event stream**, so they can't drift apart.
 
-- **A look-ahead commentator.** Our Director agent sees the next 10 s the fan hasn't heard yet and builds the voice before the chance. A **spoiler firewall** keeps it honest: the Director never sees the outcome and outputs only a tension plan, and code checks every line for truth and spoilers.
-- **A crowd at each end** that reacts to the play, and lifts at the end nearest the ball, so the fan hears where play is. The commentary puts the ball first, every few seconds.
-- **Ask by voice** (Foundry Voice Live) in the commentator's own voice, with **press-to-interrupt**. The relay injects the playhead, so the model can't look ahead. **Quick questions** work offline: *Where's the ball?*, *What's the score?*, *What just happened?*, *What did I miss?*. After each Ask, a short catch-up covers what you missed.
-- **Six languages**: English, Bulgarian, Spanish, Arabic, French and German for the match commentary and the live answers, in one multilingual voice. You pick it in Setup or ask for it out loud.
-- **Haptics** on Android: a heartbeat that follows the tension, and a pattern for each shot and goal.
-- **The fan's own mix.** A helper sets every sound once with the fan on a 0–100 scale (commentator, crowd, chants, reactions, kicks, whistle), and it's saved on the device. The fan can also change it by voice: "turn the whistle down by 5".
-- **Choose your end** (Reds or Navy), crowd level, vibration, Bluetooth delay calibration, **Next big moment**, and a "Learn the sounds" tour.
-- **Built for a screen reader and touch.** On a phone, the screen is two big halves (Ask on top, Start/Pause below). On a laptop, use Space, Enter and Esc. CI fails on any **axe WCAG 2.2 AA** violation, at three viewports, in light and dark, with and without reduced motion.
+- **A look-ahead commentator.** Our Director agent sees the next 10 s and builds the voice before the chance. A **spoiler firewall** keeps it honest: the Director never sees the outcome, outputs only a tension plan, and code checks every line.
+- **A crowd at each end** that lifts where the ball is, and ball-first commentary every few seconds.
+- **Ask by voice** (Foundry Voice Live) with press-to-interrupt. Offline quick questions: *Where's the ball?*, *What's the score?*, *What just happened?*, *What did I miss?*, *Recap so far*. A spoken recap also plays when the match ends.
+- **Seven languages** (English, Bulgarian, Spanish, Arabic, French, German, Hindi) for commentary, quick answers and live answers, in one multilingual voice.
+- **Listening modes:** screen-reader mode (your screen reader reads each line at your speed), one-ear mono with a position tone, and *Key moments only* or *Full radio*.
+- **Follow a player:** a cue, a buzz and the name each time they get the ball.
+- **Haptics** on Android, a **0–100 mixer** a helper sets once (or "whistle down by 5" by voice), and **low-data mode** for slow connections.
+- Built for screen readers and touch, with **WCAG 2.2 AA** axe tests in CI.
 
 ## What we measured
 
@@ -42,50 +42,41 @@ From `eval/report.json`, on the judge cut (8 synthetic minutes).
 
 | Measure | Result |
 |---|---|
-| Spoiler leaks in commentary | **0** in 70 lines |
-| Truth check / spoken numbers verified | **70/70** lines, **10/10** numbers |
-| Director on Foundry (gpt-5-mini) | 4 calls, 4 plans, **0 fallbacks**, 488 tokens per call |
-| Plan → verify → speech per build-up | **10/10** inside the 5.8 s budget, p50 2.98 s, p95 3.56 s |
-| Numeric truth as a Foundry custom evaluator | **4/4** passed |
-| Live spoken questions (Voice Live) | **31/31** answered, **0** spoiler hits, 43 tool calls |
-| End of question → first answer audio | **p50 1.14 s**, p95 1.82 s |
-| Offline router | 31/31 correct: answer 18/18, clarify 4/4, redirect 2/2, refuse 7/7 |
+| Spoiler leaks in commentary | **0** in 70 lines, and 0 in 6 × 70 translated lines |
+| **Planted errors caught** (names, scores, minutes, invented numbers, outcome words) | **148/148** commentary, **1015/1015** answers; 0 clean lines blocked |
+| Verifier switched off | 0/1163 caught |
+| Director handed the outcome | input unchanged 4/4; replies carrying it rejected 8/8 |
+| Director on Foundry (gpt-5-mini) | 4 calls, **0 fallbacks**, 10/10 build-ups inside the 5.8 s budget (p95 3.56 s) |
+| Live spoken questions | **31/31** answered, **0** spoiler hits, **p50 1.14 s** to the first answer audio |
+| Event → commentary heard | scheduled at the event (p50 0.0 s), heard a median 84 ms late |
+| Goal confirmed → crowd roar | 0.0 s (scheduled) |
 
-**Honest limits.** 21 of the 70 lines (30%) use a shorter fallback text to fit their gap. Spoiler lift can't be judged yet: n = 2. **We haven't run the listening test with blind or partially sighted fans yet.**
+The planted-error thresholds were committed before the first run. That run failed (a checker bug blocked 18.9 % of clean answers); we fixed the checker, not the threshold. **We haven't run the listening test with blind fans yet.**
 
 ## How it maps to the brief
 
 | Brief | Tely |
 |---|---|
-| Ingest | A seeded synthetic match: CDF events, the ball at 25 Hz, 22 players at 5 Hz |
-| Interpret | Per second: win probability, tension, danger and each end's crowd mood. Per shot: xG. |
-| Explain | The Director plans the build-up; templates say why each moment matters; `explain_moment` answers "why?" live |
-| Render | A pre-rendered Azure Speech HD voice, Web Audio crowd and cues, phone vibration, a sound radar, all on a timed cue track |
-| Personalise | End, language, the whole sound mix, vibration, and questions asked by voice |
-| (ii) Real-time intelligence | Players named in the commentary, plus "where is …" and player-stat tools. **Not done:** pass difficulty, ball and shot speed, video auto-eventing. |
-| (iii) Narrative | Build-ups, "What just happened?", "What did I miss?", and a catch-up after each Ask. **Not done:** half-time and full-time recaps. |
-| (iv) Explainability | Tension plans, `explain_moment`, and a firewall you can audit |
-| (v) Data innovation | An open, seeded generator with a realism report (it misses 2 targets, and we say so) |
-| (vi) Multi-language | Six languages for the commentary and the live answers. **Not yet:** the offline presets and the captions, which are English only. |
-
-We don't yet offer an analyst/casual split or a player-focus mode.
+| Ingest | A seeded synthetic match: CDF events, ball at 25 Hz, 22 players at 5 Hz |
+| Interpret | Per second: win probability, tension, danger, each end's crowd mood. Per shot: xG |
+| Explain | Director plans; templates say why; `explain_moment` answers "why?" |
+| Render | Voice, crowd, vibration, plus `overlays.json` and WebVTT in every language for any renderer |
+| Personalise | End, language, detail, listening mode, followed player, sound mix, low data |
+| (ii) Real-time | Players named, "where is …", player stats. **Not done:** pass difficulty, speeds, video auto-eventing |
+| (iii) Narrative | Build-ups, catch-ups, spoken recaps |
+| (iv) Explainability | Tension plans, Director's notes, an auditable firewall |
+| (v) Data | An open, seeded generator with a realism report (it misses 2 targets) |
+| (vi) Multi-language | Seven languages. **Not yet:** the page's own words |
 
 ## Microsoft technology
 
-- **Microsoft Foundry** (gpt-5-mini): the Director agent and the translations, plus a **Foundry evaluation** with our custom numeric-truth evaluator.
-- **Microsoft Agent Framework**: the workflow Director → Commentator → Verifier → TTS.
-- **Foundry Voice Live** (gpt-realtime-2.1-mini): live spoken questions, with 10 playhead-clamped tools, also served as an MCP server.
-- **Azure Speech**: HD neural and multilingual voices.
-- **Azure Static Web Apps**: the zero-backend replay.
-- **Azure Container Apps** and Container Registry: the relay, which scales to zero.
-- **Application Insights**: OpenTelemetry traces.
-- **azd and Bicep**: provisioning and deploys. **GitHub Actions**: CI and the uptime check.
-- **GitHub Copilot Agent Mode with the Azure MCP Server**: read-only checks of our deployment only. Copilot wrote none of our code.
+- **Microsoft Foundry** (gpt-5-mini): the Director agent and the translations. **Foundry evaluations**: our custom numeric-truth evaluator, including the planted errors.
+- **Microsoft Agent Framework**: Director → Commentator → Verifier → TTS.
+- **Foundry Voice Live** (gpt-realtime-2.1-mini): live questions with 11 playhead-clamped tools, also an MCP server.
+- **Azure Speech**: HD and multilingual neural voices.
+- **Azure Static Web Apps**, **Container Apps** (relay, scales to zero), **Application Insights**, **azd + Bicep**, **GitHub Actions**.
+- **GitHub Copilot + Azure MCP Server**: read-only deployment checks only. Copilot wrote none of our code.
 
 ## What's next
 
-- Test with blind and partially sighted fans, one to one.
-- Spoken half-time and full-time recaps.
-- A "follow my player" mode, and a "key moments only" detail level.
-- Native-speaker review of every language.
-- A live event feed instead of the replay.
+Testing with blind and partially sighted fans, native-speaker review of each language, the page's own words translated, and a live event feed.
