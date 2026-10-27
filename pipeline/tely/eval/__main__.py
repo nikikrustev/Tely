@@ -45,12 +45,13 @@ def main(argv: list[str] | None = None) -> int:
         rep["foundry_eval"] = {"measured": today, **numeric_truth.run_foundry(items, dir_env(env))}
 
     rep["qa_latency"] = old.get("qa_latency")   # Stage 7, written by eval/qa_latency.py (needs a live relay)
-    rep["realtime"] = old.get("realtime") or []
+    from tely.eval import realtime
+
+    rep["realtime"] = [realtime.resummarise(r) for r in old.get("realtime") or []]   # kept rows, current summary
     if args.realtime:
         from tely.agents import tracing
         from tely.agents.director import FoundryDirector
         from tely.commentary.tts import AzureSynthesiser
-        from tely.eval import realtime
 
         traces = tracing.setup(dir_env(env))
         try:

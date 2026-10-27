@@ -4,7 +4,7 @@
 returns only what the listener already knows (file 43 §2 spoiler firewall, file 40 "clamped to the delayed clock"):
 - an event counts only once its outcome is revealed (signals reveal_t <= playhead);
 - ball and player positions are read at the playhead, never after;
-- the score is the score the listener knows at that second.
+- the score counts the goals revealed by the playhead, to the hundredth of a second.
 """
 from __future__ import annotations
 
@@ -48,7 +48,13 @@ class Bundle:
         return float(self.meta["judge_cut"]["t_end"])
 
     def clamp(self, p: float) -> float:
-        return min(max(float(p), self.t0), self.t1)
+        """p inside the cut. A playhead that isn't a finite number (NaN, inf, "abc", None) is the cut's start: the
+        safest moment, which gives nothing away (+inf must never mean the end), and it keeps the session answering."""
+        try:
+            f = float(p)
+        except (TypeError, ValueError, OverflowError):
+            return self.t0
+        return min(max(f, self.t0), self.t1) if math.isfinite(f) else self.t0
 
     @cached_property
     def clock_offset_s(self) -> int:
@@ -90,7 +96,25 @@ class Bundle:
         return rows[i]
 
     def score(self, p: float) -> dict:
-        return self.second(p)["score"]
+        """Goals revealed by p, on top of the score when the window opens, counted from the events like
+        commentary/source.py Match.score_at. Not the per-second row: that is floor(p), so a goal revealed at 703.76
+        would still read nil-nil until 704 while the same answer lists the goal."""
+        p = self.clamp(p)
+        score = dict(self.meta["judge_cut"].get("score_at_start") or {"home": 0, "away": 0})
+        for e in self.known(p):
+            if e["type"] == "shot" and e["outcome_type"] == "successful":
+                score[self.side_of_team[e["team_id"]]] += 1
+        return score
+
+    def pending_shot(self, p: float) -> dict | None:
+        """A shot struck by p whose outcome isn't revealed yet (t <= p < reveal_t), else None. While it is in flight
+        (or under VAR review) the ball's position would tell where it went."""
+        p = self.clamp(p)
+        for e in self.events:
+            s = self.sig(e["id"])
+            if e["type"] == "shot" and s["t"] <= p < s["reveal_t"]:
+                return e
+        return None
 
     def ball(self, p: float) -> dict:
         b = self.ticks["ball"]

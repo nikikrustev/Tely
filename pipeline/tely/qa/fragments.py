@@ -66,9 +66,13 @@ def build_fragments(bundle) -> list[dict[str, str]]:
                 out.append(zone_frag(names[side], key, third, s))
     out += [dist_frag(m) for m in range(0, 101, 5)]
     seen = set()
-    for row in bundle.signals["per_second"]:
-        minute = int(math.floor(bundle.clock_s(row["t"]) / 60))
-        k = (minute, row["score"]["home"], row["score"]["away"])
+    # Every (minute, score) the score tool can say: each second, and each goal's reveal (bundle.score counts a goal
+    # from its reveal_t, which can fall in the minute before the next whole second).
+    goals = [bundle.sig(e["id"])["reveal_t"] for e in bundle.events if e["type"] == "shot" and e["outcome_type"] == "successful"]
+    for t in sorted({row["t"] for row in bundle.signals["per_second"]} | {g for g in goals if bundle.t0 <= g <= bundle.t1}):
+        minute = int(math.floor(bundle.clock_s(t) / 60))
+        sc = bundle.score(t)
+        k = (minute, sc["home"], sc["away"])
         if k not in seen:
             seen.add(k)
             out.append(score_frag(names["home"], names["away"], *k))

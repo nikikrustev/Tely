@@ -94,6 +94,7 @@ def a_section(r: dict) -> list[str]:
          f"after a model call: {d['fallbacks_after_a_call']}; reasons: {cell(d['fallback_reasons']) if d['fallback_reasons'] else 'none'}"],
         ["Tokens per Director call", d["tokens_per_call"], "≤ 1,200 (file 43 §4)"],
     ]) + [""]
+    out += languages_section(r.get("languages"))
     out += ["**Director plan per window** (the rules plan alongside, for the A/B listen)", ""]
     out += table(["Shot", "t (s)", "Director", "Plan: level / lead / hold / hint", "Rules plan", "Build-up spoken"],
                  [[w["key"], w["t_shot"], w["director"], _plan(w["plan"]), _plan(w["rules_plan"]),
@@ -129,6 +130,18 @@ def a_section(r: dict) -> list[str]:
                 "Each run opens its connections with one untimed warm-up call first, as a live service would "
                 "before kick-off. Nearest-rank percentiles; with this few build-ups p95 is close to the maximum.", ""]
     out += qa_latency_section(r.get("qa_latency"))
+    return out
+
+
+def languages_section(langs: dict | None) -> list[str]:
+    """D27: every translated track, line by line against the English one (tely.eval.metrics.languages)."""
+    out = ["**Commentary in other languages**: each translated line against its English line", ""]
+    if not langs:
+        return out + ["Not in this report.json: rerun `python -m tely.eval --cut judge`.", ""]
+    out += table(["Language", "Lines", "Truth check (same numbers and names, no English left)",
+                  "Spoiler check (outcome words in that language)", "Audio rendered from the current text"],
+                 [[lang, x["lines"], f"{x['truth_check_pass']}/{x['lines']}", f"{x['spoiler_check_pass']}/{x['lines']}",
+                   f"{x['audio_matches_text']}/{x['lines']}"] for lang, x in sorted(langs.items())]) + [""]
     return out
 
 

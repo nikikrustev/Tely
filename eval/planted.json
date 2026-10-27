@@ -35,8 +35,8 @@
  "answers": {
   "answers": 413,
   "clean_blocked": [],
-  "planted": 1015,
-  "caught": 1015,
+  "planted": 1007,
+  "caught": 1007,
   "by_kind": {
    "score": {
     "planted": 177,
@@ -51,8 +51,8 @@
     "caught": 413
    },
    "distance": {
-    "planted": 43,
-    "caught": 43
+    "planted": 35,
+    "caught": 35
    },
    "name": {
     "planted": 205,
@@ -64,10 +64,10 @@
   "false_block_rate": 0.0
  },
  "verifier_off": {
-  "planted": 1163,
+  "planted": 1155,
   "caught": 0,
   "caught_rate": 0.0,
-  "would_be_spoken": 1163
+  "would_be_spoken": 1155
  },
  "director": {
   "shots": 4,

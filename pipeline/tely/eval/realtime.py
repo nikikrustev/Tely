@@ -13,6 +13,7 @@ warm-up call per run opens the model and Speech connections first, as a live ser
 from __future__ import annotations
 
 import asyncio
+import math
 import statistics
 import tempfile
 import time
@@ -29,11 +30,12 @@ WARMUP_LINE = "Tely warm-up."
 
 
 def pct(xs: list[float], q: float) -> float | None:
-    """Nearest-rank percentile (q in 0..100). None for no data."""
+    """Nearest-rank percentile (q in 0..100): the ceil(q/100 * n)-th smallest. None for no data.
+    Not round(q/100 * n + 0.5): Python rounds halves to even, so p50 of 2 values was the larger one, not the first."""
     if not xs:
         return None
     s = sorted(xs)
-    k = max(0, min(len(s) - 1, round(q / 100 * len(s) + 0.5) - 1))
+    k = max(0, min(len(s) - 1, math.ceil(q * len(s) / 100) - 1))   # q * n first: 95 * 20 / 100 is exactly 19
     return round(s[k], 1)
 
 
@@ -78,6 +80,14 @@ async def one_run(m: Match, model, synth: Synthesiser, voice: str, speed: float,
                          "budget_ms": round(budget), "within_budget": total <= budget,
                          "over_budget_ms": round(total - budget, 1) if total > budget else 0.0})
     return rows
+
+
+def resummarise(entry: dict) -> dict:
+    """A stored realtime measurement with its numbers worked out again from its own rows (no Azure): so a fix to how
+    they are summarised reaches measurements already in report.json. measured / director / traces stay."""
+    if not entry.get("rows"):
+        return entry
+    return {**entry, **summarise(entry["rows"], entry["speed"], entry["runs"])}
 
 
 def summarise(rows: list[dict], speed: float, repeat: int) -> dict:

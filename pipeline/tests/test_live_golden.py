@@ -50,7 +50,11 @@ def test_live_tool_call_replays_identically_and_never_spoils(case):
     _, name, args, p, recorded = case
     assert p is not None, "transcript tool call has no playhead_s (HANDOFF to A)"
     now = qa.call_tool(name, args, playhead_s=p, bundle=B)
-    if isinstance(recorded, dict) and "say" in recorded:
+    if name == "get_ball_position" and B.pending_shot(p) is not None:
+        # Changed on purpose after these sessions (review of a55ab1a, item 12): while a shot is unrevealed the
+        # recorded "The ball is out of play." (with x/y in the net) hinted at the goal. Now: the neutral line, no x/y.
+        assert now["fragments"] == ["hold"] and "x" not in now and "y" not in now, now
+    elif isinstance(recorded, dict) and "say" in recorded:
         assert now["say"] == recorded["say"], "tool answer changed since the live session"
         assert now.get("evidence_ids") == recorded.get("evidence_ids")
     sig = B.signals["events"]

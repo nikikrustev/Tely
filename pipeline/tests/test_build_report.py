@@ -80,3 +80,11 @@ def test_b_files_of_any_shape_are_rendered(br, evaldir):
 def test_committed_report_md_is_current(br):
     """eval/report.md must be regenerated whenever report.json (or B's files) change."""
     assert (ROOT / "eval" / "report.md").read_text(encoding="utf-8") == br.build(ROOT / "eval")
+
+
+def test_report_md_shows_each_languages_checks(br, evaldir):
+    md = br.build(evaldir)
+    assert "**Commentary in other languages**" in md
+    rep = json.loads((evaldir / "report.json").read_text(encoding="utf-8"))
+    for lang, x in rep["languages"].items():
+        assert f"| {lang} | {x['lines']} | {x['truth_check_pass']}/{x['lines']} | {x['spoiler_check_pass']}/{x['lines']} |" in md

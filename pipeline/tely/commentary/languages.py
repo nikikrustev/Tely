@@ -30,6 +30,7 @@ from pathlib import Path
 from typing import Callable, Protocol
 from xml.sax.saxutils import escape
 
+from tely.commentary.numbers import mismatch
 from tely.commentary.source import BUNDLE, load_match
 from tely.commentary.ssml import NS, band, ssml_sha256
 from tely.commentary.tts import AzureSynthesiser, Synthesiser, TtsCache, TtsError, load_env
@@ -109,9 +110,12 @@ class FoundryTranslator:
         return [s.strip() for s in out]
 
 
-def check(en: str, tr: str, players: list[str]) -> list[str]:
-    """Digits and player names survive translation unchanged; no English word is left behind."""
+def check(en: str, tr: str, players: list[str], lang: str) -> list[str]:
+    """The translation says exactly the English line's numbers, digits or words, none dropped, changed or added
+    (numbers.mismatch: "fünfundfünfzig" for fifty-six was shipped once); digits stay digits; player names survive
+    unchanged; no English word is left behind."""
     errs = [f"number {n} missing" for n in _DIGITS.findall(en) if n not in tr]
+    errs += [e for e in mismatch(en, lang, tr) if e not in errs]
     errs += [f"English word {w!r} left" for w in re.findall(r"[A-Za-z]+", tr) if w.lower() in _ENGLISH and w not in players]
     errs += [f"name {p} missing" for p in players if re.search(rf"\b{re.escape(p)}\b", en) and p not in tr]
     return errs
@@ -123,16 +127,17 @@ def check(en: str, tr: str, players: list[str]) -> list[str]:
 _AR = r"(?<!\w)(?:[وفبل])?(?:ال)?"
 OUTCOME_L10N: dict[str, list[str]] = {
     "bg": [r"\bгол(?:ът|а|ове|ов)?\b", r"\bотбеляз\w*", r"\bвкар\w*", r"\bспас\w*", r"\bгред\w*", r"\bблокир\w*",
-           r"\bпропус\w*", r"\bпокрай\b"],
+           r"\bпропус\w*", r"\bпокрай\b", r"\bотби\w*", r"\bвстрани\b"],
     "es": [r"\bgol(?:es|azo)?\b", r"\bmarc(?:a|ó|an)\b", r"\banot(?:a|ó)\b", r"\bparad(?:a|ón)\b", r"\bataj\w*",
-           r"\bdesviad[oa]\b", r"\bposte\b", r"\blarguero\b", r"\bbloque\w*", r"\bfall(?:a|ó)\b", r"\bdetiene\b"],
+           r"\bdesviad[oa]\b", r"\bposte\b", r"\blarguero\b", r"\bbloque\w*", r"\bfall(?:a|ó)\b", r"\bdetiene\b",
+           r"\bfuera\b", r"\brechaz\w*"],
     "ar": [_AR + r"هدف", r"(?<!\w)[وف]?(?:ي|ت)?سجل", _AR + r"تصد", r"(?<!\w)[وف]?ي?تصدى", _AR + r"إنقاذ", r"ينقذ",
            _AR + r"قائم", _AR + r"عارضة", r"(?<!\w)[وف]?ي?هدر", r"أهدر"],
     "fr": [r"\bbuts?\b", r"\bmarqu(?:e|é|ent)\b", r"\barr[eê]t\w*", r"\bsauv\w*", r"\bpoteau\b", r"\btransversale\b",
-           r"\bcontr[ée]\b", r"\bmanqu[ée]\b", r"\brat[ée]\b", r"\bà côté\b"],
+           r"\bcontr[ée]\b", r"\bmanqu[ée]\b", r"\brat[ée]\b", r"\bà côté\b", r"\bau-dessus\b", r"\brepouss\w*"],
     "de": [r"\b[Tt]or\b", r"\btrifft\b", r"\bgetroffen\b", r"\bTreffer\b", r"\bpariert\w*", r"\bgehalten\b",
            r"\bParade\b", r"\bvorbei\b", r"\bdaneben\b", r"\bPfosten\b", r"\bLatte\b", r"\bgeblockt\b", r"\bblockt\b",
-           r"\bverschossen\b"],
+           r"\bverschossen\b", r"\bhält\b", r"\babgewehrt\b", r"\bdrüber\b"],
     "hi": [r"गोल", r"बचाव", r"बचा", r"चूक", r"पोस्ट", r"ब्लॉक"],
 }
 PASS_OUTCOME_L10N: dict[str, list[str]] = {
@@ -179,7 +184,7 @@ def translations(lang: str, english: list[str], players: list[str], translator: 
                  reject: Callable[[str, str], bool] | None = None) -> dict[str, str]:
     """English line -> translation, from the cache; only missing lines go to the model (three times at most, then
     fail). reject(en, tr): an extra check, here the spoiler firewall in that language at the line's time."""
-    ok = lambda en, tr: not check(en, tr, players) and not (reject and reject(en, tr))  # noqa: E731
+    ok = lambda en, tr: not check(en, tr, players, lang) and not (reject and reject(en, tr))  # noqa: E731
     cache = load_cache(lang)
     cache["lines"] = {en: tr for en, tr in cache["lines"].items() if ok(en, tr)}   # a stricter check re-asks
     for _ in range(3):

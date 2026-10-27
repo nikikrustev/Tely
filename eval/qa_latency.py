@@ -290,7 +290,7 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("audio")
     r = sub.add_parser("run")
     r.add_argument("--relay", required=True, help="wss://<relay host>/voice (or ws://localhost:8080/voice)")
-    r.add_argument("--origin", help="Origin header, e.g. the site URL (the relay accepts only its own pages)")
+    r.add_argument("--origin", required=True, help="Origin header, e.g. the site URL (the relay accepts only its own pages)")
     r.add_argument("--only", nargs="*", help="case ids")
     w = sub.add_parser("browser")
     w.add_argument("--site", required=True, help="the page, e.g. https://<swa host> or http://localhost:5173")

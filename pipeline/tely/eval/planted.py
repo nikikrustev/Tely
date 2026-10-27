@@ -318,11 +318,13 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     r = run(args.cut)
     old = json.loads(OUT.read_text(encoding="utf-8")) if OUT.is_file() else {}
-    # Every earlier run stays on record, so a fix after a failed run is visible (D32).
+    # Every earlier FAILED run stays on record, so a fix after a failure is visible (D32). A passing run carries no
+    # lesson and the new run replaces it (build_report tells each history entry's failure and its fix).
     r["history"] = old.get("history", []) + ([{"measured": old["measured"], "pass": old["verdict"]["pass"],
         "commentary": {k: old["commentary"][k] for k in ("caught", "planted", "false_block_rate")},
         "answers": {k: old["answers"][k] for k in ("caught", "planted", "false_block_rate")},
-        "clean_blocked_example": (old["answers"]["clean_blocked"] or [None])[0]}] if "verdict" in old else [])
+        "clean_blocked_example": (old["answers"]["clean_blocked"] or [None])[0]}]
+        if "verdict" in old and not old["verdict"]["pass"] else [])
     r["foundry_eval"] = old.get("foundry_eval")
     if args.foundry_eval:
         from tely.build_bundle import dir_env
