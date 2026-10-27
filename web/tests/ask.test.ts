@@ -148,8 +148,8 @@ describe('Ask flow', () => {
 describe('Ask button (index.html)', () => {
   const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
   it('is a native button with an accessible name and the Enter and A shortcuts, and every preset is a native button', () => {
-    // D24: the name is the pad's visible label; the icons beside it are aria-hidden.
-    expect(html).toMatch(/<button id="ask" class="pad" type="button"[^>]*aria-keyshortcuts="Enter A"[^>]*>(\s*<svg [^>]*aria-hidden="true"[^]*?<\/svg>)*\s*<span class="pad-label">Ask the commentator<\/span>\s*<\/button>/);
+    // D24: the name is the pad's visible label; the icons beside it, and the key chip (D39), are aria-hidden.
+    expect(html).toMatch(/<button id="ask" class="pad" type="button"[^>]*aria-keyshortcuts="Enter A"[^>]*>(\s*<svg [^>]*aria-hidden="true"[^]*?<\/svg>)*\s*<span class="pad-label">Ask the commentator<\/span>\s*(<kbd class="pad-key" aria-hidden="true">Enter<\/kbd>)?\s*<\/button>/);
     expect(html).toMatch(/aria-controls="ask-menu"/);
     for (const p of PRESETS) expect(html).toContain(`data-preset="${p.id}">${p.label.replace("'", "'")}</button>`);
   });

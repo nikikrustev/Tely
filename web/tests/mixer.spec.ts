@@ -1,4 +1,4 @@
-// The Setup tab's sound desk (?mix=1 still opens it), Playwright + axe at the 3 viewports,
+// The Settings screen's sound desk (the Setup tab before D39) (?mix=1 still opens it), Playwright + axe at the 3 viewports,
 // light and dark. Also proves the Laptop and Phone views never load it.
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
@@ -7,7 +7,7 @@ const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 test('no mixer on the judges\' page', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#start')).toBeFocused();
+  await expect(page.locator('#voice-pick')).toBeFocused();           // D39: the page opens on the match list
   await expect(page.locator('#mixer')).toHaveCount(0);
 });
 
@@ -20,7 +20,7 @@ test('the desk: a labelled 0-100 channel per group, nudges, presets, Reset, Subm
   await expect(page.locator('input[name="m-pos"]')).toHaveCount(3);
   // D24: the helper explanation comes before the sliders, and the mix is kept on this device across visits.
   await expect(page.locator('#m-helper')).toContainText('sighted friend or carer');
-  await expect(page.locator('#tab-setup')).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('#nav-settings')).toHaveAttribute('aria-current', 'page');
   await page.locator('#m-pass').fill('40');
   await expect(page.locator('output[for="m-pass"]')).toHaveText('40');
   await expect(page.locator('#m-pass')).toHaveAttribute('aria-valuetext', '40 out of 100');

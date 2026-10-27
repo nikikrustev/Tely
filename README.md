@@ -12,22 +12,24 @@ knows it's coming. You can ask that commentator, out loud and in seven languages
 
 - **Live demo (no login, no backend needed for the match):** https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/
 - **Demo video (under 2 min):** >>> YOUTUBE URL GOES HERE <<<
-- **Judges:** add `?radar=1` to see the sound radar and the Director's notes; `?view=laptop` shows the keys.
+- **Judges:** the app opens inside a drawn laptop or phone (switch beside it); add `?radar=1` to see the sound radar
+  and the Director's notes.
 - **Synthetic match, real pipeline.** Fictional clubs (Reds and Navy), fictional players, AI voices. No real match data.
 
 ## Judges' quick path (60 s)
 
 1. Open the [demo](https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/?radar=1) with **headphones** (laptop speakers work too).
    `?radar=1` adds a sound radar so you can see what you hear.
-2. Press **Start**, the lower big button (or Space). The first line is "AI commentary, synthetic match." **Five seconds later the voice builds:
+2. On the match list, press **Say a match** and say "Play Reds", then press Enter (or tap the card that pops up). Or
+   just tap **Reds v Navy**. The other fixtures are fictional and not in the demo.
+3. Press **Start**, the lower big button (or Space). The first line is "AI commentary, synthetic match." **Five seconds later the voice builds:
    "Navy coming... Olvholm... here's a chance!"**, four seconds before the header, while the crowd rises with it.
-3. Press **Ask the commentator**, the upper big button (or Enter), wait for the beep and ask out loud: the commentator answers
+4. Press **Ask the commentator**, the upper big button (or Enter), wait for the beep and ask out loud: the commentator answers
    through Foundry Voice Live, then the match carries on. Try "Who wins?": it won't tell you. Press it again during an
-   answer and the answer stops at once. **Quick questions** (under the pads) gives **Where's the ball?** and four more
+   answer and the answer stops at once. **Quick questions** (in Settings, the gear) gives **Where's the ball?** and four more
    without a microphone, offline.
-4. Press **Next big moment** to jump to the next chance, and open **Settings** for your end of the ground, crowd level and
-   vibration. **Fine-tune every sound** in Settings opens the mixer: a sighted friend or carer sets each sound once with
-   the fan, and that mix stays on the device.
+5. Open **Settings** (the gear) for **Next big moment**, your end of the ground, crowd level and vibration, and the
+   sound desk: a sighted friend or carer sets each sound once with the fan, and that mix stays on the device.
 
 On an Android phone in Chrome you also feel the match: a heartbeat that follows the tension, and a pattern for each shot and goal.
 

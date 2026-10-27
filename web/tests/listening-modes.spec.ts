@@ -35,6 +35,7 @@ test('screen-reader mode: each commentary line goes to a polite live region inst
   await expect(region).toHaveAttribute('aria-live', 'polite');
   await expect(region).toBeEmpty();
   await page.getByRole('checkbox', { name: /Screen-reader mode/ }).check();
+  await page.locator('#back-match').click();                         // D39: Settings, then the match
   await page.locator('#start').click();
   await expect(page.locator('#start')).toHaveText('Pause', { timeout: 30_000 });
   await expect(region).toHaveText('AI commentary, synthetic match.', { timeout: 20_000 });   // the first line, on time

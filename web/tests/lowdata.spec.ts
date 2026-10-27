@@ -10,6 +10,7 @@ test('low data: the switch is saved, and the commentary comes from the low-data 
   await page.reload();
   await expect(page.getByRole('checkbox', { name: /Low data/ })).toBeChecked();
   const lo = page.waitForResponse((r) => r.url().includes('/audio/en/radio-lo/') && r.ok(), { timeout: 30_000 });
+  await page.locator('#back-match').click();                         // D39: Settings, then the match
   await page.locator('#start').click();
   await lo;
 });
