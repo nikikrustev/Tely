@@ -41,4 +41,4 @@ def test_set_preferences_has_two_detail_levels():
     both = qa.call_tool("set_preferences", {"verbosity": "describer", "haptics": "off"}, playhead_s=p, bundle=b)
     assert both["prefs"] == {"haptics": "off"} and both["say"].startswith("Done. I can do")
     assert qa.call_tool("set_preferences", {"crowd_mix": 0.4}, playhead_s=p, bundle=b)["say"] == "Done."
-    assert 'detail "key"' in qa.PERSONA
+    assert 'Detail "key"' in qa.PERSONA and "Pass ONLY the" in qa.PERSONA

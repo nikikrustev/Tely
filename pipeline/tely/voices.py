@@ -21,7 +21,7 @@ from tely.commentary.tts import ROOT, AzureSynthesiser, Synthesiser, TtsCache, T
 # All three are in the en-US DragonHD list our resource returned on 21 Oct 2026 (get_voices_async).
 EXTRA_VOICES = ("en-US-Brian:DragonHDLatestNeural", "en-US-Ava:DragonHDLatestNeural",
                 "en-US-Davis:DragonHDLatestNeural")
-# (slug, style, pause after, text): build-up, goal call, miss, calm state line. Fictional players from contracts/b.
+# (slug, style, pause after, text): build-up, goal call, miss, calm state line. Fictional players from the sample match.
 LINES = (
     ("1_buildup", "urgent", 0, "Attacking third, centre, Reds. Ilievski... Reds pushing, this could open up!"),
     ("2_goal", "shouting", 300, "Goal! Ndiaye-Ross! Reds one, Navy nil!"),

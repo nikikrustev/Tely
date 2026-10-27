@@ -154,3 +154,19 @@ describe('Ask button (index.html)', () => {
     for (const p of PRESETS) expect(html).toContain(`data-preset="${p.id}">${p.label.replace("'", "'")}</button>`);
   });
 });
+
+describe('recaps (D31)', () => {
+  it('the end-of-match recap is the last word: no "Back to the action." after it', async () => {
+    const { ctl, log } = harness(T.t1);
+    await ctl.recap('end');
+    const said = log.filter((l) => l.startsWith('say:'));
+    expect(said).toHaveLength(1);
+    expect(said[0]).toMatch(/^say: That's the end of this part of the match\./);
+  });
+
+  it('"Recap so far" goes back to the action like any quick question', async () => {
+    const { ctl, log } = harness(940);
+    await ctl.ask('recap');
+    expect(log.filter((l) => l.startsWith('say:')).at(-1)).toMatch(/^say: Back to the action\./);
+  });
+});

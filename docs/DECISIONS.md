@@ -350,7 +350,7 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
   (`FEEDBACK_EMAIL` in `web/src/tester/index.ts`).
 - **The judges' path doesn't change.** `main.ts` imports the tester module only with `?test=1`. The markup is a
   `<template>`, which is inert, so without the flag none of it is in the DOM, the accessibility tree or the tab order.
-  `web/tests/a/tester.spec.ts` checks that: no `t-*` element, no tester request, Start focused, and F does nothing.
+  `web/tests/tester.spec.ts` checks that: no `t-*` element, no tester request, Start focused, and F does nothing.
 - **Listening test, self-run group.** The tester ID is `t-` plus 8 random hex digits, made on the first visit. Its last
   digit picks the section 1 group (even A, odd B). Each clip task sets from/to/sound inside the page, never in the
   URL or on screen. The probes are scored in the browser against section 5's key, and the score is sent but never
@@ -507,8 +507,8 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
 - **Relay:** an empty `incomplete` Voice Live response is retried once (seen in 1 of 4 phone runs: the question was
   transcribed, no audio came, the fan heard "Live questions aren't available"). Each golden turn now carries Voice
   Live's token `usage`, so cost per question comes from real counts.
-- **Tools:** `web/tests/a/phone-e2e.mjs` (phone-sized Chromium, a fake microphone speaking a WAV, an analyser on every
-  AudioContext; it measures, not guesses, whether each sound played and when it stopped) and `web/tests/a/soak.mjs`
+- **Tools:** `web/tests/phone-e2e.mjs` (phone-sized Chromium, a fake microphone speaking a WAV, an analyser on every
+  AudioContext; it measures, not guesses, whether each sound played and when it stopped) and `web/tests/soak.mjs`
   (one full half in real time). `pipeline/tely/eval/soak_bundle.py` builds both full halves of seed 24 into
   git-ignored `web/.local/`, with a tone in place of TTS (no Speech calls); `?bundle=soak1|soak2` plays them on the dev
   server only (`replay/base.ts`).
@@ -682,7 +682,7 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
 - **Why:** blind fans listen in different ways. Some want only the big moments; many run a screen reader at a speed no
   AI voice matches; some have one earbud or hear in one ear, so anything panned left or right is lost.
 - **Detail level** (Setup, saved on the device; or by voice through `set_preferences detail`): **Full radio** (today's
-  track) or **Key moments only**: the cues with `priority >= 3` (`lane-a` `KEY_PRIORITY`). On the judge cut that's 12 of
+  track) or **Key moments only**: the cues with `priority >= 3` (`web/src/voice` `KEY_PRIORITY`). On the judge cut that's 12 of
   70 lines: the AI notice, both build-ups, the header call, VAR, the four outcome reactions, the goal's detail and the
   yellow card. A filter on existing cues: no new words and no LLM call, so every line kept is already verified. D18's
   "one detail level" no longer holds; the old `verbosity` argument now names the two levels instead of "Done.".
@@ -730,7 +730,7 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
   - **(a) Commentary:** every one of the 70 lines gets each mutation that applies to it: a wrong player name, score
     or minute, an invented statistic ("Three shots on target so far."), and an outcome word before the outcome is
     known. **148/148 caught** by `verifier.truth_check` + `spoiler_check`; **0/70** clean lines blocked.
-  - **(a) Answers:** every golden Q&A answer (413, `contracts/golden/b/qa_cases.jsonl`) gets a wrong name, score,
+  - **(a) Answers:** every golden Q&A answer (413, `pipeline/tests/golden/qa_cases.jsonl`) gets a wrong name, score,
     minute, distance or an invented number. `check_answer` re-derives each fact from the match files at the playhead.
     **1015/1015 caught; 0/413** clean answers blocked.
   - **(b) Verifier off:** 0 of 1,163 caught, so every planted error would have been spoken.

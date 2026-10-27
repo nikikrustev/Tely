@@ -1,5 +1,5 @@
 """Seeded synthetic match: the file 02 possession-chain generator with both file 33 fixes, plus keeper saves,
-fouls with yellow cards, free kicks, goal kicks, blocks and a VAR-style goal check ().
+fouls with yellow cards, free kicks, goal kicks, blocks and a VAR-style goal check.
 
  Fictional clubs and players only; nothing here comes from real match data.
 

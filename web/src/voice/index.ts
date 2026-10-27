@@ -88,6 +88,8 @@ export async function liveRelayUrl(search: string, fetchJson: (u: string) => Pro
 // SEAM(A->B): B's main.ts calls this once with LaneBContext (crowd bus, Ask, replay clock).
 export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
   let audioBase = BUNDLE_BASE;
+  // D27: the commentary and the live answers in another language. The live Ask follows at once; the track when loaded.
+  let wanted = 'en';
   let all: ReturnType<typeof parseCues> = [];
   let detail: 'full' | 'key' = 'full';
   let lowData = false;
@@ -108,7 +110,7 @@ export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
       ? getOk(`${local}/cues.en.radio.jsonl`).then(async (r) => { const c = parseCues(await r.text()); audioBase = local; return c; })
         .catch(() => loadRadioCues())
       : loadRadioCues();
-    cues.then((c) => { all = c; commentary.load(filterDetail(c, detail)); })
+    cues.then((c) => { if (wanted !== 'en') return; all = c; commentary.load(filterDetail(c, detail)); })   // a saved language won
       .catch((err: unknown) => console.warn('[commentary] no commentary track; the match plays without it', err));
     unlockOnGesture((c) => { registerContext(c); commentary.attach(c); });
     // The live Ask gets its own context: CommentaryTrack.pause() suspends the commentary's, and B pauses the
@@ -132,8 +134,6 @@ export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
       })
       .catch(() => {});
   }
-  // D27: the commentary and the live answers in another language. The live Ask follows at once; the track when loaded.
-  let wanted = 'en';
   const setLanguage = async (lang: string): Promise<boolean> => {
     wanted = lang;
     try {

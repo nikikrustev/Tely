@@ -1,4 +1,4 @@
-// "Ask the commentator", offline presets (; file 40 §1).
+// "Ask the commentator", offline presets (file 40 §1).
 // A question: hold that thought if a chance is coming (says THAT, never WHAT) -> duck the crowd and pause A's
 // commentary (the playhead keeps running) -> the answer from A's pre-rendered clips -> "back to the action" with a
 // catch-up of anything revealed meanwhile -> unduck and resume. A's live voice mode plugs in via registerLiveMode().
@@ -94,7 +94,7 @@ export class AskController implements Ask {
       this.d.show?.(a.say);
       await this.d.speak(a.fragments, a.say);
       return [a.say];
-    });
+    }, moment !== 'end');                                // at the end there is no action to go back to
   }
 
   /** A's live voice mode (Voice Live), with the same duck / pause / catch-up around it. */
@@ -165,7 +165,7 @@ export class AskController implements Ask {
     this.busy = false;
   }
 
-  private async run(body: () => Promise<string[]>): Promise<string[]> {
+  private async run(body: () => Promise<string[]>, catchUp = true): Promise<string[]> {
     if (this.busy) return [];
     this.busy = true;
     this.stopped = null;
@@ -192,7 +192,7 @@ export class AskController implements Ask {
       }
       if (!this.stopped) said.push(...(await body()));
       if (this.stopped === 'listen') keepPaused = true;   // the fan asks again: no catch-up yet, stay paused
-      else if (!this.stopped) await this.backToAction(said);
+      else if (!this.stopped && catchUp) await this.backToAction(said);
       // 'back' (Escape): straight back to the action, with no catch-up talk after the fan asked for quiet.
     } finally {
       this.finish(keepPaused);
