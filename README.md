@@ -21,9 +21,9 @@ knows it's coming. You can ask that commentator, out loud and in seven languages
    `?radar=1` adds a sound radar so you can see what you hear.
 2. Press **Start**, the lower big button (or Space). The first line is "AI commentary, synthetic match." **Five seconds later the voice builds:
    "Navy coming... Olvholm... here's a chance!"**, four seconds before the header, while the crowd rises with it.
-3. Press **Ask the commentator**, the upper big button (or A), wait for the beep and ask out loud: the commentator answers
+3. Press **Ask the commentator**, the upper big button (or Enter), wait for the beep and ask out loud: the commentator answers
    through Foundry Voice Live, then the match carries on. Try "Who wins?": it won't tell you. Press it again during an
-   answer and the answer stops at once. **Quick questions** (under the pads) gives **Where's the ball?** and three more
+   answer and the answer stops at once. **Quick questions** (under the pads) gives **Where's the ball?** and four more
    without a microphone, offline.
 4. Press **Next big moment** to jump to the next chance, and open **Settings** for your end of the ground, crowd level and
    vibration. **Fine-tune every sound** in Settings opens the mixer: a sighted friend or carer sets each sound once with
@@ -80,8 +80,9 @@ flowchart LR
 
 - **The match needs no backend.** Everything a judge hears in the replay is a static file on Static Web Apps (Free).
 - **The relay scales to zero** to stay free during judging. The page wakes it on load; if it is still cold when you
-  press Ask, you hear "Live questions aren't available right now" and get the presets. Caps: 30 questions a session,
-  200 a day, 6 sessions per 10 minutes per IP ([`relay/README.md`](relay/README.md)).
+  press Ask, you hear "Waking up the live commentator, one moment" and it keeps trying for up to a minute; only then
+  do you get the presets. Caps: 30 questions a session, 200 a day (20 per IP), 6 sessions per 10 minutes per IP, and
+  10 minutes per session ([`relay/README.md`](relay/README.md)).
 - **Keyless.** The build uses `az login`; the relay uses a managed identity. CI needs no Azure credentials.
 - Infrastructure is Bicep, deployed with `azd` ([`infra/`](infra/), [`azure.yaml`](azure.yaml)). Decisions and what we
   measured along the way are in [`docs/DECISIONS.md`](docs/DECISIONS.md).
@@ -123,13 +124,13 @@ Judge cut, voice `en-US-Brian:DragonHDLatestNeural`, Director `gpt-5-mini`, meas
 | Lines passing the truth check | **70/70** | |
 | Spoken numbers verified | **10/10** | scores and clock |
 | Director: calls, model plans, fallbacks | 4 calls, 4 plans, **0 fallbacks** | 488 tokens per call |
-| Real-time budget: plan → verify → TTS per build-up | **10/10** within budget, p50 2.98 s, p95 3.56 s | budget 5.8–6.0 s; idle time between shots shortened ÷10, every step at real speed |
+| Real-time budget: plan → verify → TTS per build-up | **10/10** within budget, p50 2.97 s, p95 3.56 s | budget 5.8–6.0 s; idle time between shots shortened ÷10, every step at real speed |
 | Numeric truth as a Foundry custom evaluator | **4/4** passed | code-based evaluator (preview) on Foundry |
 | Live spoken questions (Voice Live) | **31/31** answered, **0** spoiler hits | B's 31 eval questions, spoken by a TTS "fan" |
 | Live latency: end of question → first answer audio | **p50 1.14 s**, p95 1.82 s | to the first audio after the tool results: p50 2.66 s, p95 3.35 s |
 | Offline Q&A router | 31/31 correct, 0 leaks | answer 18/18, clarify 4/4, redirect 2/2, refuse 7/7 |
 | Accessibility CI | axe, WCAG 2.0/2.1/2.2 A and AA tags, 3 viewports, with and without reduced motion, light and dark | must pass with zero violations ([CI](https://github.com/nikikrustev/BerbataAI/actions/workflows/ci.yml)) |
-| **Planted errors caught** (names, scores, minutes, invented numbers, outcome words) | **148/148** commentary, **1015/1015** answers | 0/70 clean lines and 0/413 clean answers blocked; thresholds committed before the first run; Verifier off: 0/1163 caught ([D32](docs/DECISIONS.md)) |
+| **Planted errors caught** (names, scores, minutes, invented numbers, outcome words) | **148/148** commentary, **1007/1007** answers | 0/70 clean lines and 0/413 clean answers blocked; thresholds committed before the first run; Verifier off: 0/1155 caught ([D32](docs/DECISIONS.md)) |
 | Director handed the outcome | input byte-identical **4/4**; outcome-carrying replies rejected **8/8** | the spoiler ablation |
 | Planted errors as a Foundry evaluation | 6/6 planted scored below 1.0, 4/4 clean scored 1.0 | same scores as the local grader |
 | Event → its commentary line (scheduled) | p50 **0.0 s**, p95 0.0 s | 33 events; reactions wait for the outcome: p50 0.0 s, p95 2.52 s after it |
@@ -220,7 +221,7 @@ evals; `tests/`, `sample_match/`) · `relay/` (live Ask and the MCP server) · `
 
 **Who built what.**
 - **Nikolay** built the match and its signals (Stage 1), the browser sound stage (Stage 2), haptics, settings and the UI,
-  the Q&A brain (the 8 playhead-clamped tools, the no-LLM router, the persona, catch-up and "hold that thought"), the Stats
+  the Q&A brain (the playhead-clamped tools, 11 today, the no-LLM router, the persona, catch-up and "hold that thought"), the Stats
   MCP server, the Q&A eval, the sound radar, "learn the sounds" and Bluetooth calibration.
 - **potencialbg** built the Microsoft side: Azure set-up and infrastructure, the look-ahead commentary and its verifier,
   the HD voice, the Director agent on Foundry with tracing and the evals, the relay with Foundry Voice Live, CI and the
@@ -236,12 +237,12 @@ evals; `tests/`, `sample_match/`) · `relay/` (live Ask and the MCP server) · `
 | **Azure Developer CLI + Bicep** | Provisioning and deploys | [`infra/`](infra/), [`azure.yaml`](azure.yaml) |
 | **GitHub Actions** | CI (pytest, vitest, Playwright + axe) with no Azure credentials, and the uptime check every 6 h | [`.github/workflows/`](.github/workflows/) |
 
-**AI-assist ledger** (git trailers on `main` up to `09acc63`, 24 Oct 2026):
+**AI-assist ledger** (git trailers on `main` up to `a55ab1a`, 27 Oct 2026):
 
 | | Commits |
 |---|---|
-| Non-merge commits | 87 |
-| with a `Co-Authored-By: Claude` trailer | 62 (mostly the research library) |
+| Non-merge commits | 115 |
+| with a `Co-Authored-By: Claude` trailer | 81 (34 of them touch the research library) |
 | with a Copilot trailer or `ai:copilot` label | 0 |
 
 The trailers undercount Claude Code: our squash merges kept only the PR title and summary, so most stage PRs carry no
