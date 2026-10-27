@@ -7,6 +7,8 @@ import { clipOver, listenClip, type ListenClip } from './replay/listen';
 import { loadClockOffset, Scoreboard } from './scoreboard';
 import type { TesterHandle } from './tester';
 import { bundleBase } from './replay/base';
+import { registerContext, setMono } from './audio/mono';
+import { playPositionTone, positionPitch, POSITION_TONE_EVERY_S } from './audio/position-tone';
 
 /** Placeholder services (tests, and before Start). */
 export function createStubContext(): LaneBContext {
@@ -130,6 +132,7 @@ async function startApp(): Promise<void> {
   applyHaptics();
   let crowd: InstanceType<typeof CrowdEngine> | null = null;
   let presetVoice: { setLanguage(lang: string): Promise<boolean> } | null = null;   // the quick questions' voice (D27)
+  let zoneAt: ((p: number) => string | null) | null = null;   // where the ball is, for one-ear mode's tone
   const radios = (name: string) => [...document.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`)];
   for (const r of radios('club')) r.checked = r.value === settings.club;
   for (const r of radios('haptics')) r.checked = r.value === settings.haptics;
@@ -149,6 +152,38 @@ async function startApp(): Promise<void> {
     });
   }
   for (const r of radios('haptics')) r.addEventListener('change', () => update({ haptics: r.value as typeof settings.haptics }));
+  // Tier 1: detail level and the two listening modes. All saved on this device, like the rest.
+  for (const r of radios('detail')) {
+    r.checked = r.value === settings.detail;
+    r.addEventListener('change', () => {
+      update({ detail: r.value === 'key' ? 'key' : 'full' });
+      lane.setDetail?.(settings.detail);
+      say(settings.detail === 'key' ? 'Key moments only.' : 'Full radio commentary.');
+    });
+  }
+  lane.setDetail?.(settings.detail);
+  const readerLines = $('reader-lines');
+  const applyReader = () => lane.setReader?.(settings.reader ? (text, lang) => {
+    readerLines.lang = lang;
+    readerLines.dir = lang === 'ar' ? 'rtl' : 'ltr';   // Arabic reads right to left
+    readerLines.textContent = text;
+  } : null);
+  const readerBox = $<HTMLInputElement>('reader-toggle');
+  readerBox.checked = settings.reader;
+  readerBox.addEventListener('change', () => {
+    update({ reader: readerBox.checked });
+    applyReader();
+    say(settings.reader ? 'Screen-reader mode on. Your screen reader reads the commentary.' : 'Screen-reader mode off. The commentator speaks again.');
+  });
+  applyReader();
+  const monoBox = $<HTMLInputElement>('mono-toggle');
+  monoBox.checked = settings.mono;
+  setMono(settings.mono);
+  monoBox.addEventListener('change', () => {
+    update({ mono: monoBox.checked });
+    setMono(settings.mono);
+    say(settings.mono ? 'One ear mode on: everything in both ears, with a tone for where the ball is.' : 'One ear mode off: stereo.');
+  });
   // D27: the commentator's language, from Setup or from the commentator's set_language. Saved on this device.
   const langSel = $<HTMLSelectElement>('lang');
   langSel.value = settings.lang;
@@ -174,6 +209,12 @@ async function startApp(): Promise<void> {
     if (sound) { status.textContent = `${GROUP_NAMES[sound.key]}: ${sound.level} out of 100.`; return; }
     const patch = prefsPatch(p);
     if (patch.lang) { void setLang(patch.lang, false); return; }
+    if (patch.detail) {
+      update({ detail: patch.detail });
+      for (const r of radios('detail')) r.checked = r.value === settings.detail;
+      lane.setDetail?.(settings.detail);
+      return;                                            // the commentator has already said it
+    }
     if (!Object.keys(patch).length) return;
     update(patch);
     for (const r of radios('haptics')) r.checked = r.value === settings.haptics;
@@ -376,6 +417,7 @@ async function startApp(): Promise<void> {
       await player.load();
       presetVoice = player;
       if (settings.lang !== 'en') void player.setLanguage(settings.lang);
+      zoneAt = (p) => tools.get_ball_position(p).fragments?.[0] ?? null;
       askCtl = new askMod.AskController({
         tools, clock: s, crowd: c, commentary: lane.commentary,
         speak: (f, text) => player.speak(f, text),
@@ -399,6 +441,7 @@ async function startApp(): Promise<void> {
   const ensureAudio = async () => {
     if (audio) { await audio.ctx.resume(); return audio; }
     const actx = new AudioContext({ latencyHint: 'balanced' });
+    registerContext(actx);                             // one-ear mode sums this context to mono too
     const nav = navigator as Navigator & { audioSession?: { type: string } };
     if (nav.audioSession) nav.audioSession.type = 'playback'; // iOS: play even with the silent switch on (file 37)
     await actx.resume();
@@ -559,9 +602,16 @@ async function startApp(): Promise<void> {
       hap.keepAwake();
       s.play();
       wired.pump();
+      let toneAt = 0;
       setInterval(() => {
         wired.pump();
         board.update({ playheadS: s.now() });
+        // One-ear mode: a soft tone every POSITION_TONE_EVERY_S in play, pitched by the ball's third (position-tone.ts).
+        if (settings.mono && s.isPlaying() && !askCtl?.isBusy && ctx && s.now() - toneAt >= POSITION_TONE_EVERY_S) {
+          toneAt = s.now();
+          const hz = positionPitch(zoneAt?.(s.now()), settings.club);
+          if (hz) playPositionTone(ctx, hz);
+        }
         if (!clipEnded && clipOver(clip, s.now())) {   // once: pressing Play again carries on past the clip
           clipEnded = true;
           void pause('End of the clip.').then(() => tester?.clipEnded());

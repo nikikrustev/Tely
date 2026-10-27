@@ -27,16 +27,18 @@ def test_playhead_is_keyword_only():
         assert param.kind is inspect.Parameter.KEYWORD_ONLY
 
 
-def test_set_preferences_offers_no_detail_levels():
-    """Radio only (docs/DECISIONS.md D18): the tool can't change the commentary, and says so instead of "Done."."""
+def test_set_preferences_has_two_detail_levels():
+    """D30: "key moments only" or "full radio"; any other level is named back to the fan instead of "Done."."""
     schema = next(t for t in qa.TOOL_SCHEMAS if t["name"] == "set_preferences")["parameters"]["properties"]
-    assert set(schema) == {"crowd_mix", "haptics"}
+    assert set(schema) == {"crowd_mix", "haptics", "detail"} and schema["detail"]["enum"] == ["key", "full"]
     b = qa.load_bundle()
     p = (b.t0 + b.t1) / 2
+    key = qa.call_tool("set_preferences", {"detail": "key"}, playhead_s=p, bundle=b)
+    assert key["prefs"] == {"detail": "key"} and key["say"].startswith("Key moments only")
     asked = qa.call_tool("set_preferences", {"verbosity": "calm"}, playhead_s=p, bundle=b)
-    assert asked["prefs"] == {} and asked["say"].startswith("I can't change how much I say yet")
+    assert asked["prefs"] == {} and asked["say"].startswith("I can do key moments only")
     assert asked["fragments"] is None   # no offline clip claims it either
     both = qa.call_tool("set_preferences", {"verbosity": "describer", "haptics": "off"}, playhead_s=p, bundle=b)
-    assert both["prefs"] == {"haptics": "off"} and both["say"].startswith("Done. I can't change")
+    assert both["prefs"] == {"haptics": "off"} and both["say"].startswith("Done. I can do")
     assert qa.call_tool("set_preferences", {"crowd_mix": 0.4}, playhead_s=p, bundle=b)["say"] == "Done."
-    assert "one level of detail" in qa.PERSONA
+    assert 'detail "key"' in qa.PERSONA

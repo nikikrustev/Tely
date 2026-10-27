@@ -311,3 +311,33 @@ describe('resume after an Ask: restart or drop, never mid-sentence', () => {
     expect(after.map((s) => s.cue_id)).toEqual([next.cue_id]);
   });
 });
+
+describe('screen-reader mode (D30)', () => {
+  it('mutes the voice but still starts each line on time and reports it once, in order', async () => {
+    const w = world();
+    const said: string[] = [];
+    w.track.setVoiceMuted(true);
+    w.track.onLine = (c) => said.push(c.cue_id);
+    await w.start();
+    await w.advance(60);
+    const gains = w.voice.nodes.filter((n) => n.kind === 'gain') as { gain: { value: number } }[];
+    const mute = gains.find((g) => g.gain.value === 0);
+    expect(mute).toBeDefined();                               // the one gain at 0: the voice is silent
+    expect(said.length).toBeGreaterThan(3);
+    expect(said).toEqual(w.heard.map((h) => h.cue.cue_id).slice(0, said.length));
+    w.track.setVoiceMuted(false);
+    expect(mute?.gain.value).toBe(1);
+  }, 60_000);
+
+  it('never reports a line that was stopped before it was heard', async () => {
+    const w = world();
+    const said: string[] = [];
+    w.track.onLine = (c) => said.push(c.cue_id);
+    await w.start();
+    await w.advance(1);                                     // the AI notice is scheduled
+    w.track.pause();                                        // an Ask, before the next line
+    const n = said.length;
+    await w.advance(30);
+    expect(said.length).toBe(n);
+  }, 60_000);
+});
