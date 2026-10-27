@@ -302,6 +302,8 @@ def main(argv: list[str] | None = None) -> int:
     except (TtsError, ValueError) as exc:
         print(f"FAIL: {exc}")
         return 1
+    from tely import render_out
+    render_out.write(args.cut, out_dir)   # D37: the overlays and VTT carry every language's text
     old = json.loads((out_dir / "manifest.json").read_text(encoding="utf-8"))
     man = build_bundle.manifest(args.cut, out_dir, m, old["voice"], old.get("director"))
     (out_dir / "manifest.json").write_text(json.dumps(man, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
