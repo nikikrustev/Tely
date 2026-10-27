@@ -1,5 +1,5 @@
 // "Ask out loud": one spoken question to the commentator through the relay and Foundry Voice
-// Live (). B's Ask button owns the duck, the commentary pause, "hold that thought" and the catch-up;
+// Live. B's Ask button owns the duck, the commentary pause, "hold that thought" and the catch-up;
 // this file opens the mic, streams it to the relay, plays the answer and resolves when it has finished playing.
 // WHY a relay WebSocket and not browser WebRTC: docs/DECISIONS.md D17 (file 40 §2 routing is preview and ambiguous).
 // On any error, or no answer within 8 s, the fan hears why (a pre-rendered line in the commentary voice) and B's

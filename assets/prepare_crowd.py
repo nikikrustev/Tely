@@ -1,4 +1,4 @@
-"""Turn the CC0 crowd recordings into the browser's crowd clips ().
+"""Turn the CC0 crowd recordings into the browser's crowd clips.
 
     pip install numpy soundfile lameenc          # tools for this script only (BSD, BSD + LGPL libsndfile, LGPL LAME)
     python assets/prepare_crowd.py

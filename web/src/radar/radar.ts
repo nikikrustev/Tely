@@ -1,4 +1,4 @@
-// The sound radar (; file 42): a visible top-down pitch for sighted
+// The sound radar (file 42): a visible top-down pitch for sighted
 // friends and the muted demo video. Ball dot, crowd level per end, tension line, the haptic pulse and the current caption.
 // Hidden from screen readers (aria-hidden: the listener hears all of this), and calm under reduced motion.
 // Spoiler-safe: everything is read at the playhead (the sound engine queues ball moves ~3 s ahead, so it is not used).

@@ -19,3 +19,13 @@ def test_every_player_has_a_name_clip_and_it_says_nothing_but_the_name():
     assert len(names) == len(B.players) == 22
     for pid, p in B.players.items():
         assert names[f"name_{pid}"] == f"{p['last_name']} on the ball."
+
+
+def test_a_follow_or_detail_request_never_moves_other_settings():
+    """27 Oct, live: "Follow Olvholm" arrived as follow + haptics="events" + detail="full". Only the follow applies."""
+    r = call_tool("set_preferences", {"follow": "Olvholm", "haptics": "events", "detail": "full"}, playhead_s=P, bundle=B)
+    assert set(r["prefs"]) == {"follow"}
+    r = call_tool("set_preferences", {"detail": "key", "haptics": "off", "crowd_mix": 0.2}, playhead_s=P, bundle=B)
+    assert r["prefs"] == {"detail": "key"}
+    r = call_tool("set_preferences", {"haptics": "off", "crowd_mix": 0.2}, playhead_s=P, bundle=B)
+    assert r["prefs"] == {"haptics": "off", "crowd_mix": 0.2}          # two plain settings together still work

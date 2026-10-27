@@ -19,7 +19,7 @@ knows it's coming. You can ask that commentator, out loud and in seven languages
 
 1. Open the [demo](https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/?radar=1) with **headphones** (laptop speakers work too).
    `?radar=1` adds a sound radar so you can see what you hear.
-2. Press **Start**, the lower big button (or Enter). The first line is "AI commentary, synthetic match." **Five seconds later the voice builds:
+2. Press **Start**, the lower big button (or Space). The first line is "AI commentary, synthetic match." **Five seconds later the voice builds:
    "Navy coming... Olvholm... here's a chance!"**, four seconds before the header, while the crowd rises with it.
 3. Press **Ask the commentator**, the upper big button (or A), wait for the beep and ask out loud: the commentator answers
    through Foundry Voice Live, then the match carries on. Try "Who wins?": it won't tell you. Press it again during an
@@ -115,7 +115,7 @@ each note only after its moment has played ([D33](docs/DECISIONS.md)).
 ## Results (measured)
 
 From [`eval/report.json`](eval/report.json), rendered in [`eval/report.md`](eval/report.md) by `eval/build_report.py`.
-Judge cut, voice `en-US-Brian:DragonHDLatestNeural`, Director `gpt-5-mini`, measured 23 Oct 2026.
+Judge cut, voice `en-US-Brian:DragonHDLatestNeural`, Director `gpt-5-mini`, measured 23–27 Oct 2026 (each section of `eval/report.json` carries its own date).
 
 | Measure | Value | Notes |
 |---|---|---|

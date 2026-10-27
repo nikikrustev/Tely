@@ -112,8 +112,9 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     {
         "type": "function",
         "name": "set_preferences",
-        "description": "Change the crowd level, the vibration, or how much the commentator says: detail 'key' is "
-                       "key moments only (chances, goals, cards), 'full' the full radio commentary.",
+        "description": "Change ONE thing the fan asked for: the crowd level, the vibration, how much the commentator "
+                       "says (detail 'key' is key moments only, 'full' the full radio commentary), or the player to "
+                       "follow. Pass only the fields the fan named.",
         "parameters": {
             "type": "object",
             "properties": {

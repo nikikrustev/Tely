@@ -4,7 +4,7 @@
 
     DIRECTOR=foundry python -m tely.build_bundle --cut judge   # live Director on Foundry, traced
 
-Order ():
+Order:
     1. B's build_match      -> meta.json, events.jsonl, signals.json, ticks.json.gz
     1b. A's Director workflow (Stage 5): Director -> Commentator -> Verifier -> TTS, one window per shot.
         DIRECTOR=foundry  calls the Foundry model and records every reply in agents/recorded/<cut>.json;
@@ -17,7 +17,7 @@ Order ():
 Cues are NOT merged into segments.json: A's commentary track loads the cue file itself.
 
 B's files must come out byte-identical. This build snapshots them before and after:
-- a .gz whose unzipped content is identical but whose bytes differ (another zlib build re-compressed it; contracts/b
+- a .gz whose unzipped content is identical but whose bytes differ (another zlib build re-compressed it; docs/match-format.md
   README) gets its original bytes written back, so git stays clean;
 - any real content change exits 2: that is a determinism bug for B, and the changed files must not be committed.
 """

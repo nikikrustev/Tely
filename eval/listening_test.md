@@ -6,8 +6,8 @@ of the score sheet (last page) per participant, then type it into `eval/listenin
 
 | | |
 |---|---|
-| Session length | about 20 minutes per participant () |
-| People | at least 3 (). Blind or partially sighted fans first. Sighted people with closed eyes are a fallback, not a substitute (file 36), and the report counts them separately |
+| Session length | about 20 minutes per participant |
+| People | at least 3. Blind or partially sighted fans first. Sighted people with closed eyes are a fallback, not a substitute (file 36), and the report counts them separately |
 | Format | one-to-one, on Teams/Zoom or in person, on the participant's own device and screen reader, with headphones if they have them |
 | What you compare | the same AI commentary **alone**, against **full Tely** (commentary + reactive crowd + ball sound + earcons + vibration) |
 | Afterwards | `python eval/score_listening.py` then `python eval/build_report.py` |
