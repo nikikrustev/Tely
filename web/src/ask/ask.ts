@@ -9,12 +9,13 @@ import type { Ask, CrowdBus, LiveAskHandler } from '../contracts/b-exports';
 import { HOLD_LOOKAHEAD_S, STATIC, type Answer, type LocalTools } from './local-tools';
 import { bundleBase } from '../replay/base';
 
-export type Preset = 'score' | 'ball' | 'last' | 'missed';
+export type Preset = 'score' | 'ball' | 'last' | 'missed' | 'recap';
 export const PRESETS: { id: Preset; label: string }[] = [
   { id: 'ball', label: "Where's the ball?" },
   { id: 'score', label: "What's the score?" },
   { id: 'last', label: 'What just happened?' },
   { id: 'missed', label: 'What did I miss?' },
+  { id: 'recap', label: 'Recap so far' },
 ];
 export const DUCK_DB = -12, DUCK_MS = 240, UNDUCK_MS = 1500;   // file 38: speech +12 dB over the crowd; fast down, slow up
 export const HOLD_CUE_GAP_S = 2.5;                              // A's review: never say "hold" over a line due this soon
@@ -69,6 +70,7 @@ export class AskController implements Ask {
     if (preset === 'score') return t.get_score_and_clock(p);
     if (preset === 'ball') return t.get_ball_position(p);
     if (preset === 'last') return t.get_last_events(p, 2);
+    if (preset === 'recap') return t.get_recap(p, 'so_far');
     const r = t.what_did_i_miss(p, t.clockStr(Math.max(t.t0, p - 120)));
     return 'error' in r ? t.get_last_events(p, 2) : r;
   }
@@ -79,6 +81,16 @@ export class AskController implements Ask {
       const p = this.d.clock.now();
       const a = this.answer(preset, p);
       if (preset === 'ball') this.d.ping?.();
+      this.d.show?.(a.say);
+      await this.d.speak(a.fragments, a.say);
+      return [a.say];
+    });
+  }
+
+  /** The recap at half-time or at the end (Tier 1 item 7), offered without a press: same path as a preset. */
+  async recap(moment: 'half_time' | 'end'): Promise<string[]> {
+    return this.run(async () => {
+      const a = this.d.tools.get_recap(this.d.clock.now(), moment);
       this.d.show?.(a.say);
       await this.d.speak(a.fragments, a.say);
       return [a.say];

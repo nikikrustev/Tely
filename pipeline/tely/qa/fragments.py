@@ -30,6 +30,10 @@ STATIC = {
     "off_topic": "I'm just here for the match. Ask me about the score, the ball, or what just happened.",
     "not_sure": "Sorry, I didn't catch that. Try: what's the score, or where's the ball.",
     "done": "Done.",
+    # Recaps (get_recap): the lead-in, then the score and the big moments, each an already verified fragment.
+    "recap": "Here's the story so far.",
+    "recap_ht": "That's half-time. Here's the story of the half.",
+    "recap_end": "That's the end of this part of the match. Here's how it went.",
 }
 
 
