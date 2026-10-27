@@ -724,7 +724,7 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
 
 - **Why:** "0 leaks in 70 lines" only says the clean track is clean. It doesn't show the checks would catch a wrong
   fact. So we plant wrong facts and count.
-- **`python -m tely.eval.planted`** (`pipeline/tely/eval/planted.py`). Its `THRESHOLDS` were committed in `dca24ed`
+- **`python -m tely.eval.planted`** (`pipeline/tely/eval/planted.py`). Its `THRESHOLDS` were committed in `0941111`, the first commit of PR #43,
   before the first run, and a test pins them. Results go to `eval/planted.json` and are merged into `eval/report.json`
   as `planted_errors`.
   - **(a) Commentary:** every one of the 70 lines gets each mutation that applies to it: a wrong player name, score
