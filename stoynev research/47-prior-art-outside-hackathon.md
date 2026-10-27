@@ -1,10 +1,10 @@
-# 47 — Does Audio Stands already exist? Prior art beyond the hackathon (products, startups, research, patents)
+# 47 — Does Tely already exist? Prior art beyond the hackathon (products, startups, research, patents)
 
-_Accessed/compiled: 20 Oct 2026 · Priority area: Real-World Impact + write-up honesty (novelty claims); Audio Stands across Interpret → Explain → Render → Personalise_
+_Accessed/compiled: 20 Oct 2026 · Priority area: Real-World Impact + write-up honesty (novelty claims); Tely across Interpret → Explain → Render → Personalise_
 
 ## TL;DR
 
-- **Each pillar of Audio Stands already exists somewhere. We found nobody who combines them.** We found no product, paper or patent that does all four for blind fans: a crowd driven by events, commentary shaped by look-ahead, voice talk-back and phone haptics. The closest single items are:
+- **Each pillar of Tely already exists somewhere. We found nobody who combines them.** We found no product, paper or patent that does all four for blind fans: a crowd driven by events, commentary shaped by look-ahead, voice talk-back and phone haptics. The closest single items are:
   - OneCourt: haptics plus generated audio description, blind-first.
   - Disney patent US11843473B2: tracking data drives spatial enhancement audio that does not depend on visuals, and names visually impaired users.
   - AiCommentator (IUI 2024): interactive AI commentary for football, not blind-first.
@@ -54,13 +54,13 @@ Key: **Y** = does it · **~** = partly or adjacent · **–** = no evidence.
 | **OneCourt** (2024–26) | Startup | Tactile pitch board plus generated audio. Microsoft AI for Accessibility grant. Seattle WC 2026 match, Seahawks tests | – | – | – | Y | Y |
 | Columbia **Front Row** (UIST 2023) | Research, licensable | CV on tennis broadcast → 3D audio cues. 12 BLV users | – | – | – | – | Y |
 | Touch2See · Field of Vision · Action Audio · Sky DAC · FIFA ADC (see 36) | Products | Tactile tablets, ball sonification, human describers | – | – | – | Y/– | Y |
-| **Audio Stands (ours)** | Hackathon | Event-driven crowd + look-ahead commentary + talk-back + phone haptics, synthetic data | Y | Y | Y | Y | Y |
+| **Tely (ours)** | Hackathon | Event-driven crowd + look-ahead commentary + talk-back + phone haptics, synthetic data | Y | Y | Y | Y | Y |
 
 ### 2. Patents (keyword search; we are not lawyers)
 
 We searched Google Patents' public pages for these themes: live sports audio description, spatial audio for visually impaired viewers, commentary from match data, crowd noise, spectator haptics, and delay/anticipation. Google rate-limited us part-way through (HTTP 503), so some details below come from USPTO full-text PDFs or search-engine summaries, and those are marked.
 
-| Patent | Assignee | Priority → grant | Relevance to Audio Stands |
+| Patent | Assignee | Priority → grant | Relevance to Tely |
 |---|---|---|---|
 | **US11736775B1** "Artificial intelligence audio descriptions for live events" | Amazon Technologies | 9 Dec 2021 → 22 Aug 2023 | ML finds visual elements in live sports video and generates AD as an alternative audio track. No crowd, no spatial audio, no Q&A |
 | **US11843473B2** "Audio-orientated immersive experience of an event" (also US11381413, same title) | Disney Enterprises | 8 Jan 2020 → 12 Dec 2023 (via search summary) | **Closest to our crowd/spatial pillar.** Tracking data plus a preset event condition select or generate extra (enhancement) audio, which can be spatial. Works without visuals and names universal design, including visually impaired users |
@@ -87,9 +87,9 @@ Also seen, details unverified:
 
 ## So what for us
 
-**Audio Stands. Novelty lives in Interpret (tension plan from look-ahead) plus Personalise (spoiler-safe talk-back). It does not live in Explain or Render on their own.**
+**Tely. Novelty lives in Interpret (tension plan from look-ahead) plus Personalise (spoiler-safe talk-back). It does not live in Explain or Render on their own.**
 
-1. **Write-up claim, safe version:** "Audio Stands combines four channels for blind and low-vision fans: an event-driven crowd, a commentator that uses a declared look-ahead to build tension without spoiling, voice questions answered on the delayed clock, and phone haptics. In a search of products, research and patents (20 Oct 2026), we found each channel separately but not this combination. We found no system that uses look-ahead to shape commentary emotion." Then cite OneCourt, Disney US11843473B2 and AiCommentator as the nearest neighbours. Judges trust a claim more when you name the work closest to it.
+1. **Write-up claim, safe version:** "Tely combines four channels for blind and low-vision fans: an event-driven crowd, a commentator that uses a declared look-ahead to build tension without spoiling, voice questions answered on the delayed clock, and phone haptics. In a search of products, research and patents (20 Oct 2026), we found each channel separately but not this combination. We found no system that uses look-ahead to shape commentary emotion." Then cite OneCourt, Disney US11843473B2 and AiCommentator as the nearest neighbours. Judges trust a claim more when you name the work closest to it.
 2. **Words to avoid:** "first", "world's first", "never done", "patent-pending", "revolutionary", and "predicts the future" (it is a delay, not prediction). "AI commentary" by itself is not novel: IBM, Opta Voice, WSC and Tencent all predate us.
 3. **Validation to cite, not compete with:**
    - **OneCourt**: a Microsoft AI for Accessibility grantee. It reports +74.3% comprehension with haptics plus generated AD vs radio (see 42). This is sponsor-aligned proof that generated audio plus touch helps.
@@ -106,7 +106,7 @@ Also seen, details unverified:
 5. **Patent hygiene (not legal advice):** our synthetic-data prototype is a demo. If anyone commercialises it, have counsel look at Disney US11843473B2 (event-triggered spatial enhancement audio) and Amazon US11736775B1 first.
 
 **Other ideas, briefly:**
-- **20 Home End / 17 Heartbeat** are absorbed into Audio Stands, and the same caveats apply: Sky 2020 and Immersion are prior art.
+- **20 Home End / 17 Heartbeat** are absorbed into Tely, and the same caveats apply: Sky 2020 and Immersion are prior art.
 - **D Chalk Talk** and **22 Half-Time Talk** sit among many talk-to-sports assistants (Samsung, FOX). They need a distinct hook.
 - **13 Recap Dial** overlaps with WSC, Peacock and IBM. Personalised voiced recaps are well established.
 

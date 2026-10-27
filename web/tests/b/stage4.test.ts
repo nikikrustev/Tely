@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { compose, Haptics, heartbeat, MAX_ENTRIES, TACTONS, type HapticsEnv, type Team } from '../../src/haptics/haptics';
-import { crowdGainFor, DEFAULTS, loadSettings, sanitize, saveSettings, STORAGE_KEY, type StorageLike } from '../../src/settings';
+import { crowdGainFor, DEFAULTS, LEGACY_STORAGE_KEY, loadSettings, sanitize, saveSettings, STORAGE_KEY, type StorageLike } from '../../src/settings';
 import { nextChapter } from '../../src/replay/chapters';
 import { ReplaySource, type SegmentsDoc } from '../../src/replay/replay-source';
 import { CrowdEngine } from '../../src/audio/crowd-engine';
@@ -99,6 +99,14 @@ describe('settings', () => {
     mem.set(STORAGE_KEY, '{not json');
     expect(loadSettings(store)).toEqual(DEFAULTS);
     expect(sanitize({ club: 'X', crowdMix: 7, haptics: 'loud', hapticStrength: 'x' })).toEqual({ ...DEFAULTS, crowdMix: 1 });
+  });
+
+  it('settings saved before the rename to Tely still load, and the new key wins once saved (D26)', () => {
+    const mem = new Map<string, string>([[LEGACY_STORAGE_KEY, JSON.stringify({ ...DEFAULTS, club: 'A' })]]);
+    const store: StorageLike = { getItem: (k) => mem.get(k) ?? null, setItem: (k, v) => { mem.set(k, v); } };
+    expect(loadSettings(store).club).toBe('A');
+    saveSettings({ ...DEFAULTS, club: 'H' }, store);
+    expect(loadSettings(store).club).toBe('H');
   });
 
   it('the crowd slider changes crowd gain smoothly, never above +4 dB', () => {

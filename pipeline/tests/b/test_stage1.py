@@ -11,9 +11,9 @@ from pathlib import Path
 
 import pytest
 
-from audiostands import build_match, clock, crowd, interpret, judge_cut
-from audiostands.generator import FPS, HALF_L, HALF_W, PERIODS, generate
-from audiostands.movement import ball_rows
+from tely import build_match, clock, crowd, interpret, judge_cut
+from tely.generator import FPS, HALF_L, HALF_W, PERIODS, generate
+from tely.movement import ball_rows
 
 ROOT = Path(__file__).resolve().parents[3]
 JUDGE = ROOT / "web" / "public" / "replay" / "v1" / "judge"
@@ -47,7 +47,7 @@ def test_committed_bundle_matches_a_fresh_build(two_builds):
     # SEAM(B->A): A's build_bundle reruns build_match; any byte difference would show up as a change in A's commits
     d, _ = two_builds[0]
     for name in ("meta.json", "events.jsonl", "signals.json"):
-        assert sha(d / name) == sha(JUDGE / name), f"{name}: rerun python -m audiostands.build_match --cut judge"
+        assert sha(d / name) == sha(JUDGE / name), f"{name}: rerun python -m tely.build_match --cut judge"
     new, old = (gzip.decompress((p / "ticks.json.gz").read_bytes()) for p in (d, JUDGE))
     assert hashlib.sha256(new).digest() == hashlib.sha256(old).digest(), "ticks content differs"
 

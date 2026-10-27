@@ -5,9 +5,9 @@ import re
 
 import pytest
 
-from audiostands import build_commentary, spoiler
-from audiostands.commentary import planner, ssml, templates, verifier
-from audiostands.commentary.source import MATCH_DIRS, load_match
+from tely import build_commentary, spoiler
+from tely.commentary import planner, ssml, templates, verifier
+from tely.commentary.source import MATCH_DIRS, load_match
 
 CUTS = ["sample", "judge"]
 

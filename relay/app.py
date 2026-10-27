@@ -6,8 +6,8 @@ Routes:
 - GET  /health   liveness and the current DEMO_MODE. The page calls it on load to wake a scaled-to-zero replica (D6).
 - WS   /voice    one fan's live Ask (voicelive.Bridge). Text frames are JSON control messages, binary frames are
                  PCM16 24 kHz mono audio (mic up, answer down).
-- POST /mcp      B's audiostands.qa.mcp_server, streamable HTTP, stateless (file 18). The listener's playhead comes from
-                 the X-AudioStands-Playhead header; without it the tools answer as of the start of the cut.
+- POST /mcp      B's tely.qa.mcp_server, streamable HTTP, stateless (file 18). The listener's playhead comes from
+                 the X-Tely-Playhead header; without it the tools answer as of the start of the cut.
 - POST /feedback tester mode (?test=1) answers and problem reports: checked by feedback.py, logged as the App Insights
                  custom event "tester_feedback" (telemetry.py, D19). Only FEEDBACK_ORIGINS (the Static Web App) may post.
 No keys anywhere: Voice Live uses the container's managed identity (file 30), and the browser never sees a token.
@@ -26,7 +26,7 @@ from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 
-from audiostands.qa.bundle import Bundle, load_bundle
+from tely.qa.bundle import Bundle, load_bundle
 
 from .caps import Caps
 from .clips import refusal
@@ -64,7 +64,7 @@ def create_app(*, bundle: Bundle | None = None, caps: Caps | None = None,
     if mount_mcp:
         # SEAM(A->B): B's MCP server, hosted here (TEAM_SPLIT.md "Relay"). B's http_app() keeps DNS-rebinding protection
         # on; MCP_ALLOWED_HOSTS lists our public host name (set by infra/relay.bicep).
-        from audiostands.qa.mcp_server import http_app
+        from tely.qa.mcp_server import http_app
         mcp_srv, mcp_app = http_app(b, _csv("MCP_ALLOWED_HOSTS", "localhost:*,127.0.0.1:*"))
 
     @contextlib.asynccontextmanager
@@ -76,7 +76,7 @@ def create_app(*, bundle: Bundle | None = None, caps: Caps | None = None,
         else:
             yield
 
-    app = FastAPI(title="Audio Stands relay", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
+    app = FastAPI(title="Tely relay", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=["GET"], allow_headers=[])
     app.state.caps, app.state.bundle = c, b
     mcp_hits: dict[str, collections.deque] = collections.defaultdict(collections.deque)

@@ -12,10 +12,10 @@
                "--namespace", "deploy", "--namespace", "resourcehealth", "--namespace", "bicepschema"],
       "env": { "AZURE_SUBSCRIPTION_ID": "${input:azure-sub}" }
     },
-    "audiostands-stats": {
+    "tely-stats": {
       "type": "http",
       "url": "https://ca-relay-calef3.icycliff-4b45d13b.swedencentral.azurecontainerapps.io/mcp",
-      "headers": { "X-AudioStands-Playhead": "${input:playhead}" }
+      "headers": { "X-Tely-Playhead": "${input:playhead}" }
     }
   }
 }

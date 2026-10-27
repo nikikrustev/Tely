@@ -8,10 +8,10 @@ from pathlib import Path
 
 import pytest
 
-from audiostands import build_bundle
-from audiostands.commentary import planner
-from audiostands.commentary.source import MATCH_DIRS
-from audiostands.spoiler import OUTCOME
+from tely import build_bundle
+from tely.commentary import planner
+from tely.commentary.source import MATCH_DIRS
+from tely.spoiler import OUTCOME
 
 ROOT = Path(__file__).resolve().parents[3]
 

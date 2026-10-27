@@ -1,6 +1,6 @@
 # 38 — A crowd that reacts like a real home end: generating stadium atmosphere from match state
 
-_Accessed/compiled: 20 Oct 2026 · Priority area: Render + Personalise (audio channel) for Audio Stands (20 Home End + 17 Heartbeat); also 19 Match Music, F Graphics Desk, A TwinCast_
+_Accessed/compiled: 20 Oct 2026 · Priority area: Render + Personalise (audio channel) for Tely (20 Home End + 17 Heartbeat); also 19 Match Music, F Graphics Desk, A TwinCast_
 
 ## TL;DR
 
@@ -120,7 +120,7 @@ Output: one state per second as a timed cue (`metric:"crowd"`, payload `{excitem
 
 ## So what for us
 
-- **Audio Stands, Interpret → Render (audio) → Personalise (club end).**
+- **Tely, Interpret → Render (audio) → Personalise (club end).**
   - Build `crowd_states()` as a tiny Interpret-side function that emits crowd cues on the shared cue bus.
   - Build `CrowdEngine` as the client-side Render. It needs no Azure service.
   - Personalise = the listener's club. The same match renders mirrored for the other end (see the toy output: valence flips, and our goal becomes their "stunned hush").

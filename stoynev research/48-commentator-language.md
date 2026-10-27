@@ -1,6 +1,6 @@
 # 48. How football commentators talk: language for a less bland AI commentator
 
-_Researched 24 Oct 2026 for Audio Stands. Builds on file 36 (what blind fans want) and file 39 (prosody and anticipation).
+_Researched 24 Oct 2026 for Tely. Builds on file 36 (what blind fans want) and file 39 (prosody and anticipation).
 This file is about the **words**, not the voice._
 
 ## TL;DR
@@ -57,7 +57,7 @@ This file is about the **words**, not the voice._
 
 ## So what for us
 
-- **`lively` template set (`pipeline/audiostands/commentary/lively.py`, D21):**
+- **`lively` template set (`pipeline/tely/commentary/lively.py`, D21):**
   - **Verbs and movement:** "picks it up", "takes a touch, head up", "lets fly", "steps in".
   - **Places said the way commentators say them:** "over on the far side in midfield", "right below us in the final third".
   - **Directions:** the listener's side ("to your left") when the ball is clearly in one half.
@@ -76,7 +76,7 @@ This file is about the **words**, not the voice._
   - a co-commentator voice. Candidates for the LLM-colour item on the drop list (file 39: colour lines may go stale).
 
 ## Reuse: code & links
-- Build: `python -m audiostands.build_commentary --style lively [--names pipeline/names/<x>.local.json]`.
+- Build: `python -m tely.build_commentary --style lively [--names pipeline/names/<x>.local.json]`.
 - Local listening test: `npm run dev`, then `/?names=<stem>` (dev server only; `web/.local/` is git-ignored).
 - Tests: `pipeline/tests/a/test_lively.py`.
 

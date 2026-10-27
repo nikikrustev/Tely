@@ -27,7 +27,7 @@ export const LABELS: Record<keyof MixLevels, string> = {
   whistle: "Referee's whistle",
   ping: 'Ball ping ("Where is the ball?")',
 };
-/** What the fan says for each channel (the adjust_sound names, pipeline/audiostands/qa/tools.py SOUNDS). */
+/** What the fan says for each channel (the adjust_sound names, pipeline/tely/qa/tools.py SOUNDS). */
 export const SAY_AS: Record<keyof MixLevels, string> = {
   commentator: 'commentator', crowdBeds: 'crowd', chants: 'chants', roars: 'reactions', pass: 'passes', shot: 'shots',
   tackle: 'tackles', save: 'saves', net: 'net', whistle: 'whistle', ping: 'ball ping',

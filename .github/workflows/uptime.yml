@@ -24,7 +24,7 @@ jobs:
       - name: Page loads and is the player
         run: |
           curl -fsS --retry 3 --retry-all-errors --max-time 30 "${DEMO_URL%/}/" -o page.html
-          grep -q '<title>Audio Stands</title>' page.html || { echo "::error::$DEMO_URL is up but is not the Audio Stands page"; exit 1; }
+          grep -q '<title>Tely</title>' page.html || { echo "::error::$DEMO_URL is up but is not the Tely page"; exit 1; }
           grep -q 'id="start"' page.html || { echo "::error::the Start button is missing"; exit 1; }
       - name: Replay manifest is valid and names the commentary track
         run: |

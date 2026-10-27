@@ -88,9 +88,9 @@ export function scoreLine(score: { home: number; away: number }): string {
 async function startApp(): Promise<void> {
   // The view's layout before the code below loads, so the page doesn't jump (showView() takes over from here).
   document.getElementById('app')?.classList.add(`v-${initialView(location.search, matchMedia('(max-width: 40rem)').matches)}`);
-  const [{ AudioStands }, { CrowdEngine, loadCrowdBuffers }, { ReplaySource, loadSegments }, { wire }, { startDebugPanel },
+  const [{ SoundStage }, { CrowdEngine, loadCrowdBuffers }, { ReplaySource, loadSegments }, { wire }, { startDebugPanel },
     hap, settingsMod, { loadChapters, nextChapter }, askMod, { LocalTools, loadQaBundle }] = await Promise.all([
-    import('./audio/audio-stands'), import('./audio/crowd-engine'), import('./replay/replay-source'), import('./wire'),
+    import('./audio/sound-stage'), import('./audio/crowd-engine'), import('./replay/replay-source'), import('./wire'),
     import('./replay/debug'), import('./haptics/haptics'), import('./settings'), import('./replay/chapters'),
     import('./ask/ask'), import('./ask/local-tools')]);
   const { loadSettings, saveSettings, crowdGainFor, prefsPatch } = settingsMod;
@@ -187,7 +187,7 @@ async function startApp(): Promise<void> {
   // ---- playback ----
   let ctx: AudioContext | null = null;
   let src: InstanceType<typeof ReplaySource> | null = null;
-  let stands: InstanceType<typeof AudioStands> | null = null;
+  let stands: InstanceType<typeof SoundStage> | null = null;
   laneB.pingBall = () => stands?.pingBall();
   let w: ReturnType<typeof wire> | null = null;
   let chapters: Awaited<ReturnType<typeof loadChapters>> = [];
@@ -310,7 +310,7 @@ async function startApp(): Promise<void> {
   };
   askBtn.addEventListener('click', pressAsk);
   // SEAM(B->A): live-ask.ts browserIO phase(). Visual only: a screen reader would talk into the open mic.
-  window.addEventListener('audiostands:live-phase', (e) => {
+  window.addEventListener('tely:live-phase', (e) => {
     if (askBtn.dataset.state !== 'stop') return;
     const p = (e as CustomEvent<string>).detail;
     status.textContent = p === 'heard' ? 'Got your question. Thinking…'
@@ -352,7 +352,7 @@ async function startApp(): Promise<void> {
   }, true);
   // A button clicks on Space's keyup: swallow the one that belongs to a Space we already handled.
   document.addEventListener('keyup', (e) => { if (e.key === ' ' && spaceTaken) { spaceTaken = false; e.preventDefault(); } }, true);
-  const setupAsk = async (actx: AudioContext, st: InstanceType<typeof AudioStands>, c: InstanceType<typeof CrowdEngine>,
+  const setupAsk = async (actx: AudioContext, st: InstanceType<typeof SoundStage>, c: InstanceType<typeof CrowdEngine>,
                           s: InstanceType<typeof ReplaySource>) => {
     try {
       const tools = new LocalTools(await loadQaBundle());
@@ -376,7 +376,7 @@ async function startApp(): Promise<void> {
   };
 
   // ---- one audio setup, shared by Start, "Learn the sounds" and Bluetooth calibration (each needs a tap first) ----
-  let audio: { ctx: AudioContext; st: InstanceType<typeof AudioStands>; c: InstanceType<typeof CrowdEngine> } | null = null;
+  let audio: { ctx: AudioContext; st: InstanceType<typeof SoundStage>; c: InstanceType<typeof CrowdEngine> } | null = null;
   let analyser: AnalyserNode | null = null;
   const ensureAudio = async () => {
     if (audio) { await audio.ctx.resume(); return audio; }
@@ -384,7 +384,7 @@ async function startApp(): Promise<void> {
     const nav = navigator as Navigator & { audioSession?: { type: string } };
     if (nav.audioSession) nav.audioSession.type = 'playback'; // iOS: play even with the silent switch on (file 37)
     await actx.resume();
-    const st = new AudioStands(actx);
+    const st = new SoundStage(actx);
     const c = new CrowdEngine(actx, st.crowdIn, await loadCrowdBuffers(actx));
     c.setOutputGain(crowdGainFor(settings.crowdMix));
     crowdBus.target = c;

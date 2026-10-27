@@ -4,7 +4,7 @@
     python eval/score_listening.py
     python eval/build_report.py        # puts the summary into eval/report.md and eval/report.json
 
-The protocol is eval/listening_test.md: two 3-minute clips (commentary only vs full Audio Stands), four comprehension
+The protocol is eval/listening_test.md: two 3-minute clips (commentary only vs full Tely), four comprehension
 probes per clip (1 = right, 0 = wrong) and our 3 x 1-5 version of RNIB's 15-point scale. The CSV has one row per
 participant; c1_* is Clip 1 and c2_* is Clip 2, and `group` says which clip had the full sound.
 

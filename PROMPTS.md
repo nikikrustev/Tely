@@ -1,4 +1,4 @@
-# Audio Stands: every prompt to paste
+# Tely: every prompt to paste
 
 **A = potencialbg** (owns all Microsoft work). **B = Nikolay** (no Microsoft).
 
@@ -53,7 +53,7 @@ Task: Stage 0 of BUILD_PLAN.md (run its prompt), with these changes from TEAM_SP
   pipeline/tests/a/ and pipeline/tests/b/, web/ Vite + TS + vitest with web/tests/a/ and web/tests/b/, web/src/main.ts that
   calls mountLaneA() from web/src/lane-a/index.ts (a no-op for now), web/src/contracts/a-exports.ts and
   web/src/contracts/b-exports.ts with the interfaces from TEAM_SPLIT.md "The seams" point 3, and
-  pipeline/audiostands/qa/__init__.py with the API from "The seams" point 2 (every function raises NotImplementedError).
+  pipeline/tely/qa/__init__.py with the API from "The seams" point 2 (every function raises NotImplementedError).
 - Azure Python packages go in pipeline/requirements-azure.txt, not pyproject.toml. CI installs pyproject only.
 - CI must discover tests in both a/ and b/ folders without needing edits when new test files appear.
 - Add .github/CODEOWNERS from TEAM_SPLIT.md "File ownership". Use @potencialbg for A, and ask me for Nikolay's GitHub username.
@@ -73,7 +73,7 @@ Explain as you go with one-line "TIP:" or "WHY:" notes (cite the research file).
 
 Task: Stage 3 of BUILD_PLAN.md (run its prompt), built against the hand-written sample in contracts/b/ because B's real
 match generator isn't merged yet. Read the sample through one small loader function so switching to the real judge cut later
-is a one-line change. Render the voice samples (python -m audiostands.voices) first and tell me where they are.
+is a one-line change. Render the voice samples (python -m tely.voices) first and tell me where they are.
 Tests go in pipeline/tests/a/ with the synthesiser mocked.
 ```
 
@@ -90,8 +90,8 @@ Explain as you go with one-line "TIP:" or "WHY:" notes (cite the research file).
 
 Task:
 1. Switch the Stage 3 commentary from the contracts/b/ sample to B's real judge cut
-   (python -m audiostands.build_match --cut judge). Rebuild, re-check spoiler_leaks() == [] and truth_check 100%.
-2. Write pipeline/audiostands/build_bundle.py from Stage 4 of BUILD_PLAN.md, with one change: do NOT merge cues into
+   (python -m tely.build_match --cut judge). Rebuild, re-check spoiler_leaks() == [] and truth_check 100%.
+2. Write pipeline/tely/build_bundle.py from Stage 4 of BUILD_PLAN.md, with one change: do NOT merge cues into
    segments.json. My commentary track will load cues.en.radio.jsonl itself.
 3. Write infra/main.bicep + azure.yaml for Static Web Apps Free (Stage 4) and web/staticwebapp.config.json. Don't deploy yet.
 If git status shows B's generated files (events.jsonl, ticks.json.gz, signals.json, segments.json) as modified, don't commit
@@ -139,7 +139,7 @@ If there's no model quota, use DIRECTOR=rules and note it in docs/DECISIONS.md.
 ```
 
 ### A6 · Sat 24 evening · Render the offline answers
-**Wait for:** B5 merged (`FRAGMENTS` in `audiostands.qa`).
+**Wait for:** B5 merged (`FRAGMENTS` in `tely.qa`).
 
 ```text
 I am potencialbg (Person A, I own ALL Microsoft work). Nikolay (Person B) works in this repo at the same time.
@@ -149,14 +149,14 @@ commit keys. CI must never need Azure keys.
 Explain as you go with one-line "TIP:" or "WHY:" notes (cite the research file). Mark code that meets B's with
 "# SEAM(A->B): ...". Finish by listing every file you changed and any HANDOFFs.
 
-Task: pipeline/audiostands/answers.py (Stage 6 of BUILD_PLAN.md, my part only). Import FRAGMENTS from audiostands.qa, render each
+Task: pipeline/tely/answers.py (Stage 6 of BUILD_PLAN.md, my part only). Import FRAGMENTS from tely.qa, render each
 with the same voice and SSML-hash cache as the commentary, and write web/public/replay/v1/judge/answers/<sha>.mp3 plus
 answers/index.json mapping fragment id -> audio file. Call it from build_bundle. Rebuild, azd deploy, and tell me the
 fragment count and characters synthesised. B owns local-tools.ts and ask.ts, so don't touch them.
 ```
 
 ### A7 · Sun 25 · Live spoken questions (Voice Live)
-**Wait for:** B5 merged (the `audiostands.qa` package is real, not stubs). Time box: 7 h. **Checkpoint 17:00:** if live Ask doesn't work on the deployed URL, leave it behind a flag that's off by default.
+**Wait for:** B5 merged (the `tely.qa` package is real, not stubs). Time box: 7 h. **Checkpoint 17:00:** if live Ask doesn't work on the deployed URL, leave it behind a flag that's off by default.
 
 ```text
 I am potencialbg (Person A, I own ALL Microsoft work). Nikolay (Person B) works in this repo at the same time.
@@ -167,9 +167,9 @@ Explain as you go with one-line "TIP:" or "WHY:" notes (cite the research file).
 "# SEAM(A->B): ...". Finish by listing every file you changed and any HANDOFFs.
 
 Task: Stage 7 of BUILD_PLAN.md, with these changes from TEAM_SPLIT.md:
-- relay/ IMPORTS B's tools: from audiostands.qa import TOOL_SCHEMAS, PERSONA, call_tool, catch_up. Don't write or copy
+- relay/ IMPORTS B's tools: from tely.qa import TOOL_SCHEMAS, PERSONA, call_tool, catch_up. Don't write or copy
   tools.py or mcp_server.py; B owns those. The relay injects playhead_s from the session; the model never sets the clock.
-- Host B's MCP server (audiostands.qa.mcp_server) in the same container at /mcp.
+- Host B's MCP server (tely.qa.mcp_server) in the same container at /mcp.
 - Browser side goes in web/src/lane-a/live-ask.ts and registers with B's Ask button via Ask.registerLiveMode()
   (web/src/contracts/b-exports.ts). On any error or no answer within 8 s, fall back to B's preset menu.
 - After each live test session, save contracts/golden/a/live_<date>.jsonl: question, tool calls with args, tool results,
@@ -323,7 +323,7 @@ Task: my part of Stage 4 of BUILD_PLAN.md: web/src/haptics/haptics.ts, web/src/s
 Pause and "Next big moment" must also pause and move A's commentary track through the functions in
 web/src/contracts/a-exports.ts. Tests in web/tests/b/: every haptic pattern has at most 10 entries; settings survive a
 localStorage that throws. A does the build_bundle, commentary track and deploy, so don't touch those.
-If time is left, start pipeline/audiostands/qa/tools.py (next prompt, B5, part 1).
+If time is left, start pipeline/tely/qa/tools.py (next prompt, B5, part 1).
 ```
 
 ### B5 · Sat 24 · The Q&A brain and offline Ask
@@ -339,9 +339,9 @@ git pull main, work on branch b/<topic>, open a PR when done.
 Explain as you go with one-line "TIP:" or "WHY:" notes (cite the research file). Mark code that meets A's with
 "# SEAM(B->A): ...". Finish by listing every file you changed and any HANDOFFs.
 
-Task: the Q&A brain in pipeline/audiostands/qa/, implementing exactly the API in TEAM_SPLIT.md "The seams" point 2
+Task: the Q&A brain in pipeline/tely/qa/, implementing exactly the API in TEAM_SPLIT.md "The seams" point 2
 (replace the NotImplementedError stubs; don't change the signatures, because A's relay imports them). In this order:
-1. tools.py: the 8 tools from stoynev research/43-audio-stands-architecture.md §3, ported from the match_tools.py code in
+1. tools.py: the 8 tools from stoynev research/43-tely-architecture.md §3, ported from the match_tools.py code in
    40-conversational-commentator.md, every one clamped to playhead_s. Write this test FIRST: across 200 random playheads,
    no answer uses evidence from after the playhead.
 2. fragments.py: FRAGMENTS, the list of every fixed phrase needing audio (Stage 6 of BUILD_PLAN.md: 18 zone clips,
@@ -373,7 +373,7 @@ Explain as you go with one-line "TIP:" or "WHY:" notes (cite the research file).
 "# SEAM(B->A): ...". Finish by listing every file you changed and any HANDOFFs.
 
 Task:
-1. pipeline/audiostands/qa/mcp_server.py: the same tools on MCP SDK v2 MCPServer over streamable HTTP (research file 18).
+1. pipeline/tely/qa/mcp_server.py: the same tools on MCP SDK v2 MCPServer over streamable HTTP (research file 18).
    A hosts it in the relay container. Test that every tool clamps to the playhead.
 2. eval/qa_cases.jsonl: at least 20 questions, including "who scores next?", "who wins?", off-topic ones and ambiguous player
    names, each with the expected behaviour. A script that runs them through answer_text() and writes eval/qa.json

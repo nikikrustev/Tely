@@ -1,6 +1,6 @@
 1
 00:00:00,300 --> 00:00:04,700
-Audio Stands: a seat in the stands for fans who can't see the pitch.
+Tely: a seat in the stands for fans who can't see the pitch.
 
 2
 00:00:04,900 --> 00:00:07,600
@@ -52,4 +52,4 @@ We checked our Azure deployment from Copilot Agent Mode through Azure MCP.
 
 14
 00:01:46,200 --> 00:01:51,600
-Audio Stands. Put on headphones and try it: the link is below.
+Tely. Put on headphones and try it: the link is below.

@@ -201,18 +201,18 @@ def browser(site: str, relay: str | None, only: list[str] | None, play_s: float,
             page.goto(url)
             page.wait_for_function("() => /Ready/.test(document.getElementById('status').textContent)", timeout=60_000)
             page.click("#start")                           # before "Ready" B's Start ignores the press
-            page.wait_for_function("() => !document.getElementById('ask').disabled && window.audioStandsLive",
+            page.wait_for_function("() => !document.getElementById('ask').disabled && window.telyLive",
                                    timeout=60_000)
             page.wait_for_timeout(play_s * 1000)           # let the match play a little before asking
             page.click("#ask")
             clicked = page.evaluate("() => performance.now()")
             page.click("#ask-live")
-            page.wait_for_function("() => window.audioStandsLive.turns.length > 0 || "
+            page.wait_for_function("() => window.telyLive.turns.length > 0 || "
                                    "!document.getElementById('ask-menu').hidden", timeout=60_000)
             page.wait_for_timeout(500)
-            turns = page.evaluate("() => window.audioStandsLive.turns")
+            turns = page.evaluate("() => window.telyLive.turns")
             presets = page.evaluate("() => !document.getElementById('ask-menu').hidden")
-            events = page.evaluate("() => window.audioStandsLive.events")
+            events = page.evaluate("() => window.telyLive.events")
             b.close()
         t = turns[0] if turns else {"outcome": "fallback_to_presets" if presets else "no_turn", "latency_ms": None}
         t.update({"case_id": c["id"], "asked": c["question"], "source": f"eval/qa_latency.py browser ({site})",

@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import json
 
-from audiostands.qa import golden, hold_that_thought
-from audiostands.qa.bundle import load_bundle
-from audiostands.qa.tools import call, catch_up_answer
+from tely.qa import golden, hold_that_thought
+from tely.qa.bundle import load_bundle
+from tely.qa.tools import call, catch_up_answer
 
 B = load_bundle()
 CASES = [json.loads(s) for s in golden.OUT.read_text(encoding="utf-8").splitlines()]
@@ -14,7 +14,7 @@ CASES = [json.loads(s) for s in golden.OUT.read_text(encoding="utf-8").splitline
 
 def test_golden_file_is_current(tmp_path):
     fresh = golden.write(tmp_path / "qa_cases.jsonl", B)
-    assert fresh.read_bytes() == golden.OUT.read_bytes(), "rerun: python -m audiostands.qa.golden"
+    assert fresh.read_bytes() == golden.OUT.read_bytes(), "rerun: python -m tely.qa.golden"
 
 
 def test_python_tools_reproduce_every_case():
@@ -30,7 +30,7 @@ def test_python_tools_reproduce_every_case():
 
 
 def test_every_offline_fragment_exists():
-    from audiostands.qa import FRAGMENTS
+    from tely.qa import FRAGMENTS
     ids = {f["id"] for f in FRAGMENTS}
     used = {f for c in CASES for f in (c.get("expected_fragments") or [])}
     assert used <= ids, used - ids

@@ -1,6 +1,6 @@
 // OWNER: A (potencialbg). The live-readiness soak (D24): one full-length half (48 min, real time) on a phone-sized
 // headless Chromium. Needs the dev server (the soak bundles live in git-ignored web/.local/, built by
-// `python -m audiostands.eval.soak_bundle`) and a relay. Not in CI: it runs for the whole half.
+// `python -m tely.eval.soak_bundle`) and a relay. Not in CI: it runs for the whole half.
 //   node tests/a/soak.mjs --bundle soak2 --wav question.wav [--relay http://localhost:8080] [--minutes 48]
 //        [--ask-every 10] [--offline-at 20] [--pause-at 35] [--out dir]
 // Every second it records the playhead, both audio contexts' clocks and wall time; every 100 ms each context's output
@@ -59,7 +59,7 @@ const PROBE = () => {
   // 1 Hz: wall, playhead, playing, each context's currentTime
   window.__ticks = [];
   setInterval(() => {
-    const c = window.audioStandsCommentary?.opts?.clock;
+    const c = window.telyCommentary?.opts?.clock;
     window.__ticks.push([Math.round(performance.now()), c ? +c.now().toFixed(3) : null, c ? c.isPlaying() : null,
       ...ctxs.map((x) => +x.currentTime.toFixed(4))]);
   }, 1000);
@@ -98,8 +98,8 @@ const metric = async () => {
     clock: await page.locator('[data-sb="clock"]').innerText(), state: await page.locator('[data-sb="state"]').innerText() };
 };
 const now = () => page.evaluate(() => performance.now());
-const liveState = () => page.evaluate(() => ({ events: window.audioStandsLive?.events?.length ?? 0, turns: window.audioStandsLive?.turns ?? [],
-  last: (window.audioStandsLive?.events ?? []).slice(-3) }));
+const liveState = () => page.evaluate(() => ({ events: window.telyLive?.events?.length ?? 0, turns: window.telyLive?.turns ?? [],
+  last: (window.telyLive?.events ?? []).slice(-3) }));
 
 const ask = async (why) => {
   const before = await liveState();
@@ -107,14 +107,14 @@ const ask = async (why) => {
   marks.push(['ask', tAsk]);
   if (await page.locator('#ask-menu').isVisible()) await page.keyboard.press('Escape');
   await page.tap('#ask');
-  const ok = await page.waitForFunction(([n, k]) => (window.audioStandsLive?.events ?? []).slice(n)
-    .some(([, e]) => e.startsWith('refusal')) || (window.audioStandsLive?.turns?.length ?? 0) > k,
+  const ok = await page.waitForFunction(([n, k]) => (window.telyLive?.events ?? []).slice(n)
+    .some(([, e]) => e.startsWith('refusal')) || (window.telyLive?.turns?.length ?? 0) > k,
   [before.events, before.turns.length], { timeout: 40_000 }).then(() => true).catch(() => false);
   await page.waitForFunction(() => document.getElementById('ask')?.dataset.state !== 'stop', null, { timeout: 60_000 }).catch(() => {});
   const after = await liveState();
   const turn = after.turns.length > before.turns.length ? after.turns.at(-1) : null;
   const r = { why, atMin: +((Date.now() - t0Wall) / 60000).toFixed(1), answered: !!turn && turn.outcome === 'answered',
-    refusal: (await page.evaluate((n) => (window.audioStandsLive?.events ?? []).slice(n).map(([, e]) => e)
+    refusal: (await page.evaluate((n) => (window.telyLive?.events ?? []).slice(n).map(([, e]) => e)
       .filter((e) => e.startsWith('refusal')), before.events)).at(-1) ?? null,
     question: turn?.question ?? null, answer: turn?.answer?.slice(0, 160) ?? null, latency_ms: turn?.latency_ms ?? null,
     usage: turn?.usage ?? null, waitedMs: Math.round((await now()) - tAsk), settled: ok };
@@ -155,7 +155,7 @@ while (Date.now() < endAt) {
   }
   const state = await page.locator('[data-sb="state"]').innerText();
   if (min > 5 && state !== 'Playing' && state !== 'Paused') { log('state', state); }
-  if (await page.evaluate(() => !window.audioStandsCommentary?.opts?.clock?.isPlaying()) && pauseDone && min > PAUSE_AT + 2) {
+  if (await page.evaluate(() => !window.telyCommentary?.opts?.clock?.isPlaying()) && pauseDone && min > PAUSE_AT + 2) {
     log('replay finished');
     break;
   }

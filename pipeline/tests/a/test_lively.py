@@ -5,9 +5,9 @@ import re
 
 import pytest
 
-from audiostands import build_commentary, spoiler
-from audiostands.commentary import lively, planner
-from audiostands.commentary.source import BUNDLE, load_match, rename
+from tely import build_commentary, spoiler
+from tely.commentary import lively, planner
+from tely.commentary.source import BUNDLE, load_match, rename
 
 NAMES = {"venue": "Testfield", "teams": {"home": {"short_name": "Larks"}, "away": {"short_name": "Owls"}},
          "players": {"r9": {"first_name": "Ada", "last_name": "Quill"}, "n9": {"first_name": "Bo", "last_name": "Zebedee"}}}

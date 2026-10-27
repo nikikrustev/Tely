@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Stage 0 Azure bootstrap for Audio Stands (file 44 "Reuse", cut to what BUILD_PLAN.md uses).
+# Stage 0 Azure bootstrap for Tely (file 44 "Reuse", cut to what BUILD_PLAN.md uses).
 # OWNER: A (potencialbg). Person A runs this by hand after `az login`. Claude never runs it.
 # Creates: rg-as-dev + rg-as-judge (swedencentral), one AIServices S0 resource with a custom domain,
 # a gpt-5-mini GlobalStandard deployment (capacity 10, NoAutoUpgrade), and A's own data-plane roles.

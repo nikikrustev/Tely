@@ -1,4 +1,4 @@
-// OWNER: B (Nikolay). TypeScript copies of the offline Q&A tools (pipeline/audiostands/qa/tools.py), so presets work
+// OWNER: B (Nikolay). TypeScript copies of the offline Q&A tools (pipeline/tely/qa/tools.py), so presets work
 // with no backend (BUILD_PLAN Stage 6). Every tool reads the match only up to the local playhead: an event counts once
 // its outcome is revealed (reveal_t), and the ball is read at the playhead. contracts/golden/b/qa_cases.jsonl holds
 // the Python answers; vitest checks these give exactly the same `say`, fragments and evidence.
@@ -28,7 +28,7 @@ const HALF_L = 52.5;
 const NUM = ['nil', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 const THIRD_WORDS: Record<string, string> = { defensive_third: 'defensive third', middle_third: 'midfield', attacking_third: 'attacking third' };
 const SIDE_WORDS: Record<string, string> = { near: 'near side', centre: 'centre', far: 'far side' };
-// Same texts as STATIC in pipeline/audiostands/qa/fragments.py (the golden cases catch any drift).
+// Same texts as STATIC in pipeline/tely/qa/fragments.py (the golden cases catch any drift).
 export const STATIC: Record<string, string> = {
   hold: 'Hold that thought, watch this!',
   back: 'Back to the action.',

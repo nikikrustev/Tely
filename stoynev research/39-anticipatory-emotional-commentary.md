@@ -1,6 +1,6 @@
 # 39 — A commentator who knows what's coming: look-ahead, tension build-up and emotional voice
 
-_Accessed/compiled: 20 Oct 2026 · Priority area: Audio Stands (Explain → Render audio), voice, timing_
+_Accessed/compiled: 20 Oct 2026 · Priority area: Tely (Explain → Render audio), voice, timing_
 
 ## TL;DR
 
@@ -60,7 +60,7 @@ _Accessed/compiled: 20 Oct 2026 · Priority area: Audio Stands (Explain → Rend
 
 ## So what for us
 
-**Audio Stands. Stages: Interpret (tension) → Explain (script planner) → Render (TTS + timed audio) → Personalise (language, club, verbosity).**
+**Tely. Stages: Interpret (tension) → Explain (script planner) → Render (TTS + timed audio) → Personalise (language, club, verbosity).**
 
 1. **Architecture.**
    - The generator writes to a **truth buffer**. The listener's playhead runs at `t_true − D`, with **D = 10 s** (our pick; OTA TV is about 11.5 s).

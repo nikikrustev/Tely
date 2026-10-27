@@ -2,7 +2,7 @@
 # replaces the NotImplementedError bodies.
 import inspect
 
-from audiostands import qa
+from tely import qa
 
 
 def test_qa_exports_the_seam_api():

@@ -1,4 +1,4 @@
-# Audio Stands: eyes-closed listening test
+# Tely: eyes-closed listening test
 
 _Owner: A (potencialbg). BUILD_PLAN Stage 8 item 6. The protocol follows `stoynev research/36-blind-fans-and-audio-description.md`
 ("Testing with blind users"): two clips, comprehension probes, then RNIB's 15-point scale. Print this file. Run one copy
@@ -9,7 +9,7 @@ of the score sheet (last page) per participant, then type it into `eval/listenin
 | Session length | about 20 minutes per participant (BUILD_PLAN Stage 8) |
 | People | at least 3 (BUILD_PLAN Stage 8). Blind or partially sighted fans first. Sighted people with closed eyes are a fallback, not a substitute (file 36), and the report counts them separately |
 | Format | one-to-one, on Teams/Zoom or in person, on the participant's own device and screen reader, with headphones if they have them |
-| What you compare | the same AI commentary **alone**, against **full Audio Stands** (commentary + reactive crowd + ball sound + earcons + vibration) |
+| What you compare | the same AI commentary **alone**, against **full Tely** (commentary + reactive crowd + ball sound + earcons + vibration) |
 | Afterwards | `python eval/score_listening.py` then `python eval/build_report.py` |
 
 ---
@@ -27,7 +27,7 @@ match carries on, so ask them not to.
 
 **The four URLs** (deployed demo, judge cut):
 
-| Clip | Commentary only | Full Audio Stands |
+| Clip | Commentary only | Full Tely |
 |---|---|---|
 | Clip 1 | https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/?from=670&to=850&sound=commentary | https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/?from=670&to=850 |
 | Clip 2 | https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/?from=970&to=1150&sound=commentary | https://lively-ocean-0efe4ae0f.2.azurestaticapps.net/?from=970&to=1150 |
@@ -42,8 +42,8 @@ clip gets the full sound:
 
 | Group | Who | Clip 1 | Clip 2 |
 |---|---|---|---|
-| **A** | P01, P03, P05, … | commentary only | full Audio Stands |
-| **B** | P02, P04, P06, … | full Audio Stands | commentary only |
+| **A** | P01, P03, P05, … | commentary only | full Tely |
+| **B** | P02, P04, P06, … | full Tely | commentary only |
 
 Clip 1 has a goal and Clip 2 does not, so the clips are not equally easy. The groups balance that only with an even
 number of people; with 3 people, say so in the write-up.
@@ -67,7 +67,7 @@ it is.
 
 ## 3. Consent script (read it out at the start; tick the answers on the score sheet)
 
-> "Thank you for helping. I'm testing Audio Stands, a student hackathon project: an audio experience for following
+> "Thank you for helping. I'm testing Tely, a student hackathon project: an audio experience for following
 > football without seeing it. The match is made up by a computer; the teams and players aren't real. The commentator
 > is an AI voice.
 >

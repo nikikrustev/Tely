@@ -1,6 +1,6 @@
 # 49 — Talking over the commentator: barge-in, "is that for me?", the delay and the agent layout
 
-_Accessed/compiled: 24 Oct 2026 · Priority area: Audio Stands Personalise + Render (two-way audio), with the whole pipeline's timing (Interpret → Explain → Render). Builds on [36](36-blind-fans-and-audio-description.md), [39](39-anticipatory-emotional-commentary.md), [40](40-conversational-commentator.md), [43](43-audio-stands-architecture.md), D17 and D21._
+_Accessed/compiled: 24 Oct 2026 · Priority area: Tely Personalise + Render (two-way audio), with the whole pipeline's timing (Interpret → Explain → Render). Builds on [36](36-blind-fans-and-audio-description.md), [39](39-anticipatory-emotional-commentary.md), [40](40-conversational-commentator.md), [43](43-tely-architecture.md), D17 and D21._
 
 ## TL;DR
 
@@ -56,7 +56,7 @@ _Accessed/compiled: 24 Oct 2026 · Priority area: Audio Stands Personalise + Ren
 | After an answer | Templated catch-up from the pause to now, then `commentary.resume()` | `ask.ts:105-111` |
 | Resume | The line that was speaking when paused **resumes mid-sentence at the playhead offset** (built for pause and seek) | `commentary-track.ts:97, 164, 235-239` |
 | Second press while busy | `AskController.run` returns at once while `busy`. Whether the live answer can be stopped by a press: unverified, check on device. | `ask.ts:86` |
-| Hold that thought | A shot with xG ≥ 0.08 due within 8 s → "hold that thought", wait 8 s | `pipeline/audiostands/qa/__init__.py:156-165` |
+| Hold that thought | A shot with xG ≥ 0.08 due within 8 s → "hold that thought", wait 8 s | `pipeline/tely/qa/__init__.py:156-165` |
 | Shared context | One system note per question, `[LISTENER AT mm:ss]`. **No record of aired lines** (file 40 §4 proposed `[AIRED …]`). | `relay/voicelive.py:45, 187` |
 
 ### 1. Barge-in: detection, echo and latency
@@ -203,7 +203,7 @@ _Accessed/compiled: 24 Oct 2026 · Priority area: Audio Stands Personalise + Ren
 | Q&A agent | Voice Live | Tools ≤ P, ledger | Gets `[AIRED]` items; `auto_truncate: true` |
 
 - **How live answers stay consistent with what the fan has heard:**
-  1. **One fact source.** Commentary and answers both come from the same event ids and tools (exists: B's `audiostands.qa`, the truth check, 0 spoiler leaks in D16 and D17).
+  1. **One fact source.** Commentary and answers both come from the same event ids and tools (exists: B's `tely.qa`, the truth check, 0 spoiler leaks in D16 and D17).
   2. **One clock.** Tools are clamped to the fan's P, never extrapolated (exists, D17).
   3. **One memory of what was said.** The Heard Ledger is fed to Voice Live as labelled system items (`[AIRED 63:12] …`; file 40 §4 already proposed this, unbuilt). Interrupted answers are cut to what was heard (`auto_truncate`, or `truncate` with the played milliseconds, or word timestamps). The model then won't say "as I said" about something the fan never heard. Keep the window small: it is billed as input (file 40).
   4. **Promises are state, not prose.** "I'll come back to that at the next break" is a deferred-answer entry in the Floor Manager with a TTL, not something the LLM must remember.

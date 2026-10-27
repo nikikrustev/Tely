@@ -1,6 +1,6 @@
-# 44 — Accounts, quotas and setup we will need for Audio Stands (a do-later checklist — nothing signed up yet)
+# 44 — Accounts, quotas and setup we will need for Tely (a do-later checklist — nothing signed up yet)
 
-_Accessed/compiled: 20 Oct 2026 · Priority area: day-1 setup, region choice, budget, and team ownership for the Audio Stands hero stack (Foundry, Voice Live, Speech, Container Apps, Web PubSub, GitHub Copilot Agent Mode)_
+_Accessed/compiled: 20 Oct 2026 · Priority area: day-1 setup, region choice, budget, and team ownership for the Tely hero stack (Foundry, Voice Live, Speech, Container Apps, Web PubSub, GitHub Copilot Agent Mode)_
 
 > **Nothing in this file has been signed up for, logged into or requested.** Each step is written so the team can do it later. Steps tagged **[CARD]**, **[PHONE]**, **[WORK-EMAIL]** or **[SCHOOL-EMAIL]** need that team member's own personal details.
 
@@ -85,7 +85,7 @@ Sources: Speech regions (Voice Live, STT and TTS tabs) and Foundry region availa
 | Web PubSub / Cosmos | yes / yes | yes / yes | (unverified) | (unverified) |
 | Distance to Sofia/London (voice round trip) | **near** | far | near | near |
 
-**Decision: Sweden Central.** It is the only region that ticks every Audio Stands row, and it is close to both team members, which helps barge-in latency. **Fallback: East US 2**, which ticks everything and adds `gpt-4o-mini-tts`. Community threads report that Students subscriptions often offer only *"East US 2" or "Sweden Central"* (unverified). Put SWA in `westeurope`. If we need it, the Fabric trial is offered in all Fabric regions.
+**Decision: Sweden Central.** It is the only region that ticks every Tely row, and it is close to both team members, which helps barge-in latency. **Fallback: East US 2**, which ticks everything and adds `gpt-4o-mini-tts`. Community threads report that Students subscriptions often offer only *"East US 2" or "Sweden Central"* (unverified). Put SWA in `westeurope`. If we need it, the Fabric trial is offered in all Fabric regions.
 
 ### 5. Budget estimate (USD list prices, Sweden Central)
 
@@ -131,7 +131,7 @@ Sources: Speech regions (Voice Live, STT and TTS tabs) and Foundry region availa
 
 ## So what for us
 
-- **Audio Stands, all stages: Ingest → Explain → Render (audio and haptics) → Personalise (Q&A).** Everything Audio Stands needs fits in one Sweden Central resource group:
+- **Tely, all stages: Ingest → Explain → Render (audio and haptics) → Personalise (Q&A).** Everything Tely needs fits in one Sweden Central resource group:
   - Explain uses a `gpt-5.4-mini` deployment.
   - Render pre-renders HD-voice SSML commentary (look-ahead lets us pre-render).
   - Personalise uses Voice Live `gpt-realtime-2.1-mini` for "ask the commentator". There is nothing to deploy, and it runs on the Standard price tier.

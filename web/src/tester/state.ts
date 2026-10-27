@@ -93,7 +93,9 @@ export interface TesterState {
   events: Outgoing[];
 }
 
-export const STORAGE_KEY = 'audiostands.tester.v1';
+export const STORAGE_KEY = 'tely.tester.v1';
+/** The key from before the rename to Tely (D26): read if the new key is empty, so a tester's answers carry over. */
+export const LEGACY_STORAGE_KEY = 'audiostands.tester.v1';
 export type StorageLike = Pick<Storage, 'getItem' | 'setItem'>;
 
 export function freshState(id: string = newTesterId()): TesterState {
@@ -104,7 +106,7 @@ export function freshState(id: string = newTesterId()): TesterState {
 /** The saved state, or a fresh one if there is none, it is broken, or storage throws. */
 export function loadState(storage: StorageLike | null): TesterState {
   try {
-    const raw = storage?.getItem(STORAGE_KEY);
+    const raw = storage?.getItem(STORAGE_KEY) ?? storage?.getItem(LEGACY_STORAGE_KEY);
     if (!raw) return freshState();
     const o = JSON.parse(raw) as Partial<TesterState>;
     if (o.v !== 1 || typeof o.id !== 'string' || !/^t-[0-9a-f]{8}$/.test(o.id)) return freshState();

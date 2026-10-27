@@ -4,8 +4,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from audiostands import voices
-from audiostands.commentary import tts
+from tely import voices
+from tely.commentary import tts
 
 TOO_MANY = "too_many"
 
