@@ -216,7 +216,8 @@ def test_a_turn_end_to_end_makes_a_golden_record():
         assert "function_call_output" not in json.dumps(link.sent)   # not before response.done
         await br.handle({"type": "response.done", "response": {"status": "completed"}})
         assert link.types()[-2:] == ["conversation.item.create", "response.create"]
-        assert json.loads(link.sent[-2]["item"]["output"])["say"]
+        seen = json.loads(link.sent[-2]["item"]["output"])
+        assert seen["say"] and not {"x", "y"} & seen.keys()      # D28: the model never gets the raw coordinates
         await br.handle({"type": "response.audio.delta", "delta": base64.b64encode(b"\x01\x02").decode()})
         br.metrics(1234.4)
         await br.handle({"type": "response.audio_transcript.done", "transcript": "Navy have it."})
@@ -227,6 +228,7 @@ def test_a_turn_end_to_end_makes_a_golden_record():
         rec = done[0]["turn"]
         assert rec["question"] == "Where's the ball?" and rec["answer"] == "Navy have it."
         assert rec["tool_calls"][0]["name"] == "get_ball_position"
+        assert {"x", "y"} <= rec["tool_calls"][0]["result"].keys()     # ...but the log keeps them for the evals
         assert rec["outcome"] == "answered" and rec["latency_basis"] == "audio_end_ms"
         assert isinstance(rec["latency_ms"], int) and rec["latency_ms"] >= 0
         assert isinstance(rec["facts_latency_ms"], int) and rec["facts_latency_ms"] >= rec["latency_ms"]

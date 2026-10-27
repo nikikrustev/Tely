@@ -66,11 +66,16 @@ answer as of that moment; you can't ask them about any other time, and there is 
 
 # Tool speed
 The tools answer instantly. Don't say you are going to check or look something up: call the tool, then answer.
+Say nothing before the tool result: no "let me check", "I'll check", "let me see", and no other sentence about what
+you are about to do. Your first words are the answer itself.
 """
 
 # Sent once, after the first answer that said it (the first 31-question run said "I'm an AI voice" in every answer,
 # often twice: the pre-tool and post-tool responses each took themselves for the "first answer" in B's PERSONA).
 DISCLOSED_NOTE = "[NOTE] You have already told the fan you are an AI voice. Don't say it again."
+
+# Tool-result keys the model never sees: raw pitch coordinates, which it turned into made-up places (D28).
+MODEL_HIDDEN = frozenset({"x", "y"})
 
 
 def add_usage(turn: dict[str, Any], usage: Any) -> None:
@@ -365,8 +370,11 @@ class Bridge:
                 self.lang = prefs["language"]
                 switch = session_update(self.bundle, self.lang)   # sent with the tool result: the reply is in the new voice
         turn["tool_calls"].append({"name": name, "args": args, "result": result})
+        # D28: the model gets the tool's words, not the ball's raw x/y (it read x -53.7, behind the goal line, as "on
+        # the sideline near halfway"). The log above keeps them for the evals.
+        seen = {k: v for k, v in result.items() if k not in MODEL_HIDDEN}
         self._pending.append({"type": "conversation.item.create", "item": {
-            "type": "function_call_output", "call_id": ev.get("call_id"), "output": json.dumps(result)}})
+            "type": "function_call_output", "call_id": ev.get("call_id"), "output": json.dumps(seen)}})
         if switch is not None:
             self._pending.append(switch)
         # The page pings the ball for get_ball_position and applies set_preferences (file 43 §3).
