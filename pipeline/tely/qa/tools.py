@@ -300,8 +300,28 @@ def adjust_sound(b: Bundle, p: float, sound: Any = None, change: Any = None, lev
     return _ok(b, p, None, say=say, prefs={"sound": sound, "level": new})
 
 
+# D27: the languages the commentator speaks: code -> (name, the Reds, Navy, a short confirmation in that language).
+# commentary/languages.py pre-records the match in each; the relay switches the live voice and instructions.
+LANGUAGES = {
+    "en": ("English", "Reds", "Navy", "Commentary in English."),
+    "bg": ("Bulgarian", "Червените", "Сините", "Коментарът продължава на български."),
+    "es": ("Spanish", "los Rojos", "los Azules", "Seguimos la narración en español."),
+    "ar": ("Arabic", "الحمر", "الزرق", "نواصل التعليق باللغة العربية."),
+    "fr": ("French", "les Rouges", "les Bleus", "On continue le commentaire en français."),
+    "de": ("German", "die Roten", "die Blauen", "Weiter geht's mit dem Kommentar auf Deutsch."),
+}
+
+
+def set_language(b: Bundle, p: float, language: Any = None) -> dict:
+    """"Speak Bulgarian": the page switches the match commentary, the relay the live answers."""
+    if language not in LANGUAGES:
+        return {"error": "unknown_language", "candidates": list(LANGUAGES)}
+    # SEAM(B->A): like set_preferences, the relay publishes `prefs` to the page; nothing here touches the match.
+    return _ok(b, p, None, say=LANGUAGES[language][3], prefs={"language": language})
+
+
 TOOLS = {f.__name__: f for f in (get_score_and_clock, get_ball_position, where_is, get_player_stats, get_last_events,
-                                 explain_moment, what_did_i_miss, set_preferences, adjust_sound)}
+                                 explain_moment, what_did_i_miss, set_preferences, adjust_sound, set_language)}
 
 
 def call(name: str, args: dict[str, Any], playhead_s: float, bundle: Bundle) -> dict[str, Any]:

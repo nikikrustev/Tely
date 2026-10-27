@@ -55,7 +55,7 @@ describe('LiveAsk', () => {
     expect(s.binaryType).toBe('arraybuffer');
     s.server({ type: 'ready' });
     await flush();
-    expect(s.json()[0]).toEqual({ type: 'ask', playhead_s: 742, levels: soundLevels() });
+    expect(s.json()[0]).toEqual({ type: 'ask', playhead_s: 742, levels: soundLevels(), lang: 'en' });
     expect((s.json()[0] as { levels: Record<string, number> }).levels.whistle).toBe(levelFromDb(DEFAULT_MIX.whistle));
     s.server({ type: 'listening', as_of_clock: '57:22' });
     await flush();

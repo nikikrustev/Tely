@@ -129,6 +129,18 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
             "additionalProperties": False,
         },
     },
+    {
+        "type": "function",
+        "name": "set_language",
+        "description": "Switch the language of the match commentary and of your answers: en English, bg Bulgarian, "
+                       "es Spanish, ar Arabic, fr French, de German.",
+        "parameters": {
+            "type": "object",
+            "properties": {"language": {"type": "string", "enum": ["en", "bg", "es", "ar", "fr", "de"]}},
+            "required": ["language"],
+            "additionalProperties": False,
+        },
+    },
 ]
 
 from .bundle import Bundle, load_bundle  # noqa: E402

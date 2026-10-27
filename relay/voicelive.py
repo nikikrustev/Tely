@@ -20,6 +20,7 @@ from typing import Any, Awaitable, Callable, Protocol
 # SEAM(A->B): B's Q&A brain (TEAM_SPLIT.md seam 2). Imported, never copied: the clamp B tests is the code that runs live.
 from tely.qa import PERSONA, TOOL_SCHEMAS, call_tool
 from tely.qa.bundle import Bundle
+from tely.qa.tools import LANGUAGES
 
 from .caps import Caps
 from .clips import refusal
@@ -37,6 +38,24 @@ def model() -> str:
 def voice() -> str:
     # Same voice as the pre-rendered commentary (D13), so the answer sounds like the commentator (file 40 §4).
     return os.environ.get("TTS_VOICE", "en-US-Brian:DragonHDLatestNeural")
+
+
+# D27: the same Brian in every other language (commentary/languages.py pre-records the match in this voice too).
+MULTILINGUAL_VOICE = "en-US-BrianMultilingualNeural"
+
+
+def voice_for(lang: str) -> str:
+    return voice() if lang == "en" else os.environ.get("TTS_VOICE_MULTILINGUAL", MULTILINGUAL_VOICE)
+
+
+def language_note(lang: str) -> str:
+    """Appended to the instructions for any language but English: what to speak and what the teams are called."""
+    if lang == "en" or lang not in LANGUAGES:
+        return ""
+    name, home, away, _ = LANGUAGES[lang]
+    return (f"\n# Language\nThe fan listens in {name}. Speak only {name}, in every answer, until the fan asks for another "
+            f"language. Say Reds as \"{home}\" and Navy as \"{away}\". Keep player names as they are. Tool results are in "
+            f"English: say them in {name}.\n")
 
 
 # Ours, appended to B's PERSONA: how the relay's notes and the tools relate. No facts, no match content.
@@ -76,17 +95,17 @@ def transcription_prompt(b: Bundle) -> str:
     return f"Football match, {b.team_name('home')} against {b.team_name('away')}. Players: {', '.join(names)}."
 
 
-def session_update(b: Bundle) -> dict[str, Any]:
+def session_update(b: Bundle, lang: str = "en") -> dict[str, Any]:
     return {"type": "session.update", "session": {
-        "instructions": PERSONA + HOSTING_NOTE,
+        "instructions": PERSONA + HOSTING_NOTE + language_note(lang),
         "modalities": ["text", "audio"],
-        "voice": {"type": "azure-standard", "name": voice()},
+        "voice": {"type": "azure-standard", "name": voice_for(lang)},
         "input_audio_format": "pcm16",
         "output_audio_format": "pcm16",
         "input_audio_sampling_rate": RATE,
         "input_audio_noise_reduction": {"type": "azure_deep_noise_suppression"},
         "input_audio_echo_cancellation": {"type": "server_echo_cancellation"},
-        "input_audio_transcription": {"model": "gpt-4o-mini-transcribe", "language": "en",
+        "input_audio_transcription": {"model": "gpt-4o-mini-transcribe", "language": lang if lang in LANGUAGES else "en",
                                       "prompt": transcription_prompt(b)},
         # WHY: the mic is open only while asking (file 40 §1), so semantic VAD just ends the turn.
         "turn_detection": {"type": "azure_semantic_vad", "silence_duration_ms": SILENCE_MS, "remove_filler_words": True},
@@ -173,13 +192,14 @@ class Bridge:
         self._first_audio: float | None = None
         self._after_tools = False
         self.disclosed = False
+        self.lang = "en"                           # the language this Voice Live session speaks (D27)
         self.levels: dict[str, int] = {}          # the fan's sound levels (0..100) from the last `ask`, for adjust_sound
 
     async def start(self) -> None:
-        await self.link.send(session_update(self.bundle))
+        await self.link.send(session_update(self.bundle, self.lang))   # a reconnect keeps the fan's language
 
     # ---------------------------------------------------------------- from the browser
-    async def ask(self, playhead_s: Any, levels: Any = None) -> None:
+    async def ask(self, playhead_s: Any, levels: Any = None, lang: Any = None) -> None:
         """Start one question at the fan's playhead, or send the spoken refusal. `levels` is the page's sound mix on
         the 0..100 scale ({"whistle": 30, ...}); only adjust_sound reads it, so the fan hears the new level."""
         if isinstance(levels, dict):
@@ -194,6 +214,9 @@ class Bridge:
             return
         if self.clock() - self.opened_at > self.caps.reconnect_after_s:
             await self._reconnect()              # under the 60-min Voice Live session limit (file 40 §2)
+        if lang in LANGUAGES and lang != self.lang:   # the fan's language from the page (Setup, or an earlier answer)
+            self.lang = lang
+            await self.link.send(session_update(self.bundle, lang))
         self.asked += 1
         self.playhead = p
         self.turn = {"v": 1, "at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "model": model(),
@@ -323,6 +346,7 @@ class Bridge:
         except json.JSONDecodeError:
             args = {}
         turn = self.turn if self.turn is not None else {"tool_calls": []}
+        switch: dict[str, Any] | None = None
         if len(turn["tool_calls"]) >= self.caps.tool_calls_per_answer:
             result: dict[str, Any] = {"error": "tool_budget_exceeded", "candidates": []}
         else:
@@ -337,9 +361,14 @@ class Bridge:
             prefs = result.get("prefs") or {}
             if name == "adjust_sound" and isinstance(prefs.get("level"), int):
                 self.levels[prefs["sound"]] = prefs["level"]   # a second "down by 5" in this answer starts from here
+            if name == "set_language" and prefs.get("language") in LANGUAGES and prefs["language"] != self.lang:
+                self.lang = prefs["language"]
+                switch = session_update(self.bundle, self.lang)   # sent with the tool result: the reply is in the new voice
         turn["tool_calls"].append({"name": name, "args": args, "result": result})
         self._pending.append({"type": "conversation.item.create", "item": {
             "type": "function_call_output", "call_id": ev.get("call_id"), "output": json.dumps(result)}})
+        if switch is not None:
+            self._pending.append(switch)
         # The page pings the ball for get_ball_position and applies set_preferences (file 43 §3).
         await self.to_client({"type": "tool", "name": name, "say": result.get("say"), "prefs": result.get("prefs")})
 

@@ -111,6 +111,9 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
 
   /** Give the track its cue list and start fetching every MP3 (a few MB in total, file 43 §6). */
   load(cues: Cue[]): void {
+    // A second load is a language switch (D27): the line speaking now stops, and nothing resumes mid-line.
+    this.stopAll(this.opts.clock.now());
+    this.interrupted = -1;
     this.cues = cues;
     this.status = cues.map(() => 'pending');
     for (const c of cues) this.fetch(c.utterance.audio_url);

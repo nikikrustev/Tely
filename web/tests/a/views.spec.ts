@@ -46,3 +46,16 @@ test('laptop keys: Space pauses and carries on, Enter asks', async ({ page }) =>
   else await expect(page.locator('#ask-menu')).toBeVisible();          // no relay: the quick questions
   await expect(page.locator('[data-sb="state"]')).toHaveText('Playing');
 });
+
+test('Setup: the commentator language switches the commentary track and is kept on this device (D27)', async ({ page }) => {
+  await page.goto('/?view=setup');
+  await expect(page.locator('#status')).toHaveText(/Ready/);
+  const lang = page.getByLabel('Commentator language');
+  await expect(lang).toHaveValue('en');
+  const cues = page.waitForResponse((r) => r.url().endsWith('/cues.es.radio.jsonl'));
+  await lang.selectOption('es');
+  expect((await cues).ok()).toBe(true);
+  await expect(page.locator('#status')).toHaveText('Commentary in Spanish.');
+  await page.reload();
+  await expect(page.getByLabel('Commentator language')).toHaveValue('es');
+});

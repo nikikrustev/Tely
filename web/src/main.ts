@@ -148,6 +148,19 @@ async function startApp(): Promise<void> {
     });
   }
   for (const r of radios('haptics')) r.addEventListener('change', () => update({ haptics: r.value as typeof settings.haptics }));
+  // D27: the commentator's language, from Setup or from the commentator's set_language. Saved on this device.
+  const langSel = $<HTMLSelectElement>('lang');
+  langSel.value = settings.lang;
+  const LANG_NAME: Record<typeof settings.lang, string> = { en: 'English', bg: 'Bulgarian', es: 'Spanish', ar: 'Arabic', fr: 'French', de: 'German' };
+  const setLang = async (lang: typeof settings.lang, announce: boolean) => {
+    update({ lang });
+    langSel.value = lang;
+    const ok = (await lane.setLanguage?.(lang)) ?? false;
+    const line = ok ? `Commentary in ${LANG_NAME[lang]}.` : `${LANG_NAME[lang]} commentary isn't available. Staying with what was playing.`;
+    if (announce) say(line); else status.textContent = line;   // after an answer, the commentator has already said it
+  };
+  langSel.addEventListener('change', () => { void setLang(langSel.value as typeof settings.lang, true); });
+  if (settings.lang !== 'en') void lane.setLanguage?.(settings.lang);
   crowdSlider.addEventListener('input', () => update({ crowdMix: Number(crowdSlider.value) / 100 }));
   strength.addEventListener('change', () => update({ hapticStrength: Number(strength.value) }));
   // The live commentator's set_preferences ("turn the crowd down", "only vibrate for big moments"): same path as the
@@ -158,6 +171,7 @@ async function startApp(): Promise<void> {
     const sound = adjustSound(p);
     if (sound) { status.textContent = `${GROUP_NAMES[sound.key]}: ${sound.level} out of 100.`; return; }
     const patch = prefsPatch(p);
+    if (patch.lang) { void setLang(patch.lang, false); return; }
     if (!Object.keys(patch).length) return;
     update(patch);
     for (const r of radios('haptics')) r.checked = r.value === settings.haptics;
