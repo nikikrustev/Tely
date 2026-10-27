@@ -596,3 +596,16 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
 - **After merging:** reinstall the package (`pip install -e "pipeline[dev]"`), then redeploy the web app and the relay
   (`azd deploy`), so the live page says Tely (the uptime check looks for `<title>Tely</title>`) and the relay speaks
   the new MCP header. Re-render the voiceover with `python video/narration.py`.
+
+## D28. Ball-position answers say only what the tool says (27 Oct 2026)
+
+- **Why:** the live check after the D26 deploy asked "Where's the ball?" at 56:34. The tool said "The ball is out of
+  play." (x -53.7, behind the goal line), and the commentator added "It's sitting on the sideline for Reds, near the
+  halfway point", which is made up. It also opened with "Let me check", which the hosting note already forbade.
+- **Relay:** `function_call_output` no longer carries the tool result's raw `x`/`y` (`MODEL_HIDDEN` in
+  `relay/voicelive.py`): the model gets the tool's words only. The golden-turn log keeps the full result for the evals.
+  The tools themselves are unchanged, so the offline presets, the MCP server and the golden cases are untouched.
+- **Persona:** for where the ball is, say what `get_ball_position` says, in its words, adding no side, area, distance
+  or team it didn't give. The hosting note now also names the openers to avoid ("let me check", "let me see").
+- **Checked:** relay pytest (the model's tool output has no x/y; the log still does), pipeline pytest, and the live
+  phone check after the relay redeploy.
