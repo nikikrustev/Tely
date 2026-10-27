@@ -27,9 +27,5 @@ And fans can ask out loud, through Foundry Voice Live.
 Its tools are locked to the fan's moment, on a Container Apps relay with a managed identity: no keys.
 
 8
-00:01:28,100 --> 00:01:34,800
-The same tools are an MCP server we query from GitHub Copilot in VS Code.
-
-9
-00:01:35,100 --> 00:01:43,600
+00:01:28,100 --> 00:01:36,600
 Every line is voiced by Azure Speech HD, in seven languages, and every push runs our tests, accessibility included.

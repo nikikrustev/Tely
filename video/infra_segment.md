@@ -1,6 +1,6 @@
 # The "how it works" segment: screen recordings + AI voiceover
 
-_27 Oct 2026. Fills 0:25–1:44 of the 1:52 video, between the Higgsfield clips. The shape follows the common
+_27 Oct 2026. Fills 0:25–1:37 of the 1:45 video, between the Higgsfield clips. The shape follows the common
 pattern for a "how it works" half: app → Foundry portal → trust beat → architecture → CI → end card._
 
 ## The whole video
@@ -9,8 +9,8 @@ pattern for a "how it works" half: app → Foundry portal → trust beat → arc
 |---|---|---|
 | 0:00–0:10 | Higgsfield clip 1: home, tap, "Start button" | its own |
 | 0:10–0:25 | Higgsfield clip 2: the stadium goal | its own |
-| **0:25–1:44** | **This segment: the real app, then what's under it** | narrator (`voiceover_infra.srt`) + the app's own audio |
-| 1:44–1:52 | Higgsfield clip 3: back home, logo, "Telly: teleport to the stands" | its own. Add the URL and the footer as text (below) |
+| **0:25–1:37** | **This segment: the real app, then what's under it** | narrator (`voiceover_infra.srt`) + the app's own audio |
+| 1:37–1:45 | Higgsfield clip 3: back home, logo, "Telly: teleport to the stands" | its own. Add the URL and the footer as text (below) |
 
 Transitions:
 - **Home → stadium:** a J-cut. Detach clip 2's audio and start the crowd about 1 s early, under the tap. Cut on the
@@ -19,6 +19,8 @@ Transitions:
 - **Segment → clip 3:** a hard cut. Clip 3's pull-back to black does the work.
 - If clip 2 runs straight into clip 3 in a shorter cut: a 0.3 s cross fade on his face (the shots match), and let the
   roar run about 1 s into the living room (L-cut).
+
+_The Copilot + MCP beat was cut on 27 Oct: Copilot Chat on our machine didn't list the MCP server's tools. The server itself answers (`tools/call get_score_and_clock` → "Reds nil, Navy one, 59 minutes played.")._
 
 ## Beats, pages and voiceover
 
@@ -34,10 +36,9 @@ Every number here is in `eval/report.json` or the README; the voiceover keeps th
 | 0:58–1:05 | **The eval report:** https://github.com/nikikrustev/BerbataAI/blob/main/eval/report.md | Scroll to the lines / spoiler leaks / numbers verified rows. Optional: a highlight box over them in the edit | `Measured · eval/report.json` | 5 "A Verifier checks every line in code: seventy lines, zero spoiler leaks, every number verified." |
 | 1:05–1:20 | **The live app again**, same URL | Mid-match, press **Ask the commentator**, wait for the beep, ask **"Who wins?"**. It refuses to predict. This is our trust beat: the AI can't be talked into spoiling the match. One take, unedited, app audio only from 1:09 | `LIVE · Foundry Voice Live · unedited` | 6 "And fans can ask out loud, through Foundry Voice Live." then silence for the answer |
 | 1:20–1:28 | **Azure portal:** https://portal.azure.com → Resource groups → **rg-as-judge** → Overview | The resource list: Static Web App, the Container App relay, Application Insights, the identity | `Azure Container Apps · managed identity` | 7 "Its tools are locked to the fan's moment, on a Container Apps relay with a managed identity: no keys." |
-| 1:28–1:35 | **VS Code**, GitHub Copilot Chat in **Agent** mode | Open the tools picker for 1 s so **tely-stats** and **azure** show. Ask: *"Use the tely-stats MCP server: what's the score, and where is the ball right now?"* Allow the tool call, expand it so the input and output show, and let the answer appear. The server answers at the playhead from `.vscode/mcp.json` (default 860 s = 59:20), so don't ask about another minute. Wake the relay first | `GitHub Copilot · Azure MCP · Stats MCP` | 8 "The same tools are an MCP server we query from GitHub Copilot in VS Code." |
-| 1:35–1:44 | **GitHub Actions:** https://github.com/nikikrustev/BerbataAI/actions | The run list, all green. Hover the CI workflow (it includes the WCAG 2.2 AA axe tests) | `CI on every push · WCAG 2.2 AA` | 9 "Every line is voiced by Azure Speech HD, in seven languages, and every push runs our tests, accessibility included." |
+| 1:28–1:37 | **GitHub Actions:** https://github.com/nikikrustev/BerbataAI/actions | The run list, all green. Hover the CI workflow (it includes the WCAG 2.2 AA axe tests) | `CI on every push · WCAG 2.2 AA` | 8 "Every line is voiced by Azure Speech HD, in seven languages, and every push runs our tests, accessibility included." |
 
-**Over clip 3 (1:44–1:52), as text in the edit:** the URL `lively-ocean-0efe4ae0f.2.azurestaticapps.net`, then
+**Over clip 3 (1:37–1:45), as text in the edit:** the URL `lively-ocean-0efe4ae0f.2.azurestaticapps.net`, then
 "Best Use of Microsoft Foundry · Berbata AI", and the footer **"AI voices (Azure AI Speech) · AI-generated imagery
 (Higgsfield) · synthetic data · fictional clubs and players"**. Hold the URL for at least 3 s.
 
