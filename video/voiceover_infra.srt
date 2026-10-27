@@ -1,0 +1,35 @@
+1
+00:00:25,300 --> 00:00:28,800
+This is Tely, running live on Azure.
+
+2
+00:00:35,000 --> 00:00:38,000
+The voice lifted four seconds before the header.
+
+3
+00:00:38,300 --> 00:00:50,500
+Here's how. A seeded generator plays a synthetic match. Our Director agent, on Microsoft Agent Framework, hears ten seconds ahead, but returns only a tension plan, never the result.
+
+4
+00:00:50,800 --> 00:00:57,800
+It runs on gpt-5-mini in Microsoft Foundry, and every run is traced in Application Insights.
+
+5
+00:00:58,100 --> 00:01:04,800
+A Verifier checks every line in code: seventy lines, zero spoiler leaks, every number verified.
+
+6
+00:01:05,100 --> 00:01:08,900
+And fans can ask out loud, through Foundry Voice Live.
+
+7
+00:01:20,200 --> 00:01:27,800
+Its tools are locked to the fan's moment, on a Container Apps relay with a managed identity: no keys.
+
+8
+00:01:28,100 --> 00:01:34,800
+The same tools are an MCP server we query from GitHub Copilot in VS Code.
+
+9
+00:01:35,100 --> 00:01:43,600
+Every line is voiced by Azure Speech HD, in seven languages, and every push runs our tests, accessibility included.

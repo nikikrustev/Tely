@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- Last frame for Higgsfield clip 3 (video/higgsfield_prompts.md): the Tely mark over the exact tagline in
+     Fraunces 800. Seedance can't spell the tagline, so we hand it the final frame instead.
+     Render at 1920x1080 and screenshot the viewport. Colours follow the generated clips (a dark grey background,
+     the tile a shade darker) so the model's last frames blend into this one. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tely end frame</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&display=block" rel="stylesheet">
+<style>
+  :root { --bg: #111111; --tile: #050505; --cream: #f2ead8; }
+  html, body { margin: 0; width: 1920px; height: 1080px; background: var(--bg); overflow: hidden; }
+  .card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; }
+  .mark { width: 560px; height: 560px; margin-top: 160px; }
+  .tagline {
+    margin-top: 92px;
+    font-family: 'Fraunces', serif; font-weight: 800; font-size: 118px; line-height: 1;
+    color: var(--cream); letter-spacing: 0; word-spacing: 0.14em; white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <svg class="mark" viewBox="0 0 120 120" aria-label="Tely"><rect width="120" height="120" rx="28" fill="var(--tile)"/><path d="M22 64 V58 A38 38 0 0 1 98 58 V64" fill="none" stroke="#f2ead8" stroke-width="8" stroke-linecap="round"/><rect x="12" y="56" width="20" height="38" rx="9" fill="#f2ead8"/><rect x="88" y="56" width="20" height="38" rx="9" fill="#f2ead8"/><circle cx="60" cy="74" r="23" fill="#f2ead8"/><clipPath id="bm"><circle cx="60" cy="74" r="23"/></clipPath><g clip-path="url(#bm)" fill="var(--tile)" stroke="var(--tile)"><polygon points="60.00,65.72 67.87,71.44 64.87,80.70 55.13,80.70 52.13,71.44" stroke="none"/><polygon points="60.00,59.28 52.13,53.56 55.13,44.30 64.87,44.30 67.87,53.56" stroke="none"/><line x1="60.00" y1="65.72" x2="60.00" y2="59.28" stroke-width="2.07"/><polygon points="74.00,69.45 77.01,60.19 86.74,60.19 89.75,69.45 81.87,75.17" stroke="none"/><line x1="67.87" y1="71.44" x2="74.00" y2="69.45" stroke-width="2.07"/><polygon points="68.65,85.91 78.39,85.91 81.39,95.17 73.52,100.89 65.64,95.17" stroke="none"/><line x1="64.87" y1="80.70" x2="68.65" y2="85.91" stroke-width="2.07"/><polygon points="51.35,85.91 54.36,95.17 46.48,100.89 38.61,95.17 41.61,85.91" stroke="none"/><line x1="55.13" y1="80.70" x2="51.35" y2="85.91" stroke-width="2.07"/><polygon points="46.00,69.45 38.13,75.17 30.25,69.45 33.26,60.19 42.99,60.19" stroke="none"/><line x1="52.13" y1="71.44" x2="46.00" y2="69.45" stroke-width="2.07"/></g><circle cx="60" cy="74" r="21.85" fill="none" stroke="#f2ead8" stroke-width="2.30"/></svg>
+  <div class="tagline">Tely - teleport to the stands</div>
+</div>
+</body>
+</html>

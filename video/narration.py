@@ -10,8 +10,11 @@ HD voices sound slightly different on every render (D9), so the full track can d
 hundred ms; the cue files are the exact ones. A cue that runs past its slot is reported: trim the line or the slot.
 
 Auth is keyless first, then SPEECH_KEY from .env (tely.commentary.tts); nothing prints a key.
-Usage (A's machine): python video/narration.py [--voice NAME] [--dry-run]
+Usage (A's machine): python video/narration.py [--voice NAME] [--srt FILE] [--out DIR] [--dry-run]
 About 30 short HD TTS calls (one per cue, then one for the full track).
+--srt/--out narrate another cue file, e.g. the infrastructure segment:
+  python video/narration.py --srt video/voiceover_infra.srt --out out/narration_infra
+writes out/narration_infra/vo_NN.mp3 and out/narration_infra.mp3.
 """
 
 from __future__ import annotations
@@ -64,11 +67,14 @@ def full_ssml(cues: list[tuple[float, float, str]], durations: list[float], voic
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--voice", default=VOICE)
+    ap.add_argument("--srt", type=Path, default=ROOT / "video" / "voiceover.srt", help="the cue file to narrate")
+    ap.add_argument("--out", type=Path, default=OUT / "narration", help="folder for the cue files; the full track "
+                    "goes next to it as <folder>.mp3")
     ap.add_argument("--dry-run", action="store_true", help="print the cues and SSML, call nothing")
     args = ap.parse_args(argv)
     if "Brian" in args.voice:
         print("warning: Brian is the commentator's voice; the plan asks for a different narrator voice", file=sys.stderr)
-    cues = [(a, b, spoken(text)) for a, b, text in read_srt(ROOT / "video" / "voiceover.srt")]
+    cues = [(a, b, spoken(text)) for a, b, text in read_srt(args.srt)]
     if args.dry_run:
         for i, (a, b, text) in enumerate(cues, 1):
             print(f"vo_{i:02} {a:6.2f}-{b:6.2f} {build_ssml(text, STYLE, args.voice)}")
@@ -78,7 +84,7 @@ def main(argv: list[str]) -> int:
 
     try:
         synth = AzureSynthesiser(load_env())
-        folder = OUT / "narration"
+        folder = args.out
         folder.mkdir(parents=True, exist_ok=True)
         durations = []
         for i, (a, b, text) in enumerate(cues, 1):
@@ -89,8 +95,9 @@ def main(argv: list[str]) -> int:
             flag = f"  OVER its slot by {over:.1f} s" if over > SLACK_S else ""
             print(f"vo_{i:02}.mp3  {a:6.2f} s  {dur:4.1f} s of speech in a {b - a:4.1f} s slot{flag}")
         mp3, dur = synth.synthesise(full_ssml(cues, durations, args.voice))
-        (OUT / "narration.mp3").write_bytes(mp3)
-        print(f"narration.mp3  {dur:.1f} s (last cue ends at {cues[-1][1]:.1f} s); auth: {synth.auth}")
+        full = folder.with_suffix(".mp3")
+        full.write_bytes(mp3)
+        print(f"{full.name}  {dur:.1f} s (last cue ends at {cues[-1][1]:.1f} s); auth: {synth.auth}")
     except TtsError as exc:
         print(f"narration failed: {exc}", file=sys.stderr)
         return 1
