@@ -26,3 +26,9 @@ def test_it_never_touches_the_match():
     before = qa.call_tool("get_score_and_clock", {}, playhead_s=P, bundle=B)
     qa.call_tool("set_language", {"language": "ar"}, playhead_s=P, bundle=B)
     assert qa.call_tool("get_score_and_clock", {}, playhead_s=P, bundle=B) == before
+
+
+def test_the_persona_answers_a_switch_with_the_tools_sentence_only():
+    # Seen live 27 Oct: "Claro, voy a cambiar el idioma... De momento no haré nada más. Seguimos la narración en español."
+    assert "call set_language straight away, without\nsaying anything first" in qa.PERSONA
+    assert "word for word, and nothing else" in qa.PERSONA

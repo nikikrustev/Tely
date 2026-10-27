@@ -626,3 +626,9 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
   Playwright + axe 114/114. A test render of every language came back about 2 s long.
 - **Not checked:** the recordings by a native speaker of each language, and a live spoken "speak Spanish" (after the
   deploy).
+- **Live check (27 Oct, after deploy):** a spoken "Please speak Spanish from now on" on the live site called
+  `set_language(es)`, answered in Spanish in 0.9 s, switched the Setup select, and played 65 Spanish match lines. The
+  next question went out with `lang: "es"` and was answered in Spanish. The reply was wordy ("Claro, voy a cambiar el
+  idioma… De momento no haré nada más. Seguimos…"), because the model spoke before calling the tool. The persona now
+  says to call `set_language` without saying anything first, then say only the tool's sentence. The first question
+  after the relay had scaled to zero never reached it and fell back to the presets; the retry worked.
