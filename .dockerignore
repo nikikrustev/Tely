@@ -3,7 +3,7 @@
 *
 !relay/
 !pipeline/pyproject.toml
-!pipeline/audiostands/
+!pipeline/tely/
 !web/public/replay/v1/judge/meta.json
 !web/public/replay/v1/judge/events.jsonl
 !web/public/replay/v1/judge/signals.json

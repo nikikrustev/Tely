@@ -1,5 +1,5 @@
 # OWNER: A (potencialbg). The relay image. Build context is the repo root (azure.yaml: docker.context ..), because the
-# relay imports B's audiostands.qa and reads the judge-cut bundle it answers from. The root .dockerignore keeps the
+# relay imports B's tely.qa and reads the judge-cut bundle it answers from. The root .dockerignore keeps the
 # context to exactly those files. No keys are baked in: auth is the container's managed identity at run time.
 FROM python:3.12-slim
 
@@ -11,7 +11,7 @@ RUN pip install -r relay/requirements.txt
 
 # B's package, editable, so qa/bundle.py still finds web/public/replay/v1/judge/ two folders up (its JUDGE path).
 COPY pipeline/pyproject.toml pipeline/pyproject.toml
-COPY pipeline/audiostands pipeline/audiostands
+COPY pipeline/tely pipeline/tely
 RUN pip install -e "./pipeline[mcp]"
 
 # Only what B's load_bundle() reads: the match the tools answer from (no audio, no cues).

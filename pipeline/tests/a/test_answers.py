@@ -5,10 +5,10 @@ import shutil
 
 import pytest
 
-from audiostands import answers
-from audiostands.commentary.source import MATCH_DIRS
-from audiostands.commentary.ssml import DEFAULT_VOICE, build_ssml, ssml_sha256
-from audiostands.qa import FRAGMENTS
+from tely import answers
+from tely.commentary.source import MATCH_DIRS
+from tely.commentary.ssml import DEFAULT_VOICE, build_ssml, ssml_sha256
+from tely.qa import FRAGMENTS
 
 
 class FakeSynth:

@@ -10,7 +10,7 @@ Files that cross from one lane to the other. Each folder has one owner (TEAM_SPL
 
 The rest of this file documents `b/`: the **match format, version 0.2.0** (0.1.0 plus added fields only; see the Changelog).
 
-**Where the real match is.** Stage 1 (`python -m audiostands.build_match --cut judge`, from `pipeline/`) writes the judge cut to `web/public/replay/v1/judge/`. It uses the same four files and the same fields as the sample, plus the 0.2.0 additions.
+**Where the real match is.** Stage 1 (`python -m tely.build_match --cut judge`, from `pipeline/`) writes the judge cut to `web/public/replay/v1/judge/`. It uses the same four files and the same fields as the sample, plus the 0.2.0 additions.
 
 **Append-only from Wed 21 Oct, 18:00 Sofia.** Adding a field is fine. Renaming or removing a field needs A's approval in the PR (TEAM_SPLIT.md, cross-lane rules).
 
@@ -108,7 +108,7 @@ Our format (not CDF). The match, the teams and the window.
 
 | Field | Type | Meaning | Example |
 |---|---|---|---|
-| `format`, `version` | string | Always `"audiostands.meta"`, and the format version | `"0.1.0"` |
+| `format`, `version` | string | Always `"tely.meta"`, and the format version | `"0.1.0"` |
 | `cdf_version` | string | CDF version the event lines follow | `"0.3.2"` |
 | `synthetic`, `notice` | bool, string | Always `true`, plus a line the UI can show or speak | `"Synthetic match. Fictional clubs and players. No real match data."` |
 | `match.id` | string | Same id as in every CDF line | `"syn_sample_0001"` |
@@ -124,7 +124,7 @@ Our format (not CDF). The match, the teams and the window.
 | `judge_cut.period` *(0.2.0)* | string | The CDF period the window is in (the generator's cuts sit inside one half) | `"second_half"` |
 | `judge_cut.score_at_start` *(0.2.0)* | `{home, away}` | Score when the window opens. Goals before the window are not in `events.jsonl`, so add this to any score you count from events. The judge cut is chosen to start at 0–0 | `{"home":0,"away":0}` |
 | `officials` *(0.2.0)* | list | `{id, type}` of the officials that referee events name in `official_id` | `[{"id":"ref_1","type":"main_referee"},{"id":"var_1","type":"video_assistant_referee"}]` |
-| `generator` *(0.2.0)* | object | `name` and `version` of the generator that made the bundle (absent in the hand-written sample) | `{"name":"audiostands.generator","version":"0.2.0"}` |
+| `generator` *(0.2.0)* | object | `name` and `version` of the generator that made the bundle (absent in the hand-written sample) | `{"name":"tely.generator","version":"0.2.0"}` |
 
 **A team:**
 
@@ -198,7 +198,7 @@ There are no `metrics` on purpose. xG lives in `signals.json` (TEAM_SPLIT.md). C
 Our format. Two parts: `per_second` (one row per whole second) and `events` (one entry per CDF event).
 
 ```json
-{"format":"audiostands.signals","version":"0.1.0","match_id":"syn_sample_0001","hz":1,
+{"format":"tely.signals","version":"0.1.0","match_id":"syn_sample_0001","hz":1,
  "per_second":[ {...t=0...}, {...t=1...}, ... ],
  "events":{"e0001":{...}, ...},
  "crowd_one_shots":[ ... ]}
@@ -274,7 +274,7 @@ One-off vibration cues from file 41's vocabulary: `{"t": 703.76, "tacton": "goal
 Our format, gzipped JSON. Where the ball and every player are, over the whole window. The sample is 49 KB on disk (175 KB unzipped).
 
 ```json
-{"format":"audiostands.ticks","version":"0.1.0","match_id":"syn_sample_0001","t0":0.0,"duration_s":90.0,
+{"format":"tely.ticks","version":"0.1.0","match_id":"syn_sample_0001","t0":0.0,"duration_s":90.0,
  "ball":{"hz":25,"columns":["x","y","z","alive","poss"],
          "rows":[[0.0,0.0,0.11,1,"home"], ...]},
  "players":{"hz":5,"ids":["r1","r2","r5",...,"n10"],

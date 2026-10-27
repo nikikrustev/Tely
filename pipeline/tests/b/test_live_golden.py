@@ -9,8 +9,8 @@ from pathlib import Path
 
 import pytest
 
-from audiostands import qa
-from audiostands.qa.bundle import load_bundle
+from tely import qa
+from tely.qa.bundle import load_bundle
 
 ROOT = Path(__file__).resolve().parents[3]
 FILES = sorted((ROOT / "contracts" / "golden" / "a").glob("live_*.jsonl"))

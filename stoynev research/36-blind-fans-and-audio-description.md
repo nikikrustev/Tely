@@ -1,13 +1,13 @@
 # 36 — How blind and low-vision fans follow football today, and what they say they want
 
-_Accessed/compiled: 20 Oct 2026 · Priority area: Explain + Render + Personalise (Audio Stands: description grammar, sync, verbosity, talk-back)_
+_Accessed/compiled: 20 Oct 2026 · Priority area: Explain + Render + Personalise (Tely: description grammar, sync, verbosity, talk-back)_
 
 ## TL;DR
 
 - **The fans are clear about what they want.** RNIB's 2022 research ran 10 interviews plus two focus groups. Fans want **one voice that describes the ball in real time**. That voice says where the ball is (third, side, near or far), what kind of pass it was, which way the shot went, and what the keeper did. It describes both kits and the players' build, and saves punditry for stoppages. A normal TV commentary scored **6.1 out of 15** on RNIB's scale (enjoyment + access + ability to follow). Fans disliked description that arrives after the action (backfilling).
-- **Lag is the biggest technical complaint.** Fans hear the crowd react before they hear what happened. Three of the 20 Premier League clubs ran audio description on a 30 s delay (LPF survey, 2015), and DAB radio or phone streams add more lag. One RNIB focus-group fan said "even a one second delay can make a huge difference". In Audio Stands, the crowd and the commentary are generated **from the same event stream**, so they can be in perfect sync. That is our biggest structural advantage.
+- **Lag is the biggest technical complaint.** Fans hear the crowd react before they hear what happened. Three of the 20 Premier League clubs ran audio description on a 30 s delay (LPF survey, 2015), and DAB radio or phone streams add more lag. One RNIB focus-group fan said "even a one second delay can make a huge difference". In Tely, the crowd and the commentary are generated **from the same event stream**, so they can be in perfect sync. That is our biggest structural advantage.
 - **Today's services are one-way and the same for everyone.** That covers club headsets, radio, Sky's new Live Descriptive Audio Commentary (from 10 Oct 2026), the UEFA and FIFA apps, and the tactile tablets (Touch2See, Field of Vision, OneCourt). None of them lets the fan **ask** "where is it?", turn the detail up or down, or set the crowd-vs-voice mix. Tablet testers asked for a radio link to fill gaps in the information.
-- **Audio Stands design rules (ours):**
+- **Tely design rules (ours):**
   - ball-first, location-first grammar
   - a zero-lag crowd generated from the same events
   - three verbosity levels
@@ -73,7 +73,7 @@ _Accessed/compiled: 20 Oct 2026 · Priority area: Explain + Render + Personalise
 | NHK automatic AD | Event metadata goes to a text generator and then TTS. Used for more than 2,000 contests at Rio 2016 | Fills gaps in the main commentary. Not interactive |
 | Research: "Did you see that!?" (INTERACT 2021, n=12) | Tennis: AD gives placement, 3D audio gives direction, radio gives the human voice | Radio alone was overwhelming. People want to watch alone **and** with friends |
 
-**The gap Audio Stands fills.** No existing service combines four things:
+**The gap Tely fills.** No existing service combines four things:
 - (a) a talk-back AI commentator
 - (b) user-set verbosity and audio mix
 - (c) a crowd bed driven by the same events, so it is in sync by construction
@@ -83,7 +83,7 @@ Haptics (Heartbeat) runs on a phone the fan already owns, so no tablet has to be
 
 ## So what for us
 
-**Audio Stands. These are our design principles, derived from the findings above.**
+**Tely. These are our design principles, derived from the findings above.**
 
 1. **Explain stage: ball-first grammar.** Each live line follows this order: location (third, side), team colour, action, then player name if there is time. Example: "Midfield, far side, Reds; chipped forward…". At kick-off and half-time, give the kits (both), the direction of play and a one-line stadium scene. Name the scorer only *after* describing the goal.
 2. **Render stage: one clock for crowd and voice.** Generate the Home End crowd bed and the commentary from the same timed cues (research 24). The crowd may never react before the description starts. With lookahead, we can begin the *build-up* intonation about 4–8 s before a big chance (our number, untested). The **outcome** is withheld until the event's timecode. Heartbeat haptics ramp up on the same tension signal (research 23 and 09).
@@ -156,7 +156,7 @@ Lookahead build-up rule (ours): `if next_event.kind in {"shot","penalty"} and ne
   - Union of the Blind in Bulgaria (ssb.bg, unverified)
 
   Sighted team members using blindfolds are **not** a substitute (our view).
-- **If we have not tested, say so.** Suggested wording: "Audio Stands is designed from published research with blind and partially sighted football fans (RNIB 2022–23, Level Playing Field, UEFA/CAFE guidance). We have not yet tested it with blind users; our next step is a co-design session with [organisation]." Name an organisation only if we really contacted it.
+- **If we have not tested, say so.** Suggested wording: "Tely is designed from published research with blind and partially sighted football fans (RNIB 2022–23, Level Playing Field, UEFA/CAFE guidance). We have not yet tested it with blind users; our next step is a co-design session with [organisation]." Name an organisation only if we really contacted it.
 
 ## Sources
 

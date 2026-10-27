@@ -4,7 +4,7 @@
 import { readFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
 import { afterEach, describe, expect, it } from 'vitest';
-import { AudioStands, EARCON_GAP_S, FIELD_LOWPASS_HZ, SEATS, stereoPan, toWorld } from '../../src/audio/audio-stands';
+import { SoundStage, EARCON_GAP_S, FIELD_LOWPASS_HZ, SEATS, stereoPan, toWorld } from '../../src/audio/sound-stage';
 import { CrowdEngine, FOLLOW_PAN, levelFor, REFRACTORY_S, type CrowdBuffers } from '../../src/audio/crowd-engine';
 import { DEFAULT_MIX, parseMix, setMix, VoiceStage } from '../../src/audio/mix';
 import { ReplaySource, type SegmentsDoc } from '../../src/replay/replay-source';
@@ -42,7 +42,7 @@ describe('the pitch: no ball sound, kicks panned by ball x', () => {
 
   it('plays no continuous ball sound: nothing starts on its own, and ball samples are silent', () => {
     const fake = new FakeAudioContext();
-    const stands = new AudioStands(asCtx(fake));
+    const stands = new SoundStage(asCtx(fake));
     expect(fake.started).toBe(0);                                          // no looped noise, no rattle oscillator
     for (let k = 0; k < 50; k++) stands.ballAt({ x: k, y: 0, z: 0.11, speed: 15, alive: true }, k / 25);
     expect(fake.started).toBe(0);
@@ -52,7 +52,7 @@ describe('the pitch: no ball sound, kicks panned by ball x', () => {
 
   it('the ping plays where the ball is as heard now, not where it is queued to be', () => {
     const fake = new FakeAudioContext();
-    const stands = new AudioStands(asCtx(fake));
+    const stands = new SoundStage(asCtx(fake));
     stands.ballAt({ x: -30, y: 0, z: 0.11, speed: 5, alive: true }, 0);
     stands.ballAt({ x: 40, y: 0, z: 0.11, speed: 5, alive: true }, 3);    // queued 3 s ahead
     fake.currentTime = 1;
@@ -67,7 +67,7 @@ describe('the pitch: no ball sound, kicks panned by ball x', () => {
   it('the whistle is soft: peak at most -18 dBFS, and not a pure tone', () => {
     const fake = new FakeAudioContext();
     fake.sampleRate = 22050;
-    const stands = new AudioStands(asCtx(fake));
+    const stands = new SoundStage(asCtx(fake));
     const buf = (stands as unknown as { icons: Map<string, AudioBuffer> }).icons.get('whistle') as AudioBuffer;
     const d = buf.getChannelData(0);
     const peak = d.reduce((m, v) => Math.max(m, Math.abs(v)), 0);
@@ -81,7 +81,7 @@ describe('the pitch: no ball sound, kicks panned by ball x', () => {
     expect(stereoPan(52.5)).toBeGreaterThanOrEqual(0.85);
     for (let x = -52; x < 52; x += 4) expect(stereoPan(x + 4)).toBeGreaterThanOrEqual(stereoPan(x));
     const fake = new FakeAudioContext();
-    const stands = new AudioStands(asCtx(fake));
+    const stands = new SoundStage(asCtx(fake));
     const pans = spy<StereoPannerNode>(fake, 'createStereoPanner'), hrtf = spy<PannerNode>(fake, 'createPanner');
     stands.earcon('pass', -45, 10, 0);
     stands.earcon('shot', 45, 10, 1);
@@ -96,7 +96,7 @@ describe('the pitch: no ball sound, kicks panned by ball x', () => {
     expect(DEFAULT_MIX.pass).toBeLessThan(DEFAULT_MIX.shot);
     const fake = new FakeAudioContext();
     const filters = spy<BiquadFilterNode>(fake, 'createBiquadFilter');
-    const stands = new AudioStands(asCtx(fake));
+    const stands = new SoundStage(asCtx(fake));
     fake.currentTime = 1;
     const gainOf = (k: 'pass' | 'shot' | 'whistle') => paramOf(stands.kindGain.get(k)!.gain).value;
     expect(gainOf('pass')).toBeCloseTo(Math.pow(10, DEFAULT_MIX.pass / 20), 3);
@@ -110,7 +110,7 @@ describe('the pitch: no ball sound, kicks panned by ball x', () => {
 
   it('keeps earcons at least 300 ms apart', () => {
     const fake = new FakeAudioContext();
-    const stands = new AudioStands(asCtx(fake));
+    const stands = new SoundStage(asCtx(fake));
     const a = stands.earcon('shot', 0, 0, 1), b = stands.earcon('whistle', 0, 0, 1.05);
     expect(a).toBe(1);
     expect((b ?? 0) - (a ?? 0)).toBeGreaterThanOrEqual(EARCON_GAP_S - 1e-9);
@@ -150,7 +150,7 @@ describe('crowd follows the ball (left/right without a ball sound)', () => {
 describe('the commentator: press box, behind and above, never left or right', () => {
   it('sits on the centre line behind and above the listener, and moves live', () => {
     const fake = new FakeAudioContext();
-    const stands = new AudioStands(asCtx(fake));                            // listener on the halfway seat
+    const stands = new SoundStage(asCtx(fake));                            // listener on the halfway seat
     const seat = SEATS.halfway.pos, p = stands.voice.panner;
     const pos = () => { fake.currentTime += 1; return [p.positionX, p.positionY, p.positionZ].map((q) => paramOf(q).value); };
     expect(p.panningModel).toBe('HRTF');

@@ -9,8 +9,8 @@ import random
 
 import pytest
 
-from audiostands.qa import TOOL_SCHEMAS, call_tool
-from audiostands.qa.bundle import load_bundle
+from tely.qa import TOOL_SCHEMAS, call_tool
+from tely.qa.bundle import load_bundle
 from relay.caps import Caps
 from relay.clips import CLIPS, REASON_CLIP
 from relay.voicelive import RATE, Bridge, session_update

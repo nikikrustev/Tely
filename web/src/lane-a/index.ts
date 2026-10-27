@@ -96,7 +96,7 @@ export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
     unlockOnGesture((c) => { liveVoice = c; });
     const debug = new URLSearchParams(location.search).get('debug') === '1';
     if (debug) {
-      (window as unknown as { audioStandsCommentary?: CommentaryTrackPlayer }).audioStandsCommentary = commentary;
+      (window as unknown as { telyCommentary?: CommentaryTrackPlayer }).telyCommentary = commentary;
     }
     // Stage 7: "Ask out loud". B's Ask shows the button once this registers (b-exports.ts Ask.registerLiveMode).
     liveRelayUrl(location.search, async (u) => { const r = await fetch(u); return r.ok ? r.json() : null; })
@@ -107,7 +107,7 @@ export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
         const live = new LiveAsk(url, browserIO({ audio: () => liveVoice, base: BUNDLE_BASE, lane: ctx }));
         ctx.ask.registerLiveMode(live);   // SEAM(A->B): b-exports.ts Ask.registerLiveMode(handler)
         document.addEventListener('visibilitychange', () => { if (document.hidden) live.cancel(); });
-        if (debug) (window as unknown as { audioStandsLive?: LiveAsk }).audioStandsLive = live;
+        if (debug) (window as unknown as { telyLive?: LiveAsk }).telyLive = live;
       })
       .catch(() => {});
   }

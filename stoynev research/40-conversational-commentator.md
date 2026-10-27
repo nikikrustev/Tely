@@ -1,11 +1,11 @@
 # 40 — Talking to the commentator mid-match: voice Q&A grounded in live match state
 
-_Accessed/compiled: 20 Oct 2026 · Priority area: Personalise + Render (two-way audio) for Audio Stands; Explain (answers come from tools, not model memory)_
+_Accessed/compiled: 20 Oct 2026 · Priority area: Personalise + Render (two-way audio) for Tely; Explain (answers come from tools, not model memory)_
 
 ## TL;DR
 
 - **Use a toggle "Ask" button, not a wake word and not an always-open mic.** One large native button, which a VoiceOver or TalkBack user activates with a plain double-tap. The mic is gated: it is open only between the two presses. Hold-to-talk is awkward under VoiceOver, because a hold needs the pass-through gesture ("double-tap and hold … until you hear three rising tones"). Gating the mic also deals with crowd audio and echo: we duck our own crowd bed while the fan speaks, so the mic mostly hears the fan.
-- **Voice Live over WebRTC fits Audio Stands. The tool calls run on our server, not in the browser.** The docs describe three channels:
+- **Voice Live over WebRTC fits Tely. The tool calls run on our server, not in the browser.** The docs describe three channels:
   - audio over RTP;
   - a browser data channel `voice-live-events` that carries VAD and response events;
   - a WebSocket control channel, "typically initiated by your server", which carries `session.update` and **all function-call events**.
@@ -15,7 +15,7 @@ _Accessed/compiled: 20 Oct 2026 · Priority area: Personalise + Render (two-way 
 - **One persona across commentary and answers comes almost free.** Voice Live speaks with the same Azure TTS voices we use to pre-render commentary (HD voices work in every Voice Live region), so the timbre is identical. We share one persona prompt block, and the relay feeds every line that has aired into the conversation as labelled system items.
 - **Bulgarian works, but use the toggle rather than open-mic.** `gpt-realtime` lists Bulgarian and so does `mai-transcribe-2`. `azure-speech` (which pairs only with non-realtime models) needs `language: "bg-BG"` set explicitly, because the auto-detect list excludes Bulgarian. Semantic-VAD filler-word removal does not cover Bulgarian, so open-mic barge-in would false-trigger more often. Answer with `bg-BG-BorislavNeural`, which has no styles, only prosody (file 27).
 
-> **Correction (from [43](43-audio-stands-architecture.md)):** Microsoft Learn lists only **en-US** DragonHD voices, so `en-GB-Ollie`/`en-GB-…:DragonHDLatestNeural` HD names used below should be replaced by an en-US DragonHD (or DragonHD Omni) voice. DragonHD supports `<break>` but not `prosody`/`express-as`; Omni supports `express-as` but not `<break>`. HD voices are real-time only (no batch pre-render).
+> **Correction (from [43](43-tely-architecture.md)):** Microsoft Learn lists only **en-US** DragonHD voices, so `en-GB-Ollie`/`en-GB-…:DragonHDLatestNeural` HD names used below should be replaced by an en-US DragonHD (or DragonHD Omni) voice. DragonHD supports `<break>` but not `prosody`/`express-as`; Omni supports `express-as` but not `<break>`. HD voices are real-time only (no batch pre-render).
 
 ## Findings
 
@@ -30,7 +30,7 @@ _Accessed/compiled: 20 Oct 2026 · Priority area: Personalise + Render (two-way 
 
 **Screen-reader specifics.**
 - **Both readers duck other audio.** TalkBack's audio ducking "lowers the volume level of media and other audio so TalkBack's spoken feedback is easy to understand" and is "on by default". Every `aria-live` announcement therefore dips our commentary.
-  - In Audio Stands mode, mute the per-cue live regions from file 32. The fan already *hears* the cues. Keep live regions only for state changes ("Listening", "Answer stopped").
+  - In Tely mode, mute the per-cue live regions from file 32. The fan already *hears* the cues. Keep live regions only for state changes ("Listening", "Answer stopped").
 - **Give a magic tap a job.** VoiceOver's two-finger double tap is "Start or stop the current action (for example, play or pause music or a video…)". We cannot verify that it reaches a web page; it probably arrives as a media play/pause.
   - Register Media Session `play`/`pause` handlers that toggle Ask. MDN says these fire on "built-in physical or onscreen media controls", which covers a headset button.
   - Browser support is "limited availability", so treat this as a bonus and keep the button primary.
@@ -182,7 +182,7 @@ Each tool is a thin wrapper over the file 18 stats engine. The same Python funct
 
 ## So what for us
 
-**Audio Stands.** Stage: **Personalise and Render (two-way audio)**, with answers taken from the **Interpret** engine through MCP tools.
+**Tely.** Stage: **Personalise and Render (two-way audio)**, with answers taken from the **Interpret** engine through MCP tools.
 
 - **What to build:**
   - the gated toggle Ask;
@@ -217,7 +217,7 @@ from fastapi import FastAPI, Header, HTTPException
 from mcp.server import MCPServer
 from twincast.engine import engine          # deterministic stats engine (file 18)
 
-mcp, api = MCPServer("audio-stands-tools"), FastAPI()
+mcp, api = MCPServer("tely-tools"), FastAPI()
 PITCH_X, PITCH_Y = 105.0, 68.0
 
 def snap(session_id: str):

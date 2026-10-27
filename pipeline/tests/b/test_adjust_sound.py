@@ -1,7 +1,7 @@
 """adjust_sound: the fan changes one sound out loud, on the 0..100 scale the page's mixer shows (web/src/audio/mix.ts)."""
-from audiostands import qa
-from audiostands.qa.bundle import load_bundle
-from audiostands.qa.tools import SOUNDS
+from tely import qa
+from tely.qa.bundle import load_bundle
+from tely.qa.tools import SOUNDS
 
 B = load_bundle()
 P = (B.t0 + B.t1) / 2

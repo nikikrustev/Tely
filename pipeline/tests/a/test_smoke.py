@@ -17,7 +17,7 @@ def smoke():
 
 
 def test_package_imports():
-    import audiostands  # noqa: F401
+    import tely  # noqa: F401
 
 
 def test_load_env_parses_and_ignores_comments(smoke, tmp_path):

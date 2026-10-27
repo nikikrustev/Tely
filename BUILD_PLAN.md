@@ -1,6 +1,6 @@
-# Audio Stands: build plan (one person, 20–27 Oct 2026)
+# Tely: build plan (one person, 20–27 Oct 2026)
 
-_Written 20 Oct 2026. Based on the "Audio Stands — Idea Brief" and the day-by-day plan in `stoynev research/43-audio-stands-architecture.md`, cut down from two people to one._
+_Written 20 Oct 2026. Based on the "Tely — Idea Brief" and the day-by-day plan in `stoynev research/43-tely-architecture.md`, cut down from two people to one._
 
 _Weekdays are checked against the calendar. 20 Oct 2026 is a Tuesday. The brief and file 43 label the days one weekday off ("Tue 21 … Mon 27"); the dates there are right, only the weekday names are wrong._
 
@@ -70,7 +70,7 @@ The brief's own cut list already drops most of these first.
 **Repo layout.** Every prompt assumes this:
 
 ```
-pipeline/        Python 3.12 package `audiostands` (generator, interpret, commentary, agents, eval, bundle builder) + tests/
+pipeline/        Python 3.12 package `tely` (generator, interpret, commentary, agents, eval, bundle builder) + tests/
 web/             Vite + TypeScript (vanilla, strict) client + vitest; replay bundle in web/public/replay/v1/judge/
 relay/           Stage 7: FastAPI service (Voice Live relay + Stats tools + MCP server), Dockerfile
 infra/           main.bicep (+ azure.yaml at the repo root), azd env "judge" in rg-as-judge
@@ -96,21 +96,21 @@ docs/DECISIONS.md
 **Depends on:** nothing. **Time:** about 2 h today: 1.5 h of manual work and 0.5 h of Claude Code.
 
 ```text
-Stage 0 of BUILD_PLAN.md: repo scaffold and Azure smoke test for Audio Stands.
+Stage 0 of BUILD_PLAN.md: repo scaffold and Azure smoke test for Tely.
 
-Read first: CLAUDE.md; BUILD_PLAN.md ("Before you start", "Repo layout", Stage 0); in stoynev research/: 44-accounts-quotas-setup-checklist.md (day-1 checklist, bootstrap commands, budget), 46-copilot-github-azure-mcp-workflow.md (copilot-instructions draft, .vscode/mcp.json), 43-audio-stands-architecture.md (TL;DR and §7: HD voices are real-time only and en-US DragonHD only).
+Read first: CLAUDE.md; BUILD_PLAN.md ("Before you start", "Repo layout", Stage 0); in stoynev research/: 44-accounts-quotas-setup-checklist.md (day-1 checklist, bootstrap commands, budget), 46-copilot-github-azure-mcp-workflow.md (copilot-instructions draft, .vscode/mcp.json), 43-tely-architecture.md (TL;DR and §7: HD voices are real-time only and en-US DragonHD only).
 
 Create:
 - .gitignore: .env, out/, node_modules/, assets/raw/, __pycache__/, .azure/, dist/.
 - .env.example (no real values): FOUNDRY_RESOURCE, FOUNDRY_PROJECT_ENDPOINT, FOUNDRY_MODEL=gpt-5.4-mini, SPEECH_REGION=swedencentral, SPEECH_ENDPOINT, SPEECH_KEY (optional, only if keyless auth fails), TTS_VOICE=en-US-Andrew:DragonHDLatestNeural.
-- pipeline/pyproject.toml (package audiostands, Python 3.12, pytest), pipeline/audiostands/__init__.py, pipeline/tests/test_smoke.py.
+- pipeline/pyproject.toml (package tely, Python 3.12, pytest), pipeline/tely/__init__.py, pipeline/tests/test_smoke.py.
 - web/: Vite + TypeScript (vanilla, strict) + vitest, with one passing test.
 - .github/workflows/ci.yml: pytest + vitest on every push and PR. CI must never need Azure credentials.
 - .github/copilot-instructions.md: file 46's draft, updated to this repo layout and to the one-person scope.
 - .vscode/mcp.json: Azure MCP Server with --read-only (file 46).
 - scripts/bootstrap_azure.sh: file 44's bootstrap for rg-as-dev and rg-as-judge in swedencentral (register providers, create the groups, an AIServices S0 resource with a custom domain, usage list, quota tiers, a gpt-5.4-mini GlobalStandard deployment with capacity 10 and NoAutoUpgrade). Do NOT create Cosmos DB, Web PubSub or Event Hubs; this plan doesn't use them. Check each flag with --help and mark doubtful ones "(unverified)" in comments. Don't run it: I run it myself after az login.
 - scripts/smoke_azure.py:
-  (1) synthesise "Audio Stands smoke test. The Reds are breaking down the far side." with TTS_VOICE to out/smoke.mp3 using the Speech SDK, keyless with DefaultAzureCredential first and SPEECH_KEY from .env as a fallback;
+  (1) synthesise "Tely smoke test. The Reds are breaking down the far side." with TTS_VOICE to out/smoke.mp3 using the Speech SDK, keyless with DefaultAzureCredential first and SPEECH_KEY from .env as a fallback;
   (2) one short chat call to FOUNDRY_MODEL.
   Print PASS/FAIL per check. On a quota or deployment error, print "model quota missing: Director falls back to rules (Stage 5)" instead of crashing. Never print, log or commit keys or tokens.
 - docs/DECISIONS.md: one-person scope, the "Not in this plan" list from BUILD_PLAN.md, region Sweden Central, category Best Use of Microsoft Foundry, hard rules from CLAUDE.md.
@@ -133,7 +133,7 @@ Run it, verify it, commit and push.
 - [ ] **(2 min)** Create or choose a YouTube channel. Don't upload anything yet.
 - [ ] **(3 min)** Create a free Freesound account; Stage 2 needs it to download crowd clips.
 - [ ] **(15 min)** Book at least 3 people for a 20-minute eyes-closed listening test on Mon 26 morning. If you want, also email RNIB or a local blind or low-vision group. File 36 explains how to word it, and says to name an organisation in the write-up only if you really contacted it.
-- [ ] **(2 min)** Decide on the product name; "Audio Stands" is the default.
+- [ ] **(2 min)** Decide on the product name; "Tely" is the default.
 
 ---
 
@@ -142,7 +142,7 @@ Run it, verify it, commit and push.
 **Aim.** Generate one reproducible synthetic match. From it, pick an 8-minute "judge cut" and compute the signals everything else reads: win probability, suspense, danger, tension, crowd state and haptic cues.
 
 **Done when:**
-- [ ] `python -m audiostands.build_match --cut judge` writes `events.jsonl`, `ticks.json.gz` and `signals.json` to `web/public/replay/v1/judge/` in under 60 s.
+- [ ] `python -m tely.build_match --cut judge` writes `events.jsonl`, `ticks.json.gz` and `signals.json` to `web/public/replay/v1/judge/` in under 60 s.
 - [ ] Two runs give identical sha256 for every file.
 - [ ] The judge cut contains at least 1 goal, 1 save, 1 card, 1 VAR-style check and 4 shots (stored in `pipeline/judge_cut.json`).
 - [ ] `pytest` passes, including:
@@ -155,9 +155,9 @@ Run it, verify it, commit and push.
 ```text
 Stage 1 of BUILD_PLAN.md: seeded synthetic match + Interpret signals for the judge cut.
 
-Read first: CLAUDE.md; BUILD_PLAN.md Stage 1; in stoynev research/: 43-audio-stands-architecture.md §2–§3 and §6 (clock, spoiler firewall, cue contract, judge cut), 02-synthetic-match-data.md (generator) together with the two fixes in 33-synthetic-possession-value.md ("Fixes to file 02 generate()"), 19-realistic-player-movement.md (Movement model), 23-win-probability-and-momentum.md (Poisson win probability), 39-anticipatory-emotional-commentary.md (suspense/surprise code, LEAD_S), 38-reactive-crowd-atmosphere.md (crowd_states with spoiler-safe look-ahead), 41-haptics-match-tension.md (tacton vocabulary), 09-pressure-pressing-ppda.md (Andrienko pressure, optional input to tension), 26-cdf-spadl-data-tooling.md (CDF field names only).
+Read first: CLAUDE.md; BUILD_PLAN.md Stage 1; in stoynev research/: 43-tely-architecture.md §2–§3 and §6 (clock, spoiler firewall, cue contract, judge cut), 02-synthetic-match-data.md (generator) together with the two fixes in 33-synthetic-possession-value.md ("Fixes to file 02 generate()"), 19-realistic-player-movement.md (Movement model), 23-win-probability-and-momentum.md (Poisson win probability), 39-anticipatory-emotional-commentary.md (suspense/surprise code, LEAD_S), 38-reactive-crowd-atmosphere.md (crowd_states with spoiler-safe look-ahead), 41-haptics-match-tension.md (tacton vocabulary), 09-pressure-pressing-ppda.md (Andrienko pressure, optional input to tension), 26-cdf-spadl-data-tooling.md (CDF field names only).
 
-Build in pipeline/audiostands/:
+Build in pipeline/tely/:
 - generator.py: the file 02 possession-chain generator with both file 33 fixes, plus synthetic keeper saves, yellow/red cards and a "var_check" event (a stoppage of about 20 s that ends in a decision). Fictional clubs only: home "Reds" (red shirts, white shorts), away "Navy" (navy, sky-blue sleeves). Player names are generated from the seed; no real people, clubs or chants.
 - movement.py: the file 19 Movement model → 22 players at 25 Hz, plus the ball track from events.
 - clock.py: Clock, director_window, qa_view and release from file 43, with D_S = 10 and PREFETCH_S = 3.
@@ -165,7 +165,7 @@ Build in pipeline/audiostands/:
 - crowd.py: file 38 crowd_states → H and A {excitement, valence, danger} at 1 Hz plus one-shots (goal roar, groan, hush for var_check). Look-ahead may use chance quality only, never the outcome.
 - haptics.py: haptic cues {tacton, team, t} from file 41's vocabulary.
 - judge_cut.py: scan seeds 1–500 (stop at the first hit) for an 8-minute window with ≥ 1 goal, ≥ 1 save, ≥ 1 card, 1 var_check and ≥ 4 shots; write {seed, t_start, t_end} to pipeline/judge_cut.json.
-- build_match.py (python -m audiostands.build_match --cut judge): writes web/public/replay/v1/judge/events.jsonl, ticks.json.gz (ball 25 Hz; crowd H/A and tension 1 Hz) and signals.json, plus out/realism_report.md over 50 seeds against the targets cited in files 02 and 19 (green/red per row; don't invent thresholds).
+- build_match.py (python -m tely.build_match --cut judge): writes web/public/replay/v1/judge/events.jsonl, ticks.json.gz (ball 25 Hz; crowd H/A and tension 1 Hz) and signals.json, plus out/realism_report.md over 50 seeds against the targets cited in files 02 and 19 (green/red per row; don't invent thresholds).
 - tests (pytest):
   - determinism: two runs → identical sha256 for every output;
   - regression tests for both file 33 bugs;
@@ -199,12 +199,12 @@ Run it, verify it, commit and push.
 ```text
 Stage 2 of BUILD_PLAN.md: the browser sound stage (crowd + ball + earcons) playing the judge-cut ticks.
 
-Read first: CLAUDE.md; BUILD_PLAN.md Stage 2; in stoynev research/: 37-spatial-audio-in-the-browser.md (audio-stands.ts, halfway seat default, Firefox AudioListener quirk, synthetic stadium IR, earcon spacing ≥ 300 ms, Bluetooth latency), 38-reactive-crowd-atmosphere.md (CrowdEngine, §4 CC0 clip list and audit rule, §6 granular bed and two-clocks scheduling, +12 dB speech rule), 32-accessible-responsive-viewer.md (player markup with live regions, Announcer), 43-audio-stands-architecture.md §6 (ReplaySource, wire(), segments).
+Read first: CLAUDE.md; BUILD_PLAN.md Stage 2; in stoynev research/: 37-spatial-audio-in-the-browser.md (sound-stage.ts, halfway seat default, Firefox AudioListener quirk, synthetic stadium IR, earcon spacing ≥ 300 ms, Bluetooth latency), 38-reactive-crowd-atmosphere.md (CrowdEngine, §4 CC0 clip list and audit rule, §6 granular bed and two-clocks scheduling, +12 dB speech rule), 32-accessible-responsive-viewer.md (player markup with live regions, Announcer), 43-tely-architecture.md §6 (ReplaySource, wire(), segments).
 
 Build:
-- pipeline/audiostands/build_segments.py: ticks.json.gz → web/public/replay/v1/judge/segments.json (2 s segments; ball at 10 Hz; crowd H/A; tension; cues: [] for now).
+- pipeline/tely/build_segments.py: ticks.json.gz → web/public/replay/v1/judge/segments.json (2 s segments; ball at 10 Hz; crowd H/A; tension; cues: [] for now).
 - scripts/prepare_crowd.py: read assets/raw/* and assets/crowd_sources.csv (id, file, author, url, licence, role), trim and loudness-normalise to web/public/crowd/<role>_<n>.mp3 using an LGPL build of ffmpeg, and write assets/licences.json. Refuse any row whose licence isn't CC0. If assets/raw is empty, generate placeholder noise beds so everything still runs, and print a warning.
-- web/src/audio/audio-stands.ts (file 37): halfway seat by default; the ball is a broadband rattling texture on an HRTF PannerNode; procedural thud/whistle/net auditory icons ≥ 300 ms apart; Firefox setPosition/setOrientation fallback.
+- web/src/audio/sound-stage.ts (file 37): halfway seat by default; the ball is a broadband rattling texture on an HRTF PannerNode; procedural thud/whistle/net auditory icons ≥ 300 ms apart; Firefox setPosition/setOrientation fallback.
 - web/src/audio/stadium-ir.ts: a generated stadium impulse response (no downloaded IRs).
 - web/src/audio/crowd-engine.ts (file 38): looped/granular beds, one-shots with refractory limits, safety limiter, a speech-ducking bus input for later.
 - web/src/replay/replay-source.ts and web/src/wire.ts (file 43).
@@ -231,7 +231,7 @@ Run it, verify it, commit and push.
 **Aim.** A Radio-level commentary script. It builds about 4 s before each big chance using chance quality only, calls the moment after it happens, and is verified for numbers and spoilers. Every line is pre-rendered once in an Azure HD voice.
 
 **Done when:**
-- [ ] `python -m audiostands.build_commentary --cut judge` writes `cues.en.radio.jsonl`, MP3s by SSML hash, `captions_sdh.vtt` and `descriptions.vtt`.
+- [ ] `python -m tely.build_commentary --cut judge` writes `cues.en.radio.jsonl`, MP3s by SSML hash, `captions_sdh.vtt` and `descriptions.vtt`.
 - [ ] In CI, `spoiler_leaks()` returns `[]` (target 0) and `truth_check` passes 100%.
 - [ ] Every build line starts LEAD_S ± 0.5 s before its shot.
 - [ ] A second build makes 0 TTS calls (cache by SSML hash).
@@ -242,16 +242,16 @@ Run it, verify it, commit and push.
 ```text
 Stage 3 of BUILD_PLAN.md: look-ahead commentary (templates), verifier, spoiler-leak test and pre-rendered HD voice.
 
-Read first: CLAUDE.md; BUILD_PLAN.md Stage 3; in stoynev research/: 39-anticipatory-emotional-commentary.md (look-ahead planner, reveal policy, LEAD_S = 4 s, SSML builders, pre-synthesis cache), 22-explanation-generation-patterns.md (templates, wordalization, verifier), 36-blind-fans-and-audio-description.md (ball-first grammar, Radio level, design rules 1–8), 27-voice-speech-and-audio.md together with the correction box in 40-conversational-commentator.md (en-US DragonHD voices only; DragonHD has [style] tags and <break> but no <prosody>/express-as; HD is real-time only, no batch), 43-audio-stands-architecture.md §2–§3 (firewall table, 6 s budget, cue contract, spoiler_leaks code).
+Read first: CLAUDE.md; BUILD_PLAN.md Stage 3; in stoynev research/: 39-anticipatory-emotional-commentary.md (look-ahead planner, reveal policy, LEAD_S = 4 s, SSML builders, pre-synthesis cache), 22-explanation-generation-patterns.md (templates, wordalization, verifier), 36-blind-fans-and-audio-description.md (ball-first grammar, Radio level, design rules 1–8), 27-voice-speech-and-audio.md together with the correction box in 40-conversational-commentator.md (en-US DragonHD voices only; DragonHD has [style] tags and <break> but no <prosody>/express-as; HD is real-time only, no batch), 43-tely-architecture.md §2–§3 (firewall table, 6 s budget, cue contract, spoiler_leaks code).
 
-Build in pipeline/audiostands/commentary/:
+Build in pipeline/tely/commentary/:
 - templates.py: Radio-level, ball-first lines ("Final third, far side, Reds… Okafor!"); both kits and the direction of play at kick-off; the scorer named only after the play is described; a state line at least every 20 s; "ball's out" before any background. Varied phrasings, chosen by seed.
 - planner.py: the file 39 planner over the window [P, P+D]. Build lines at shot − LEAD_S use chance quality only; calls at shot + 0.2 s; priority, stale drop and quiet fill. Emit cues in the file 43 contract (cue_id, kind, reveal, tc_in, t_in, text.radio, utterance, crowd_state, haptic, spatial, evidence, truth_check, spoiler_check, source).
 - verifier.py: truth_check (every number and name in a line matches events/signals) and spoiler_check (no outcome word in any line timed before its event).
 - spoiler.py: spoiler_leaks() from file 43 and "spoiler lift" from file 39, as functions and a CLI report.
 - ssml.py + tts.py: DragonHD SSML with [style] bands calm → curious → urgent → excited → shouting and a low temperature. Pre-synthesise MP3 with the Speech SDK, cached by SSML sha256, with 429 retry and backoff. Never re-synthesise an existing hash. Keyless first, SPEECH_KEY fallback; never log keys.
-- build_commentary.py (python -m audiostands.build_commentary --cut judge): writes cues.en.radio.jsonl, audio/en/radio/<sha>.mp3 (real durations written back into the cues), captions_sdh.vtt and descriptions.vtt (code from files 32/42) into web/public/replay/v1/judge/. Report the line count and characters synthesised.
-- voices.py (python -m audiostands.voices): render the same 4 lines (build-up, goal call, miss, calm state line) in 3 en-US DragonHD voices to out/voices/.
+- build_commentary.py (python -m tely.build_commentary --cut judge): writes cues.en.radio.jsonl, audio/en/radio/<sha>.mp3 (real durations written back into the cues), captions_sdh.vtt and descriptions.vtt (code from files 32/42) into web/public/replay/v1/judge/. Report the line count and characters synthesised.
+- voices.py (python -m tely.voices): render the same 4 lines (build-up, goal call, miss, calm state line) in 3 en-US DragonHD voices to out/voices/.
 - tests (all run in CI with the synthesiser mocked; CI must not call Azure):
   - spoiler_leaks == [];
   - truth_check 100% pass;
@@ -289,10 +289,10 @@ Run it, verify it, commit and push.
 ```text
 Stage 4 of BUILD_PLAN.md: the playable judge-cut replay, deployed to Azure Static Web Apps with zero backend. This is the MVP.
 
-Read first: CLAUDE.md; BUILD_PLAN.md Stage 4; in stoynev research/: 43-audio-stands-architecture.md §6 (bundle layout, manifest, ReplaySource, wire) and §7 (Bluetooth and iOS risks), 41-haptics-match-tension.md (haptics.ts, tacton vocabulary, honest iOS line, wake lock, "did you feel it?" button), 27-voice-speech-and-audio.md (crowd ducking snippet), 38-reactive-crowd-atmosphere.md (+12 dB commentary over crowd, mirrored club end), 32-accessible-responsive-viewer.md (live regions, throttled Announcer), 21-demo-uptime-cost-and-ops.md (replay mode, staticwebapp.config.json), 30-infra-as-code-azd-bicep.md (azure.yaml + Bicep pattern; swaLocation westeurope (unverified)).
+Read first: CLAUDE.md; BUILD_PLAN.md Stage 4; in stoynev research/: 43-tely-architecture.md §6 (bundle layout, manifest, ReplaySource, wire) and §7 (Bluetooth and iOS risks), 41-haptics-match-tension.md (haptics.ts, tacton vocabulary, honest iOS line, wake lock, "did you feel it?" button), 27-voice-speech-and-audio.md (crowd ducking snippet), 38-reactive-crowd-atmosphere.md (+12 dB commentary over crowd, mirrored club end), 32-accessible-responsive-viewer.md (live regions, throttled Announcer), 21-demo-uptime-cost-and-ops.md (replay mode, staticwebapp.config.json), 30-infra-as-code-azd-bicep.md (azure.yaml + Bicep pattern; swaLocation westeurope (unverified)).
 
 Build:
-- pipeline/audiostands/build_bundle.py (python -m audiostands.build_bundle --cut judge): run build_match, build_commentary and build_segments in order; merge cues into segments.json; write manifest.json in the file 43 shape (delay_s, kits, chapters for "next big moment", tracks, ai_voice_notice "Commentary uses Azure AI voices. Match data is synthetic.", sha256 of every file). Fail if the bundle exceeds 200 MB.
+- pipeline/tely/build_bundle.py (python -m tely.build_bundle --cut judge): run build_match, build_commentary and build_segments in order; merge cues into segments.json; write manifest.json in the file 43 shape (delay_s, kits, chapters for "next big moment", tracks, ai_voice_notice "Commentary uses Azure AI voices. Match data is synthetic.", sha256 of every file). Fail if the bundle exceeds 200 MB.
 - web/src/audio/commentary-track.ts: fetch and decode each line ahead of time, play it at its t_in on the AudioContext clock, and duck the crowd at least 12 dB under speech with soft ramps.
 - web/src/haptics/haptics.ts (file 41): heartbeat tempo from tension, event tactons, home/away signatures, firing at audibleAt − 20 ms using outputLatency. Honest message on iPhone and Firefox Android, a "did you feel it?" test button, Screen Wake Lock.
 - web/src/settings.ts: club end (Reds/Navy, flips crowd valence), crowd/voice mix slider, haptics off / key moments / full. Store in localStorage inside try/catch; everything works without storage.
@@ -322,7 +322,7 @@ Run it, verify it, commit and push.
 **Aim.** Make the "agent that hears the next 10 seconds" real. An Agent Framework Director on a Foundry model reads the look-ahead window and outputs only a tension plan. A Verifier in code checks it, and a rules Director takes over on any failure. Traces and a measured eval table back the Agentic Design and Foundry claims.
 
 **Done when:**
-- [ ] `DIRECTOR=foundry python -m audiostands.build_bundle --cut judge` runs through the Agent Framework workflow, and the traces appear in Application Insights / Foundry.
+- [ ] `DIRECTOR=foundry python -m tely.build_bundle --cut judge` runs through the Agent Framework workflow, and the traces appear in Application Insights / Foundry.
 - [ ] `spoiler_leaks()` is still `[]`.
 - [ ] `eval/report.md` shows:
   - spoiler leaks (0), spoiler lift, % numbers verified, % template fallback;
@@ -335,13 +335,13 @@ Run it, verify it, commit and push.
 ```text
 Stage 5 of BUILD_PLAN.md: the Director agent on Microsoft Foundry (Agent Framework), tracing, and the evaluation table.
 
-Read first: CLAUDE.md; BUILD_PLAN.md Stage 5; in stoynev research/: 18-agentic-design-for-pipelines.md (Agent Framework 1.22 workflows, FoundryChatClient, tracing with configure_azure_monitor + enable_instrumentation, Foundry code-based custom evaluator and its sandbox limits), 03-foundry-llm-explain.md (Foundry project endpoint), 43-audio-stands-architecture.md §1–§2 (Director inputs/outputs, firewall table, at most one call per 10 s, ≤ 1,200 tokens per call, 10K TPM ceiling), 39-anticipatory-emotional-commentary.md (reveal policy, spoiler lift), 42-audio-competitors-and-demo.md (information-asymmetry framing), 22-explanation-generation-patterns.md (locked-placeholder polish, optional).
+Read first: CLAUDE.md; BUILD_PLAN.md Stage 5; in stoynev research/: 18-agentic-design-for-pipelines.md (Agent Framework 1.22 workflows, FoundryChatClient, tracing with configure_azure_monitor + enable_instrumentation, Foundry code-based custom evaluator and its sandbox limits), 03-foundry-llm-explain.md (Foundry project endpoint), 43-tely-architecture.md §1–§2 (Director inputs/outputs, firewall table, at most one call per 10 s, ≤ 1,200 tokens per call, 10K TPM ceiling), 39-anticipatory-emotional-commentary.md (reveal policy, spoiler lift), 42-audio-competitors-and-demo.md (information-asymmetry framing), 22-explanation-generation-patterns.md (locked-placeholder polish, optional).
 
 Build:
-- pipeline/audiostands/agents/director.py: an Agent Framework agent on FOUNDRY_MODEL. Input: the window [P, P+D] as compact features (event types, xG, zone, seconds to the next shot). Output, validated against a JSON schema: {build_up_level 0–1, lead_s, hold_ms, hint_type ∈ danger|counter|set_piece|none}. Its instructions forbid outcome information, and the Verifier rejects any field outside the schema.
-- pipeline/audiostands/agents/rules_director.py: the same output from file 39's rules. Select with DIRECTOR=foundry|rules. If a model call fails (no quota, 429, timeout), that window falls back to rules and the fallback is recorded.
-- pipeline/audiostands/agents/workflow.py: an Agent Framework workflow Director → Commentator (templates) → Verifier (code) → TTS executor, with at most one Director call per 10 s of match time. OpenTelemetry tracing to Application Insights: add a workspace-based App Insights (dailyQuotaGb 1) to infra/main.bicep, pass its connection details through the azd env, and keep keys out of files.
-- pipeline/audiostands/eval/:
+- pipeline/tely/agents/director.py: an Agent Framework agent on FOUNDRY_MODEL. Input: the window [P, P+D] as compact features (event types, xG, zone, seconds to the next shot). Output, validated against a JSON schema: {build_up_level 0–1, lead_s, hold_ms, hint_type ∈ danger|counter|set_piece|none}. Its instructions forbid outcome information, and the Verifier rejects any field outside the schema.
+- pipeline/tely/agents/rules_director.py: the same output from file 39's rules. Select with DIRECTOR=foundry|rules. If a model call fails (no quota, 429, timeout), that window falls back to rules and the fallback is recorded.
+- pipeline/tely/agents/workflow.py: an Agent Framework workflow Director → Commentator (templates) → Verifier (code) → TTS executor, with at most one Director call per 10 s of match time. OpenTelemetry tracing to Application Insights: add a workspace-based App Insights (dailyQuotaGb 1) to infra/main.bicep, pass its connection details through the azd env, and keep keys out of files.
+- pipeline/tely/eval/:
   (a) spoiler leaks (target 0), spoiler lift, % numbers verified, % template fallback, Director calls and fallbacks;
   (b) a --realtime harness that plays the cut at wall-clock speed and logs, for each build line, plan → verify → TTS latency against the 6 s budget (p50/p95);
   (c) a Foundry code-based custom evaluator for numeric truth (file 18), uploaded and run once if the SDK supports it; otherwise run the same grader locally and say so.
@@ -375,10 +375,10 @@ Run it, verify it, commit and push.
 ```text
 Stage 6 of BUILD_PLAN.md: "Ask the commentator" with preset questions that work offline in the replay.
 
-Read first: CLAUDE.md; BUILD_PLAN.md Stage 6; in stoynev research/: 40-conversational-commentator.md (§1 toggle Ask button and VoiceOver/TalkBack gestures, tool definitions, catch-up, ducking), 43-audio-stands-architecture.md §3 (tool schemas, {say, evidence_ids, as_of_clock}) and §6 (offline Ask, clip counts), 36-blind-fans-and-audio-description.md (rules 4 and 7: short answers now, long ones held until the ball is out, "ball's out" first), 32-accessible-responsive-viewer.md (button semantics, live regions).
+Read first: CLAUDE.md; BUILD_PLAN.md Stage 6; in stoynev research/: 40-conversational-commentator.md (§1 toggle Ask button and VoiceOver/TalkBack gestures, tool definitions, catch-up, ducking), 43-tely-architecture.md §3 (tool schemas, {say, evidence_ids, as_of_clock}) and §6 (offline Ask, clip counts), 36-blind-fans-and-audio-description.md (rules 4 and 7: short answers now, long ones held until the ball is out, "ball's out" first), 32-accessible-responsive-viewer.md (button semantics, live regions).
 
 Build:
-- pipeline/audiostands/answers.py: render answer fragments for the judge cut with the same voice and cache. That means 18 zone clips (2 teams × 3 sides × 3 thirds), 21 distance clips (0–100 m in 5 m steps), one score/clock clip per minute of the cut, "hold that thought" and "back to the action". Index them at web/public/replay/v1/judge/answers/index.json, and call this from build_bundle.
+- pipeline/tely/answers.py: render answer fragments for the judge cut with the same voice and cache. That means 18 zone clips (2 teams × 3 sides × 3 thirds), 21 distance clips (0–100 m in 5 m steps), one score/clock clip per minute of the cut, "hold that thought" and "back to the action". Index them at web/public/replay/v1/judge/answers/index.json, and call this from build_bundle.
 - web/src/ask/local-tools.ts: TypeScript versions of get_score_and_clock, get_ball_position (plus a spatial ball ping), get_last_events, what_did_i_miss and explain_moment (replays the cached cue audio), all clamped to the local playhead.
 - web/src/ask/ask.ts:
   - One large native Ask button (a screen-reader double-tap is one activation; key A as a shortcut) that opens a short list of preset questions.
@@ -415,7 +415,7 @@ Run it, verify it, commit and push.
 ```text
 Stage 7 of BUILD_PLAN.md: live spoken questions through Foundry Voice Live, with our Stats MCP server. Time box 7 h; the presets stay as the fallback.
 
-Read first: CLAUDE.md; BUILD_PLAN.md Stage 7; in stoynev research/: 40-conversational-commentator.md (all of it: relay design, a) tools, b) relay, c) browser WebRTC, persona prompt, caps, the voice-name correction), 27-voice-speech-and-audio.md (Voice Live API, GA WebSocket api-version 2026-04-10), 43-audio-stands-architecture.md §1 (relay and MCP boxes), §3 (the 8 tool schemas), §7 (WebRTC is preview, 60-min session cap, fallback chain), 18-agentic-design-for-pipelines.md (MCP SDK v2: MCPServer, not FastMCP), 21-demo-uptime-cost-and-ops.md (per-IP limit, daily cap, DEMO_MODE kill switch), 30-infra-as-code-azd-bicep.md (Container Apps, user-assigned identity, role assignments, minReplicas override), 44-accounts-quotas-setup-checklist.md (Voice Live needs no deployment; S0 limits).
+Read first: CLAUDE.md; BUILD_PLAN.md Stage 7; in stoynev research/: 40-conversational-commentator.md (all of it: relay design, a) tools, b) relay, c) browser WebRTC, persona prompt, caps, the voice-name correction), 27-voice-speech-and-audio.md (Voice Live API, GA WebSocket api-version 2026-04-10), 43-tely-architecture.md §1 (relay and MCP boxes), §3 (the 8 tool schemas), §7 (WebRTC is preview, 60-min session cap, fallback chain), 18-agentic-design-for-pipelines.md (MCP SDK v2: MCPServer, not FastMCP), 21-demo-uptime-cost-and-ops.md (per-IP limit, daily cap, DEMO_MODE kill switch), 30-infra-as-code-azd-bicep.md (Container Apps, user-assigned identity, role assignments, minReplicas override), 44-accounts-quotas-setup-checklist.md (Voice Live needs no deployment; S0 limits).
 
 Build:
 - relay/ (Python 3.12, FastAPI, one container):
@@ -474,7 +474,7 @@ Do these in order, and stop adding new items after 3 hours so there is time to d
 3. One-tap Bluetooth calibration: tap along to a beat, store the offset, apply it to haptics.
 4. Playwright + @axe-core/playwright in CI at 3 viewports, with tags wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, plus reduced motion. Fix every violation.
 5. .github/workflows/uptime.yml: a cron every 6 h that fetches the deployed URL and manifest.json; badge in README.
-6. eval/listening_test.md: file 36's protocol (two 3-minute clips: commentary only vs full Audio Stands; comprehension probes "where was the ball / which side / was it dangerous / who scored"; RNIB's 15-point scale), eval/listening_test.csv to fill in, and eval/score_listening.py, which adds the summary to eval/report.md.
+6. eval/listening_test.md: file 36's protocol (two 3-minute clips: commentary only vs full Tely; comprehension probes "where was the ball / which side / was it dangerous / who scored"; RNIB's 15-point scale), eval/listening_test.csv to fill in, and eval/score_listening.py, which adds the summary to eval/report.md.
 7. Only if time remains: Describer and Calm levels (planner variants, TTS and a detail-level setting). Otherwise ship Radio only and record that in docs/DECISIONS.md.
 
 Rebuild and redeploy with azd deploy.
@@ -505,7 +505,7 @@ Run it, verify it, commit and push.
 ```text
 Stage 9a of BUILD_PLAN.md: everything the video and the write-up need.
 
-Read first: CLAUDE.md; BUILD_PLAN.md Stage 9 and "Not in this plan"; in stoynev research/: 14-demo-video-and-writeup.md (under 2:00, target 1:52, about 255 words of voiceover, beat structure, submission checklist, README skeleton), 42-audio-competitors-and-demo.md (muted-first video, radar, burned-in SDH captions, ffmpeg recipe, a real listener carries the story), 12-judging-criteria-and-rules.md (must-haves; no third-party trademarks or music), 46-copilot-github-azure-mcp-workflow.md ("How we built it", honest AI credit, AI-assist ledger), 36-blind-fans-and-audio-description.md (RNIB facts, honest testing wording), 43-audio-stands-architecture.md ("Pitch (3 sentences)"), 28-sponsor-goals-and-real-world-impact.md (impact framing). Use eval/report.json for every number; never put a number on screen that isn't in it or in a cited research file.
+Read first: CLAUDE.md; BUILD_PLAN.md Stage 9 and "Not in this plan"; in stoynev research/: 14-demo-video-and-writeup.md (under 2:00, target 1:52, about 255 words of voiceover, beat structure, submission checklist, README skeleton), 42-audio-competitors-and-demo.md (muted-first video, radar, burned-in SDH captions, ffmpeg recipe, a real listener carries the story), 12-judging-criteria-and-rules.md (must-haves; no third-party trademarks or music), 46-copilot-github-azure-mcp-workflow.md ("How we built it", honest AI credit, AI-assist ledger), 36-blind-fans-and-audio-description.md (RNIB facts, honest testing wording), 43-tely-architecture.md ("Pitch (3 sentences)"), 28-sponsor-goals-and-real-world-impact.md (impact framing). Use eval/report.json for every number; never put a number on screen that isn't in it or in a cited research file.
 
 Create:
 - video/script.md: a 1:52 script, about 255 words, as a table (time, on screen, voiceover, burned caption). Suggested beats:

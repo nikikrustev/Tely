@@ -5,9 +5,9 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "audiostands"
+name = "tely"
 version = "0.0.1"
-description = "Audio Stands: synthetic match, signals, commentary and Q&A for blind fans"
+description = "Tely: synthetic match, signals, commentary and Q&A for blind fans"
 requires-python = ">=3.12"
 dependencies = ["numpy>=2.0,<3"]   # movement.py only (element-wise maths; see its docstring)
 
@@ -16,7 +16,7 @@ dev = ["pytest>=9.1", "common-data-format-validator==0.1.1", "mcp==2.3.0"]   # C
 mcp = ["mcp==2.3.0"]   # the Stats MCP server (qa/mcp_server.py, file 18); open protocol, not Microsoft
 
 [tool.setuptools.packages.find]
-include = ["audiostands*"]
+include = ["tely*"]
 
 [tool.pytest.ini_options]
 # importlib mode: tests/a/test_x.py and tests/b/test_x.py can share a basename without clashing,

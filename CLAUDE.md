@@ -8,11 +8,11 @@ the Synthetic Match Insights Engine. The pipeline has five stages: Ingest → In
    "So what for us", reusable code and dated sources. Read the TL;DR of the relevant files before researching
    or building anything. Don't redo work that is already there.
 2. `Berbata_Hackathon_Intel.md` has the brief and a snapshot of the 332 competing projects.
-3. `Berbata_Idea_Shortlist.html` and `Berbata_Idea_Brainstorm.html` have our candidate ideas. The shortlist recommended TwinCast, but the user has since chosen to focus on Audio Stands (below).
+3. `Berbata_Idea_Shortlist.html` and `Berbata_Idea_Brainstorm.html` have our candidate ideas. The shortlist recommended TwinCast, but the user has since chosen to focus on Tely (below).
    Don't edit these three files.
 
 ## Current focus (from the user, 20 Oct 2026)
-"Audio Stands" (working name): the best audio experience for a blind fan. It combines brainstorm ideas 20 Home End and
+**Tely** (the project name since 27 Oct 2026, said "telly"; it was the working name Audio Stands): the best audio experience for a blind fan. It combines brainstorm ideas 20 Home End and
 17 Heartbeat: an immersive reactive crowd, an AI commentator who builds emotion because the pipeline knows what is
 coming, and the fan can talk to the commentator and ask questions. See the "Current focus" section in INDEX.md.
 

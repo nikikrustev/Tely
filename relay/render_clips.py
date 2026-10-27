@@ -11,9 +11,9 @@ from __future__ import annotations
 import json
 import sys
 
-from audiostands.commentary.source import BUNDLE
-from audiostands.commentary.ssml import DEFAULT_VOICE, build_ssml, ssml_sha256
-from audiostands.commentary.tts import AzureSynthesiser, TtsCache, TtsError, load_env
+from tely.commentary.source import BUNDLE
+from tely.commentary.ssml import DEFAULT_VOICE, build_ssml, ssml_sha256
+from tely.commentary.tts import AzureSynthesiser, TtsCache, TtsError, load_env
 
 from .clips import CLIPS
 

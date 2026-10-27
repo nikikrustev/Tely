@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from audiostands.qa import tools
-from audiostands.qa.bundle import load_bundle
+from tely.qa import tools
+from tely.qa.bundle import load_bundle
 
 GOLDEN = Path(__file__).resolve().parents[3] / "contracts" / "golden" / "a" / "live_2026-10-23.jsonl"
 B = load_bundle()

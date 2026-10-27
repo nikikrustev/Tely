@@ -1,5 +1,5 @@
 # OWNER: B (Nikolay). The Stats MCP server (qa/mcp_server.py): every tool clamps to the playhead the relay sends in the
-# X-AudioStands-Playhead header, gives exactly the relay's answer (qa.call_tool), and the model can never set the clock.
+# X-Tely-Playhead header, gives exactly the relay's answer (qa.call_tool), and the model can never set the clock.
 # Real streamable-HTTP calls, served in memory (no network port).
 from __future__ import annotations
 
@@ -13,9 +13,9 @@ import httpx2  # noqa: E402  (comes with the MCP SDK)
 from mcp import Client, ClientSession  # noqa: E402
 from mcp.client.streamable_http import streamable_http_client  # noqa: E402
 
-from audiostands import qa  # noqa: E402
-from audiostands.qa.bundle import load_bundle  # noqa: E402
-from audiostands.qa.mcp_server import build_server, http_app  # noqa: E402
+from tely import qa  # noqa: E402
+from tely.qa.bundle import load_bundle  # noqa: E402
+from tely.qa.mcp_server import build_server, http_app  # noqa: E402
 
 B = load_bundle()
 SIG = B.signals["events"]
@@ -36,7 +36,7 @@ async def over_http(header: str | None, calls: list[tuple[str, dict]]) -> list[d
     out = []
     async with srv.session_manager.run():
         hc = httpx2.AsyncClient(transport=httpx2.ASGITransport(app=app), base_url="http://localhost:8080",
-                                headers={"X-AudioStands-Playhead": header} if header is not None else {})
+                                headers={"X-Tely-Playhead": header} if header is not None else {})
         async with streamable_http_client(URL, http_client=hc) as streams:
             async with ClientSession(streams[0], streams[1]) as s:
                 await s.initialize()

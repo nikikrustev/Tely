@@ -1,9 +1,9 @@
 # OWNER: A (potencialbg). `azd up` in env "judge": the zero-backend replay on Static Web Apps Free (web), and from Stage 7
 # the relay on Container Apps (live spoken questions through Voice Live, plus B's Stats MCP server at /mcp).
-# Before deploying: python -m audiostands.build_bundle --cut judge (from pipeline/), so web/public/replay/v1/judge/ is
+# Before deploying: python -m tely.build_bundle --cut judge (from pipeline/), so web/public/replay/v1/judge/ is
 # current. The bundle is committed, so the web deploy needs no TTS and no keys; the relay hook needs Python + uv (D17).
 # One-time: azd env set FOUNDRY_RESOURCE <name> (the Voice Live resource, D8; a name, not a secret).
-name: audiostands
+name: tely
 infra:
   provider: bicep
   path: infra

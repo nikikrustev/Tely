@@ -1,6 +1,6 @@
 # 37 — Putting the listener in the stands: binaural/spatial audio and sonifying the pitch in the browser
 
-_Accessed/compiled: 20 Oct 2026 · Priority area: Render (audio channel) + Personalise (seat choice), for Audio Stands (20 Home End + 17 Heartbeat)_
+_Accessed/compiled: 20 Oct 2026 · Priority area: Render (audio channel) + Personalise (seat choice), for Tely (20 Home End + 17 Heartbeat)_
 
 ## TL;DR
 
@@ -8,7 +8,7 @@ _Accessed/compiled: 20 Oct 2026 · Priority area: Render (audio channel) + Perso
 - **Default to the halfway seat.** From there the pitch length runs left to right. That is where human localisation is sharpest (minimum audible angle 1–2° near the front midline). Behind-goal seats ("Home End") put attacks on the front/back axis, which is where generic HRTFs cause front-back confusions. Add a brightness or distance cue there.
 - **Make the ball a broadband rattling texture, not a tone.** This copies blind football's noisy ball. Narrowband sounds localise worse. Keep football actions as **auditory icons**: thud, whistle, net. They are understood without training, while earcons score about 10% before training. Keep earcon onsets **≥300 ms apart** and add **≥0.1 s gaps** (McGookin & Brewster).
 - **Head tracking:** AirPods head tracking is **not exposed to the web**. It is native only (`CMHeadphoneMotionManager`), and the W3C issue has been open since 2020. Phone orientation works, but iOS needs `DeviceOrientationEvent.requestPermission()` from a tap. Use it as an optional "point your phone to listen" mode.
-- **Bluetooth adds about 126–274 ms** (AirPods, end-to-end, measured by Coyle). Audio Stands has no video to sync, so this mostly matters for **haptics**: delay the Heartbeat pulses by `baseLatency + outputLatency`. **OpenAIR, the classic free IR library, currently shows a hosting "suspended" page**, so generate a synthetic stadium IR in code (licence-free). Voxengo's free IRs are the fallback.
+- **Bluetooth adds about 126–274 ms** (AirPods, end-to-end, measured by Coyle). Tely has no video to sync, so this mostly matters for **haptics**: delay the Heartbeat pulses by `baseLatency + outputLatency`. **OpenAIR, the classic free IR library, currently shows a hosting "suspended" page**, so generate a synthetic stadium IR in code (licence-free). Voxengo's free IRs are the fallback.
 
 ## Findings
 
@@ -95,7 +95,7 @@ Resonance's own concepts page claims efficiency on mobile but gives no source co
 
 ## So what for us
 
-- **Audio Stands. Stages: Render (spatial audio engine) + Personalise (seat, focus player, earcon set, speaker fallback).**
+- **Tely. Stages: Render (spatial audio engine) + Personalise (seat, focus player, earcon set, speaker fallback).**
   - The module below is the "being in the stands" layer under the commentator (research 39/40) and crowd (38).
   - Seat choice is a real personalisation axis: "Home End" for your club's end, "halfway" for clarity. It also differentiates us from Audio Eyes / Blind-side (research 32, unverified).
   - The look-ahead delay lets us pre-schedule earcons and ducking around commentary lines.
@@ -110,10 +110,10 @@ Resonance's own concepts page claims efficiency on mobile but gives no source co
 
 ## Reuse: code & links
 
-**`audio-stands.ts`** (126 lines, no dependencies; passes `tsc --strict` with lib dom, TypeScript 5.6). It takes CDF frames at 25 Hz.
+**`sound-stage.ts`** (126 lines, no dependencies; passes `tsc --strict` with lib dom, TypeScript 5.6). It takes CDF frames at 25 Hz.
 
 ```ts
-// audio-stands.ts — seat-in-the-stands spatial audio for synthetic CDF frames (metres, origin centre spot, 25 fps)
+// sound-stage.ts — seat-in-the-stands spatial audio for synthetic CDF frames (metres, origin centre spot, 25 fps)
 export type Seat = "halfway" | "homeEnd" | "awayEnd";
 export type Earcon = "pass" | "shot" | "tackle" | "whistle" | "ping";
 type V3 = [number, number, number];
@@ -126,7 +126,7 @@ const SEATS: Record<Seat, { pos: V3; fwd: V3 }> = {
   awayEnd: { pos: [64, 10, 0], fwd: [-1, 0, 0] },
 };
 
-export class AudioStands {
+export class SoundStage {
   readonly ctx = new AudioContext({ latencyHint: "balanced" });
   private master = new GainNode(this.ctx);
   private reverb = new ConvolverNode(this.ctx);
@@ -244,7 +244,7 @@ export class AudioStands {
 **Wiring sketch.**
 
 ```ts
-const stands = new AudioStands();
+const stands = new SoundStage();
 startBtn.onclick = async () => { await stands.unlock(); await stands.loadEarcons(EARCON_URLS); };
 pubsub.on("frame", (f) => stands.onFrame({ x: f.ball.x, y: f.ball.y, z: f.ball.z,
   speed: f.ball.speed, alive: f.ball_status === "alive" }));
@@ -258,7 +258,7 @@ stands.ctx.createMediaElementSource(ttsAudio).connect(stands.commentaryIn);
 **Phone-pointer mode (iOS permission).** Turn the phone towards the action and that side gets louder and clearer.
 
 ```ts
-async function pointToListen(stands: AudioStands) {          // call from a click handler
+async function pointToListen(stands: SoundStage) {          // call from a click handler
   const DOE = DeviceOrientationEvent as any;
   if (typeof DOE.requestPermission === "function" && (await DOE.requestPermission()) !== "granted") return;
   let zero: number | null = null;                              // calibrate: "facing the pitch" = first reading

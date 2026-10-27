@@ -10,7 +10,7 @@ Standard library only and no randomness, so every run writes byte-identical file
 
 All clubs, players and the venue are fictional. Nothing here comes from real match data.
 The per-second signals use simple sample-only versions of the file 23/38/39 formulas; Stage 1
-(pipeline/audiostands/interpret.py, crowd.py) replaces them but must keep this file format.
+(pipeline/tely/interpret.py, crowd.py) replaces them but must keep this file format.
 The format itself is documented field by field in contracts/README.md.
 """
 from __future__ import annotations
@@ -556,7 +556,7 @@ def build_signals(actions, ball):
         events[a["id"]] = dict(t=round(a["f"] / BALL_HZ, 2), reveal_t=round(a["f_end"] / BALL_HZ, 2),
                                xg=a.get("xg"), priority=priority(a), zone=zone(*a["at"], a["side"]),
                                spoken=spoken, spoken_past=spoken_past)
-    return dict(format="audiostands.signals", version=FORMAT_VERSION, match_id=MATCH_ID, hz=1,
+    return dict(format="tely.signals", version=FORMAT_VERSION, match_id=MATCH_ID, hz=1,
                 per_second=per_second, events=events, crowd_one_shots=one_shots)
 
 
@@ -570,7 +570,7 @@ def build_meta():
                                          jersey_number=p[3], position=p[4], is_starter=True)
                                     for p in PLAYERS[side]])
     return dict(
-        format="audiostands.meta", version=FORMAT_VERSION, cdf_version=CDF_VERSION, synthetic=True,
+        format="tely.meta", version=FORMAT_VERSION, cdf_version=CDF_VERSION, synthetic=True,
         notice="Synthetic match. Fictional clubs and players. No real match data.",
         match=dict(id=MATCH_ID, competition="Berbata Synthetic League", season="2026-27",
                    kickoff_time=iso(0), venue=dict(id="syn_emberfield", name="Emberfield")),
@@ -586,7 +586,7 @@ def build_meta():
 
 
 def build_ticks(ball, players):
-    return dict(format="audiostands.ticks", version=FORMAT_VERSION, match_id=MATCH_ID, t0=0.0,
+    return dict(format="tely.ticks", version=FORMAT_VERSION, match_id=MATCH_ID, t0=0.0,
                 duration_s=float(DURATION_S),
                 ball=dict(hz=BALL_HZ, columns=["x", "y", "z", "alive", "poss"], rows=ball),
                 players=dict(hz=PLAYER_HZ, ids=PLAYER_IDS, rows=players))

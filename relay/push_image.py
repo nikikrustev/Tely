@@ -6,7 +6,7 @@
 WHY (docs/DECISIONS.md D17): the free subscription refuses ACR Tasks ("TasksOperationsNotAllowed", 23 Oct 2026), so azd's
 remote build can't run, and A's machine has no Docker. An image is only a base image plus layers, so this script takes
 python:3.12-slim (linux/amd64) from Docker Hub, adds ONE layer with the same files relay/Dockerfile copies (the relay,
-B's audiostands package, the four judge-bundle files B's load_bundle reads) plus Linux wheels from pip, and pushes it
+B's tely package, the four judge-bundle files B's load_bundle reads) plus Linux wheels from pip, and pushes it
 with the registry HTTP API. Auth is the signed-in user's own token (`az acr login --expose-token`): no admin password
 and no key; the Container App pulls with its managed identity. relay/Dockerfile stays the reference build for anyone
 with Docker. The tag is the layer's content hash, so the same inputs give the same tag.
@@ -30,7 +30,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ("registry-1.docker.io", "library/python", "3.12-slim")
-REPO = "audiostands/relay"
+REPO = "tely/relay"
 JUDGE = "web/public/replay/v1/judge"
 BUNDLE_FILES = ["meta.json", "events.jsonl", "signals.json", "ticks.json.gz"]
 MANIFEST_TYPES = ", ".join([
@@ -112,7 +112,7 @@ def wheels(target: Path) -> None:
 
 def app_files() -> list[tuple[Path, str]]:
     out = []
-    for base in ("relay", "pipeline/audiostands"):
+    for base in ("relay", "pipeline/tely"):
         for p in sorted((ROOT / base).rglob("*")):
             rel = p.relative_to(ROOT).as_posix()
             if p.is_file() and "__pycache__" not in rel and not rel.startswith("relay/tests/") and p.suffix != ".pyc":

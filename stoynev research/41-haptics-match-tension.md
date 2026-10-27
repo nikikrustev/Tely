@@ -1,6 +1,6 @@
 # 41 — Feeling the match: haptic patterns on phones, watches and controllers (idea 17 Heartbeat)
 
-_Accessed/compiled: 20 Oct 2026 · Priority area: Render + Personalise (touch channel) for **Audio Stands** (20 Home End + 17 Heartbeat); also helps F Graphics Desk demo and 10 Story Time_
+_Accessed/compiled: 20 Oct 2026 · Priority area: Render + Personalise (touch channel) for **Tely** (20 Home End + 17 Heartbeat); also helps F Graphics Desk demo and 10 Story Time_
 
 ## TL;DR
 
@@ -72,11 +72,11 @@ _Accessed/compiled: 20 Oct 2026 · Priority area: Render + Personalise (touch ch
   - Either way, **vibration slightly before sound is fine; vibration after sound is noticed sooner.**
 - **No sourced figure for vibration API latency.** Kaaresoja's measurement method (microphone and accelerometer recorded at once, read in an audio editor) is cheap to copy. Phone motors are audible, so a laptop mic recording the speaker click and the buzz gives an offset.
 - **Clock.** Use `AudioContext.getOutputTimestamp()` to map the audio clock to `performance.now()`, and include `outputLatency` (Baseline 2025). Convert each cue's audio time to a performance time, then fire with `setTimeout` (minus a calibrated `leadMs`).
-- **Audio Stands bonus.** The pipeline runs on a look-ahead delay, so the heartbeat can **start rising before the shot**, in step with the commentator's build-up.
+- **Tely bonus.** The pipeline runs on a look-ahead delay, so the heartbeat can **start rising before the shot**, in step with the commentator's build-up.
 
 ## So what for us
 
-**Audio Stands, Render stage (touch channel), driven by the tension signal from Interpret:**
+**Tely, Render stage (touch channel), driven by the tension signal from Interpret:**
 - Use win-probability swing and momentum (research 23) plus pressure (research 09).
 - Map tension 0–1 to heartbeat tempo, about 55 to 140 BPM. Our mapping is a design choice, not a sourced number.
 - Event tactons ride on the same timed cue JSON as the commentary (research 24 scheduler). Add a `haptic` field: `{tacton, team, at_audio_time}`.
