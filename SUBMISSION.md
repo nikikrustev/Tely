@@ -13,11 +13,12 @@
 
 Open the demo link in Chrome or Edge, with headphones if you have them.
 
-1. Press **Start** (or Space). About 5 s in, the voice builds ("Navy coming... Olvholm... here's a chance!") four seconds *before* the header, and the crowd rises with it.
-2. Press **Ask the commentator** (or Enter), wait for the beep and ask out loud: "What's the score?", "Who wins?" (it won't tell you). Press it again mid-answer and it stops.
-3. Say "speak Spanish": the answers and the match switch language. Below the radar, **Director's notes** show what the agents decided, after each moment.
+1. On the match list, tap **Reds v Navy**. Or press **Say a match**, say "Play Reds" and press Enter.
+2. Press **Start** (or Space). About 5 s in, the voice builds ("Navy coming... Olvholm... here's a chance!") four seconds *before* the header, and the crowd rises with it.
+3. Press **Ask the commentator** (or Enter), wait for the beep and ask out loud: "What's the score?", "Who wins?" (it won't tell you). Press it again mid-answer and it stops.
+4. Say "speak Spanish": the answers and the match switch language. Below the radar, **Director's notes** show what the agents decided, after each moment.
 
-If the first question says live questions aren't available, the relay was asleep: wait up to a minute and ask again. **Quick questions** work offline.
+If the first question says live questions aren't available, the relay was asleep: wait up to a minute and ask again. **Quick questions** (in Settings, the gear) work offline.
 
 ## The problem
 
