@@ -370,8 +370,9 @@ export class CrowdEngine implements CrowdBus {
   }
 }
 
-/** Load web/public/crowd/manifest.json and decode every clip. Missing files are skipped, never fatal. */
-export async function loadCrowdBuffers(ctx: BaseAudioContext, base = '/crowd'): Promise<CrowdBuffers> {
+/** Load web/public/crowd/manifest.json and decode every clip. Missing files are skipped, never fatal.
+ *  minimal (low-data mode, D36): one recording per role instead of up to six variants. */
+export async function loadCrowdBuffers(ctx: BaseAudioContext, base = '/crowd', minimal = false): Promise<CrowdBuffers> {
   const res = await fetch(`${base}/manifest.json`);
   const manifest = (await res.json()) as { roles: Record<string, string[]> };
   const decode = async (f: string) => {
@@ -383,7 +384,7 @@ export async function loadCrowdBuffers(ctx: BaseAudioContext, base = '/crowd'): 
   };
   const out: CrowdBuffers = { beds: {}, shots: {} };
   for (const [role, files] of Object.entries(manifest.roles)) {
-    const bufs = (await Promise.all(files.map(decode))).filter((b): b is AudioBuffer => b !== null);
+    const bufs = (await Promise.all((minimal ? files.slice(0, 1) : files).map(decode))).filter((b): b is AudioBuffer => b !== null);
     if (role === 'murmur' || role === 'swell' || role === 'tense' || role === 'away') out.beds[role] = bufs[0];
     else out.shots[role] = bufs;
   }

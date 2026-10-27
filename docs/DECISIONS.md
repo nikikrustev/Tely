@@ -820,3 +820,24 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
 - Nothing is generated here: every field comes from the committed, verified cue files.
 - **Checked:** pytest (`test_render_out.py`: the committed file is current, all 70 lines have all 7 languages and
   pass both checks, and each translation has a description track).
+
+## D36. Low-data mode (27 Oct 2026)
+
+- **Why:** many blind fans listen on a phone, often on a capped or slow connection. The normal page fetches the whole
+  commentary track and every crowd variant at Start.
+- **What:** with low-data mode on, the page:
+  - plays the commentary from 16 kHz / 32 kbps mono copies (`audio/<lang>/radio-lo/`, `commentary/lowdata.py`)
+    instead of 24 kHz / 48 kbps;
+  - fetches each line only when it comes within 30 s instead of the whole track at Start;
+  - loads one recording of each crowd reaction instead of up to six.
+- **When:** automatically when the browser asks to save data (`navigator.connection.saveData`) or reports a 2G/3G
+  connection. A Setup switch overrides it, saved on the device.
+- **Same words, same timing:** each copy is the same SSML as the normal line (rebuilt from the build's rules and
+  checked against the cue's `ssml_sha256`; 0 failed). A copy that would run past the next line's start is dropped
+  (none was), and a line without a copy plays its normal file. Cue files don't change.
+- **Numbers:** commentary per language 1.70 → 1.07 MB (English), about 37 % smaller in every language. The
+  minimal crowd set leaves out about 0.9 MB of the 4.1 MB of crowd recordings. The crowd recordings themselves aren't
+  re-encoded: we have no encoder on the build machine (unverified how much smaller they could be).
+- **Checked:** pytest (`test_lowdata.py`: every line of every language has a smaller copy of the same SSML),
+  vitest (the automatic choice and the fan's override), Playwright (the switch is saved; the commentary then comes
+  from `radio-lo`).

@@ -31,10 +31,12 @@ export interface Settings {
   mono: boolean;
   /** Follow my player (D34): a player id ("n11"), or null. A soft cue and the name when they get the ball. */
   follow: string | null;
+  /** Low-data mode (D36): true or false if the fan chose, null to follow the browser (Save-Data, 2G/3G). */
+  lowData: boolean | null;
 }
 
 export const DEFAULTS: Settings = { club: 'H', crowdMix: 0.5, haptics: 'full', hapticStrength: 1, radar: false, audioOffsetMs: null, lang: 'en',
-  detail: 'full', reader: false, mono: false, follow: null };
+  detail: 'full', reader: false, mono: false, follow: null, lowData: null };
 export const STORAGE_KEY = 'tely.settings.v1';
 /** The key from before the rename to Tely (D26): read once if the new key is empty, so saved settings carry over. */
 export const LEGACY_STORAGE_KEY = 'audiostands.settings.v1';
@@ -68,6 +70,7 @@ export function sanitize(x: unknown): Settings {
     reader: o.reader === true,
     mono: o.mono === true,
     follow: typeof o.follow === 'string' && /^[A-Za-z0-9_-]{1,12}$/.test(o.follow) ? o.follow : null,
+    lowData: typeof o.lowData === 'boolean' ? o.lowData : null,
   };
 }
 
