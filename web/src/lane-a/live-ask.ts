@@ -5,6 +5,7 @@
 // On any error, or no answer within 8 s, the fan hears why (a pre-rendered line in the commentary voice) and B's
 // preset menu opens.
 import { soundLevels, VoiceStage } from '../audio/mix';
+import { liveLanguage } from './language';
 import type { LaneBContext, LiveAskHandler } from '../contracts/b-exports';
 
 export const ANSWER_TIMEOUT_MS = 8000;  // BUILD_PLAN Stage 7: presets take over within 8 s
@@ -212,7 +213,7 @@ export class LiveAsk implements LiveAskHandler {
       };
       arm(ANSWER_TIMEOUT_MS, UNAVAILABLE);
       // The fan's sound levels (0..100) ride along, so "whistle down by 5" is answered with the new level.
-      sock.send(JSON.stringify({ type: 'ask', playhead_s: playheadS, levels: soundLevels() }));
+      sock.send(JSON.stringify({ type: 'ask', playhead_s: playheadS, levels: soundLevels(), lang: liveLanguage() }));
     });
   }
 

@@ -109,6 +109,12 @@ def build_server(bundle: Bundle | None = None) -> MCPServer:
                      level: Annotated[int, Field(ge=0, le=100)] | None = None) -> dict[str, Any]:
         return run("adjust_sound", {"sound": sound, "change": change, "level": level}, ctx)
 
+    @mcp.tool(name="set_language", description=DESCRIPTIONS["set_language"],
+              annotations=ToolAnnotations(read_only_hint=False, destructive_hint=False, idempotent_hint=True,
+                                          open_world_hint=False))
+    def set_language(language: Literal["en", "bg", "es", "ar", "fr", "de"], ctx: Context) -> dict[str, Any]:
+        return run("set_language", {"language": language}, ctx)
+
     return mcp
 
 

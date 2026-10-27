@@ -147,6 +147,9 @@
       #radar canvas { display: block; width: 100%; border-radius: 0.5rem; background: var(--panel); }
       .radar-caption { min-height: 3em; font-size: 1.25rem; font-weight: 600; margin: 0.5rem 0 0; }
       #settings > label { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; }
+      #settings > label.setting { flex-wrap: wrap; font-weight: 600; }
+      #lang { font-weight: 400; padding: 0 0.5rem; border: 2px solid var(--muted); border-radius: 0.5rem; background: var(--bg); color: var(--fg); }
+      #lang-hint { margin: 0 0 1rem; }
       input[type="checkbox"] { width: 1.4rem; height: 1.4rem; accent-color: var(--accent); }
       /* Tester mode (?test=1, D19). Nothing on the judges' page matches these: #tester-tpl below stays inert. */
       html.t-mode { scroll-padding-top: 5rem; }   /* the sticky bar never covers the focused control (WCAG 2.4.11) */
@@ -259,6 +262,18 @@
           <label><input type="radio" name="club" value="H" /> Reds (home end)</label>
           <label><input type="radio" name="club" value="A" /> Navy (away end)</label>
         </fieldset>
+        <!-- D27: the pre-recorded match and the live answers. The fan can also just ask: "speak Spanish". -->
+        <label for="lang" class="setting">Commentator language
+          <select id="lang">
+            <option value="en" lang="en">English</option>
+            <option value="bg" lang="bg">Български (Bulgarian)</option>
+            <option value="es" lang="es">Español (Spanish)</option>
+            <option value="ar" lang="ar">العربية (Arabic)</option>
+            <option value="fr" lang="fr">Français (French)</option>
+            <option value="de" lang="de">Deutsch (German)</option>
+          </select>
+        </label>
+        <p class="hint" id="lang-hint">The fan can also ask the commentator: "Speak Spanish."</p>
         <label for="crowd">Whole crowd level</label>
         <input id="crowd" type="range" min="0" max="100" step="5" />
         <fieldset>

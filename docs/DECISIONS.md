@@ -597,6 +597,36 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
   (`azd deploy`), so the live page says Tely (the uptime check looks for `<title>Tely</title>`) and the relay speaks
   the new MCP header. Re-render the voiceover with `python video/narration.py`.
 
+## D27. The commentator speaks six languages (27 Oct 2026)
+
+- **Why:** potencialbg, 27 Oct: the commentator should talk in other languages. A friend can set it in Setup, or the
+  fan can ask the commentator. The languages are English, Bulgarian, Spanish, Arabic, French and German, for the
+  match commentary and the live answers.
+- **Match commentary:** `tely/commentary/languages.py` translates the 70 finished English lines with Foundry
+  (`l10n_v1@gpt-5-mini`, strict JSON schema, keyless). It records them with Azure Speech in
+  `en-US-BrianMultilingualNeural`, the same Brian in every language, inside `<lang xml:lang>`. Each line keeps the
+  English line's time, evidence and checks.
+  - We translate whole lines, not templates (file 35), because the English track is already verified.
+  - A translation must keep every digit and player name, and must not leave an English number word. The first run
+    left "Rojos nil, Azules one, sixty minutes played" in Spanish, which the check now rejects and re-asks.
+  - A line longer than its slot is recorded again, faster (prosody rate, at most +45 %). That was 2 to 8 lines per
+    language, with 0 overlaps.
+  - Translations and the lengths of discarded recordings are cached in `commentary/l10n/<lang>.json` (committed), so
+    a rebuild makes 0 model calls and 0 TTS calls.
+  - The bundle grows from 5.9 MB to 15.7 MB, and the manifest lists one track per language.
+- **Live answers:** a new tool `set_language(language)`. The page sends `lang` with every `ask`. The relay switches
+  the Voice Live session's voice (BrianMultilingual for every language except English), its instructions (speak only
+  that language, the team names in it) and its transcription language. After `set_language` mid-answer, the
+  `session.update` goes out with the tool result, so the reply is already in the new language.
+- **Page:** a "Commentator language" select in Setup's settings, saved on the device. The commentator's
+  `set_language` changes it too, and the commentary track reloads mid-match. The line speaking stops, and nothing
+  resumes mid-line.
+- **Still English:** the offline preset answers, the refusal clips, the captions and the page's own words.
+- **Checked:** pipeline pytest (new `test_languages.py`, `test_set_language.py`), relay pytest, vitest 138/138,
+  Playwright + axe 114/114. A test render of every language came back about 2 s long.
+- **Not checked:** the recordings by a native speaker of each language, and a live spoken "speak Spanish" (after the
+  deploy).
+
 ## D28. Ball-position answers say only what the tool says (27 Oct 2026)
 
 - **Why:** the live check after the D26 deploy asked "Where's the ball?" at 56:34. The tool said "The ball is out of
