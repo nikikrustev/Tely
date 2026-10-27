@@ -4,6 +4,7 @@ import { CommentaryTrackPlayer, parseCues } from './commentary-track';
 import { browserIO, LiveAsk } from './live-ask';
 import { liveLanguage, setLiveLanguage } from './language';
 import { registerContext } from '../audio/mono';
+import { lowUrl } from '../lowdata';
 import { bundleBase } from '../replay/base';
 
 export const BUNDLE_BASE = bundleBase();   // the judge cut, or a dev-only soak bundle (replay/base.ts)
@@ -89,10 +90,17 @@ export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
   let audioBase = BUNDLE_BASE;
   let all: ReturnType<typeof parseCues> = [];
   let detail: 'full' | 'key' = 'full';
+  let lowData = false;
   const commentary = new CommentaryTrackPlayer({
     clock: ctx.clock,
     crowd: ctx.crowd,
-    fetchAudio: async (url) => (await getOk(`${audioBase}/${url}`)).arrayBuffer(),
+    fetchAudio: async (url) => {
+      if (lowData) {   // the smaller copy if this line has one (lowdata.py skips the few that would not fit)
+        const r = await fetch(`${audioBase}/${lowUrl(url)}`).catch(() => null);
+        if (r?.ok) return r.arrayBuffer();
+      }
+      return (await getOk(`${audioBase}/${url}`)).arrayBuffer();
+    },
   });
   if (typeof window !== 'undefined') {
     const local = localCommentaryBase(location.search);
@@ -149,5 +157,9 @@ export const mountLaneA: MountLaneA = (ctx): LaneAHandle => {
     commentary.setVoiceMuted(onLine !== null);
     commentary.onLine = onLine ? (c) => onLine(c.text.radio, liveLanguage()) : null;
   };
-  return { commentary, setLanguage, setDetail, setReader };
+  const setLowData = (on: boolean) => {
+    lowData = on;
+    commentary.prefetch = !on;
+  };
+  return { commentary, setLanguage, setDetail, setReader, setLowData };
 };

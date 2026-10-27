@@ -67,8 +67,9 @@ class AzureSynthesiser:
     """One reused SpeechSynthesizer with MP3 output (file 39 pre-synthesis cache), keyless first."""
 
     def __init__(self, env: dict[str, str] | None = None, *, sdk: Any = None, credential: Callable[[], Any] = _credential,
-                 sleep: Callable[[float], None] = time.sleep):
+                 sleep: Callable[[float], None] = time.sleep, fmt: str = "Audio24Khz48KBitRateMonoMp3"):
         self.env = env if env is not None else load_env()
+        self.fmt = fmt   # SpeechSynthesisOutputFormat name; low-data copies use 16 kHz / 32 kbps (D36)
         self.sleep = sleep
         try:
             self.sdk = sdk or _load_sdk()
@@ -89,7 +90,7 @@ class AzureSynthesiser:
 
     def _connect(self, label: str, make: Callable[[], Any]) -> None:
         cfg = make()
-        cfg.set_speech_synthesis_output_format(self.sdk.SpeechSynthesisOutputFormat.Audio24Khz48KBitRateMonoMp3)
+        cfg.set_speech_synthesis_output_format(getattr(self.sdk.SpeechSynthesisOutputFormat, self.fmt))
         self._synth = self.sdk.SpeechSynthesizer(speech_config=cfg, audio_config=None)
         self.auth = label
 

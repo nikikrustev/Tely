@@ -1,0 +1,75 @@
+{
+ "format": "Audio16Khz32KBitRateMonoMp3",
+ "tracks": [
+  {
+   "lang": "en",
+   "lines": 70,
+   "low": 64,
+   "no_ssml": 0,
+   "too_long": 0,
+   "tts_calls": 64,
+   "bytes_normal": 1695600,
+   "bytes_low": 1065312
+  },
+  {
+   "lang": "bg",
+   "lines": 70,
+   "low": 65,
+   "no_ssml": 0,
+   "too_long": 0,
+   "tts_calls": 65,
+   "bytes_normal": 1999728,
+   "bytes_low": 1266048
+  },
+  {
+   "lang": "es",
+   "lines": 70,
+   "low": 65,
+   "no_ssml": 0,
+   "too_long": 0,
+   "tts_calls": 65,
+   "bytes_normal": 2020896,
+   "bytes_low": 1277424
+  },
+  {
+   "lang": "ar",
+   "lines": 70,
+   "low": 64,
+   "no_ssml": 0,
+   "too_long": 0,
+   "tts_calls": 64,
+   "bytes_normal": 2042496,
+   "bytes_low": 1280160
+  },
+  {
+   "lang": "fr",
+   "lines": 70,
+   "low": 64,
+   "no_ssml": 0,
+   "too_long": 0,
+   "tts_calls": 64,
+   "bytes_normal": 1764288,
+   "bytes_low": 1102896
+  },
+  {
+   "lang": "de",
+   "lines": 70,
+   "low": 64,
+   "no_ssml": 0,
+   "too_long": 0,
+   "tts_calls": 64,
+   "bytes_normal": 1923696,
+   "bytes_low": 1200960
+  },
+  {
+   "lang": "hi",
+   "lines": 70,
+   "low": 66,
+   "no_ssml": 0,
+   "too_long": 0,
+   "tts_calls": 66,
+   "bytes_normal": 2135088,
+   "bytes_low": 1368432
+  }
+ ]
+}
