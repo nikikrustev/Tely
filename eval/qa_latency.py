@@ -42,7 +42,7 @@ GOLDEN = ROOT / "contracts" / "golden" / "a"
 REPORT = ROOT / "eval" / "report.json"
 FAN_VOICE = "en-GB-RyanNeural"                      # not the commentator's voice, so the two never get mixed up
 RATE, CHUNK_MS = 24000, 20
-RIVAL_MEDIAN_S = 4.66                               # file 42, Matchday Companion; comparison only
+RIVAL_MEDIAN_S = 4.66                               # file 42, another entry's published median; comparison only
 PER_SESSION = 10                                    # questions per relay session (cap is 30, file 40 §6)
 
 
