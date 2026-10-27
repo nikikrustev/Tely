@@ -1,10 +1,10 @@
-// OWNER: A (potencialbg). Tester mode (?test=1, D19): a guided test for friends who don't know the project.
+// Tester mode (?test=1, D19): a guided test for friends who don't know the project.
 // main.ts imports this only with ?test=1, so the judges' page never loads it. It clones #tester-tpl from
 // index.html into the page, walks the tester through TASKS, and sends each answer to the relay (outbox.ts). The
 // answers double as the self-run group of the eyes-closed listening test (eval/listening_test.md, mode=self).
 // Accessibility as on the rest of the page (file 32): native controls, 44 px targets, focus moved to each new
 // screen's heading, and the page's one polite status (#sr-polite, through main.ts say()) for state changes only.
-import { liveRelayUrl } from '../lane-a';
+import { liveRelayUrl } from '../voice';
 import type { ListenClip } from '../replay/listen';
 import { browserStorage, type Settings } from '../settings';
 import { deliver, browserTransport, feedbackUrl } from './outbox';

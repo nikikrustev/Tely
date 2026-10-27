@@ -1,4 +1,4 @@
-// OWNER: B lane (created by A, 24 Oct, Stage 8 item 4). Playwright + axe accessibility tests in tests/b/*.spec.ts.
+// Playwright + axe accessibility tests in tests/*.spec.ts.
 // WHY a preview build and not `vite dev`: CI checks the same static files Static Web Apps serves (file 21), and the
 // build needs no keys (live Ask is off without /live.json, so the page falls back to presets).
 // Run locally with `npm run test:a11y` (builds, serves on :4173, runs every project).

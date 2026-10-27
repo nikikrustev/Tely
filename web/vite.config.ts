@@ -1,4 +1,4 @@
-// OWNER: B (Nikolay; A since the 24 Oct handover). Stub created by A in Stage 0.
+// Stub created by A in Stage 0.
 import { readFile } from 'node:fs/promises';
 import { extname, resolve, sep } from 'node:path';
 import { defineConfig, type Plugin } from 'vitest/config';
@@ -30,7 +30,7 @@ function localTestBundles(): Plugin {
 export default defineConfig({
   plugins: [localTestBundles()],
   test: {
-    // Both lanes' folders by glob: a new tests/a/*.test.ts or tests/b/*.test.ts runs in CI with no config edit.
+    // Both lanes' folders by glob: a new tests/*.test.ts runs in CI with no config edit.
     include: ['tests/**/*.test.ts'],
     environment: 'node',
   },

@@ -1,5 +1,5 @@
 """Commentary in other languages (D27): translate the English Radio track line by line, then render each line with
-the multilingual Brian voice, at the English line's time. OWNER: A (potencialbg).
+the multilingual Brian voice, at the English line's time.
 
     python -m tely.commentary.languages --cut judge                  # every language in LANGS
     python -m tely.commentary.languages --cut judge --langs bg,es

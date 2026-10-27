@@ -1,4 +1,4 @@
-"""Relay tests. OWNER: A (potencialbg). No Azure packages, no keys: Voice Live is a fake Link (TEAM_SPLIT.md rule 3)."""
+"""Relay tests. No Azure packages, no keys: Voice Live is a fake Link."""
 from __future__ import annotations
 
 import asyncio

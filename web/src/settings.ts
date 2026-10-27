@@ -1,4 +1,4 @@
-// OWNER: B (Nikolay). Listener settings (BUILD_PLAN Stage 4): club end, crowd level and vibration.
+// Listener settings (): club end, crowd level and vibration.
 // Saved in localStorage inside try/catch: a private window, blocked storage or a broken value never stops the app.
 import type { HapticMode } from './haptics/haptics';
 

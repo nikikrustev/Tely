@@ -1,8 +1,8 @@
-"""Fixed lines the live Ask says when it can't take a question. OWNER: A (potencialbg).
+"""Fixed lines the live Ask says when it can't take a question.
 
 Each one is pre-rendered in the commentary voice (relay/render_clips.py -> web/public/replay/v1/judge/live/), so a
 refusal still sounds like the commentator, and the browser can play the "unavailable" line even when the relay is down.
-Every line ends by pointing at the preset questions, because that is where the fan lands next (BUILD_PLAN Stage 7).
+Every line ends by pointing at the preset questions, because that is where the fan lands next ().
 """
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Abuse and cost caps for the live Ask. OWNER: A (potencialbg).
+"""Abuse and cost caps for the live Ask.
 
 WHY (file 21 "Request floods", "Bad day"): Container Apps has no per-IP limiter, so the relay keeps in-memory counters.
 They are exact while there is one replica; with maxReplicas 2 each replica counts on its own, so the real ceiling is

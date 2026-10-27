@@ -35,6 +35,6 @@ Then open the site at `http://localhost:5173/?debug=1&relay=http://localhost:808
 
 **Tests** (no Azure packages, no keys; CI job `relay`): `cd relay && pytest`.
 
-**After a live session:** run `python -m relay.golden_from_logs --since 3h`, which appends to `contracts/golden/a/live_<date>.jsonl`. Then tell Nikolay.
+**After a live session:** run `python -m relay.golden_from_logs --since 3h`, which appends to `eval/live/live_<date>.jsonl`. Then tell Nikolay.
 
 **Latency:** run `python eval/qa_latency.py run|browser|summarise`, then `python eval/build_report.py`.

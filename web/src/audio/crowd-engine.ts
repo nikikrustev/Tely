@@ -1,5 +1,5 @@
-// OWNER: B (Nikolay; A since the 24 Oct handover). The reactive crowd (file 38 CrowdEngine), adapted:
-// - implements CrowdBus.duck(db, rampMs) / unduck(rampMs) from contracts/b-exports.ts (A's commentary ducks us);
+// The reactive crowd (file 38 CrowdEngine), adapted:
+// - implements CrowdBus.duck(db, rampMs) / unduck(rampMs) from contracts/stage.ts (A's commentary ducks us);
 // - state changes are scheduled at an exact audio time, so the replay can queue them ahead;
 // - an explicit `level` gain follows excitement (the crowd "bus gain" the Stage 2 test checks);
 // - our end and the other end: one-shots from the other end play distant (low-passed, opposite side);
@@ -9,7 +9,7 @@
 //   anticipation layers (swell, tense) come from the part of the stand nearest the ball. With no ball sound, this is
 //   the main left/right cue between kicks;
 // - beds, chants and one-shots each have a level from the shared mix (mix.ts), heard live.
-import type { CrowdBus } from '../contracts/b-exports';
+import type { CrowdBus } from '../contracts/stage';
 import { dbToGain, getMix, onMix, type AudioMix } from './mix';
 import { prng } from './stadium-ir';
 
@@ -239,7 +239,7 @@ export class CrowdEngine implements CrowdBus {
     this.output.gain.setTargetAtTime(g, this.ctx.currentTime, 0.1);
   }
 
-  // SEAM(B->A): CrowdBus contract (web/src/contracts/b-exports.ts). A's commentary track and live Ask call these.
+  // SEAM(B->A): CrowdBus contract (web/src/contracts/stage.ts). A's commentary track and live Ask call these.
   /** Lower the crowd by `db` (negative, e.g. -12) over `rampMs`, plus a -6 dB speech-band dip at 2 kHz. */
   duck(db: number, rampMs: number): void {
     const t = this.ctx.currentTime, tau = Math.max(0.001, rampMs / 3000); // ~95% of the way after 3 time constants

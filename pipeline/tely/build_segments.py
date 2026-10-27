@@ -1,10 +1,10 @@
-"""Cut the judge-cut match into 2 s segments for the browser's ReplaySource (file 43 §6). OWNER: B (Nikolay).
+"""Cut the judge-cut match into 2 s segments for the browser's ReplaySource (file 43 §6).
 
     python -m tely.build_segments --cut judge      # writes web/public/replay/v1/judge/segments.json
 
 Each segment carries the ball at 10 Hz, the crowd state per end and the tension for each second, the crowd one-shots
 and the earcons (thud, whistle, net...) and haptic cues (file 41 tactons) that fall inside it, plus the score
-per second (for the score announcement). **No `cues` field** (TEAM_SPLIT.md): A's commentary track
+per second (for the score announcement). **No `cues` field**: A's commentary track
 loads cues.*.jsonl itself. Deterministic: same input bytes -> same output bytes.
 """
 from __future__ import annotations

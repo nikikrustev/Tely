@@ -1,4 +1,4 @@
-"""The relay: live spoken questions (Voice Live) and B's Stats MCP server, in one container. OWNER: A (potencialbg).
+"""The relay: live spoken questions (Voice Live) and B's Stats MCP server, in one container.
 
     uvicorn relay.app:app --port 8080        # from the repo root, PYTHONPATH=pipeline;.  (see relay/README.md)
 
@@ -34,7 +34,7 @@ from .feedback import MAX_BYTES, FeedbackCaps, Invalid, validate
 from .telemetry import Tracker, make_tracker
 from .voicelive import Bridge, Link, connect_voice_live, log_line
 
-CONNECT_TIMEOUT_S = 8.0     # the browser falls back to presets after 8 s anyway (BUILD_PLAN Stage 7)
+CONNECT_TIMEOUT_S = 8.0     # the browser falls back to presets after 8 s anyway ()
 MCP_CALLS_PER_MIN = 60      # ours; MCP spec: servers "MUST ... rate limit tool invocations" (file 40 §3)
 
 
@@ -62,7 +62,7 @@ def create_app(*, bundle: Bundle | None = None, caps: Caps | None = None,
     mcp_srv = None
     mcp_app = None
     if mount_mcp:
-        # SEAM(A->B): B's MCP server, hosted here (TEAM_SPLIT.md "Relay"). B's http_app() keeps DNS-rebinding protection
+        # SEAM(A->B): B's MCP server, hosted here. B's http_app() keeps DNS-rebinding protection
         # on; MCP_ALLOWED_HOSTS lists our public host name (set by infra/relay.bicep).
         from tely.qa.mcp_server import http_app
         mcp_srv, mcp_app = http_app(b, _csv("MCP_ALLOWED_HOSTS", "localhost:*,127.0.0.1:*"))

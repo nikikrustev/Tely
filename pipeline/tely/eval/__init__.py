@@ -1,4 +1,4 @@
-"""Stage 5 evaluation: spoiler leaks, numbers, Director calls and fallbacks, real-time latency. OWNER: A (potencialbg).
+"""Stage 5 evaluation: spoiler leaks, numbers, Director calls and fallbacks, real-time latency.
 
     python -m tely.eval --cut judge                 # (a) + (c) locally, writes eval/report.json
     python -m tely.eval --cut judge --foundry-eval  # (c) also uploaded and run as a Foundry custom evaluator

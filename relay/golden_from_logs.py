@@ -1,12 +1,12 @@
-"""Save the deployed relay's golden turns from its console logs to contracts/golden/a/. OWNER: A (potencialbg).
+"""Save the deployed relay's golden turns from its console logs to eval/live/.
 
     python -m relay.golden_from_logs --since 3h            # after a live test session with a real mic (needs az login)
 
 The relay prints one {"golden_turn": {...}} JSON line per answered question (relay/voicelive.py): question, tool calls
 with args and results, spoken answer, latency. No keys, tokens or audio are ever in it. Container Apps ships those lines
-to the Log Analytics workspace, and this script appends the new ones to contracts/golden/a/live_<date>.jsonl, one file
-per UTC day of the turn, skipping turns already saved. Then tell Nikolay (TEAM_SPLIT.md rule 4): B turns them into
-regression tests in pipeline/tests/b/.
+to the Log Analytics workspace, and this script appends the new ones to eval/live/live_<date>.jsonl, one file
+per UTC day of the turn, skipping turns already saved. Then tell Nikolay: B turns them into
+regression tests in pipeline/tests/.
 """
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GOLDEN = ROOT / "contracts" / "golden" / "a"
+GOLDEN = ROOT / "eval" / "live"
 
 
 def az(*args: str) -> str:

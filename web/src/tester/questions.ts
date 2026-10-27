@@ -1,4 +1,4 @@
-// OWNER: A (potencialbg). Tester mode (?test=1, D19): the questions after each clip and in the overall feedback.
+// Tester mode (?test=1, D19): the questions after each clip and in the overall feedback.
 // Probes and scale are eval/listening_test.md sections 5 and 6, turned into multiple choice with "Don't know" always
 // there. The answer KEY is section 5's table. It is used only by scoreClip(): never shown, and the score is sent to
 // the relay but never displayed. Choice ids must match relay/feedback.py SCHEMA (relay/tests/test_feedback.py).

@@ -1,4 +1,4 @@
-"""Cues -> captions_sdh.vtt and descriptions.vtt (files 32 §e and 42). OWNER: A (potencialbg).
+"""Cues -> captions_sdh.vtt and descriptions.vtt (files 32 §e and 42).
 
 captions_sdh.vtt: what a deaf viewer needs: the AI commentator's words plus the crowd sounds in [brackets].
 descriptions.vtt (kind="descriptions"): the verified lines only, never overlapping (file 32 builder: a more

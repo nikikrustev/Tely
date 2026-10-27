@@ -1,13 +1,13 @@
 # Tely: eyes-closed listening test
 
-_Owner: A (potencialbg). BUILD_PLAN Stage 8 item 6. The protocol follows `stoynev research/36-blind-fans-and-audio-description.md`
+_Owner: A (potencialbg). . The protocol follows `stoynev research/36-blind-fans-and-audio-description.md`
 ("Testing with blind users"): two clips, comprehension probes, then RNIB's 15-point scale. Print this file. Run one copy
 of the score sheet (last page) per participant, then type it into `eval/listening_test.csv`._
 
 | | |
 |---|---|
-| Session length | about 20 minutes per participant (BUILD_PLAN Stage 8) |
-| People | at least 3 (BUILD_PLAN Stage 8). Blind or partially sighted fans first. Sighted people with closed eyes are a fallback, not a substitute (file 36), and the report counts them separately |
+| Session length | about 20 minutes per participant () |
+| People | at least 3 (). Blind or partially sighted fans first. Sighted people with closed eyes are a fallback, not a substitute (file 36), and the report counts them separately |
 | Format | one-to-one, on Teams/Zoom or in person, on the participant's own device and screen reader, with headphones if they have them |
 | What you compare | the same AI commentary **alone**, against **full Tely** (commentary + reactive crowd + ball sound + earcons + vibration) |
 | Afterwards | `python eval/score_listening.py` then `python eval/build_report.py` |

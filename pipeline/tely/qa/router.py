@@ -1,4 +1,4 @@
-"""answer_text(): a keyword/intent router with no LLM. OWNER: B (Nikolay).
+"""answer_text(): a keyword/intent router with no LLM.
 
 It is the offline fallback when the live voice is unavailable, the engine behind the preset questions, and a cheap
 test harness for the tools. Order matters: refusals (predictions, betting) are checked before lookups, so "who will

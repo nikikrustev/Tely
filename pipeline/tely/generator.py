@@ -1,7 +1,7 @@
 """Seeded synthetic match: the file 02 possession-chain generator with both file 33 fixes, plus keeper saves,
-fouls with yellow cards, free kicks, goal kicks, blocks and a VAR-style goal check (BUILD_PLAN Stage 1).
+fouls with yellow cards, free kicks, goal kicks, blocks and a VAR-style goal check ().
 
-OWNER: B (Nikolay). Fictional clubs and players only; nothing here comes from real match data.
+ Fictional clubs and players only; nothing here comes from real match data.
 
 Determinism (A's build reruns this, so every run must give the same bytes on every machine):
 - times are whole 25 Hz frames (ints) from the period start, so an event always sits on the ball grid;

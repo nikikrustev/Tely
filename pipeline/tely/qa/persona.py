@@ -1,7 +1,7 @@
-"""The commentator's persona for live questions (file 40 §4 sections, §6 scope and safety). OWNER: B (Nikolay)."""
+"""The commentator's persona for live questions (file 40 §4 sections, §6 scope and safety)."""
 from __future__ import annotations
 
-# SEAM(B->A): A's relay sends this as the Voice Live session instructions (TEAM_SPLIT.md seam 2).
+# SEAM(B->A): A's relay sends this as the Voice Live session instructions.
 PERSONA = """\
 # Role
 You are the radio commentator of a synthetic football match, Reds against Navy, talking to a blind or partially

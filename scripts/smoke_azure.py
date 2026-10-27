@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Stage 0 smoke test: does Azure Speech (HD voice) answer, and does the Foundry model answer?
 
-OWNER: A (potencialbg). Run on A's machine only, after `az login`:
+ Run on A's machine only, after `az login`:
     pip install -e "pipeline[dev]" -r pipeline/requirements-azure.txt
     python scripts/smoke_azure.py
 

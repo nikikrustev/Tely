@@ -1,4 +1,4 @@
-"""Build the judge-cut match bundle in the contracts/b/ format (contracts/README.md). OWNER: B (Nikolay).
+"""Build the judge-cut match bundle in the docs/match-format.md format (docs/match-format.md).
 
     python -m tely.build_match --cut judge
 
@@ -157,14 +157,14 @@ def build(cut: dict, out_dir: Path, report: bool = True) -> dict:
                  players=dict(hz=PLAYER_HZ, ids=ids, rows=players))
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    # SEAM(B->A): meta.json -> A's load_match() (contracts/b match format; judge_cut, teams, periods)
+    # SEAM(B->A): meta.json -> A's load_match() (docs/match-format.md; judge_cut, teams, periods)
     (out_dir / "meta.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8", newline="\n")
-    # SEAM(B->A): events.jsonl -> A's planner and verifier read the CDF lines (contracts/b match format)
+    # SEAM(B->A): events.jsonl -> A's planner and verifier read the CDF lines (docs/match-format.md)
     (out_dir / "events.jsonl").write_text("".join(json.dumps(x, separators=(",", ":")) + "\n" for x in lines),
                                           encoding="utf-8", newline="\n")
-    # SEAM(B->A): signals.json -> A's templates read tension, xg, priority, zone, crowd_one_shots (contracts/b)
+    # SEAM(B->A): signals.json -> A's templates read tension, xg, priority, zone, crowd_one_shots (docs/match-format.md)
     (out_dir / "signals.json").write_text(rows_json(signals), encoding="utf-8", newline="\n")
-    # SEAM(B->A): ticks.json.gz -> A's Match.ball() and the spatial voice read ball x/y (contracts/b match format)
+    # SEAM(B->A): ticks.json.gz -> A's Match.ball() and the spatial voice read ball x/y (docs/match-format.md)
     (out_dir / "ticks.json.gz").write_bytes(gz(json.dumps(ticks, separators=(",", ":")).encode("utf-8")))
     if report:
         REPORT.parent.mkdir(parents=True, exist_ok=True)
@@ -237,7 +237,7 @@ def load_cut() -> dict:
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description="Build the judge-cut match bundle (contracts/b format).")
+    ap = argparse.ArgumentParser(description="Build the judge-cut match bundle (docs/match-format.md format).")
     ap.add_argument("--cut", default="judge", choices=["judge"])
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--no-report", action="store_true")

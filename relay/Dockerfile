@@ -1,4 +1,4 @@
-# OWNER: A (potencialbg). The relay image. Build context is the repo root (azure.yaml: docker.context ..), because the
+# The relay image. Build context is the repo root (azure.yaml: docker.context ..), because the
 # relay imports B's tely.qa and reads the judge-cut bundle it answers from. The root .dockerignore keeps the
 # context to exactly those files. No keys are baked in: auth is the container's managed identity at run time.
 FROM python:3.12-slim

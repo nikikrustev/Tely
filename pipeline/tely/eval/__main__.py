@@ -1,4 +1,4 @@
-"""python -m tely.eval --cut judge [--realtime] [--foundry-eval]  ->  eval/report.json. OWNER: A (potencialbg).
+"""python -m tely.eval --cut judge [--realtime] [--foundry-eval]  ->  eval/report.json.
 
 Sections that need Azure (realtime, foundry_eval, qa_latency) are kept from the previous report.json when not re-run, with
 the date they were measured, so a quick offline re-run never erases a measurement.

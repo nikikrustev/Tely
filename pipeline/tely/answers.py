@@ -1,4 +1,4 @@
-"""Render B's Q&A FRAGMENTS to audio for the offline Ask (BUILD_PLAN Stage 6, file 43 §6). OWNER: A (potencialbg).
+"""Render B's Q&A FRAGMENTS to audio for the offline Ask (file 43 §6).
 
     python -m tely.answers --cut judge        # build_bundle also calls build()
 
@@ -29,7 +29,7 @@ STYLES = {"hold": "urgent"}    # "Hold that thought, watch this!" leans in; it s
 
 def fragments_for(out_dir: Path) -> list[dict[str, str]]:
     """B's FRAGMENTS for the bundle in out_dir (the committed judge cut, or a test copy)."""
-    # SEAM(A->B): tely.qa.FRAGMENTS ([{id, text}], TEAM_SPLIT.md "The seams" point 2). It is built at import
+    # SEAM(A->B): tely.qa.FRAGMENTS ([{id, text}], docs/architecture.md). It is built at import
     # from the committed judge bundle; any other folder (tests, a fresh cut) goes through B's own build_fragments.
     from tely.qa import FRAGMENTS
     from tely.qa.bundle import JUDGE, load_bundle

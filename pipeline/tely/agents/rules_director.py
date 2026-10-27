@@ -1,4 +1,4 @@
-"""The rules Director: the same tension plan as the Foundry Director, from file 39's rules. OWNER: A (potencialbg).
+"""The rules Director: the same tension plan as the Foundry Director, from file 39's rules.
 
 It is the fallback for any window where the model call fails or its reply is rejected, and the whole Director when
 DIRECTOR=rules (no quota; drop-list item 5). It reads the same firewalled features, so it can't see outcomes either.

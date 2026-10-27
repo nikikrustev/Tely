@@ -1,6 +1,6 @@
 """The Q&A brain: tools, persona and no-LLM router for "ask the commentator".
 
-OWNER: B (Nikolay). Stub created by A in Stage 0 with the API from TEAM_SPLIT.md "The seams" point 2.
+ Stub created by A in Stage 0 with the API from docs/architecture.md.
 From the merge of the Stage 0 PR on, only B edits this package. The API is append-only after Wed 21 Oct 18:00 Sofia.
 
 No Microsoft imports here, ever. A's relay imports this module and hosts it inside Voice Live:

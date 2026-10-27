@@ -1,4 +1,4 @@
-"""Crowd state per end, once a second, plus one-shot reactions (file 38 crowd_states). OWNER: B (Nikolay).
+"""Crowd state per end, once a second, plus one-shot reactions (file 38 crowd_states).
 
 Spoiler rule: the look-ahead (an anticipation swell before a shot) uses the shot's time and xG only, so a goal and
 a miss build the same swell. Reactions start at the moment the outcome is revealed (reveal_t), never before.
@@ -16,9 +16,9 @@ REACT = {  # file 38: (d_excitement, d_valence, tau_s) from the listening end's 
     ("card", True): (0.20, -0.30, 5), ("card", False): (0.25, 0.25, 5)}
 VAR_HOLD_S = 20.0           # file 38: VAR-like pause = hushed hold for about 20 s
 # Look-ahead strength. File 38 used min(1, 2 * xg) and 0.5; ours are stronger so that every xG >= 0.1 chance
-# swells the home end by >= 0.2 over 8 s (BUILD_PLAN Stage 1 test; "tune the crowd weights, not the test").
+# swells the home end by >= 0.2 over 8 s (test; "tune the crowd weights, not the test").
 ANTIC_XG, W_ANTIC = 4.0, 0.9
-# One-shot clip names B's CrowdEngine plays (contracts/README.md lists them).
+# One-shot clip names B's CrowdEngine plays (docs/match-format.md lists them).
 ONE_SHOT = {("goal", True): "roar", ("goal", False): "stunned_hush", ("shot", True): "ooh_groan",
             ("shot", False): "relief_applause", ("foul", False): "whistles_jeer", ("card", False): "cheer"}
 

@@ -1,4 +1,4 @@
-"""OpenTelemetry for the Director workflow -> Application Insights (file 18 §5). OWNER: A (potencialbg).
+"""OpenTelemetry for the Director workflow -> Application Insights (file 18 §5).
 
 configure_azure_monitor(...) then enable_instrumentation(), as file 18 says. The connection string comes from the
 process env, else from the azd env ("judge"), where `azd provision` stores the Bicep output. It is never printed,

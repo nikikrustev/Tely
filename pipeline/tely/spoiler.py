@@ -1,4 +1,4 @@
-"""Spoiler-leak eval (file 43) and "spoiler lift" (file 39). CI target: spoiler_leaks() == []. OWNER: A (potencialbg).
+"""Spoiler-leak eval (file 43) and "spoiler lift" (file 39). CI target: spoiler_leaks() == [].
 
     python -m tely.spoiler --cut judge      # report on the built cues; exit 1 on any leak
 """

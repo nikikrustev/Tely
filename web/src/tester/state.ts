@@ -1,4 +1,4 @@
-// OWNER: A (potencialbg). Tester mode (?test=1, D19): the tester's anonymous ID, their group, the task list and
+// Tester mode (?test=1, D19): the tester's anonymous ID, their group, the task list and
 // everything they answered. Saved in localStorage inside try/catch, like settings.ts: a private window or blocked
 // storage only means progress is kept in memory for this visit. No name, email or age is ever stored.
 import type { ListenClip } from '../replay/listen';

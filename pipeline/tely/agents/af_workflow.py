@@ -1,4 +1,4 @@
-"""The workflow.py steps as a Microsoft Agent Framework graph (file 18 §3). OWNER: A (potencialbg).
+"""The workflow.py steps as a Microsoft Agent Framework graph (file 18 §3).
 
     Director -> Commentator -> Verifier -> TTS          (one short-lived workflow per window)
 

@@ -1,4 +1,4 @@
-"""The one delayed clock and the spoiler firewall (file 43 §2-§3). OWNER: B (Nikolay).
+"""The one delayed clock and the spoiler firewall (file 43 §2-§3).
 
 Truth time t runs D_S seconds ahead of what the listener hears (playhead P = t - D_S). Only the Director and the
 Commentator see the window [P, P + D_S]. Q&A tools, catch-up and crowd outcome reactions see only <= P.

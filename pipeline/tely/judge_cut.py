@@ -1,5 +1,5 @@
 """Find the judge cut: the first seed (1-500) with an 8-minute window inside one half that has >= 1 goal,
->= 1 save, >= 1 card, a VAR-style check and >= 4 shots (BUILD_PLAN Stage 1). OWNER: B (Nikolay).
+>= 1 save, >= 1 card, a VAR-style check and >= 4 shots ().
 
     python -m tely.judge_cut          # writes pipeline/judge_cut.json
 

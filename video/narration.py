@@ -1,6 +1,6 @@
-"""Optional: narrate video/voiceover.srt with Azure Speech, in a voice that isn't the commentator's. OWNER: A (potencialbg).
+"""Optional: narrate video/voiceover.srt with Azure Speech, in a voice that isn't the commentator's.
 
-BUILD_PLAN Stage 9: record the voiceover yourself, or run this and approve it. Either way the end card labels the AI voices.
+record the voiceover yourself, or run this and approve it. Either way the end card labels the AI voices.
 The commentator is en-US-Brian HD (D13), so the narrator defaults to en-US-Ava HD, which our resource lists (D9).
 
 Writes, under out/ (git-ignored):

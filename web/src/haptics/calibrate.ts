@@ -1,4 +1,4 @@
-// OWNER: B (Nikolay). One-tap Bluetooth calibration (BUILD_PLAN Stage 8 item 3; file 37 §5, file 41).
+// One-tap Bluetooth calibration (; file 37 §5, file 41).
 // Bluetooth earbuds add 126-274 ms (Coyle's tap-to-sound measurements, file 37), and the browser often doesn't report
 // it. The fan taps along to a beat; the median gap between each beat being played and the tap is the delay their ears
 // hear. Haptics then fire that much later, so the vibration lands with the sound (fire early, never late: file 41).
