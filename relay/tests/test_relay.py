@@ -126,6 +126,27 @@ def test_adjust_sound_starts_from_the_pages_level_not_the_models():
     run(go())
 
 
+def test_language_from_the_page_and_from_set_language_switch_voice_and_instructions():
+    async def go():
+        link = FakeLink()
+        br, out, _, _ = make_bridge(link=link)
+        await br.ask((B.t0 + B.t1) / 2, None, "bg")
+        upd = [e for e in link.sent if e.get("type") == "session.update"][-1]["session"]
+        assert br.lang == "bg" and upd["voice"]["name"] == "en-US-BrianMultilingualNeural"
+        assert "Speak only Bulgarian" in upd["instructions"] and upd["input_audio_transcription"]["language"] == "bg"
+        n = len([e for e in link.sent if e.get("type") == "session.update"])
+        await br.ask((B.t0 + B.t1) / 2, None, "bg")                      # same language: no update
+        assert len([e for e in link.sent if e.get("type") == "session.update"]) == n
+        await br.handle(call("set_language", language="de"))
+        assert [o for o in out if o["type"] == "tool"][-1]["prefs"] == {"language": "de"}
+        assert br.lang == "de" and br._pending[-1]["type"] == "session.update"   # goes with the tool result
+        assert "Speak only German" in br._pending[-1]["session"]["instructions"]
+        await br.handle(call("set_language", language="en"))
+        assert br._pending[-1]["session"]["voice"]["name"] == "en-US-Brian:DragonHDLatestNeural"
+        assert "# Language" not in br._pending[-1]["session"]["instructions"]
+    run(go())
+
+
 # ---------------------------------------------------------------- caps return a spoken refusal
 def test_session_cap_is_a_spoken_refusal():
     async def go():

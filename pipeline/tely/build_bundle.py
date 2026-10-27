@@ -156,7 +156,10 @@ def manifest(cut: str, out_dir: Path, m: Match, voice: str, director: str | None
         "teams": {"H": teams["home"]["short_name"], "A": teams["away"]["short_name"]},
         "kits": {"H": teams["home"]["kit"]["words"], "A": teams["away"]["kit"]["words"]},
         "chapters": chapters(cues, m),
-        "tracks": {"en": {"radio": cues_file.name}},
+        # D27: one track per language present (commentary/languages.py adds cues.<lang>.radio.jsonl), English first.
+        "tracks": {lang: {"radio": f"cues.{lang}.{build_commentary.LEVEL}.jsonl"} for lang in
+                   sorted({p.name.split(".")[1] for p in out_dir.glob(f"cues.*.{build_commentary.LEVEL}.jsonl")},
+                          key=lambda x: (x != build_commentary.LANG, x))},
         "voice": voice, "director": director,
         "meta": "meta.json", "events": "events.jsonl", "signals": "signals.json", "ticks": "ticks.json.gz",
         "segments": "segments.json" if (out_dir / "segments.json").is_file() else None,

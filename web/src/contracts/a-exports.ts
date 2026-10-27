@@ -13,6 +13,9 @@ export interface CommentaryTrack {
 /** What mountLaneA() hands back to B's main.ts. */
 export interface LaneAHandle {
   commentary: CommentaryTrack;
+  /** Appended 27 Oct (D27). Switch the commentary track and the live answers to a language ("bg"). Resolves false
+   *  if the bundle has no track for it (the English track keeps playing). */
+  setLanguage?(lang: string): Promise<boolean>;
 }
 
 /** B's main.ts calls this once, and nothing else of A's. */
