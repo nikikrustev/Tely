@@ -8,7 +8,7 @@ import { loadClockOffset, Scoreboard } from './scoreboard';
 import type { TesterHandle } from './tester';
 import { bundleBase } from './replay/base';
 import { registerContext, setMono } from './audio/mono';
-import { playPositionTone, positionPitch, POSITION_TONE_EVERY_S } from './audio/position-tone';
+import { playFollowCue, playPositionTone, positionPitch, FOLLOW_NAME_EVERY_S, POSITION_TONE_EVERY_S } from './audio/position-tone';
 
 /** Placeholder services (tests, and before Start). */
 export function createStubContext(): LaneBContext {
@@ -133,7 +133,9 @@ async function startApp(): Promise<void> {
   let crowd: InstanceType<typeof CrowdEngine> | null = null;
   let presetVoice: { setLanguage(lang: string): Promise<boolean> } | null = null;   // the quick questions' voice (D27)
   let zoneAt: ((p: number) => string | null) | null = null;
-  let clockAt: ((p: number) => string) | null = null;          // match clock (mm:ss), for the notes   // where the ball is, for one-ear mode's tone
+  let clockAt: ((p: number) => string) | null = null;          // match clock (mm:ss), for the notes
+  let touchesOf: ((pid: string, from: number, to: number) => number[]) | null = null;   // follow my player (D34)
+  let speakName: ((pid: string) => void) | null = null;   // where the ball is, for one-ear mode's tone
   const radios = (name: string) => [...document.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`)];
   for (const r of radios('club')) r.checked = r.value === settings.club;
   for (const r of radios('haptics')) r.checked = r.value === settings.haptics;
@@ -177,6 +179,28 @@ async function startApp(): Promise<void> {
     say(settings.reader ? 'Screen-reader mode on. Your screen reader reads the commentary.' : 'Screen-reader mode off. The commentator speaks again.');
   });
   applyReader();
+  // Follow my player (D34): the players come from the bundle's roster; the choice is saved on this device.
+  const followSel = $<HTMLSelectElement>('follow');
+  const PLAYER_NAMES = new Map<string, string>();
+  void fetch(`${bundleBase()}/meta.json`).then((r) => r.json()).then((meta: {
+    teams: Record<'home' | 'away', { short_name: string; players: { id: string; name: string; jersey_number: number }[] }> }) => {
+    for (const side of ['home', 'away'] as const) {
+      const g = document.createElement('optgroup');
+      g.label = meta.teams[side].short_name;
+      for (const p of meta.teams[side].players) {
+        PLAYER_NAMES.set(p.id, p.name);
+        g.append(new Option(`${p.name} (#${p.jersey_number})`, p.id));
+      }
+      followSel.append(g);
+    }
+    followSel.value = settings.follow ?? '';
+  }).catch(() => {});
+  const setFollow = (pid: string | null, announce: boolean) => {
+    update({ follow: pid });
+    followSel.value = pid ?? '';
+    if (announce) say(pid ? `Following ${PLAYER_NAMES.get(pid) ?? 'that player'}.` : 'Not following a player.');
+  };
+  followSel.addEventListener('change', () => setFollow(followSel.value || null, true));
   const monoBox = $<HTMLInputElement>('mono-toggle');
   monoBox.checked = settings.mono;
   setMono(settings.mono);
@@ -210,6 +234,7 @@ async function startApp(): Promise<void> {
     if (sound) { status.textContent = `${GROUP_NAMES[sound.key]}: ${sound.level} out of 100.`; return; }
     const patch = prefsPatch(p);
     if (patch.lang) { void setLang(patch.lang, false); return; }
+    if ('follow' in patch) { setFollow(patch.follow ?? null, false); return; }   // the commentator said it
     if (patch.detail) {
       update({ detail: patch.detail });
       for (const r of radios('detail')) r.checked = r.value === settings.detail;
@@ -420,6 +445,8 @@ async function startApp(): Promise<void> {
       if (settings.lang !== 'en') void player.setLanguage(settings.lang);
       zoneAt = (p) => tools.get_ball_position(p).fragments?.[0] ?? null;
       clockAt = (p) => tools.clockStr(p);
+      touchesOf = (pid, a, b) => tools.touches(pid, a, b);
+      speakName = (pid) => { void player.speak([`name_${pid}`], ''); };
       askCtl = new askMod.AskController({
         tools, clock: s, crowd: c, commentary: lane.commentary,
         speak: (f, text) => player.speak(f, text),
@@ -611,7 +638,7 @@ async function startApp(): Promise<void> {
       hap.keepAwake();
       s.play();
       wired.pump();
-      let toneAt = 0;
+      let toneAt = 0, followFrom = s.now(), nameAt = -Infinity;
       setInterval(() => {
         wired.pump();
         board.update({ playheadS: s.now() });
@@ -626,6 +653,17 @@ async function startApp(): Promise<void> {
           recapDone = true;
           void askCtl.recap('end');
         }
+        // Follow my player (D34): a soft cue and a short buzz at each touch, and the name when the voice is free.
+        if (settings.follow && touchesOf && s.isPlaying() && ctx) {
+          const touched = touchesOf(settings.follow, followFrom, s.now());
+          if (touched.length) {
+            playFollowCue(ctx);
+            if (settings.haptics !== 'off') { try { hap.browserEnv().vibrate?.([12]); } catch { /* not allowed */ } }
+            const quiet = !askCtl?.isBusy && !lane.commentary.nextCueWithin(2.5) && !lane.commentary.isSpeaking?.();
+            if (quiet && s.now() - nameAt >= FOLLOW_NAME_EVERY_S) { nameAt = s.now(); speakName?.(settings.follow); }
+          }
+        }
+        followFrom = s.now();
         if (!clipEnded && clipOver(clip, s.now())) {   // once: pressing Play again carries on past the clip
           clipEnded = true;
           void pause('End of the clip.').then(() => tester?.clipEnded());

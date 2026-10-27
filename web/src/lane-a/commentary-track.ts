@@ -163,6 +163,11 @@ export class CommentaryTrackPlayer implements CommentaryTrack {
     if (this.mute) this.mute.gain.value = on ? 0 : 1;
   }
 
+  /** A line is playing (or scheduled to start) now. */
+  isSpeaking(): boolean {
+    return this.sources.size > 0;
+  }
+
   nextCueWithin(s: number): boolean {
     const p = this.opts.clock.now();
     return this.cues.some((c) => c.t_in >= p && c.t_in <= p + s);

@@ -120,6 +120,8 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
                 "crowd_mix": {"type": "number", "minimum": 0, "maximum": 1},
                 "haptics": {"type": "string", "enum": ["off", "events", "full"]},
                 "detail": {"type": "string", "enum": ["key", "full"]},
+                "follow": {"type": "string", "description": "a player to follow all match, as the fan said it, "
+                                                            "or 'nobody' to stop"},
             },
             "additionalProperties": False,
         },

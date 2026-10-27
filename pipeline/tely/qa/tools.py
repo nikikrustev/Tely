@@ -288,6 +288,16 @@ def set_preferences(b: Bundle, p: float, **prefs: Any) -> dict:
             clean[k] = v
         elif k == "crowd_mix" and isinstance(v, (int, float)):
             clean[k] = min(1.0, max(0.0, float(v)))
+    if "follow" in prefs:      # D34: follow one player all match ("follow Olvholm", "stop following")
+        q = str(prefs["follow"] or "").strip()
+        if q.lower() in ("", "none", "nobody", "no one", "stop", "off"):
+            return _ok(b, p, None, say="No longer following a player.", prefs={**clean, "follow": None})
+        player, err = find_player(b, q)
+        if err:
+            return {**err, "hint": "ask which player"}
+        return _ok(b, p, None, prefs={**clean, "follow": player["id"]},
+                   say=f"Following {player['name']}: you'll hear a soft cue, and the name, when {player['last_name']} "
+                       "is on the ball.")
     # SEAM(B->A): the relay publishes `prefs` to the listener's page; nothing here touches the match.
     if "detail" in clean:      # two levels since 27 Oct (D30): the page filters the track by cue priority
         return _ok(b, p, None, say=DETAIL_SAID[clean["detail"]], prefs=clean)

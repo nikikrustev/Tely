@@ -30,7 +30,7 @@ def test_playhead_is_keyword_only():
 def test_set_preferences_has_two_detail_levels():
     """D30: "key moments only" or "full radio"; any other level is named back to the fan instead of "Done."."""
     schema = next(t for t in qa.TOOL_SCHEMAS if t["name"] == "set_preferences")["parameters"]["properties"]
-    assert set(schema) == {"crowd_mix", "haptics", "detail"} and schema["detail"]["enum"] == ["key", "full"]
+    assert set(schema) == {"crowd_mix", "haptics", "detail", "follow"} and schema["detail"]["enum"] == ["key", "full"]
     b = qa.load_bundle()
     p = (b.t0 + b.t1) / 2
     key = qa.call_tool("set_preferences", {"detail": "key"}, playhead_s=p, bundle=b)

@@ -29,10 +29,12 @@ export interface Settings {
   reader: boolean;
   /** One-ear mode: every sound summed to mono (one earbud, or hearing in one ear), plus a soft position tone. */
   mono: boolean;
+  /** Follow my player (D34): a player id ("n11"), or null. A soft cue and the name when they get the ball. */
+  follow: string | null;
 }
 
 export const DEFAULTS: Settings = { club: 'H', crowdMix: 0.5, haptics: 'full', hapticStrength: 1, radar: false, audioOffsetMs: null, lang: 'en',
-  detail: 'full', reader: false, mono: false };
+  detail: 'full', reader: false, mono: false, follow: null };
 export const STORAGE_KEY = 'tely.settings.v1';
 /** The key from before the rename to Tely (D26): read once if the new key is empty, so saved settings carry over. */
 export const LEGACY_STORAGE_KEY = 'audiostands.settings.v1';
@@ -65,6 +67,7 @@ export function sanitize(x: unknown): Settings {
     detail: o.detail === 'key' ? 'key' : 'full',
     reader: o.reader === true,
     mono: o.mono === true,
+    follow: typeof o.follow === 'string' && /^[A-Za-z0-9_-]{1,12}$/.test(o.follow) ? o.follow : null,
   };
 }
 
@@ -107,5 +110,8 @@ export function prefsPatch(p: unknown): Partial<Settings> {
   if (typeof o.crowd_mix === 'number' && Number.isFinite(o.crowd_mix)) patch.crowdMix = Math.min(1, Math.max(0, o.crowd_mix));
   if (LANGS.includes(o.language as Lang)) patch.lang = o.language as Lang;   // set_language (D27)
   if (o.detail === 'key' || o.detail === 'full') patch.detail = o.detail;     // set_preferences detail
+  if ('follow' in o && (o.follow === null || (typeof o.follow === 'string' && /^[A-Za-z0-9_-]{1,12}$/.test(o.follow)))) {
+    patch.follow = o.follow as string | null;                                  // set_preferences follow (D34)
+  }
   return patch;
 }
