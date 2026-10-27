@@ -567,6 +567,7 @@ async function startApp(): Promise<void> {
   };
 
   let clipEnded = false;
+  let recapDone = false;
   start.addEventListener('click', async () => {
     if (!ctx) {
       feedback('start');
@@ -611,6 +612,11 @@ async function startApp(): Promise<void> {
           toneAt = s.now();
           const hz = positionPitch(zoneAt?.(s.now()), settings.club);
           if (hz) playPositionTone(ctx, hz);
+        }
+        // The recap when this part of the match ends (Tier 1 item 7): once, spoken in the commentator's voice.
+        if (!recapDone && clip.to === null && s.now() >= s.doc.t1 - 0.3 && askCtl && !askCtl.isBusy) {
+          recapDone = true;
+          void askCtl.recap('end');
         }
         if (!clipEnded && clipOver(clip, s.now())) {   // once: pressing Play again carries on past the clip
           clipEnded = true;

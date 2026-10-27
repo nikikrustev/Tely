@@ -91,6 +91,10 @@ def build_server(bundle: Bundle | None = None) -> MCPServer:
     def what_did_i_miss(since: Annotated[str, Field(description="mm:ss")], ctx: Context) -> dict[str, Any]:
         return run("what_did_i_miss", {"since": since}, ctx)
 
+    @mcp.tool(name="get_recap", description=DESCRIPTIONS["get_recap"], annotations=READ_ONLY)
+    def get_recap(ctx: Context, moment: Literal["so_far", "half_time", "end"] = "so_far") -> dict[str, Any]:
+        return run("get_recap", {"moment": moment}, ctx)
+
     @mcp.tool(name="set_preferences", description=DESCRIPTIONS["set_preferences"],
               annotations=ToolAnnotations(read_only_hint=False, destructive_hint=False, idempotent_hint=True,
                                           open_world_hint=False))

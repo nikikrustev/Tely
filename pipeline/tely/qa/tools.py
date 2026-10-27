@@ -249,6 +249,32 @@ def what_did_i_miss(b: Bundle, p: float, since: str) -> dict:
     return _ok(b, p, parts, say=" ".join(t for _, t in parts) + ".", evidence=[e["id"] for e in ev])
 
 
+RECAP_LEAD = {"so_far": "recap", "half_time": "recap_ht", "end": "recap_end"}
+RECAP_MAX = 6   # big moments in one recap: the latest six, so it stays under about 20 s
+
+
+def get_recap(b: Bundle, p: float, moment: Any = "so_far") -> dict:
+    """Half-time, the end, or "so far" (Tier 1 item 7): the score, then each big moment revealed by p, in time
+    order. Only verified fragments (the score line and the events' spoken_past), clamped to the playhead like every
+    tool, so a recap can never say what hasn't happened yet. No LLM."""
+    p = b.clamp(p)
+    lead = RECAP_LEAD.get(moment, "recap")
+    big = sorted((e for e in b.events if b.sig(e["id"])["reveal_t"] <= p and b.sig(e["id"])["priority"] >= 2),
+                 key=lambda e: b.sig(e["id"])["t"])
+    keep: list[dict] = []
+    for e in big:
+        if e["type"] == "goalkeeping" and any(k["id"] in (e.get("related_event_ids") or ()) for k in keep):
+            continue                    # a shot and its save are one moment: say it once (as _missed does)
+        keep.append(e)
+    keep = keep[-RECAP_MAX:]
+    sc = b.score(p)
+    minute = int(math.floor(b.clock_s(p) / 60))
+    parts = [_static(lead), score_frag(b.team_name("home"), b.team_name("away"), minute, sc["home"], sc["away"])]
+    parts += [(f"past_{e['id']}", b.sig(e["id"])["spoken_past"]) for e in keep] or [_static("nothing_yet")]
+    say = " ".join(t for _, t in parts[:2]) + " " + ". ".join(t.rstrip(".") for _, t in parts[2:]) + "."
+    return _ok(b, p, parts, say=say, evidence=[e["id"] for e in keep], moment=lead)
+
+
 NO_DETAIL_LEVEL = ("I can do key moments only, or the full radio commentary. Say which you'd like.")
 DETAIL_SAID = {"key": "Key moments only from now on: chances, goals and cards.",
                "full": "The full radio commentary from now on."}
@@ -325,7 +351,8 @@ def set_language(b: Bundle, p: float, language: Any = None) -> dict:
 
 
 TOOLS = {f.__name__: f for f in (get_score_and_clock, get_ball_position, where_is, get_player_stats, get_last_events,
-                                 explain_moment, what_did_i_miss, set_preferences, adjust_sound, set_language)}
+                                 explain_moment, what_did_i_miss, get_recap, set_preferences, adjust_sound,
+                                 set_language)}
 
 
 def call(name: str, args: dict[str, Any], playhead_s: float, bundle: Bundle) -> dict[str, Any]:

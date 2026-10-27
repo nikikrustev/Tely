@@ -18,7 +18,8 @@ RULES: list[tuple[str, re.Pattern]] = [
                                r"|(is|are) (there )?(a |another )?(goal|chance|shot|something)s? (coming|about to)"
                                r"|will there be|are (they|we) going to|about to (score|happen))\b")),
     ("no_betting", re.compile(r"\b(bet|bets|betting|odds|gambl\w*|wager|bookie\w*)\b")),
-    ("missed", re.compile(r"\b(miss|missed|catch (me )?up|while i was|i was away|recap)\b")),
+    ("recap", re.compile(r"\b(recap|sum (it )?up|summary|summari[sz]e|story so far|so far|half[- ]?time|full[- ]?time)\b")),
+    ("missed", re.compile(r"\b(miss|missed|catch (me )?up|while i was|i was away)\b")),
     ("last", re.compile(r"\b(what (just )?happened|just now|last (event|thing|play)|recent|replay)\b")),
     ("stats", re.compile(r"\b(stats?|statistics|how (far|fast|many)|passes|distance|top speed|run)\b")),
     ("ball", re.compile(r"\b(ball|who has it|who'?s got it|possession|which side|where('s| is) (the )?play)\b")),
@@ -53,6 +54,8 @@ def answer_text(question: str, *, playhead_s: float, bundle: Bundle) -> dict:
         res = tools.call("get_ball_position", {}, p, bundle)
     elif intent == "last":
         res = tools.call("get_last_events", {"n": 2}, p, bundle)
+    elif intent == "recap":
+        res = tools.call("get_recap", {"moment": "so_far"}, p, bundle)
     elif intent == "missed":
         res = tools.call("what_did_i_miss", {"since": bundle.clock_str(max(bundle.t0, p - 120))}, p, bundle)
     elif intent == "stats":

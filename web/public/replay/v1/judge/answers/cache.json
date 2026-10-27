@@ -139,6 +139,11 @@
   "bytes": 10224,
   "text": "90 metres from goal."
  },
+ "484bec3cebff1fd8b601c7378a60e7a28a58c4f41d468317c9d659fdd781d29a": {
+  "duration_ms": 1350,
+  "bytes": 8496,
+  "text": "Here's the story so far."
+ },
  "4a5b04ab727a6215227a503be18753682736233e8dc414ea1839a4d7d01376ac": {
   "duration_ms": 2850,
   "bytes": 17424,
@@ -243,6 +248,11 @@
   "duration_ms": 5350,
   "bytes": 32400,
   "text": "Midfield, far side, Navy. Kelski to Strandford."
+ },
+ "77b628a05df4f2040d36f67b52e68aabb94ad6948ae9529e4d4351481c71b97e": {
+  "duration_ms": 3000,
+  "bytes": 18288,
+  "text": "That's half-time. Here's the story of the half."
  },
  "79aeb549aa5e6d759bf672800184b20733ae616e1f2af8eb651357eb96c70916": {
   "duration_ms": 2250,
@@ -358,6 +368,11 @@
   "duration_ms": 2400,
   "bytes": 14688,
   "text": "Navy have it, midfield, near side."
+ },
+ "a5feb4c60bfb5a693ec0dca4e544982f68900d946063e060dcfe1bcbe8916acc": {
+  "duration_ms": 2800,
+  "bytes": 17136,
+  "text": "That's the end of this part of the match. Here's how it went."
  },
  "a73017f77d4ce573d0ad5d925ff08fe49c359414c74f13fad7ed055ceb8eb47c": {
   "duration_ms": 1700,

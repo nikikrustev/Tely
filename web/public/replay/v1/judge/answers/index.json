@@ -1,7 +1,7 @@
 {
  "voice": "en-US-Brian:DragonHDLatestNeural",
  "style": "calm",
- "count": 110,
+ "count": 113,
  "fragments": {
   "hold": {
    "file": "4bfef2c3e49a8d15e3e6c54141725f8408b66e0a3845150d7760c84efb644932.mp3",
@@ -58,6 +58,18 @@
   "done": {
    "file": "cfbc66fc95c9529551b871184af1e6482a88f68149bcc9490bb4df6e9ca97711.mp3",
    "duration_ms": 750
+  },
+  "recap": {
+   "file": "484bec3cebff1fd8b601c7378a60e7a28a58c4f41d468317c9d659fdd781d29a.mp3",
+   "duration_ms": 1350
+  },
+  "recap_ht": {
+   "file": "77b628a05df4f2040d36f67b52e68aabb94ad6948ae9529e4d4351481c71b97e.mp3",
+   "duration_ms": 3000
+  },
+  "recap_end": {
+   "file": "a5feb4c60bfb5a693ec0dca4e544982f68900d946063e060dcfe1bcbe8916acc.mp3",
+   "duration_ms": 2800
   },
   "zone_H_defensive_third_near": {
    "file": "3fe84730c85116996856cf465d9d3b132589061b89cc9345d8eee34b80ced01c.mp3",

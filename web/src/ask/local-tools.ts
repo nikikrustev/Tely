@@ -25,6 +25,7 @@ export interface QaBundle {
 export interface Answer { say: string; evidence_ids: string[]; as_of_clock: string; fragments: string[] | null; x?: number; y?: number }
 
 const HALF_L = 52.5;
+export const RECAP_MAX = 6;   // tools.py RECAP_MAX: the latest six big moments, so a recap stays under about 20 s
 const NUM = ['nil', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 const THIRD_WORDS: Record<string, string> = { defensive_third: 'defensive third', middle_third: 'midfield', attacking_third: 'attacking third' };
 const SIDE_WORDS: Record<string, string> = { near: 'near side', centre: 'centre', far: 'far side' };
@@ -38,6 +39,9 @@ export const STATIC: Record<string, string> = {
   then: 'Before that:',
   ball_out: 'The ball is out of play.',
   nothing_yet: 'Nothing big has happened yet.',
+  recap: "Here's the story so far.",
+  recap_ht: "That's half-time. Here's the story of the half.",
+  recap_end: "That's the end of this part of the match. Here's how it went.",
   nothing_missed: 'Nothing big happened.',
   no_spoilers: "I can't tell you what happens next. That's for the match to decide.",
   no_betting: "I can't help with betting or odds. Ask me about the match instead.",
@@ -123,6 +127,27 @@ export class LocalTools {
       [`zone_${key}_${third}_${s}`, `${this.team(side)} have it, ${THIRD_WORDS[third]}, ${SIDE_WORDS[s]}.`],
       [`dist_${String(m).padStart(3, '0')}`, m === 0 ? 'On the goal line.' : `${m} metres from goal.`],
     ], undefined, ev, { x: ball.x, y: ball.y });
+  }
+
+  /** Half-time, the end, or "so far": the score, then each big moment revealed by the playhead, in time order (a shot
+   *  and its save once, the latest RECAP_MAX). Same fragments and words as tools.py get_recap. */
+  get_recap(playhead: number, moment: 'so_far' | 'half_time' | 'end' = 'so_far'): Answer {
+    const p = this.clamp(playhead);
+    const lead = moment === 'half_time' ? 'recap_ht' : moment === 'end' ? 'recap_end' : 'recap';
+    const big = this.b.events.filter((e) => this.sig(e.id).reveal_t <= p && this.sig(e.id).priority >= 2)
+      .sort((a, b) => this.sig(a.id).t - this.sig(b.id).t);
+    let keep: QaEvent[] = [];
+    for (const e of big) {
+      if (e.type === 'goalkeeping' && keep.some((k) => (e.related_event_ids ?? []).includes(k.id))) continue;
+      keep.push(e);
+    }
+    keep = keep.slice(-RECAP_MAX);
+    const score = this.get_score_and_clock(p);
+    const scorePart: Part = [score.fragments?.[0] as string, score.say];
+    const events: Part[] = keep.map((e) => [`past_${e.id}`, this.sig(e.id).spoken_past]);
+    const parts: Part[] = [this.st(lead), scorePart, ...(events.length ? events : [this.st('nothing_yet')])];
+    const say = `${parts[0]?.[1]} ${scorePart[1]} ${parts.slice(2).map(([, t]) => t.replace(/\.$/, '')).join('. ')}.`;
+    return this.ok(p, parts, say, keep.map((e) => e.id));
   }
 
   get_last_events(playhead: number, n = 3): Answer {

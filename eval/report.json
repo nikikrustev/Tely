@@ -762,8 +762,8 @@
     "question": "Quick recap please",
     "playhead": "63:20",
     "expected": "answer",
-    "intent": "missed",
-    "answer": "While you were away, Orlani had a shot blocked.",
+    "intent": "recap",
+    "answer": "Here's the story so far. Reds nil, Navy one, 63 minutes played. Fenford scored for Navy. V",
     "answered": true,
     "correct": true,
     "spoiler_leak": false

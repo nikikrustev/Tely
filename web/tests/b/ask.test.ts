@@ -24,6 +24,7 @@ function run(c: { tool: string; args: Record<string, unknown>; playhead_s: numbe
     case 'get_ball_position': return T.get_ball_position(p);
     case 'get_last_events': return T.get_last_events(p, c.args.n as number);
     case 'what_did_i_miss': return T.what_did_i_miss(p, c.args.since as string);
+    case 'get_recap': return T.get_recap(p, c.args.moment as 'so_far' | 'end');
     case 'catch_up': return T.catch_up(c.args.since_s as number, p);
     case 'hold_that_thought': return T.hold_that_thought(p);
     default: throw new Error(c.tool);
@@ -53,7 +54,7 @@ describe('spoiler firewall in the browser', () => {
     for (let i = 0; i < 200; i++) {
       const p = T.t0 + rnd() * (T.t1 - T.t0);
       const answers = [T.get_score_and_clock(p), T.get_ball_position(p), T.get_last_events(p, 5),
-        T.what_did_i_miss(p, T.clockStr(T.t0)), T.catch_up(T.t0, p)];
+        T.what_did_i_miss(p, T.clockStr(T.t0)), T.catch_up(T.t0, p), T.get_recap(p), T.get_recap(p, 'end')];
       for (const a of answers) {
         for (const id of (a as Answer).evidence_ids ?? []) {
           const s = T.sig(id);

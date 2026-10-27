@@ -701,3 +701,21 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
   reload, axe on Settings in light and dark, and the first line reaching the live region on time).
 - **Not checked:** NVDA, Narrator, TalkBack or VoiceOver reading the live region on a real device; the mono down-mix
   on a real one-ear Bluetooth earbud.
+
+## D31. Spoken recaps, from verified pieces only (27 Oct 2026)
+
+- **Why:** a fan who joins late, or comes back from the kitchen, wants the story so far, and every broadcast has a
+  half-time and full-time summary. An LLM summary could invent or leak; ours can't.
+- **`get_recap(moment)`** (`qa/tools.py`, mirrored in `ask/local-tools.ts`): a lead-in, the score line, then each big
+  moment (priority >= 2) whose outcome is revealed by the playhead, in time order: a shot and its save once, the
+  latest six. Every piece is an existing, verified fragment (`score_m*`, `past_*`) plus three new fixed lead-ins
+  (`recap`, `recap_ht`, `recap_end`), recorded in all seven languages. No LLM, no new facts.
+- **Where:** "Recap so far" in the quick questions (offline, any language); the live commentator's `get_recap` tool
+  (Voice Live and MCP; the router sends "recap", "sum it up", "half-time" to it); and once, automatically, when the
+  replay reaches its end ("That's the end of this part of the match. Here's how it went."). The judge cut is 56:10 to
+  64:10, so it holds no half-time: `recap_ht` is ready for a bundle that does, but nothing triggers it on the cut.
+- **Spoiler-safe by construction:** evidence is filtered on `reveal_t <= playhead`; a test sweeps 400 playheads x 3
+  moments, and the goal joins the recap only after VAR lets it stand (703.76 s).
+- **Checked:** pytest (new `test_recap.py`; the golden file now has `get_recap` cases, so the TypeScript copy says
+  exactly what Python says: 472 cases), the Q&A eval ("Quick recap please" now routes to `recap`, 31/31), vitest,
+  Playwright (`recap.spec.ts`).
