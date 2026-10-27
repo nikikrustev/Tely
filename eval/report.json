@@ -1131,5 +1131,50 @@
    },
    "error": null
   }
+ },
+ "speed": {
+  "measured": "2026-10-27",
+  "cut": "judge",
+  "scheduled": {
+   "reaction_after_reveal_s": {
+    "n": 9,
+    "p50": 0.0,
+    "p95": 2.52
+   },
+   "description_after_event_s": {
+    "n": 33,
+    "p50": 0.0,
+    "p95": 0.0
+   },
+   "build_up_before_shot_s": {
+    "n": 2,
+    "p50": 4.0,
+    "min": 4.0
+   },
+   "goal_to_crowd_roar_s": {
+    "n": 1,
+    "max": 0.0
+   },
+   "goal_to_vibration_s": {
+    "n": 1,
+    "max": 0.0
+   }
+  },
+  "heard_in_browser": {
+   "source": [
+    "soak1_2026-10-26.json",
+    "soak2_2026-10-26.json"
+   ],
+   "lines": 747,
+   "median_lag_ms": [
+    84,
+    82
+   ],
+   "p90_abs_lag_ms": [
+    123,
+    123
+   ],
+   "note": "first audible output of each line against its due time, both halves of seed 24 in real time"
+  }
  }
 }
