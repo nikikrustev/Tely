@@ -719,3 +719,33 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
 - **Checked:** pytest (new `test_recap.py`; the golden file now has `get_recap` cases, so the TypeScript copy says
   exactly what Python says: 472 cases), the Q&A eval ("Quick recap please" now routes to `recap`, 31/31), vitest,
   Playwright (`recap.spec.ts`).
+
+## D32. Proof by planted errors, with the thresholds set before the first run (27 Oct 2026)
+
+- **Why:** "0 leaks in 70 lines" only says the clean track is clean. It doesn't show the checks would catch a wrong
+  fact. So we plant wrong facts and count.
+- **`python -m tely.eval.planted`** (`pipeline/tely/eval/planted.py`). Its `THRESHOLDS` were committed in `dca24ed`
+  before the first run, and a test pins them. Results go to `eval/planted.json` and are merged into `eval/report.json`
+  as `planted_errors`.
+  - **(a) Commentary:** every one of the 70 lines gets each mutation that applies to it: a wrong player name, score
+    or minute, an invented statistic ("Three shots on target so far."), and an outcome word before the outcome is
+    known. **148/148 caught** by `verifier.truth_check` + `spoiler_check`; **0/70** clean lines blocked.
+  - **(a) Answers:** every golden Q&A answer (413, `contracts/golden/b/qa_cases.jsonl`) gets a wrong name, score,
+    minute, distance or an invented number. `check_answer` re-derives each fact from the match files at the playhead.
+    **1015/1015 caught; 0/413** clean answers blocked.
+  - **(b) Verifier off:** 0 of 1,163 caught, so every planted error would have been spoken.
+  - **(c) Spoiler ablation:** all 4 shots had their outcome handed to the Director (ending rewritten, VAR
+    overturned, "X scores!"), and the firewall gave byte-identical input every time. 8/8 replies that tried to carry
+    the outcome were rejected by the schema (extra field, `hint_type: goal`, prose, words in a number).
+- **The first run failed, and stays on record** (`history` in `planted.json`): 18.9 % of clean answers were blocked.
+  The answer checker didn't allow the keeper of a related save ("…saved by Vaston"). We fixed the checker; the
+  threshold did not move.
+- **Foundry:** the numeric part (4 clean lines with numbers and their 6 score/minute mutations) ran as a Foundry
+  evaluation with our numeric-truth custom evaluator. Foundry scored 6/6 planted items below 1.0 and 4/4 clean at 1.0,
+  the same as the local grader. Foundry's own `passed` flag said every item passed, even at 0.5, so its threshold
+  isn't applied the way we expected (unverified why). We count from its scores.
+- **What this does not show:**
+  - The answers in the product are tool templates. `check_answer` is the eval's independent checker, not a
+    runtime guard on the live model's speech; that guard is D28 (the model gets the tool's words only).
+  - A Director that knew the outcome could still choose a higher `build_up_level`; the firewall stops it from
+    knowing.

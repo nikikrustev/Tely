@@ -148,6 +148,10 @@ def check_answer(m, b, text: str, p: float, evidence: list[str]) -> list[str]:
 
     errs = []
     ok = allowed_players(m, evidence, p)
+    for eid in evidence:   # "a shot saved by Vaston": once the shot's outcome is out, its related events' actors too
+        e = m.by_id(eid)
+        if m.reveal_t(e) <= p:
+            ok |= {m.by_id(r).get("player_id") for r in e.get("related_event_ids") or ()}
     for name, pid in _names(m).items():
         if re.search(rf"(?<![\w-]){re.escape(name)}(?![\w-])", text) and pid not in ok:
             errs.append(f"name {name!r} not an actor of {evidence}")
@@ -314,6 +318,11 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     r = run(args.cut)
     old = json.loads(OUT.read_text(encoding="utf-8")) if OUT.is_file() else {}
+    # Every earlier run stays on record, so a fix after a failed run is visible (D32).
+    r["history"] = old.get("history", []) + ([{"measured": old["measured"], "pass": old["verdict"]["pass"],
+        "commentary": {k: old["commentary"][k] for k in ("caught", "planted", "false_block_rate")},
+        "answers": {k: old["answers"][k] for k in ("caught", "planted", "false_block_rate")},
+        "clean_blocked_example": (old["answers"]["clean_blocked"] or [None])[0]}] if "verdict" in old else [])
     r["foundry_eval"] = old.get("foundry_eval")
     if args.foundry_eval:
         from tely.build_bundle import dir_env
@@ -321,10 +330,20 @@ def main(argv: list[str] | None = None) -> int:
         from tely.eval import numeric_truth
 
         items = foundry_items(load_match(args.cut), __import__("tely.eval.metrics", fromlist=["load_cues"]).load_cues(args.cut))
-        res = numeric_truth.run_foundry(items, dir_env(load_env()), eval_name="tely-planted-errors", run_name="planted")
+        env = dir_env(load_env())
+        res = numeric_truth.run_foundry(items, env, eval_name="tely-planted-errors", run_name="planted")
+        scores = numeric_truth.item_scores(env, res) if res.get("where") == "foundry" else []
+        # Foundry's own pass flag marked every item passed (its threshold is not applied as we expected), so we
+        # count from its scores: a planted item is caught when Foundry scores it below 1.0, a clean one passes at 1.0.
+        pairs = list(zip(items, scores)) if len(scores) == len(items) else []
         r["foundry_eval"] = {"measured": time.strftime("%Y-%m-%d"), "items": len(items),
                              "planted": sum(it["planted"] for it in items),
-                             "clean": sum(not it["planted"] for it in items), **res}
+                             "clean": sum(not it["planted"] for it in items),
+                             "planted_scored_below_1": sum(1 for it, sc in pairs if it["planted"] and sc < 1.0),
+                             "clean_scored_1": sum(1 for it, sc in pairs if not it["planted"] and sc >= 1.0),
+                             "scores_match_local": bool(pairs) and all(abs(sc - numeric_truth.grade({}, it)) < 1e-9
+                                                                      for it, sc in pairs),
+                             **res}
     OUT.write_text(json.dumps(r, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     c, a = r["commentary"], r["answers"]
     print(f"commentary: {c['caught']}/{c['planted']} caught, {len(c['clean_blocked'])}/{c['lines']} clean blocked; "

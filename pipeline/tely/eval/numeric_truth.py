@@ -124,5 +124,18 @@ def run_foundry(items: list[dict], env: dict[str, str], timeout_s: float = 600, 
         return {"where": "local-only", "reason": scrub(f"{step}: {type(exc).__name__}: {exc}")[:400]}
 
 
+def item_scores(env: dict[str, str], res: dict) -> list[float]:
+    """The Foundry run's score for each item, in the order sent (the output items come back newest first)."""
+    from azure.ai.projects import AIProjectClient
+    from azure.identity import DefaultAzureCredential
+
+    project = AIProjectClient(endpoint=env["FOUNDRY_PROJECT_ENDPOINT"],
+                              credential=DefaultAzureCredential(exclude_interactive_browser_credential=True))
+    out = [o.model_dump() for o in project.get_openai_client().evals.runs.output_items.list(
+        run_id=res["run_id"], eval_id=res["eval_id"])]
+    out.sort(key=lambda d: d.get("datasource_item_id", 0))
+    return [float(next((x.get("score") for x in d.get("results", []) if x.get("score") is not None), "nan")) for d in out]
+
+
 def items_json(items: list[dict]) -> str:
     return "\n".join(json.dumps(it, ensure_ascii=False) for it in items)
