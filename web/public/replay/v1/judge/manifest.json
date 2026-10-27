@@ -71,7 +71,7 @@
  "answers": "answers/index.json",
  "ai_voice_notice": "Commentary uses Azure AI voices. Match data is synthetic.",
  "files": 1449,
- "bytes": 36191813,
+ "bytes": 36189615,
  "sha256": {
   ".gitattributes": "388cc297116535ee565c188a3b7733e108f3a8fec17de8335a9b47d444922d54",
   "answers/006bdb96f2f193291b56fedbf358a4ecd5c151c6fd4912f1ad20d390a74521e6.mp3": "6eb1b4eebc282da7445c9ac491b1a266a6ee40163f1841eb31fe6e47770d7c72",
@@ -1518,7 +1518,7 @@
   "live/cache.json": "15109888e46243b29eac443f83c9555ca3fa3b7fe5ef14d9336baaa21075067c",
   "live/index.json": "0e4ce578b8ffb13e6aceb5fa17fdd17c5c416585130045884f3520c1651df218",
   "meta.json": "d097c67c1f9ccaed5df5765f72c405173f6133c527b0630b0b0f1be505d66134",
-  "overlays.json": "692db1593f7c2a70a5f6fb42fc864da2e77b27026354b614dd318411b162fd37",
+  "overlays.json": "99300e3a34424e4b9e2bf1b2c4f3a6be7fa94bf84cd6b7c45e5b41643c327be9",
   "segments.json": "2406e8d758af363d9d49db459747f63e4edc3f221c5380ad0774cb0d6bdd21ea",
   "signals.json": "fb3f478e78f58850f6037aa7882749c3b14990601352fb5b41b824793f757eca",
   "ticks.json.gz": "a7a2462a3fea0650a2f4430cd7ad477462e0a6a8eb44cdef1d5c55d6bd0beb97"
