@@ -112,7 +112,7 @@ def build_server(bundle: Bundle | None = None) -> MCPServer:
     @mcp.tool(name="set_language", description=DESCRIPTIONS["set_language"],
               annotations=ToolAnnotations(read_only_hint=False, destructive_hint=False, idempotent_hint=True,
                                           open_world_hint=False))
-    def set_language(language: Literal["en", "bg", "es", "ar", "fr", "de"], ctx: Context) -> dict[str, Any]:
+    def set_language(language: Literal["en", "bg", "es", "ar", "fr", "de", "hi"], ctx: Context) -> dict[str, Any]:
         return run("set_language", {"language": language}, ctx)
 
     return mcp

@@ -309,6 +309,7 @@ LANGUAGES = {
     "ar": ("Arabic", "الحمر", "الزرق", "نواصل التعليق باللغة العربية."),
     "fr": ("French", "les Rouges", "les Bleus", "On continue le commentaire en français."),
     "de": ("German", "die Roten", "die Blauen", "Weiter geht's mit dem Kommentar auf Deutsch."),
+    "hi": ("Hindi", "लाल टीम", "नीली टीम", "कमेंट्री अब हिंदी में जारी है।"),
 }
 
 

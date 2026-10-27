@@ -9,7 +9,7 @@ P = (B.t0 + B.t1) / 2
 
 def test_the_schema_offers_exactly_the_languages_we_recorded():
     schema = next(t for t in qa.TOOL_SCHEMAS if t["name"] == "set_language")["parameters"]["properties"]
-    assert schema["language"]["enum"] == list(LANGUAGES) == ["en", "bg", "es", "ar", "fr", "de"]
+    assert schema["language"]["enum"] == list(LANGUAGES) == ["en", "bg", "es", "ar", "fr", "de", "hi"]
 
 
 def test_a_switch_confirms_in_the_new_language_and_sends_it_to_the_page():

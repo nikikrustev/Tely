@@ -4,7 +4,7 @@ import type { HapticMode } from './haptics/haptics';
 
 export type Club = 'H' | 'A';
 /** The commentator's languages (D27): the pre-recorded match and the live answers. */
-export const LANGS = ['en', 'bg', 'es', 'ar', 'fr', 'de'] as const;
+export const LANGS = ['en', 'bg', 'es', 'ar', 'fr', 'de', 'hi'] as const;
 export type Lang = (typeof LANGS)[number];
 export interface Settings {
   /** Which end you sit with: "H" Reds (home) or "A" Navy (away). Flips whose goals the crowd around you cheers. */

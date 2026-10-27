@@ -223,7 +223,24 @@ export class FragmentPlayer {
   private index: Record<string, string> = {};
   private cache = new Map<string, AudioBuffer>();
   private current: { gain: GainNode; sources: AudioBufferSourceNode[]; done: () => void } | null = null;
-  constructor(private ctx: BaseAudioContext, private out: AudioNode, private base = `${bundleBase()}/answers`) {}
+  private base: string;
+  constructor(private ctx: BaseAudioContext, private out: AudioNode, private root = `${bundleBase()}/answers`) {
+    this.base = root;
+  }
+
+  /** D27: the same fragments in another language, from answers/<lang>/ (English stays in answers/). A language
+   *  the bundle has no answers for keeps the current ones and returns false. */
+  async setLanguage(lang: string): Promise<boolean> {
+    const base = lang === 'en' ? this.root : `${this.root}/${lang}`;
+    if (base === this.base && Object.keys(this.index).length) return true;
+    const prev = { base: this.base, index: this.index };
+    this.base = base;
+    this.index = {};
+    if (await this.load()) return true;
+    this.base = prev.base;
+    this.index = prev.index;
+    return false;
+  }
 
   /** Stop the answer now: a STOP_FADE_S fade (no click), and speak() resolves at once. */
   stop(): void {
@@ -239,7 +256,9 @@ export class FragmentPlayer {
 
   async load(): Promise<number> {
     try {
-      const raw = (await (await fetch(`${this.base}/index.json`)).json()) as Record<string, unknown>;
+      const res = await fetch(`${this.base}/index.json`);
+      if (res.ok === false) throw new Error(String(res.status));   // a missing language folder: keep what we have
+      const raw = (await res.json()) as Record<string, unknown>;
       const map = (raw.fragments && typeof raw.fragments === 'object' ? raw.fragments : raw) as Record<string, unknown>;
       // SEAM(B->A): answers/index.json from A's answers.py: { id: "file.mp3" } or { id: { file / audio_url } }
       for (const [id, v] of Object.entries(map)) {
