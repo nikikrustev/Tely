@@ -788,3 +788,19 @@ goes through `tely.commentary.source.load_match()`. Switching to the real cut is
     the name);
   - vitest 151/151 (touches never ahead of the playhead, each once; the setting is sanitised);
   - Playwright + axe on desktop and portrait (23 options, saved across a reload, no violations).
+
+## D35. Speed numbers judges can compare (27 Oct 2026)
+
+- **What:** `python -m tely.eval.speed` writes `eval/speed.json`, merged into `eval/report.json` as `speed`. Two kinds
+  of number, never mixed:
+  - **Scheduled on the judge cut**, when the bundle plays each sound against the moment it belongs to:
+    - event → its commentary line: p50 0.0 s, p95 0.0 s, over 33 described events;
+    - outcome revealed → the reaction: p50 0.0 s, p95 2.52 s, over 9 reactions;
+    - goal confirmed → crowd roar: 0.0 s, and → goal vibration: 0.0 s (both on the reveal itself);
+    - the build-up comes 4.0 s before the shot.
+  - **Heard in the browser**, from the 26 Oct soak runs (747 lines, an analyser on every AudioContext): each line
+    is first audible a median 84 / 82 ms after it was due (90th percentile 123 ms).
+  - Together: an event's commentary is heard about 0.1 s after it.
+- **Not counted:** the "ball" and "state" lines are regular position updates (D15), not replies to an event. The
+  audible delay of the crowd roar itself wasn't measured with an analyser; we only say when it is scheduled.
+- For comparison, the live spoken answer's 1.14 s median (D17) is from the end of the question.

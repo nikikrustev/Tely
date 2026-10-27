@@ -124,6 +124,18 @@ Foundry evaluation (`tely-numeric-truth:2`, run `evalrun_06911d20ff334ad6a0ff290
 
 Earlier run (2026-10-27): FAIL, answers false-block rate 0.1889, e.g. "While you were away, Fenford had a shot saved by Vaston.": the answer checker did not allow the keeper of a related save. Fixed in the checker; the threshold did not move.
 
+## Speed (eval/speed.json)
+
+| Moment | Scheduled on the judge cut | Notes |
+|---|---|---|
+| Event -> its commentary line starts | p50 0.0 s, p95 0.0 s | 33 described events |
+| Outcome revealed -> the reaction line starts | p50 0.0 s, p95 2.52 s | 9 reactions; a reaction waits for the reveal |
+| Goal confirmed -> crowd roar | 0.0 s | on the audio clock, at the reveal |
+| Goal confirmed -> phone vibration | 0.0 s | same moment, timer against the audio clock |
+| Build-up line -> the shot | 4.0 s before | the look-ahead |
+
+**Heard in the browser** (soak1_2026-10-26.json, soak2_2026-10-26.json, 747 lines): each line's first audible output against its due time, median 84 / 82 ms, 90th percentile 123 / 123 ms. So an event's commentary is heard about 0.1 s after it.
+
 ## Eyes-closed listening test (eval/listening.json)
 
 Not run yet: 0 participants in `eval/listening_test.csv`. The protocol is `eval/listening_test.md`; enter each session in the CSV, then run `python eval/score_listening.py` and this script. No numbers are shown until then.
