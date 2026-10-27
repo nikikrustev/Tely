@@ -22,6 +22,15 @@ Transitions:
 
 _The Copilot + MCP beat was cut on 27 Oct: Copilot Chat on our machine didn't list the MCP server's tools. The server itself answers (`tools/call get_score_and_clock` → "Reds nil, Navy one, 59 minutes played.")._
 
+## As rendered (27 Oct, for `TelyFinalVideo.mp4`, 1:52.8)
+
+The assembled cut ran longer than planned, so the narrator was refitted to it: `voiceover_infra.srt` now holds the 8
+lines exactly as rendered (Ava HD, keyless) and where they sit. Each line falls only where the cut is silent (checked
+against the cut's own audio: no overlap with the Higgsfield clips or the app). The cut: clips 1–2 to 25.3 s, live app
+25.3–45.0 (app audio 28–44.5), architecture 45.0–58.0, Foundry 58.0–62.8, App Insights 62.8–65.3, eval report
+65.3–76.5, live Ask 76.5–94.5 (answer 80.5–92), rg-as-judge 94.5–100.0, Actions 100.0–104.8, clip 3 104.8–112.8.
+The table below is the original plan.
+
 ## Beats, pages and voiceover
 
 Every number here is in `eval/report.json` or the README; the voiceover keeps the three phrases
