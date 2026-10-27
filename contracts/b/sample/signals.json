@@ -1,5 +1,5 @@
 {
-  "format": "audiostands.signals",
+  "format": "tely.signals",
   "version": "0.1.0",
   "match_id": "syn_sample_0001",
   "hz": 1,

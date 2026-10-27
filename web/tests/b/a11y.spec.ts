@@ -32,7 +32,7 @@ async function startMatch(page: Page): Promise<void> {
 // screen, with none of the test tools (?test=1, ?mix=1, ?debug=1) in the page.
 test('product view', async ({ page }, info) => {
   await ready(page);
-  await expect(page.locator('h1')).toHaveText('Audio Stands');
+  await expect(page.locator('h1')).toHaveText('Tely');
   await expect(page.locator('.pitch')).toBeVisible();
   await expect(page.locator('#match')).toBeVisible();
   await expect(page.locator('[data-sb="clock"]')).toHaveText('56:10');

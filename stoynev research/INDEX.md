@@ -7,7 +7,7 @@ So what for us, Reuse: code & links, and Sources. Context: [Intel pack](../Berba
 
 > **Deadline (verified in the official rules, 20 Oct):** submissions close **27 Oct 2026, 23:59 PT** (28 Oct 08:59 Sofia). Registration closes 20 Oct 12:00 PT. See [12](12-judging-criteria-and-rules.md).
 
-## Current focus (20 Oct 2026): "Audio Stands", the blind-fan audio experience (working name)
+## Current focus (20 Oct 2026): "Tely", the blind-fan audio experience (said "telly"; named 27 Oct, D26)
 
 Brainstorm ideas **20 Home End** (a crowd mix tuned to your club) and **17 Heartbeat** (haptic tension) combined. A blind or
 low-vision fan should feel as if they are in the stands: a reactive crowd around them, and an AI commentator who builds
@@ -19,7 +19,7 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 
 | Building… | Read |
 |---|---|
-| **Audio Stands** (blind-fan audio) | **43 first** (architecture + build plan), then 36–42, 27, 32, 22, 23, 09; talk-back, barge-in and the delay: 49 |
+| **Tely** (blind-fan audio) | **43 first** (architecture + build plan), then 36–42, 27, 32, 22, 23, 09; talk-back, barge-in and the delay: 49 |
 | Pitch, impact framing, what the sponsor wants | 28 |
 | Azure architecture, infra, deploy, Fabric, accounts | 01, 17, 21, 30, 34, 44 |
 | Synthetic events, tracking, realism, data format | 02, 19, 26 |
@@ -71,22 +71,22 @@ ask questions at any time. Research for it: 36–42 (in progress), plus 27 (voic
 | 34 | [34-fabric-real-time-intelligence.md](34-fabric-real-time-intelligence.md) | Verdict: optional half-day side quest. Judges can't open Fabric dashboards; trial needs a work email; F2 cost; FabricTool retires 6 Nov 2026 mid-judging; side consumer-group tap; ready KQL for possession/PPDA/speeds; Activator rule |
 | 35 | [35-multilingual-pipeline.md](35-multilingual-pipeline.md) | Translate templates offline, fill slots at runtime; EN+BG+ES+AR demo; Translator 2026-06-06 details and bg/ar limits; ICU plurals/ordinals tested; quality-score licence traps (CometKiwi NC vs MetricX Apache); RTL overlays; 40-term EN→BG glossary |
 | 36 | [36-blind-fans-and-audio-description.md](36-blind-fans-and-audio-description.md) | What blind fans want (RNIB 2022–23: ball-first, real-time, one voice), lag as the top pain, UEFA/CAFE guidance, what exists (Sky's new descriptive commentary, Touch2See, OneCourt, FIFA 2026), the gap (no Q&A, no detail control, no synced crowd), design principles, ethical testing plan |
-| 37 | [37-spatial-audio-in-the-browser.md](37-spatial-audio-in-the-browser.md) | Native Web Audio is enough (HRTF PannerNode, Convolver), Firefox listener fallback, halfway seat default, rattle-like ball sound, earcon rules (Sonification Handbook), no web head tracking, iOS audioSession, Bluetooth latency, synthetic stadium IR, typed 126-line AudioStands module |
+| 37 | [37-spatial-audio-in-the-browser.md](37-spatial-audio-in-the-browser.md) | Native Web Audio is enough (HRTF PannerNode, Convolver), Firefox listener fallback, halfway seat default, rattle-like ball sound, earcon rules (Sonification Handbook), no web head tracking, iOS audioSession, Bluetooth latency, synthetic stadium IR, typed 126-line SoundStage module |
 | 38 | [38-reactive-crowd-atmosphere.md](38-reactive-crowd-atmosphere.md) | How EA/Sky faked crowds in 2020, home-advantage research, spoiler-safe crowd state machine {excitement, valence, danger} (toy-tested, flips for away end), Web Audio CrowdEngine (granular bed, synthetic chants, ducking), CC0 Freesound packs, no real chants (legal), mixing levels |
 | 39 | [39-anticipatory-emotional-commentary.md](39-anticipatory-emotional-commentary.md) | Commentator runs a 10 s delay behind the truth buffer (framed as broadcast delay), suspense/surprise from win-prob (Ely et al., PL audience evidence), anti-spoiler cap, prosody evidence for build-ups and goal calls, priority planner, SSML for EN HD + BG, tested on toy data |
 | 40 | [40-conversational-commentator.md](40-conversational-commentator.md) | Ask toggle button (VoiceOver-friendly), Voice Live WebRTC with a server relay for tool calls, six read-only tools that only see the delayed playhead (no spoilers), same voice as commentary, Bulgarian STT limits, ~$0.02/question, code for relay and browser |
 | 41 | [41-haptics-match-tension.md](41-haptics-match-tension.md) | iOS web can't vibrate; Firefox Android silently fails; rhythm-only tacton vocabulary (heartbeat, attack, shot, goal), gamepad rumble, audio-clock sync ~20 ms early, anti-fatigue cap, real tactile products, typed haptics.ts + AHAP for later native |
 | 42 | [42-audio-competitors-and-demo.md](42-audio-competitors-and-demo.md) | Audio rivals with evidence: Ninety Labs' audio-description PRs and Matchday Companion's Voice Live Q&A are the real threats; white space (anticipation, crowd, haptics, blind-user testing); muted/laptop-speaker demo craft; Foundry category; agents as a spoiler firewall |
-| 43 | [43-audio-stands-architecture.md](43-audio-stands-architecture.md) | End-to-end design on the hero stack: component map, truth/playhead timing and spoiler firewall, extended audio cue contract, 8 Q&A tools, cost (~$1.46/match commentary, ~$0.02/question), static judge mode with offline Ask, 7-day 2-person build plan, risks, Foundry category pitch |
+| 43 | [43-tely-architecture.md](43-tely-architecture.md) | End-to-end design on the hero stack: component map, truth/playhead timing and spoiler firewall, extended audio cue contract, 8 Q&A tools, cost (~$1.46/match commentary, ~$0.02/question), static judge mode with offline Ask, 7-day 2-person build plan, risks, Foundry category pitch |
 | 44 | [44-accounts-quotas-setup-checklist.md](44-accounts-quotas-setup-checklist.md) | Do-later checklist (nothing signed up): free account → upgrade to Pay-As-You-Go, avoid Students as main sub, Sweden Central region (West Europe lacks Voice Live realtime), Voice Live needs S0, model quota may start at 0 TPM, ~$45–87 budget, 2-person account ownership |
 | 46 | [46-copilot-github-azure-mcp-workflow.md](46-copilot-github-azure-mcp-workflow.md) | Copilot plans today (agent mode in Free; cloud agent needs Student/Pro), Azure MCP 3.0 flags and 128-tool limit, GitHub Models retired, datasets as attested GitHub Releases, honest AI-assistance disclosure, ready config files (instructions, mcp.json, workflows) |
-| 47 | [47-prior-art-outside-hackathon.md](47-prior-art-outside-hackathon.md) | No single product does all of Audio Stands, but each pillar exists (IBM/Opta Voice/NBC AI commentary, FOX/Samsung talk-back, OneCourt, Disney spatial-audio patent, AiCommentator). Defensible novelty: look-ahead used for tension + talk-back on a delayed playhead. 8 patents, safe novelty wording, partners |
+| 47 | [47-prior-art-outside-hackathon.md](47-prior-art-outside-hackathon.md) | No single product does all of Tely, but each pillar exists (IBM/Opta Voice/NBC AI commentary, FOX/Samsung talk-back, OneCourt, Disney spatial-audio patent, AiCommentator). Defensible novelty: look-ahead used for tension + talk-back on a delayed playhead. 8 patents, safe novelty wording, partners |
 | 48 | [48-commentator-language.md](48-commentator-language.md) | The words commentators use: Ferguson's register (dropped copulas, inversion, routines), play-by-play vs colour, radio rules (be the eyes, update the score, don't over-locate), one-word calls rise with xG, hyperbole; the `lively` template set built from it |
 | 49 | [49-two-way-commentary-barge-in-and-delay.md](49-two-way-commentary-barge-in-and-delay.md) | Two-way commentary: press-to-interrupt now, voice barge-in later (server AEC can't hear our crowd/commentary; Live-Reference AEC needs 2026-07-15), no browser wake word or speaker check on our stack, LLM addressee check 46.7% FAR zero-shot; keep D=10 s as a floor and make it elastic instead of 60 s; Floor Manager + Heard Ledger; pause-don't-duck, restart-or-drop, answers held to stoppages ≥25 s; what fits before 27 Oct |
 
 ## In progress
 
-45 Agent Framework orchestration for Audio Stands (stopped before finishing; not committed)
+45 Agent Framework orchestration for Tely (stopped before finishing; not committed)
 
 ## Next topics (queue)
 

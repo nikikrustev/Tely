@@ -18,7 +18,9 @@ export interface Settings {
 }
 
 export const DEFAULTS: Settings = { club: 'H', crowdMix: 0.5, haptics: 'full', hapticStrength: 1, radar: false, audioOffsetMs: null };
-export const STORAGE_KEY = 'audiostands.settings.v1';
+export const STORAGE_KEY = 'tely.settings.v1';
+/** The key from before the rename to Tely (D26): read once if the new key is empty, so saved settings carry over. */
+export const LEGACY_STORAGE_KEY = 'audiostands.settings.v1';
 
 /** The parts of Storage we use, so tests can pass a fake (or one that throws). */
 export type StorageLike = Pick<Storage, 'getItem' | 'setItem'>;
@@ -49,7 +51,7 @@ export function sanitize(x: unknown): Settings {
 
 export function loadSettings(storage: StorageLike | null = browserStorage()): Settings {
   try {
-    const raw = storage?.getItem(STORAGE_KEY);
+    const raw = storage?.getItem(STORAGE_KEY) ?? storage?.getItem(LEGACY_STORAGE_KEY);
     return raw ? sanitize(JSON.parse(raw)) : { ...DEFAULTS };
   } catch {
     return { ...DEFAULTS };

@@ -111,7 +111,7 @@ test('tester mode: clip task and questions, by keyboard only', async ({ page }) 
   await page.keyboard.press('Enter');
   await expect(page.locator('#sr-polite')).toHaveText(/Task 3 done\. Next: Clip 2, eyes closed\./);
   // Saved locally even with no relay, scored but never shown.
-  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('audiostands.tester.v1') ?? '{}'));
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('tely.tester.v1') ?? '{}'));
   const clipEv = saved.events.find((e: { ev: { kind: string } }) => e.ev.kind === 'clip');
   expect(clipEv.ev).toMatchObject({ clip: 1, where: 'right_close', where_ok: 0, enjoy: 1 });
   if (!LIVE) expect(clipEv.status).not.toBe('sent');   // with the relay (deployed site) it is sent
@@ -133,7 +133,7 @@ test('tester mode: report a problem (button and F key)', async ({ page }) => {
   await dialog.getByRole('button', { name: 'Send' }).click();
   await expect(dialog).toBeHidden();
   await expect(page.locator('#sr-polite')).toHaveText(/Your report is saved/);
-  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('audiostands.tester.v1') ?? '{}'));
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('tely.tester.v1') ?? '{}'));
   const ev = saved.events.find((e: { ev: { kind: string } }) => e.ev.kind === 'problem').ev;
   expect(ev).toMatchObject({ problem_kind: 'stuck', problem_text: 'It stopped after the goal', ctx_task: 0, ctx_relay: LIVE,
     ctx_club: 'H', ctx_browser: 'chrome' });

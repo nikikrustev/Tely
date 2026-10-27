@@ -18,8 +18,8 @@ from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable, Protocol
 
 # SEAM(A->B): B's Q&A brain (TEAM_SPLIT.md seam 2). Imported, never copied: the clamp B tests is the code that runs live.
-from audiostands.qa import PERSONA, TOOL_SCHEMAS, call_tool
-from audiostands.qa.bundle import Bundle
+from tely.qa import PERSONA, TOOL_SCHEMAS, call_tool
+from tely.qa.bundle import Bundle
 
 from .caps import Caps
 from .clips import refusal

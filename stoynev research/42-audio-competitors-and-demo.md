@@ -30,7 +30,7 @@ Innovation Studio pages need sign-in, so the one-line pitches come from `Berbata
 
 Related entries, not audio-first: 126398 Matchmate ("talk to the match"), 126595 La Liguilla (conversational stats via MCP), 126499 PitchPulse (control room plus voice).
 
-### 2. White space for Audio Stands (only what the evidence supports)
+### 2. White space for Tely (only what the evidence supports)
 
 1. **Anticipation is unclaimed.** Matchday Companion's ADR 0004 says its Q&A tools read a `LedgerView` filtered by `playback_t`, so the Q&A agent "cannot observe events … in the 20-second future ingest buffer". The Ninety Labs drops late lines rather than delaying them. **No public entry uses look-ahead to shape tension.**
 2. **Atmosphere and haptics.** No public hackathon repo we found has a crowd mix or haptics. One older repo, `DilipReddy72/haptic-football-accessibility` ("In progress", May 2026), predates the hackathon window.
@@ -66,7 +66,7 @@ The constraints come from [12](12-judging-criteria-and-rules.md) and [14](14-dem
 
 ## So what for us
 
-**Audio Stands (main):**
+**Tely (main):**
 
 - **Render/Personalise: differentiate on anticipation + embodiment, not on "audio description".**
   - The Ninety Labs will show verified, panned description. Matchday Companion will show verified, interruptible voice.
@@ -84,7 +84,7 @@ The constraints come from [12](12-judging-criteria-and-rules.md) and [14](14-dem
   - Otherwise eyes-closed, measuring "who has the ball / which side / was it dangerous" accuracy across radio-style commentary only, + crowd, + haptics.
   - OneCourt's study is the model to cite.
 
-**Other ideas, briefly:** 17 Heartbeat and 20 Home End are absorbed into Audio Stands. **D Chalk Talk** shares the Voice Live tool pattern. **A TwinCast**: The Ninety Labs is the same CV-from-synthetic-video concept with a head start, so TwinCast would need a different hero.
+**Other ideas, briefly:** 17 Heartbeat and 20 Home End are absorbed into Tely. **D Chalk Talk** shares the Voice Live tool pattern. **A TwinCast**: The Ninety Labs is the same CV-from-synthetic-video concept with a head start, so TwinCast would need a different hero.
 
 ## Reuse: code & links
 
@@ -96,7 +96,7 @@ ffmpeg -i screen.mp4 -i mix_binaural.wav -filter_complex \
   [a2]showvolume=w=400:h=20:o=h[m]; \
   [0:v][w]overlay=0:H-h-60[v1];[v1][m]overlay=40:40, \
   subtitles=captions_sdh.srt:force_style='FontSize=26,BorderStyle=3,Outline=0,BackColour=&H80000000'[v]" \
- -map "[v]" -map 1:a -c:v libx264 -crf 18 -c:a aac -b:a 192k -shortest audio_stands_demo.mp4
+ -map "[v]" -map 1:a -c:v libx264 -crf 18 -c:a aac -b:a 192k -shortest tely_demo.mp4
 ```
 
 **SDH captions straight from our cue stream (Python),** with no speech-to-text needed:

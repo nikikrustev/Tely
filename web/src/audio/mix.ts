@@ -64,12 +64,14 @@ export function parseMix(x: unknown, base: AudioMix = DEFAULT_MIX): AudioMix {
 }
 
 /** Where this device keeps its mix (the key the 24 Oct mixer used for its draft, so a mix set then carries over). */
-export const MIX_KEY = 'audiostands.mixDraft.v1';
+export const MIX_KEY = 'tely.mixDraft.v1';
+/** The key from before the rename to Tely (D26): read if the new key is empty, so a mix set then carries over. */
+export const LEGACY_MIX_KEY = 'audiostands.mixDraft.v1';
 
 /** This device's saved mix, or null if there is none (or storage is blocked or holds junk). */
 export function loadSavedMix(storage: StorageLike | null = browserStorage()): AudioMix | null {
   try {
-    const raw = storage?.getItem(MIX_KEY);
+    const raw = storage?.getItem(MIX_KEY) ?? storage?.getItem(LEGACY_MIX_KEY);
     return raw ? parseMix(JSON.parse(raw)) : null;
   } catch {
     return null;
@@ -100,7 +102,7 @@ export function setMix(patch: Partial<AudioMix>): AudioMix {
 export const levelFromDb = (db: number): number => Math.round(((Math.min(MAX_DB, Math.max(MIN_DB, db)) - MIN_DB) / (MAX_DB - MIN_DB)) * 100);
 export const dbFromLevel = (level: number): number => MIN_DB + (Math.min(100, Math.max(0, level)) / 100) * (MAX_DB - MIN_DB);
 
-/** The names the commentator's adjust_sound tool uses (pipeline/audiostands/qa/tools.py SOUNDS), to our groups. */
+/** The names the commentator's adjust_sound tool uses (pipeline/tely/qa/tools.py SOUNDS), to our groups. */
 export const SOUNDS: Record<string, keyof MixLevels> = {
   commentator: 'commentator', crowd: 'crowdBeds', chants: 'chants', reactions: 'roars', whistle: 'whistle',
   passes: 'pass', shots: 'shot', tackles: 'tackle', saves: 'save', net: 'net', ball_ping: 'ping',

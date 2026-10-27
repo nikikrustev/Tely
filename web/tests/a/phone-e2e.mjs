@@ -84,8 +84,8 @@ const quietAt = async (i, t0, thr = 0.002, hold = 300) => page.evaluate(([i, t0,
   return null;
 }, [i, t0, thr, hold]);
 const text = (sel) => page.locator(sel).first().innerText().catch(() => null);
-const playhead = () => page.evaluate(() => window.audioStandsCommentary?.['o']?.clock?.now?.() ?? null);
-const live = () => page.evaluate(() => ({ events: window.audioStandsLive?.events ?? [], turns: window.audioStandsLive?.turns ?? [] }));
+const playhead = () => page.evaluate(() => window.telyCommentary?.['o']?.clock?.now?.() ?? null);
+const live = () => page.evaluate(() => ({ events: window.telyLive?.events ?? [], turns: window.telyLive?.turns ?? [] }));
 const shot = (name) => page.screenshot({ path: `${OUT}/${name}.png` });
 const ASK = '#ask';
 const askLabel = () => page.locator(ASK).getAttribute('aria-label').then((l) => l ?? page.locator(ASK).innerText());
@@ -125,8 +125,8 @@ if (ONLY.has('ask')) {
   await shot('02-ask-listening');
   let firstAudio = null;
   try {
-    await page.waitForFunction(() => (window.audioStandsLive?.turns?.length ?? 0) > 0
-      || (window.audioStandsLive?.events ?? []).some(([, e]) => e.startsWith('refusal')), null, { timeout: 30_000 });
+    await page.waitForFunction(() => (window.telyLive?.turns?.length ?? 0) > 0
+      || (window.telyLive?.events ?? []).some(([, e]) => e.startsWith('refusal')), null, { timeout: 30_000 });
   } catch { /* reported below */ }
   const l = await live();
   await shot('03-ask-answering');

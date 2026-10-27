@@ -1,5 +1,5 @@
 # OWNER: A (potencialbg). Stage 5 Director checks. No Azure: the Foundry Director is replayed from the reply file
-# recorded on 23 Oct 2026 (audiostands/agents/recorded/judge.json), and failures are simulated.
+# recorded on 23 Oct 2026 (tely/agents/recorded/judge.json), and failures are simulated.
 import asyncio
 import copy
 import json
@@ -8,13 +8,13 @@ import re
 
 import pytest
 
-from audiostands import build_bundle, build_commentary, spoiler
-from audiostands.agents import director as D
-from audiostands.agents import rules_director
-from audiostands.agents import workflow as W
-from audiostands.commentary import planner
-from audiostands.commentary.source import load_match
-from audiostands.spoiler import OUTCOME
+from tely import build_bundle, build_commentary, spoiler
+from tely.agents import director as D
+from tely.agents import rules_director
+from tely.agents import workflow as W
+from tely.commentary import planner
+from tely.commentary.source import load_match
+from tely.spoiler import OUTCOME
 
 CUTS = ["sample", "judge"]
 RECORDED = build_bundle.recorded("judge")
@@ -232,7 +232,7 @@ def test_agent_framework_graph_and_plain_runner_agree(monkeypatch):
     pytest.importorskip("agent_framework")  # only on A's machine: CI never installs requirements-azure.txt
     m = load_match("judge")
     af = W.direct(m, D.ReplayDirector(RECORDED), None, "replay")
-    monkeypatch.setenv("AUDIOSTANDS_NO_AF", "1")
+    monkeypatch.setenv("TELY_NO_AF", "1")
     plain = W.direct(m, D.ReplayDirector(RECORDED), None, "replay")
     assert (af.engine, plain.engine) == ("agent-framework", "plain")
     strip = lambda r: [{k: v for k, v in x.items() if not k.endswith("_ms")} for x in r.summary()["log"]]  # noqa: E731

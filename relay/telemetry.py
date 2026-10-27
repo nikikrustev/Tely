@@ -1,6 +1,6 @@
 """Custom events from the relay to Application Insights (D19). OWNER: A (potencialbg).
 
-Same OpenTelemetry route as the Director's traces (pipeline/audiostands/agents/tracing.py, D16): the Azure Monitor
+Same OpenTelemetry route as the Director's traces (pipeline/tely/agents/tracing.py, D16): the Azure Monitor
 distro, configure_azure_monitor(), and the connection string from APPLICATIONINSIGHTS_CONNECTION_STRING (a Container
 Apps secret, infra/relay.bicep). It is never printed or logged. Only one Python logger is exported, and a log record
 with "microsoft.custom_event.name" becomes a row in the customEvents table. Tracing, metrics, live metrics and
@@ -18,8 +18,8 @@ import os
 from typing import Callable
 
 CONN = "APPLICATIONINSIGHTS_CONNECTION_STRING"
-LOGGER = "audiostands.relay.events"
-SERVICE = "audiostands-relay"
+LOGGER = "tely.relay.events"
+SERVICE = "tely-relay"
 Tracker = Callable[[str, dict[str, str]], None]
 
 

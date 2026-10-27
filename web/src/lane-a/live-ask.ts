@@ -459,6 +459,6 @@ export function browserIO(o: BrowserIOOptions): LiveIO {
     ping: () => o.lane.pingBall?.(),
     prefs: (p) => o.lane.applyPrefs?.(p),
     // SEAM(A->B): a window event, so B's main.ts can show the phase without a contract change.
-    phase: (p) => window.dispatchEvent(new CustomEvent('audiostands:live-phase', { detail: p })),
+    phase: (p) => window.dispatchEvent(new CustomEvent('tely:live-phase', { detail: p })),
   };
 }

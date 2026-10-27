@@ -1,4 +1,4 @@
-# Audio Stands
+# Tely
 
 **A seat in the stands for football fans who can't see the pitch.** A reactive crowd, a ball you can hear move, a
 heartbeat on your phone, and an AI commentator whose voice builds *before* the big chance, because the pipeline already
@@ -49,7 +49,7 @@ hackathon entry or product we found combines a look-ahead commentator, a reactiv
 
 | Stage | What happens | Where | Tech |
 |---|---|---|---|
-| **Ingest** | A seeded match generator plays a whole synthetic match: CDF v0.3.2 events, the ball at 25 Hz and all 22 players at 5 Hz. The judge cut is 8 minutes of the second half (56:10–64:10, seed 24): a goal with a VAR check, a save, a block, a yellow card. | `pipeline/audiostands/generator.py`, `movement.py`, `judge_cut.py`, `build_match.py` | Python, numpy |
+| **Ingest** | A seeded match generator plays a whole synthetic match: CDF v0.3.2 events, the ball at 25 Hz and all 22 players at 5 Hz. The judge cut is 8 minutes of the second half (56:10–64:10, seed 24): a goal with a VAR check, a save, a block, a yellow card. | `pipeline/tely/generator.py`, `movement.py`, `judge_cut.py`, `build_match.py` | Python, numpy |
 | **Interpret** | Per second: win probability, suspense, tension, danger, and the crowd's mood at each end. Per event: xG, priority, zone, and the words a commentator may say before and after the outcome. | `interpret.py`, `crowd.py`, `haptics.py` | Python |
 | **Explain** | The **Director** agent sees the next 10 s and returns only a tension plan. The **Commentator** turns facts plus that plan into lines; the **Verifier** checks every number against the truth and every word for spoilers. | `agents/`, `commentary/` | **Microsoft Agent Framework**, **Foundry** (gpt-5-mini), Application Insights |
 | **Render** | Each line is pre-rendered in an **Azure Speech HD voice** (Brian). In the browser, Web Audio plays a crowd per end, a ball rattle panned left to right, sound icons for passes, shots and whistles, and ducks the crowd under the voice. Captions (SDH) and descriptions ship as WebVTT. | `commentary/tts.py`, `web/src/audio/`, `web/src/lane-a/commentary-track.ts` | **Azure Speech**, **Azure Static Web Apps** |
@@ -72,7 +72,7 @@ flowchart LR
   SWA --> P["Browser<br/>Web Audio crowd and ball, haptics,<br/>radar, offline Ask"]
   P -- "Ask out loud: mic audio + playhead" --> R["Azure Container Apps relay"]
   R --> VL["Foundry Voice Live<br/>gpt-realtime-2.1-mini, same HD voice"]
-  R --> Q["Q&A tools clamped to the playhead<br/>audiostands.qa"]
+  R --> Q["Q&A tools clamped to the playhead<br/>tely.qa"]
   R --> M["Stats MCP server at /mcp"]
   CP["VS Code: Copilot Agent Mode<br/>+ Azure MCP Server"] -. "dev time" .-> M
 ```
@@ -95,9 +95,9 @@ better, and build the agents so that it can't leak:
 | **Director** | The next 10 s, through an allow-list: event types, zones, xG, seconds to the shot, score, tension. Never the outcome, the shot's end point, VAR, or any outcome text. A test rewrites each shot's ending and checks the Director's input is byte-identical. | A tension plan only: `build_up_level`, `lead_s`, `hold_ms`, `hint_type` (JSON schema, strict) | Agent Framework `Agent` on Foundry `gpt-5-mini`, traced to Application Insights. One call per shot, ~490 tokens. |
 | **Commentator** | Facts up to now, plus the plan | The spoken lines, from templates | Code (the LLM stays off the hot path) |
 | **Verifier** | Every line and every plan | Pass, or a fallback: any failure (timeout, quota, bad JSON, a failed check) drops that window to the rules Director, which is the MVP's output byte for byte | Code |
-| **Q&A (live)** | Only the playhead the fan pressed at, injected by the relay. The model never sets the clock. | Spoken answers in the commentary voice, 1–2 sentences, no predictions, no betting | Foundry Voice Live (`gpt-realtime-2.1-mini`), tools from `audiostands.qa` |
+| **Q&A (live)** | Only the playhead the fan pressed at, injected by the relay. The model never sets the clock. | Spoken answers in the commentary voice, 1–2 sentences, no predictions, no betting | Foundry Voice Live (`gpt-realtime-2.1-mini`), tools from `tely.qa` |
 
-**The 8 Q&A tools** (`pipeline/audiostands/qa/`): `get_score_and_clock`, `get_ball_position`, `where_is`,
+**The 8 Q&A tools** (`pipeline/tely/qa/`): `get_score_and_clock`, `get_ball_position`, `where_is`,
 `get_player_stats`, `get_last_events`, `explain_moment`, `what_did_i_miss`, `set_preferences`. Each is clamped to the
 playhead; a property test checks 200 random playheads for evidence from the future. The same tools power the offline
 presets (a keyword router, no LLM), the live voice (Voice Live function calls) and the **Stats MCP server** (MCP SDK,
@@ -140,18 +140,18 @@ Judge cut, voice `en-US-Brian:DragonHDLatestNeural`, Director `gpt-5-mini`, meas
   [file 19](stoynev%20research/19-realistic-player-movement.md)); they only set the ranges we check against, and no real
   match data goes into the generator.
 - **One detail level ships: Radio** (the ball and key moments). Describer and Calm were cut ([D18](docs/DECISIONS.md)).
-- **Not yet tested with blind users.** Audio Stands is designed from published research with blind and partially sighted
+- **Not yet tested with blind users.** Tely is designed from published research with blind and partially sighted
   football fans (RNIB 2022–23, Level Playing Field, UEFA/CAFE guidance). Our next step is testing with blind fans.
 
 ## Synthetic data
 
-- Every event, position and player comes from `pipeline/audiostands/generator.py` (v0.2.0) with a fixed seed. The judge cut
+- Every event, position and player comes from `pipeline/tely/generator.py` (v0.2.0) with a fixed seed. The judge cut
   is seed 24, second half, 670–1150 s (56:10–64:10), at the fictional ground Emberfield. `meta.json` says
   `"synthetic": true`.
 - No real match data, footage, clubs, players, commentators, logos or music. We use no StatsBomb data, and no xT or EPV
   grid fitted on real matches (`CLAUDE.md`).
 - Rebuilds are deterministic: the match files come out byte-identical on every run (a test checks the sha256), and
-  `python -m audiostands.build_bundle --cut judge` replays the recorded Director plans and cached voice with no Azure calls.
+  `python -m tely.build_bundle --cut judge` replays the recorded Director plans and cached voice with no Azure calls.
 
 ## Run it yourself
 

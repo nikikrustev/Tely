@@ -1,4 +1,4 @@
-# Audio Stands: demo video script (1:52)
+# Tely: demo video script (1:52)
 
 _OWNER: A (potencialbg). Stage 9a, 24 Oct 2026. Target length 1:52, hard stop 1:55 (file 14). Category: Best Use of Microsoft Foundry._
 
@@ -22,7 +22,7 @@ builds the SDH track from the bundle's cue text, crowd captions and sound events
 
 | Time | On screen | Voiceover | Burned caption |
 |---|---|---|---|
-| 0:00–0:08 | Black. Small white text, top: **"Audio Stands"**. Crowd audio fades in (match 954.8–966.8 s: the stoppage after the yellow card, no commentary). | "Audio Stands: a seat in the stands for fans who can't see the pitch." / "Synthetic match, real pipeline." | [stadium crowd fades in], then the voiceover |
+| 0:00–0:08 | Black. Small white text, top: **"Tely"**. Crowd audio fades in (match 954.8–966.8 s: the stoppage after the yellow card, no commentary). | "Tely: a seat in the stands for fans who can't see the pitch." / "Synthetic match, real pipeline." | [stadium crowd fades in], then the voiceover |
 | 0:08–0:20 | Still black. Text card, centred: **"RNIB research: TV commentary scored 6.1 / 15 with blind fans"**, then **"Description lags: the roar comes first"**. Source line, small: "RNIB 2022 (file 36)". Crowd fades out by 0:12. | "In RNIB's research, blind fans scored ordinary TV commentary 6.1 out of 15." / "And description often lags: you hear the roar before you know why." | the voiceover |
 | 0:20–0:30.6 | **The hero, part 1.** The site with the sound radar (`?radar=1`), match 674.0–684.6 s. Lower third at 0:20: **"Listen: the voice builds before the chance"**. At 0:21.4 the build-up starts; at 0:25.4 the header. The radar shows the ball moving left, the tension line climbing, the haptic pulse. | (none: the product speaks) | AI COMMENTATOR: Navy coming... Olvholm... here's a chance! · [crowd rises] · [phone pulses: attack] · [shot, left] [phone pulses: shot] [ball hits the net] · Fenford, the header! · It's in the net... but hold on, VAR is checking it. · [Navy end hush] [Reds end hush] |
 | 0:30.6–0:35.7 | **The hero, part 2.** Hard cut, with a 1.8 s title "(18 seconds later, after the VAR check)". Match 702.8–707.9 s: the verdict and the roar. | (none) | (18 seconds later, after the VAR check) · [Navy end roars] [Reds end falls silent] [phone pulses: goal] · AI COMMENTATOR: The goal stands! Goal for Navy! |
@@ -35,7 +35,7 @@ builds the SDH track from the bundle's cue text, crowd captions and sound events
 | 1:25–1:35 | **What we shipped:** the README architecture diagram, each box lighting as it's named: synthetic match generator → Agent Framework + Foundry (gpt-5-mini) → Azure Speech HD → Static Web Apps; Container Apps relay → Foundry Voice Live + Stats MCP. | "Under the hood: a seeded match generator, Agent Framework on Foundry, Azure Speech HD voices, Static Web Apps, and a Container Apps relay." | the voiceover |
 | 1:35–1:40 | VS Code, GitHub Copilot Chat in **Agent mode**, answering from the **Azure MCP Server**: the resources in `rg-as-judge`. | "We checked our Azure deployment from Copilot Agent Mode through Azure MCP." | the voiceover |
 | 1:40–1:46 | **A listener.** TODO (listening test not run yet): a consenting listening-test participant's reaction, their own words, captioned verbatim. No voiceover. If nobody consents, or the test hasn't run: hold the eval card from 1:20 instead, and do **not** imply any test with blind fans. | (none) | the listener's words, from `video/takes.srt` |
-| 1:46–1:52 | **End card.** Large URL: `lively-ocean-0efe4ae0f.2.azurestaticapps.net` · "Best Use of Microsoft Foundry" · "Berbata AI" · footer: **"AI voices (Azure AI Speech) · synthetic data · fictional clubs and players"**. Hold the URL at least 3 s. | "Audio Stands. Put on headphones and try it: the link is below." | the voiceover |
+| 1:46–1:52 | **End card.** Large URL: `lively-ocean-0efe4ae0f.2.azurestaticapps.net` · "Best Use of Microsoft Foundry" · "Berbata AI" · footer: **"AI voices (Azure AI Speech) · synthetic data · fictional clubs and players"**. Hold the URL at least 3 s. | "Tely. Put on headphones and try it: the link is below." | the voiceover |
 
 ## Where each number comes from
 

@@ -362,7 +362,7 @@ export function mountTester(hooks: TesterHooks): TesterHandle {
     $('t-code').textContent = `Your tester code is ${st.id}. It is random and doesn't say who you are.`;
     const mail = $<HTMLAnchorElement>('t-mail');
     mail.hidden = !FEEDBACK_EMAIL;
-    if (FEEDBACK_EMAIL) mail.href = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent('Audio Stands test answers')}&body=${encodeURIComponent(answersText(st))}`;
+    if (FEEDBACK_EMAIL) mail.href = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent('Tely test answers')}&body=${encodeURIComponent(answersText(st))}`;
   };
   $('t-copy').addEventListener('click', async () => {
     const text = answersText(st);

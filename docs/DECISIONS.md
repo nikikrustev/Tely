@@ -69,7 +69,7 @@ apply to a free account. `.env` uses `FOUNDRY_MODEL=gpt-5-mini`. If the Free Tie
 
 ## D8. Voice Live works on the Free Tier: GPT Realtime Mini, Standard tier (21 Oct 2026)
 
-potencialbg tested the Voice Live playground in project `audiostands` (resource `as-foundry-stoynev`, Sweden Central) on our
+potencialbg tested the Voice Live playground in project `tely` (resource `as-foundry-stoynev`, Sweden Central) on our
 free account: it heard the question and answered by voice. The playground lists models by price tier (Pro / Standard / Lite)
 without version numbers. We use **GPT Realtime Mini (Standard)**, which matches `gpt-realtime-mini` in our quota list (40)
 and the plan's `gpt-realtime-2.1-mini`. The exact version behind the name is (unverified). Avoid the Pro models, which cost more.
@@ -77,7 +77,7 @@ and the plan's `gpt-realtime-2.1-mini`. The exact version behind the name is (un
 ## D9. Stage 3 commentary: what we verified and what we chose (21 Oct 2026)
 
 Built against B's hand-written 90 s sample (`contracts/b/sample/`), because Stage 1 has not merged. Every Stage 3 reader
-goes through `audiostands.commentary.source.load_match()`. Switching to the real cut is one line in `MATCH_DIRS`.
+goes through `tely.commentary.source.load_match()`. Switching to the real cut is one line in `MATCH_DIRS`.
 
 **Verified on our resource (`as-foundry-stoynev`, keyless):**
 - `get_voices_async("en-US")` lists 30+ `en-US-*:DragonHDLatestNeural` voices, incl. Andrew, Brian, Ava, Davis, Emma, Steffan.
@@ -232,7 +232,7 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   truth_check 70/70, **0 spoiler leaks**, 10/10 spoken numbers verified, 0 fallbacks. Build-ups: "Navy coming... Olvholm...
   here's a chance!" and "Reds... Orlani... danger!". 13 new MP3s (117 files, 3.8 MB). One orphan MP3 from a discarded hold
   variant was deleted, and every cached MP3 is read by the replay plan or the rules plan (0 orphans).
-- **Replay keeps the bundle deterministic.** `DIRECTOR=foundry` records every reply to `pipeline/audiostands/agents/recorded/judge.json`
+- **Replay keeps the bundle deterministic.** `DIRECTOR=foundry` records every reply to `pipeline/tely/agents/recorded/judge.json`
   (features, raw reply, latency, tokens; no keys or audio). Without `DIRECTOR` set, `build_bundle` replays that file, so a rebuild,
   CI, or Nikolay gets the same plans with no Azure. If B's match changes, the replay no longer matches, those windows fall back to
   rules, and a test fails, asking for a re-record.
@@ -240,14 +240,14 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   `infra/` and provisioned with `azd provision`. The connection string lives only in the git-ignored azd env.
   `configure_azure_monitor()` + `enable_instrumentation()` (file 18 §5); prompt text isn't captured. Verified with a Log
   Analytics query: `workflow.run`, `executor.process director|commentator|verifier|tts`, `invoke_agent Director`, `chat gpt-5-mini`
-  under service `audiostands-director`. The App Insights resource is not linked to the Foundry project, so the Foundry "Traces"
+  under service `tely-director`. The App Insights resource is not linked to the Foundry project, so the Foundry "Traces"
   tab stays empty (manual step if we want it there).
 - **Seen in the traces:** each new `DefaultAzureCredential` first probes the managed-identity endpoint on a laptop (~1 s per
   token fetch) before it uses the az login. The token is then cached, and the real-time harness opens connections with one
   untimed warm-up call.
 - **Numeric truth on Foundry:** the same `grade()` from file 18 ran as a code-based custom evaluator (preview,
-  `beta.evaluators.create_version` + an OpenAI-style eval run): `audiostands-numeric-truth`, 4/4 items passed, matching the local grader.
-- **Real-time latency (`python -m audiostands.eval --realtime`):** plan → verify → TTS per build-up, from the moment the shot
+  `beta.evaluators.create_version` + an OpenAI-style eval run): `tely-numeric-truth`, 4/4 items passed, matching the local grader.
+- **Real-time latency (`python -m tely.eval --realtime`):** plan → verify → TTS per build-up, from the moment the shot
   enters the look-ahead to the moment its MP3 exists, against D − lead_s. Wall clock, 1 run: 2/2 within budget, 3.75 s each.
   Waits ÷10, 5 runs: 10/10 within budget (5.8–6.0 s), p50 2.98 s, p95 3.56 s (plan p95 2.41 s, TTS p95 1.64 s). Each run opens
   its connections with one untimed warm-up call. The cold first call on 23 Oct took 6.2 s, which alone would miss the budget,
@@ -268,7 +268,7 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   voice `en-US-Brian:DragonHDLatestNeural` (D13), with `azure_semantic_vad` (500 ms) and `gpt-4o-mini-transcribe` for
   the question text. Auth is keyless: the user-assigned identity holds Cognitive Services User + Foundry User on
   `as-foundry-stoynev`, and locally it is `az login`.
-- **B's brain is imported, not copied.** `TOOL_SCHEMAS`, `PERSONA` and `call_tool` come from `audiostands.qa`. The
+- **B's brain is imported, not copied.** `TOOL_SCHEMAS`, `PERSONA` and `call_tool` come from `tely.qa`. The
   playhead is the one in the browser's `ask` message (the moment the fan pressed), clamped to the cut. It is never
   extrapolated, so it can't run ahead of what the fan heard. Tool outputs go back only after the `response.done` of the
   response that called them. Sending them earlier raced the model's own preamble response (smoke test, 23 Oct).
@@ -325,12 +325,12 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   - Each level is a whole new commentary track, not a switch. It needs a planner variant, new templates, TTS for
     every new line, and the truth check, spoiler firewall and eval run again on it. Shipping that untested two days
     before the deadline would risk the one track that is already verified (D16: 0 spoiler leaks, 70/70 truth check).
-  - The listening test (`eval/listening_test.md`) compares commentary alone against full Audio Stands. Adding a
+  - The listening test (`eval/listening_test.md`) compares commentary alone against full Tely. Adding a
     detail-level comparison would split 3 participants across too many conditions to say anything.
 - **What covers part of the need today:** asking "where is the ball?" at any moment (offline presets and live
   questions), the crowd slider, and vibration set to key moments only. None of these is a detail level, and the
   write-up must not claim one.
-- **Known loose end:** the Q&A tool `set_preferences` (`pipeline/audiostands/qa/__init__.py`, `tools.py`, and the MCP
+- **Known loose end:** the Q&A tool `set_preferences` (`pipeline/tely/qa/__init__.py`, `tools.py`, and the MCP
   server) still offers `verbosity: describer | radio | calm`. The page drops it (`web/src/settings.ts` `prefsPatch`),
   so a fan who asks for less talk can hear "done" when nothing changed. Follow-up: take `verbosity` out of the tool
   so the commentator says it can't do that yet. The relay has to be redeployed after that change.
@@ -385,7 +385,7 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
 - **Deployed and checked (24 Oct):** `azd provision` (the secret and `FEEDBACK_ORIGINS`) then `azd deploy` (relay
   revision 9, web). A full run in the built-in browser on the live `?test=1` (tour, both clips to their automatic
   end, both question sets, Ask with 2 presets, Settings, overall feedback in Bulgarian, one problem report, thank-you
-  screen) sent 15/15 events. All 15 arrived in `customEvents` as `tester_feedback` from `audiostands-relay`, with
+  screen) sent 15/15 events. All 15 arrived in `customEvents` as `tester_feedback` from `tely-relay`, with
   `client_IP` 0.0.0.0, and `pull_feedback.py --dry-run` read them back (Cyrillic intact). Two fixes came out of the
   run: azure-core's HTTP logging flooded the console (now WARNING), and `az` on Windows dropped Cyrillic from piped
   output (KQL now returns the dimensions base64-encoded). The tester and a11y specs passed against the live site,
@@ -396,7 +396,7 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
 
 - **Why:** from a seat on the halfway line nobody hears a ball on grass. The looped band-passed noise (the "ball") was
   a constant hiss, passes and shots popped out of the crowd, and the commentator sounded as if he were on the pitch.
-- **No ball sound:** `AudioStands` no longer has the noise loop, rattle, ball panner or ball send. `ballAt()` only
+- **No ball sound:** `SoundStage` no longer has the noise loop, rattle, ball panner or ball send. `ballAt()` only
   records where the ball is (by audio time, so "Where is the ball?" pings where it is now, not where it is queued).
 - **Left/right without it (three cues):** (1) passes, shots, tackles and saves stay panned by ball x (HRTF + stereo);
   (2) `CrowdEngine.followBall()`: the crowd end nearest the ball lifts and the far end drops (±3.5 dB at `nearEnd` 0.5,
@@ -509,7 +509,7 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   Live's token `usage`, so cost per question comes from real counts.
 - **Tools:** `web/tests/a/phone-e2e.mjs` (phone-sized Chromium, a fake microphone speaking a WAV, an analyser on every
   AudioContext; it measures, not guesses, whether each sound played and when it stopped) and `web/tests/a/soak.mjs`
-  (one full half in real time). `pipeline/audiostands/eval/soak_bundle.py` builds both full halves of seed 24 into
+  (one full half in real time). `pipeline/tely/eval/soak_bundle.py` builds both full halves of seed 24 into
   git-ignored `web/.local/`, with a tone in place of TTS (no Speech calls); `?bundle=soak1|soak2` plays them on the dev
   server only (`replay/base.ts`).
 - **Checked (26 Oct, phone-e2e against the deployed relay, 360x640 @3x):** match start (crowd and commentary audible),
@@ -576,3 +576,23 @@ goes through `audiostands.commentary.source.load_match()`. Switching to the real
   6 projects (new: tabs, Space and Enter, the desk).
 - **Not checked:** a real spoken "turn the whistle down by 5" through Voice Live (the new tool needs the relay
   redeployed first), and screen readers with the tabs.
+
+## D26. The name is Tely (27 Oct 2026)
+
+- **Why:** potencialbg, 27 Oct: "the name is tely and make sure that it is like this everywhere". Tely is short for
+  television and teleport ("teleport to the stands"). We chose Tely over Telly, which is already a US free-TV company
+  and a Czech streaming service that carries football. No other hackathon entry uses either name.
+- **Said "telly".** Wherever a voice says the name, it gets the spoken form "Telly": `video/narration.py` (`SAY_AS`) and
+  the tour's intro (`learn.ts`, `speech`). Captions and on-screen text keep "Tely". Never write it in capitals ("TELY"),
+  because screen readers may spell it out.
+- **Renamed everywhere:** the display name, the Python package (`pipeline/tely`, so `python -m tely.build_bundle`), the
+  bundle formats (`tely.meta`, `tely.signals`, ...), the MCP server (`tely-qa`, header `X-Tely-Playhead`), the debug
+  globals (`window.telyLive`, `window.telyCommentary`), `TELY_NO_AF`, research file 43 (`43-tely-architecture.md`),
+  and the browser sound stage (class `SoundStage` in `audio/sound-stage.ts`, a name for what it is, not the product).
+- **Kept on purpose:** `eval/report.json` keeps the real Foundry evaluator name and run URL (`audiostands-numeric-truth`),
+  because they are the IDs of runs that happened. Azure resource names (`rg-as-judge`, `as-foundry-...`) keep "as":
+  renaming them means new resources. Settings, the sound mix and tester answers move to `tely.*` keys, and each
+  is still read from its old `audiostands.*` key once if the new one is empty, so nothing saved on a device is lost.
+- **After merging:** reinstall the package (`pip install -e "pipeline[dev]"`), then redeploy the web app and the relay
+  (`azd deploy`), so the live page says Tely (the uptime check looks for `<title>Tely</title>`) and the relay speaks
+  the new MCP header. Re-render the voiceover with `python video/narration.py`.

@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from audiostands.qa import eval_qa
+from tely.qa import eval_qa
 
 CASES = [json.loads(s) for s in eval_qa.CASES.read_text(encoding="utf-8").splitlines() if s.strip()]
 
@@ -32,4 +32,4 @@ def test_qa_json_is_current_when_present():
     # may be absent here; when it is present it must match a fresh run.
     if not eval_qa.OUT.exists():
         pytest.skip("eval/qa.json not committed yet (A commits it with eval/report.md)")
-    assert json.loads(eval_qa.OUT.read_text(encoding="utf-8")) == eval_qa.run(), "rerun: python -m audiostands.qa.eval_qa"
+    assert json.loads(eval_qa.OUT.read_text(encoding="utf-8")) == eval_qa.run(), "rerun: python -m tely.qa.eval_qa"

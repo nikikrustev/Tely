@@ -7,7 +7,7 @@ import json
 import shutil
 from pathlib import Path
 
-from audiostands import build_segments
+from tely import build_segments
 
 ROOT = Path(__file__).resolve().parents[3]
 JUDGE = ROOT / "web" / "public" / "replay" / "v1" / "judge"

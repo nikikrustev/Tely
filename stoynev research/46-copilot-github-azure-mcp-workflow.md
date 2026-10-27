@@ -76,7 +76,7 @@ We found **no primary source** of a Microsoft hackathon winner documenting Copil
 
 ## So what for us
 
-**Audio Stands. The pipeline stages these tools touch:** Ingest (seeded synthetic match), Interpret (tension/momentum signal, research 23/09), Explain (look-ahead commentator), Render (Web Audio crowd bed, ducking, haptics, research 27), Personalise (voice Q&A, club, language). Copilot and Azure MCP are *build-time* tools. GitHub Releases, attestations and Octokit are *product* features on the Ingest/data side.
+**Tely. The pipeline stages these tools touch:** Ingest (seeded synthetic match), Interpret (tension/momentum signal, research 23/09), Explain (look-ahead commentator), Render (Web Audio crowd bed, ducking, haptics, research 27), Personalise (voice Q&A, club, language). Copilot and Azure MCP are *build-time* tools. GitHub Releases, attestations and Octokit are *product* features on the Ingest/data side.
 
 **One-week plan for 2 people (20–27 Oct)**
 
@@ -93,7 +93,7 @@ We found **no primary source** of a Microsoft hackathon winner documenting Copil
 4. Keep the Azure MCP Server `--read-only` in `.vscode/mcp.json`. Do writes through `azd` ourselves.
 5. Issues for the cloud agent use the template below, with acceptance tests written *before* assigning.
 
-**Azure MCP use during the week:** ask Copilot things like "List Container Apps in rg-audiostands-judge and their latest revision". Or "Query App Insights traces for the last hour where `tools/call get_tension` took over 300 ms". Or "Show `azd` app logs for env judge". Take **one screenshot** of a real answer for the README.
+**Azure MCP use during the week:** ask Copilot things like "List Container Apps in rg-tely-judge and their latest revision". Or "Query App Insights traces for the last hour where `tools/call get_tension` took over 300 ms". Or "Show `azd` app logs for env judge". Take **one screenshot** of a real answer for the README.
 
 **Our own Stats/Audio MCP server** (research 18) goes into the same `mcp.json`. Copilot agent mode can then call `get_tension(match_id, clock)` while writing the crowd-mix code. One server, two consumers (the product's agents and the dev tools), which is a good "MCP integration" story.
 
@@ -111,7 +111,7 @@ We found **no primary source** of a Microsoft hackathon winner documenting Copil
 
 **`.github/copilot-instructions.md` (draft, under 2 pages)**
 ```markdown
-# Audio Stands — Copilot instructions
+# Tely — Copilot instructions
 Audio-first match experience for blind/low-vision fans. SYNTHETIC match data only — never add real
 Premier League data, names, crests, chants or copyrighted audio.
 
@@ -157,24 +157,24 @@ AudioNode wiring lives in `graph.ts`. No `any`. Target latency budget: commentar
                "--namespace", "resourcehealth", "--namespace", "bicepschema"],
       "env": { "AZURE_SUBSCRIPTION_ID": "${input:azure-sub}" }
     },
-    "audiostands-stats": {
+    "tely-stats": {
       "type": "http",
       "url": "http://localhost:8765/mcp"
     }
   }
 }
 ```
-(Run `az login` first. Start the Stats MCP server locally with `uv run python -m audiostands.mcp_server`.)
+(Run `az login` first. Start the Stats MCP server locally with `uv run python -m tely.mcp_server`.)
 
 **`.github/prompts/new-crowd-layer.prompt.md`**
 ```markdown
 ---
 description: Add a new crowd audio layer driven by a Stats MCP metric
 agent: agent
-tools: ["audiostands-stats/*", "azure/*"]
+tools: ["tely-stats/*", "azure/*"]
 argument-hint: "layer name and metric, e.g. 'groan on shot_saved'"
 ---
-Create a crowd layer for ${input:layer}. Call `audiostands-stats` to inspect the metric's range on seed 42,
+Create a crowd layer for ${input:layer}. Call `tely-stats` to inspect the metric's range on seed 42,
 add a pure mapping in web/src/audio/mapping.ts with vitest cases at min/mid/max, wire it in graph.ts,
 then run `npm test`. Follow [the web audio rules](../instructions/webaudio.instructions.md).
 ```
@@ -242,7 +242,7 @@ jobs:
       - uses: actions/setup-python@v6
         with: { python-version: "3.12" }
       - run: pip install -e .
-      - run: python -m audiostands.sim --seeds 1-20 --out dist/ && python -m audiostands.realism --in dist/ --report dist/realism_report.html
+      - run: python -m tely.sim --seeds 1-20 --out dist/ && python -m tely.realism --in dist/ --report dist/realism_report.html
       - uses: actions/attest@v4
         with: { subject-path: "dist/*.jsonl.gz" }
       - name: Publish GitHub Release
@@ -252,13 +252,13 @@ jobs:
             "dist/realism_report.html#Realism report" \
             --title "Synthetic matches $GITHUB_REF_NAME" --notes-file dist/RELEASE_NOTES.md --verify-tag
 ```
-Anyone can verify: `gh attestation verify match_seed_7.jsonl.gz --repo OWNER/audio-stands`.
+Anyone can verify: `gh attestation verify match_seed_7.jsonl.gz --repo OWNER/tely`.
 
 **Octokit in the product (show the data version in the UI / About page)**
 ```ts
 import { Octokit } from "octokit";
 const octokit = new Octokit();                       // public read; cache result server-side
-const { data } = await octokit.rest.repos.getLatestRelease({ owner: "OWNER", repo: "audio-stands" });
+const { data } = await octokit.rest.repos.getLatestRelease({ owner: "OWNER", repo: "tely" });
 export const dataVersion = { tag: data.tag_name, url: data.html_url, published: data.published_at };
 ```
 

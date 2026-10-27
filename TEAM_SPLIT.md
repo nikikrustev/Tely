@@ -1,4 +1,4 @@
-# Audio Stands: two-person split (20 Oct 2026)
+# Tely: two-person split (20 Oct 2026)
 
 _This file is for both people **and both Claude Code sessions**. If you are Claude, read all of it before you touch any file._
 
@@ -91,8 +91,8 @@ Nikolay proposed: "I take the Q&A agent and its tools; you take the commentator 
 |---|---|
 | Infra and CI | `infra/**`, `azure.yaml`, `.github/**` (incl. `CODEOWNERS`), `.vscode/**`, `web/staticwebapp.config.json`, root `.gitignore`, `.gitattributes`, `.dockerignore` (added 23 Oct, A7: the relay image's build context), `.env.example` |
 | Scripts | `scripts/bootstrap_azure.sh`, `scripts/smoke_azure.py` |
-| Python, commentator and agents | `pipeline/audiostands/__init__.py` (empty; created once in Stage 0, never edited), `pipeline/audiostands/commentary/**`, `pipeline/audiostands/agents/**`, `pipeline/audiostands/build_commentary.py`, `pipeline/audiostands/build_bundle.py`, `pipeline/audiostands/answers.py`, `pipeline/audiostands/spoiler.py`, `pipeline/audiostands/voices.py`, `pipeline/audiostands/eval/**`, `pipeline/requirements-azure.txt`, `pipeline/tests/a/**` |
-| Relay | `relay/**`. It **imports** B's `audiostands.qa`; it never copies it |
+| Python, commentator and agents | `pipeline/tely/__init__.py` (empty; created once in Stage 0, never edited), `pipeline/tely/commentary/**`, `pipeline/tely/agents/**`, `pipeline/tely/build_commentary.py`, `pipeline/tely/build_bundle.py`, `pipeline/tely/answers.py`, `pipeline/tely/spoiler.py`, `pipeline/tely/voices.py`, `pipeline/tely/eval/**`, `pipeline/requirements-azure.txt`, `pipeline/tests/a/**` |
+| Relay | `relay/**`. It **imports** B's `tely.qa`; it never copies it |
 | Browser | `web/src/lane-a/**` (`index.ts` with `mountLaneA()`, `commentary-track.ts`, `live-ask.ts`), `web/src/contracts/a-exports.ts`, `web/src/tester/**` (added 24 Oct, D19 tester mode), `web/tests/a/**` |
 | Generated bundle files | In `web/public/replay/v1/judge/`: `cues.*.jsonl`, `audio/**`, `captions_sdh.vtt`, `descriptions.vtt`, `manifest.json`, `answers/**`, `live/**` (added 23 Oct, A7: the live Ask's refusal clips) |
 | Contracts | `contracts/golden/a/**` (live Voice Live transcripts) |
@@ -103,8 +103,8 @@ Nikolay proposed: "I take the Q&A agent and its tools; you take the commentator 
 
 | Area | Paths |
 |---|---|
-| Python, match and signals | `pipeline/pyproject.toml`, `pipeline/audiostands/{generator,movement,clock,interpret,crowd,haptics,judge_cut,build_match,build_segments}.py`, `pipeline/judge_cut.json`, `pipeline/tests/b/**` |
-| Python, Q&A brain | `pipeline/audiostands/qa/**` (`__init__.py` API, `tools.py`, `router.py`, `persona.py`, `fragments.py`, `mcp_server.py`) |
+| Python, match and signals | `pipeline/pyproject.toml`, `pipeline/tely/{generator,movement,clock,interpret,crowd,haptics,judge_cut,build_match,build_segments}.py`, `pipeline/judge_cut.json`, `pipeline/tests/b/**` |
+| Python, Q&A brain | `pipeline/tely/qa/**` (`__init__.py` API, `tools.py`, `router.py`, `persona.py`, `fragments.py`, `mcp_server.py`) |
 | Crowd assets | `scripts/prepare_crowd.py`, `assets/**`, `web/public/crowd/**` |
 | Browser | `web/package.json` + lockfile, `web/vite.config.*`, `web/playwright.config.ts` (added 24 Oct, Stage 8 a11y tests), `web/tsconfig.json`, `web/index.html`, `web/src/main.ts`, `web/src/wire.ts`, `web/src/audio/**`, `web/src/replay/**`, `web/src/haptics/**`, `web/src/ask/**`, `web/src/settings.ts`, `web/src/radar/**`, `web/src/learn/**`, `web/src/contracts/b-exports.ts`, `web/tests/b/**` |
 | Generated bundle files | In `web/public/replay/v1/judge/`: `meta.json`, `events.jsonl`, `ticks.json.gz`, `signals.json`, `segments.json`, `.gitattributes` (added 21 Oct, PR #5) |
@@ -135,7 +135,7 @@ These are the only places where the lanes meet:
      These extras stay out of the CDF lines so the events still pass the validator.
    - **`ticks.json.gz`:** the ball at 25 Hz, and the players at a rate B picks (at least 1 Hz, so `where_is` works).
    - Also include a **hand-written 90 s sample** with a pass chain, a shot, a save and a goal, plus a validator test.
-2. **The Q&A brain API** (B owns it in `pipeline/audiostands/qa/__init__.py`; A's relay imports it):
+2. **The Q&A brain API** (B owns it in `pipeline/tely/qa/__init__.py`; A's relay imports it):
    ```python
    TOOL_SCHEMAS: list[dict]   # the 8 file-43 §3 schemas, Voice Live "function" format
    PERSONA: str               # Voice Live instructions (file 40 §4 and §6)
@@ -210,7 +210,7 @@ Each person has about 56 h, so each lane has about 25 h spare. **Use it to bring
 Paste this at the start of every session. For a stage from `BUILD_PLAN.md`, paste this first and the stage prompt after it.
 
 ```text
-I am Nikolay, Person B on Audio Stands. My teammate potencialbg is Person A and owns everything Microsoft.
+I am Nikolay, Person B on Tely. My teammate potencialbg is Person A and owns everything Microsoft.
 Read CLAUDE.md, TEAM_SPLIT.md (all of it) and BUILD_PLAN.md before anything else.
 # WHY: TEAM_SPLIT.md says which files are mine. Another Claude (A's) is working in the same repo at the same time.
 #      If we both only edit our own files, our PRs never conflict.
@@ -245,7 +245,7 @@ MY WORK, IN ORDER
    and ask.ts. Use the prompts in BUILD_PLAN.md, with the paths from TEAM_SPLIT.md. Skip any step that calls Azure, deploys
    or edits A's files, and list it as a HANDOFF to A.
    # TIP: in Stage 2, segments.json gets NO cues field. A's commentary track loads the cue file itself (TEAM_SPLIT.md).
-2. The Q&A brain in pipeline/audiostands/qa/, implementing exactly the API in TEAM_SPLIT.md "The seams" point 2:
+2. The Q&A brain in pipeline/tely/qa/, implementing exactly the API in TEAM_SPLIT.md "The seams" point 2:
    - the 8 tools from file 43 §3, ported from file 40's match_tools.py and clamped to playhead_s.
      Property test: across 200 random playheads, no evidence comes from after the playhead.
      # TIP: write this test first. The pitch says "0 spoiler leaks", so it's the most valuable test I own.
@@ -265,7 +265,7 @@ Commit and push after each working piece.
 ## Prompt for A's Claude (potencialbg)
 
 ```text
-I am potencialbg, Person A on Audio Stands, and I own everything Microsoft. My teammate Nikolay is Person B.
+I am potencialbg, Person A on Tely, and I own everything Microsoft. My teammate Nikolay is Person B.
 Read CLAUDE.md, TEAM_SPLIT.md (all of it) and BUILD_PLAN.md before anything else.
 # WHY: Nikolay's Claude works in the same repo at the same time. If each of us edits only our own files, PRs never conflict.
 
@@ -274,7 +274,7 @@ HARD RULES
    Anything else goes under a "HANDOFF to B" heading in the PR description.
    The one exception is Stage 0: today I create the scaffold, including stubs of B's files (TEAM_SPLIT.md "The cross-lane rules").
    After that PR merges, I never edit B's files again.
-2. The relay imports B's package: from audiostands.qa import TOOL_SCHEMAS, PERSONA, call_tool, catch_up.
+2. The relay imports B's package: from tely.qa import TOOL_SCHEMAS, PERSONA, call_tool, catch_up.
    Never copy or fork B's tools. The relay injects playhead_s from the session, and the model never sets the clock.
    # WHY: one implementation means the spoiler clamp B tests is exactly the code that runs live.
 3. Azure Python packages go in pipeline/requirements-azure.txt, never in B's pyproject.toml. CI never installs them and never

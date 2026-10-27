@@ -2,7 +2,7 @@
 // It is also the one replay clock (ReplayClock in contracts/b-exports.ts) that A's commentary track follows.
 import type { ReplayClock } from '../contracts/b-exports';
 import type { CrowdState } from '../audio/crowd-engine';
-import type { Earcon } from '../audio/audio-stands';
+import type { Earcon } from '../audio/sound-stage';
 import { bundleBase } from './base';
 
 export interface CrowdEnds { H: CrowdState; A: CrowdState }

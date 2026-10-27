@@ -9,7 +9,7 @@ Writes, under out/ (git-ignored):
 HD voices sound slightly different on every render (D9), so the full track can drift from the cue files by a few
 hundred ms; the cue files are the exact ones. A cue that runs past its slot is reported: trim the line or the slot.
 
-Auth is keyless first, then SPEECH_KEY from .env (audiostands.commentary.tts); nothing prints a key.
+Auth is keyless first, then SPEECH_KEY from .env (tely.commentary.tts); nothing prints a key.
 Usage (A's machine): python video/narration.py [--voice NAME] [--dry-run]
 About 30 short HD TTS calls (one per cue, then one for the full track).
 """
@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "pipeline"))
 sys.path.insert(0, str(ROOT / "video"))
 
-from audiostands.commentary.ssml import _SENTENCE, NS, TEMPERATURE, build_ssml  # noqa: E402
+from tely.commentary.ssml import _SENTENCE, NS, TEMPERATURE, build_ssml  # noqa: E402
 from make_captions import read_srt  # noqa: E402
 
 VOICE = "en-US-Ava:DragonHDLatestNeural"
@@ -33,6 +33,13 @@ STYLE = "calm"
 OUT = ROOT / "out"
 MAX_BREAK_MS = 5000   # one <break> is capped; longer gaps chain several (our cap, kept under the service limit)
 SLACK_S = 0.3         # how far a cue may run past its slot before we warn
+SAY_AS = {"Tely": "Telly"}   # D26: say the name "telly", never "tee-lee"; the captions keep the written form
+
+
+def spoken(text: str) -> str:
+    for written, said in SAY_AS.items():
+        text = text.replace(written, said)
+    return text
 
 
 def breaks(ms: int) -> str:
@@ -61,13 +68,13 @@ def main(argv: list[str]) -> int:
     args = ap.parse_args(argv)
     if "Brian" in args.voice:
         print("warning: Brian is the commentator's voice; the plan asks for a different narrator voice", file=sys.stderr)
-    cues = read_srt(ROOT / "video" / "voiceover.srt")
+    cues = [(a, b, spoken(text)) for a, b, text in read_srt(ROOT / "video" / "voiceover.srt")]
     if args.dry_run:
         for i, (a, b, text) in enumerate(cues, 1):
             print(f"vo_{i:02} {a:6.2f}-{b:6.2f} {build_ssml(text, STYLE, args.voice)}")
         return 0
 
-    from audiostands.commentary.tts import AzureSynthesiser, TtsError, load_env
+    from tely.commentary.tts import AzureSynthesiser, TtsError, load_env
 
     try:
         synth = AzureSynthesiser(load_env())

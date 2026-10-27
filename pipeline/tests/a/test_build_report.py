@@ -50,7 +50,7 @@ def test_listening_results_are_rendered(br, evaldir):
     (evaldir / "listening.json").write_text(json.dumps(sl.summarise([rec])))   # made-up test record
     md = br.build(evaldir).split("## Eyes-closed listening test", 1)[1]
     assert "**1 participant** (1 not said; listened via 1 in person)" in md and "| Commentary only | 1 | 7 (7–7) | 2 / 3 / 2 | 3/4 (75%) |" in md
-    assert "| Full Audio Stands | 1 | 12 (12–12) |" in md and "mean 5 points" in md
+    assert "| Full Tely | 1 | 12 (12–12) |" in md and "mean 5 points" in md
     assert "not evidence for blind fans" in md and "6.1/15" in md
     assert '> "I knew \\| where it was" (P01, sight not said)' in md
 

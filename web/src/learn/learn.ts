@@ -15,6 +15,8 @@ export interface LearnStage {
 export interface Step {
   id: string;
   say: string;
+  /** What the voice says, when it differs from the text shown (D26: the browser voice reads "Tely" as "tee-lee"). */
+  speech?: string;
   /** Play the demo starting at audio time `at`; returns how long it lasts (s). */
   play(s: LearnStage, at: number): number;
 }
@@ -31,7 +33,8 @@ function sweep(s: LearnStage, at: number, from: number, to: number, secs: number
 }
 
 export const STEPS: Step[] = [
-  { id: 'intro', say: 'Welcome to Audio Stands. Here are the sounds, one by one. Use headphones if you can. Press Escape to skip.',
+  { id: 'intro', say: 'Welcome to Tely. Here are the sounds, one by one. Use headphones if you can. Press Escape to skip.',
+    speech: 'Welcome to Telly. Here are the sounds, one by one. Use headphones if you can. Press Escape to skip.',
     play: () => 0 },
   { id: 'ball', say: 'Like in a real stadium, you cannot hear the ball itself. Follow the kicks, and the crowd: the end nearest the ball gets louder. Here it travels from your left to your right.',
     play: (s, at) => { const d = sweep(s, at, -45, 45, 5); s.ballOff(at + d); return d + 0.5; } },
@@ -79,7 +82,7 @@ export class Tour {
     for (const step of steps) {
       if (this.stopped) break;
       this.d.show?.(step.say);
-      await this.d.speak(step.say);
+      await this.d.speak(step.speech ?? step.say);
       if (this.stopped) break;
       const dur = step.play(this.d.stage, this.d.stage.now() + 0.2);
       played.push(step.id);

@@ -57,7 +57,7 @@ export function uaFamily(ua: string, touchPoints = 0): { browser: string; os: st
  *  the code line at the end, which only our eval/pull_feedback.py --paste reads. */
 export function answersText(s: TesterState): string {
   const a = s.answers;
-  const lines = ['Audio Stands: my test answers', `Tester code: ${s.id}`, ''];
+  const lines = ['Tely: my test answers', `Tester code: ${s.id}`, ''];
   for (const t of TASKS) lines.push(`Task ${t.id}, ${t.title}: ${s.tasks[t.id] === 'done' ? 'done' : s.tasks[t.id] === 'skip' ? 'skipped' : 'not done'}`);
   for (const c of [1, 2] as ClipNo[]) {
     const ca = a.clips[c];

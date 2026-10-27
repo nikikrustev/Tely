@@ -1,4 +1,4 @@
-# Audio Stands: what's left before "only testing remains"
+# Tely: what's left before "only testing remains"
 
 _Written Sat 24 Oct 2026 from the state of `main` at `ded7aff` (PR #25), GitHub, and the live site._
 

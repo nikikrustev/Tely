@@ -6,7 +6,7 @@ import json
 import pytest
 from fastapi.testclient import TestClient
 
-from audiostands.qa.bundle import load_bundle
+from tely.qa.bundle import load_bundle
 from relay.app import create_app
 from relay.feedback import MAX_BYTES, TEXT_MAX, FeedbackCaps, Invalid, validate
 from relay.telemetry import make_tracker

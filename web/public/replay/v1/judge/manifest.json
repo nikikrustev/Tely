@@ -5,7 +5,7 @@
  "seed": 24,
  "source": "generator",
  "generator": {
-  "name": "audiostands.generator",
+  "name": "tely.generator",
   "version": "0.2.0"
  },
  "format_version": "0.2.0",
@@ -53,7 +53,7 @@
  "answers": "answers/index.json",
  "ai_voice_notice": "Commentary uses Azure AI voices. Match data is synthetic.",
  "files": 223,
- "bytes": 5940329,
+ "bytes": 5940232,
  "sha256": {
   ".gitattributes": "388cc297116535ee565c188a3b7733e108f3a8fec17de8335a9b47d444922d54",
   "answers/0243fe855747334633daace0aa0734d1dac5bd3e410db8957cf2d0a674620e78.mp3": "fc0bf45f58658d148d127b48688f9f12e7e559cea99eec93a0ea03fbb67256de",
@@ -274,9 +274,9 @@
   "cues.en.radio.jsonl": "1dcb7e4c1a3bd135f33a68fed8575a352eb773ddc323a70f81c133bf6c31c3ca",
   "descriptions.vtt": "fe9a431efc2f4e1f8b74d643d0e1b400816be6315d791fbfe9dae820897fdaab",
   "events.jsonl": "84ba756076276a7c7b454b37bec6f8fc790f411ce8cbb7d4da16a7fc5f2980d5",
-  "meta.json": "93e29846afdd9b65ca462823469126f95a15d3fca8b288c18bb5a74b82fe5c3a",
-  "segments.json": "b2f0683958caf506164d2998d7fb17027af07d455ac1415265314c2f1c67f483",
-  "signals.json": "22d18ce4115cd48a3b01e6f07fba86f8852e4d503829df4f0c7475078885f003",
-  "ticks.json.gz": "32f6e98819e3c60424a8447e222c22bacdf51fead408c33ec1d691945ba7ee45"
+  "meta.json": "d097c67c1f9ccaed5df5765f72c405173f6133c527b0630b0b0f1be505d66134",
+  "segments.json": "2406e8d758af363d9d49db459747f63e4edc3f221c5380ad0774cb0d6bdd21ea",
+  "signals.json": "fb3f478e78f58850f6037aa7882749c3b14990601352fb5b41b824793f757eca",
+  "ticks.json.gz": "a7a2462a3fea0650a2f4430cd7ad477462e0a6a8eb44cdef1d5c55d6bd0beb97"
  }
 }

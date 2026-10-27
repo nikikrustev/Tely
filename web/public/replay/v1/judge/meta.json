@@ -1,5 +1,5 @@
 {
-  "format": "audiostands.meta",
+  "format": "tely.meta",
   "version": "0.2.0",
   "cdf_version": "0.3.2",
   "synthetic": true,
@@ -293,7 +293,7 @@
     }
   ],
   "generator": {
-    "name": "audiostands.generator",
+    "name": "tely.generator",
     "version": "0.2.0"
   }
 }

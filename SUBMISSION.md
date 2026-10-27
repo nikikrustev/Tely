@@ -1,6 +1,6 @@
 **Category: Best Use of Microsoft Foundry**
 
-# Audio Stands
+# Tely
 
 _OWNER: A (potencialbg). Text to paste into the Innovation Studio form (Stage 9). Every number is from
 [`eval/report.json`](eval/report.json) or a cited research file; Stage 9b refreshes them and adds the video link._
@@ -16,7 +16,7 @@ _OWNER: A (potencialbg). Text to paste into the Innovation Studio form (Stage 9)
 
 ## Elevator pitch
 
-Audio Stands puts a blind or partially sighted fan in the stands. A crowd that reacts at each end, a ball you can hear
+Tely puts a blind or partially sighted fan in the stands. A crowd that reacts at each end, a ball you can hear
 move from left to right and a heartbeat on your phone all rise with the match, and the commentator's voice builds
 *before* the big chance, because our **Director agent on Microsoft Foundry** (built with **Microsoft Agent Framework**)
 sees the next ten seconds that the fan hasn't heard yet. A spoiler firewall keeps that look-ahead honest: the Director
@@ -28,7 +28,7 @@ zero-backend replay on **Azure Static Web Apps**, the voice is **Azure Speech** 
 
 ## Microsoft technology we shipped
 
-| Technology | What it does in Audio Stands |
+| Technology | What it does in Tely |
 |---|---|
 | **Microsoft Foundry** (gpt-5-mini) | The Director agent: plans the tension of each build-up from a 10 s look-ahead. 4 calls, 0 fallbacks on the judge cut. |
 | **Microsoft Agent Framework** | The workflow Director → Commentator → Verifier → TTS, with the Director as an `Agent` on the Foundry chat client. |

@@ -2,7 +2,7 @@
 // the audio clock at the exact match time it belongs to, a few seconds ahead, so a busy main thread never makes it late.
 // Vibration and per-second callbacks use timers aimed at the same moments. No cues here: A's commentary track loads
 // cues.*.jsonl itself (TEAM_SPLIT.md).
-import type { AudioStands } from './audio/audio-stands';
+import type { SoundStage } from './audio/sound-stage';
 import type { CrowdEngine } from './audio/crowd-engine';
 import type { Haptics, Tacton } from './haptics/haptics';
 import type { ReplaySource, Segment } from './replay/replay-source';
@@ -29,7 +29,7 @@ export interface Wired {
   cancel(): void;
 }
 
-export function wire(src: ReplaySource, stands: AudioStands | null, crowd: CrowdEngine, club: Club = 'H',
+export function wire(src: ReplaySource, stands: SoundStage | null, crowd: CrowdEngine, club: Club = 'H',
                      now: () => number = () => crowd.ctx.currentTime, opts: WireOptions = {}): Wired {
   const ours = opts.club ?? (() => club);
   const timers = opts.timers ?? { set: (f, ms) => setTimeout(f, ms) as unknown as number, clear: (id) => clearTimeout(id) };

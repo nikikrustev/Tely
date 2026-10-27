@@ -7,8 +7,8 @@ import random
 
 import pytest
 
-from audiostands import qa
-from audiostands.qa.bundle import load_bundle
+from tely import qa
+from tely.qa.bundle import load_bundle
 
 B = load_bundle()
 SIG = B.signals["events"]

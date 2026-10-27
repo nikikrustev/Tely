@@ -11,14 +11,14 @@
 # GPU/OS encoders). libx264 is GPL, so it is never used. The script checks each filter and the encoder before it runs.
 #
 # Usage, from anywhere:  bash video/assemble.sh [edit.mp4] [out.mp4]
-#   defaults: out/video/edit.mp4 -> out/video/audio_stands_demo.mp4 (out/ is git-ignored)
+#   defaults: out/video/edit.mp4 -> out/video/tely_demo.mp4 (out/ is git-ignored)
 #   ENCODER=h264_nvenc bash video/assemble.sh   to force an encoder
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"   # the subtitles filter gets a relative path: a Windows drive colon would break the filter graph
 IN="${1:-out/video/edit.mp4}"
-OUT="${2:-out/video/audio_stands_demo.mp4}"
+OUT="${2:-out/video/tely_demo.mp4}"
 SRT="video/captions_sdh.srt"
 MAX_S=115
 

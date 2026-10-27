@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parents[1]
-LINE = "Audio Stands smoke test. The Reds are breaking down the far side."
+LINE = "Tely smoke test. The Reds are breaking down the far side."
 QUOTA_MSG = "model quota missing: Director falls back to rules (Stage 5)"
 INSTALL_HINT = 'pip install -e "pipeline[dev]" -r pipeline/requirements-azure.txt'
 MIN_MP3_BYTES = 1024

@@ -1,16 +1,16 @@
-# OWNER: A (potencialbg). Stage 5 eval (audiostands.eval). No Azure: replayed Director, fake synthesiser.
+# OWNER: A (potencialbg). Stage 5 eval (tely.eval). No Azure: replayed Director, fake synthesiser.
 import asyncio
 import json
 import re
 
 import pytest
 
-from audiostands.agents import director as D
-from audiostands.build_bundle import recorded
-from audiostands.commentary import planner
-from audiostands.commentary.source import load_match
-from audiostands.commentary.tts import load_env
-from audiostands.eval import metrics, numeric_truth, realtime
+from tely.agents import director as D
+from tely.build_bundle import recorded
+from tely.commentary import planner
+from tely.commentary.source import load_match
+from tely.commentary.tts import load_env
+from tely.eval import metrics, numeric_truth, realtime
 
 
 class FakeSynth:

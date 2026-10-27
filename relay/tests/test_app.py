@@ -7,7 +7,7 @@ import json
 import pytest
 from fastapi.testclient import TestClient
 
-from audiostands.qa.bundle import load_bundle
+from tely.qa.bundle import load_bundle
 from relay.app import create_app
 from relay.caps import Caps
 
@@ -121,7 +121,7 @@ def test_b_mcp_server_is_mounted_at_mcp(monkeypatch):
     pytest.importorskip("mcp")
     monkeypatch.setenv("MCP_ALLOWED_HOSTS", "testserver")     # infra sets our public host name the same way
     hdr = {"accept": "application/json, text/event-stream", "content-type": "application/json",
-           "x-audiostands-playhead": str(B.t0 + 45)}
+           "x-tely-playhead": str(B.t0 + 45)}
     with client(mount_mcp=True) as c:
         init = {"jsonrpc": "2.0", "id": 1, "method": "initialize",
                 "params": {"protocolVersion": "2025-06-18", "capabilities": {},
