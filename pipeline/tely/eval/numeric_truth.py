@@ -72,7 +72,8 @@ DATA_SCHEMA = {
 }
 
 
-def run_foundry(items: list[dict], env: dict[str, str], timeout_s: float = 600) -> dict:
+def run_foundry(items: list[dict], env: dict[str, str], timeout_s: float = 600, eval_name: str = "tely-numeric-truth",
+                run_name: str = "judge-cut") -> dict:
     """Returns the Foundry run's result, or {"where": "local-only", "reason": ...} if the SDK or service refuses."""
     try:
         from azure.ai.projects import AIProjectClient
@@ -97,13 +98,13 @@ def run_foundry(items: list[dict], env: dict[str, str], timeout_s: float = 600) 
         step = "create eval"
         oai = project.get_openai_client()
         evaluation = oai.evals.create(
-            name="tely-numeric-truth",
+            name=eval_name,
             data_source_config={"type": "custom", "item_schema": DATA_SCHEMA, "include_sample_schema": False},
             testing_criteria=[{"type": "azure_ai_evaluator", "name": "numeric_truth", "evaluator_name": EVALUATOR,
                                "evaluator_version": ev.version,
                                "data_mapping": {"claims": "{{item.claims}}", "truth": "{{item.truth}}"}}])
         step = "create run"
-        run = oai.evals.runs.create(eval_id=evaluation.id, name="judge-cut", data_source={
+        run = oai.evals.runs.create(eval_id=evaluation.id, name=run_name, data_source={
             "type": "jsonl", "source": {"type": "file_content",
                                         "content": [{"item": {"claims": it["claims"], "truth": it["truth"]}}
                                                     for it in items]}})
