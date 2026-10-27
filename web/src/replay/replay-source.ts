@@ -109,5 +109,7 @@ export class ReplaySource implements ReplayClock {
 }
 
 export async function loadSegments(base = bundleBase()): Promise<SegmentsDoc> {
-  return (await (await fetch(`${base}/segments.json`)).json()) as SegmentsDoc;
+  const r = await fetch(`${base}/segments.json`);
+  if (!r.ok) throw new Error(`segments.json: HTTP ${r.status}`);   // Start says so and can be pressed again
+  return (await r.json()) as SegmentsDoc;
 }
