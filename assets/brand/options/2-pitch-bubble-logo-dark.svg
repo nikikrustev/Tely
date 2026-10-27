@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 120" role="img" aria-label="Tely"><g fill="none" stroke="#1f8a5a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M26 20 H94 Q108 20 108 34 V74 Q108 88 94 88 H52 L30 106 V88 H26 Q12 88 12 74 V34 Q12 20 26 20 Z"/>
+    <line x1="60" y1="20" x2="60" y2="88"/><circle cx="60" cy="54" r="13"/>
+    <path d="M12 40 H26 V68 H12 M108 40 H94 V68 H108"/></g><text x="150" y="86" font-family="Fraunces, Georgia, serif" font-weight="800" font-size="84" letter-spacing="-3" fill="#f2ead8">Tely</text></svg>
