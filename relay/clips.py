@@ -14,6 +14,11 @@ CLIPS: dict[str, str] = {
     "live_rate_limit": "Lots of live questions at once. Here are the preset questions for now.",
 }
 
+# Not refusals: what the browser says while it is still trying (voice/live-ask.ts WAKING, the cold-relay retry).
+NOTICES: dict[str, str] = {
+    "live_waking": "Waking up the live commentator, one moment.",
+}
+
 # Refusal reason (caps.py, app.py) -> the clip that explains it.
 REASON_CLIP: dict[str, str] = {
     "demo_off": "live_unavailable",

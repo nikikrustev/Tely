@@ -180,8 +180,8 @@ class Bridge:
 
     def __init__(self, link: Link, *, bundle: Bundle, caps: Caps, to_client: SendJson, to_client_audio: SendBytes,
                  connect: Callable[[], Awaitable[Link]] = connect_voice_live, log: Callable[[str], None] | None = None,
-                 clock: Callable[[], float] = time.monotonic) -> None:
-        self.link, self.bundle, self.caps = link, bundle, caps
+                 clock: Callable[[], float] = time.monotonic, ip: str = "?") -> None:
+        self.link, self.bundle, self.caps, self.ip = link, bundle, caps, ip
         self.to_client, self.to_client_audio, self.connect, self.log, self.clock = (
             to_client, to_client_audio, connect, log or log_line, clock)
         self.opened_at = clock()
@@ -196,6 +196,10 @@ class Bridge:
         self._eos: float | None = None
         self._first_audio: float | None = None
         self._after_tools = False
+        self._counted = True                      # this question already counts against the daily caps (caps.py)
+        self._listen_from: tuple[float, float] | None = None   # (clock, sent_ms) at the 1st chunk, then speech_started
+        self._listen_moved = False                # speech_started moves the listen start once per question
+        self.audio_bytes = 0                      # mic audio this session, against caps.audio_bytes_per_session
         self.disclosed = False
         self.lang = "en"                           # the language this Voice Live session speaks (D27)
         self.levels: dict[str, int] = {}          # the fan's sound levels (0..100) from the last `ask`, for adjust_sound
@@ -212,9 +216,12 @@ class Bridge:
                            if isinstance(k, str) and isinstance(v, (int, float)) and not isinstance(v, bool)}
         try:
             p = self.bundle.clamp(float(playhead_s))
-        except (TypeError, ValueError):
+        except (TypeError, ValueError, OverflowError):
             p = self.bundle.t0                   # no valid clock: the safest moment (B's mcp_server does the same)
-        if (reason := self.caps.question(self.asked)) is not None:
+        reason = self.caps.question(self.asked, self.ip)
+        if reason is None and self.audio_bytes >= self.caps.audio_bytes_per_session:
+            reason = "session_cap"               # this session has sent all the mic audio it may
+        if reason is not None:
             await self.to_client(refusal(reason))
             return
         if self.clock() - self.opened_at > self.caps.reconnect_after_s:
@@ -231,6 +238,7 @@ class Bridge:
                      "outcome": None}
         self._pending, self._eos, self._first_audio, self._after_tools = [], None, None, False
         self._retried = False
+        self._counted, self._listen_from, self._listen_moved = False, None, False
         # Measured 23 Oct: the VAD's audio_end_ms counts from the last buffer clear, so our audio clock restarts here.
         self._sent_ms, self._marks = 0.0, []
         await self.link.send({"type": "input_audio_buffer.clear"})
@@ -244,17 +252,36 @@ class Bridge:
         """Mic PCM16 from the browser. Dropped unless a question is open: the gate is enforced here too."""
         if not self.listening or not chunk:
             return
+        if self.audio_bytes + len(chunk) > self.caps.audio_bytes_per_session:
+            await self.commit()                  # the session's audio is spent: answer what was heard
+            return
+        if self._listen_from is None:
+            # The listen time runs from the first audio, not from `listening`: the browser may sit in its mic
+            # permission prompt first. speech_started moves the start to the fan's first word.
+            self._listen_from = (self.clock(), self._sent_ms)
+        elif self._listened_too_long():
+            await self.commit()                  # the browser should have sent `commit` by now (MAX_LISTEN_MS)
+            return
+        self.audio_bytes += len(chunk)
         self._sent_ms += len(chunk) / 2 / RATE * 1000
         self._marks.append((self._sent_ms, time.time()))
         del self._marks[:-500]                   # ~10 s of 20 ms chunks is plenty to find the end of speech
         await self.link.send({"type": "input_audio_buffer.append", "audio": base64.b64encode(chunk).decode()})
 
+    def _listened_too_long(self) -> bool:
+        """Past max_listen_s (+ grace) since the listen start, by the wall clock or by the audio sent: a client can
+        send audio faster than real time, so both count."""
+        at, ms = self._listen_from or (self.clock(), self._sent_ms)
+        limit = self.caps.max_listen_s + self.caps.listen_grace_s
+        return self.clock() - at > limit or (self._sent_ms - ms) / 1000 > limit
+
     async def commit(self) -> None:
-        """The fan talked past the max listen time: end the turn ourselves."""
+        """The fan talked past the max listen time: end the turn ourselves. The browser sends it after MAX_LISTEN_MS;
+        audio() calls it too, as the server's own backstop."""
         if self.listening:
             self.listening = False
             await self.link.send({"type": "input_audio_buffer.commit"})
-            await self.link.send({"type": "response.create"})
+            await self.link.send(self._response_create())
 
     async def cancel(self) -> None:
         self.listening = False
@@ -285,6 +312,8 @@ class Bridge:
         t = ev.get("type", "")
         turn = self.turn
         if t == "input_audio_buffer.speech_started":
+            if self.listening and not self._listen_moved:
+                self._listen_moved, self._listen_from = True, (self.clock(), self._sent_ms)
             await self.to_client({"type": "speech_started"})
         elif t == "input_audio_buffer.speech_stopped":
             self.listening = False
@@ -294,10 +323,14 @@ class Bridge:
                 turn["latency_basis"] = basis
             await self.to_client({"type": "speech_stopped"})
         elif t == "conversation.item.input_audio_transcription.completed" and turn is not None:
+            self._count()
             turn["question"] = (ev.get("transcript") or "").strip()
+        elif t == "response.created" and turn is not None:
+            self._count()
         elif t in ("response.audio.delta", "response.output_audio.delta"):
             if turn is None:
                 return                           # a cancelled answer's tail
+            self._count()
             now = time.time()
             if self._first_audio is None:
                 self._first_audio = now
@@ -324,7 +357,7 @@ class Bridge:
                 for item in self._pending:
                     await self.link.send(item)
                 self._pending, self._after_tools = [], True
-                await self.link.send({"type": "response.create"})
+                await self.link.send(self._response_create())
             elif turn is not None:
                 resp = ev.get("response") or {}
                 status = resp.get("status")
@@ -335,7 +368,7 @@ class Bridge:
                     self._retried = True
                     self.log(json.dumps({"retry_empty_response": {"status": status,
                                                                   "details": resp.get("status_details")}}))
-                    await self.link.send({"type": "response.create"})
+                    await self.link.send(self._response_create())
                     return
                 turn["outcome"] = "answered" if self._first_audio is not None else (status or "no_audio")
                 await self._finish()
@@ -379,6 +412,21 @@ class Bridge:
             self._pending.append(switch)
         # The page pings the ball for get_ball_position and applies set_preferences (file 43 §3).
         await self.to_client({"type": "tool", "name": name, "say": result.get("say"), "prefs": result.get("prefs")})
+
+    def _count(self) -> None:
+        """Voice Live heard this question (a transcript, or a response started): count it once (caps.py). An `ask`
+        with no audio never gets here, so it can't use up the daily caps."""
+        if not self._counted:
+            self._counted = True
+            self.caps.count_question(self.ip)
+
+    def _response_create(self) -> dict[str, Any]:
+        """Once this answer has spent its tool calls, the next response may only speak: tool_choice "none" (the
+        Realtime response.create override; that Voice Live honours it is unverified)."""
+        turn = self.turn
+        if turn is not None and len(turn["tool_calls"]) >= self.caps.tool_calls_per_answer:
+            return {"type": "response.create", "response": {"tool_choice": "none"}}
+        return {"type": "response.create"}
 
     def _end_of_speech(self, audio_end_ms: Any) -> tuple[float, str]:
         """Wall time the fan's last word reached the relay: map the VAD's audio_end_ms onto the chunks we sent.

@@ -176,7 +176,8 @@ def build_and_push(acr: str) -> str:
         "Env": env + ["PYTHONPATH=/app/site:/app/pipeline:/app", "PYTHONUNBUFFERED=1", "PYTHONDONTWRITEBYTECODE=1"],
         "WorkingDir": "/app", "User": "65534", "ExposedPorts": {"8080/tcp": {}},
         "Entrypoint": None,
-        "Cmd": ["python", "-m", "uvicorn", "relay.app:app", "--host", "0.0.0.0", "--port", "8080"]})
+        "Cmd": ["python", "-m", "uvicorn", "relay.app:app", "--host", "0.0.0.0", "--port", "8080",
+                "--ws-max-size", "65536"]})                  # same as relay/Dockerfile: 64 KB per /voice frame
     cfg["rootfs"]["diff_ids"].append(diff_id)
     cfg.setdefault("history", []).append({"created_by": "relay/push_image.py: app + wheels layer (D17)"})
     cfg_raw = json.dumps(cfg, separators=(",", ":")).encode()
